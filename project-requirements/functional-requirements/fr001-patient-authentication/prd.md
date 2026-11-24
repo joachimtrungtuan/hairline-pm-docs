@@ -29,7 +29,7 @@ The Patient Authentication & Profile Management module enables patients to secur
 - Update profile image and preferences
 - Reset password via email OTP (REQ-001-004)
 - Manage notification preferences and privacy settings
-- Request account deletion (soft-delete handled by admin)
+- Request account deletion (handled by admin; the account is anonymised as FR-023 rules)
 - Access profile overview, settings, and account management features
 
 **Provider Platform**:
@@ -43,11 +43,11 @@ The Patient Authentication & Profile Management module enables patients to secur
 
 - View all patient accounts and profiles (REQ-001-023)
 - Edit patient profile information with audit trail
-- Suspend/reactivate patient accounts (REQ-001-028)
+- Suspend, reactivate and unlock patient accounts through the FR-016 flows (REQ-001-028)
 - Reset patient passwords (REQ-001-027)
-- Manage patient account status and verification state (REQ-001-026)
+- View patient account status and verification state; status changes run through FR-016 (REQ-001-026)
 - View and manage patient authentication logs (REQ-001-030)
-- Handle account deletion requests (soft-delete) (REQ-001-031)
+- Handle account deletion requests (anonymised as FR-023 rules) (REQ-001-031)
 - Cannot create new patient accounts (patients must register via mobile app) (REQ-001-032)
 
 **Shared Services (S-XX)**:
@@ -181,7 +181,7 @@ flowchart TD
 
   subgraph W2S3["3. Authentication Success"]
     direction TB
-    W2S3_1["System validates email and password combination"] --> W2S3_2["System creates authenticated session"] --> W2S3_3["System redirects patient to main app dashboard"] --> W2S3_4["System logs successful login for audit trail"]
+    W2S3_1["System validates email and password combination"] --> W2S3_2["System creates authenticated session"] --> W2S3_3["System redirects patient to main app dashboard; a patient who has not given the general consent first meets the FR-027 consent prompt (REQ-001-187)"] --> W2S3_4["System logs successful login for audit trail"]
   end
 
   W2S1_3 --> W2S2_1
@@ -202,8 +202,21 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  W2B2_1["System displays account lockout message"] --> W2B2_2["Patient must wait for configurable lockout duration (default: 15 minutes; per Admin Settings A-09 / FR-026) or contact support"]
+  W2B2_1["System displays account lockout message"] --> W2B2_2["Patient must wait for configurable lockout duration (default: 15 minutes; per Admin Settings A-09 / FR-026), reset the password, or contact support"]
   W2B2_2 --> W2B2_3["System logs security event"]
+  W2B2_3 --> W2B2_4["When the lock period ends, login works again (REQ-001-066, REQ-001-068)"]
+```
+
+#### B3: Login outcome by account state (REQ-001-068, REQ-001-069)
+
+```mermaid
+flowchart TD
+  W2B3_1["Credentials are correct"] --> W2B3_2{"Account state"}
+  W2B3_2 -->|"Suspended"| W2B3_3["Login blocked; message tells the patient to contact support (REQ-016-223)"]
+  W2B3_2 -->|"Email not verified"| W2B3_4["Patient goes to the verification screen and a new code is sent"]
+  W2B3_2 -->|"Locked"| W2B3_5["Login blocked until the lock period set in FR-026 ends (B2)"]
+  W2B3_2 -->|"Deletion request open"| W2B3_6["Login allowed; the request stays open (FR-023)"]
+  W2B3_2 -->|"Active"| W2B3_7["Login succeeds (main flow)"]
 ```
 
 ### Workflow 3: Password Reset (Recovery Flow)
@@ -231,7 +244,7 @@ flowchart TD
 
   subgraph W3S4["4. Password Update Completion"]
     direction TB
-    W3S4_1["System validates new password strength"] --> W3S4_2["System updates password in secure storage"] --> W3S4_3["System creates new authenticated session"] --> W3S4_4["System redirects patient to main app"]
+    W3S4_1["System validates new password strength"] --> W3S4_2["System updates password in secure storage"] --> W3S4_3["System creates a new authenticated session unless the account is Suspended (see C4)"] --> W3S4_4["System redirects patient to main app"]
   end
 
   W3S1_4 --> W3S2_1
@@ -245,7 +258,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  W3C1_1["System displays error message"] --> W3C1_2["Patient can request new reset code"]
+  W3C1_1["System displays error message; a code that reaches the wrong-code limit stops working (REQ-001-180)"] --> W3C1_2["Patient can request new reset code"]
   W3C1_2 --> W3C1_3["System maintains configurable OTP validity window (default: 15 minutes, configurable via Admin Settings A-09)"]
 ```
 
@@ -263,6 +276,16 @@ flowchart TD
 flowchart TD
   W3C3_1["System displays &quot;If this email exists, a reset code has been sent&quot; message (privacy-preserving)"] --> W3C3_2["No indication given whether the email is registered"]
   W3C3_2 --> W3C3_3["System still enforces rate limiting on requests"]
+```
+
+#### C4: Password reset outcome by account status (REQ-001-076, REQ-016-223)
+
+```mermaid
+flowchart TD
+  W3C4_1["Password is updated; every existing session of the patient ends (REQ-001-182)"] --> W3C4_2{"Account status"}
+  W3C4_2 -->|"Active"| W3C4_3["New session starts"]
+  W3C4_2 -->|"Locked"| W3C4_4["Status becomes Active; new session starts"]
+  W3C4_2 -->|"Suspended"| W3C4_5["No session is created; status stays Suspended; neutral message tells the patient to contact support"]
 ```
 
 ### Workflow 4: Profile Management (Ongoing Flow)
@@ -300,7 +323,7 @@ flowchart TD
 flowchart TD
   W4D1_1["Admin can edit patient profiles through admin platform"] --> W4D1_2["System logs all admin changes with reason"]
   W4D1_2 --> W4D1_3["Patient receives notification of every change"]
-  W4D1_3 --> W4D1_4["Patient can review the changes (the admin edit is final; the patient does not accept or reject it)"]
+  W4D1_3 --> W4D1_4["The notice lists the changed fields (the admin edit is final; the patient does not accept or reject it, and there is no review screen)"]
 ```
 
 ---
@@ -377,18 +400,18 @@ flowchart TD
 | Back Navigation | action | Yes | Back arrow to return to previous screen | Top-left corner | no graph field (control) |
 | First Name | text | Yes | Patient's first name input | Min 2, max 50 characters (REQ-001-042) | ENT-patient.first_name |
 | Last Name | text | Yes | Patient's last name input | Min 2, max 50 characters (REQ-001-042) | ENT-patient.last_name |
-| Continue Button | button | Yes | Primary CTA (green) | Disabled until both name fields are valid and Terms acceptance is checked (REQ-001-043) | no graph field (control) |
-| Terms & Conditions Link | link | Yes | Opens latest published Terms & Conditions (FR-027) | Navigates to Terms content; does not disrupt form state (REQ-001-144) | no graph field (control) |
-| Privacy Policy Link | link | Yes | Opens latest published Privacy Policy (FR-027) | Navigates to Privacy Policy content; does not disrupt form state (REQ-001-144) | no graph field (control) |
-| Terms Acceptance Checkbox | checkbox | Yes | "I agree to the Terms & Conditions" | Required; on first acceptance triggers FR-027 acceptance tracking (document type, version, locale, acceptedAt, channel) (REQ-001-044) | ENT-legal-acceptance.accepted_at, ENT-legal-acceptance.document_type, ENT-legal-acceptance.version, ENT-legal-acceptance.locale, ENT-legal-acceptance.channel |
+| Continue Button | button | Yes | Primary CTA (green) | Disabled until both name fields are valid and the Terms and Privacy Policy acceptance is checked (REQ-001-043) | no graph field (control) |
+| Terms & Conditions Link | link | Yes | Opens the Current version of the Terms & Conditions (FR-027) | Navigates to Terms content; does not disrupt form state (REQ-001-144) | no graph field (control) |
+| Privacy Policy Link | link | Yes | Opens the Current version of the Privacy Policy (FR-027) | Navigates to Privacy Policy content; does not disrupt form state (REQ-001-144) | no graph field (control) |
+| Terms Acceptance Checkbox | checkbox | Yes | "I agree to the Terms & Conditions and the Privacy Policy" | Required; one checkbox covers both documents; nothing is recorded on this screen, both acceptances (the Current version of each) are recorded when the account is created on Screen 4 (REQ-001-044) | ENT-legal-acceptance.accepted_at, ENT-legal-acceptance.document_type, ENT-legal-acceptance.version, ENT-legal-acceptance.locale, ENT-legal-acceptance.channel |
 
 **Business Rules**:
 
 - Both name fields are required (REQ-001-042)
 - Minimum 2 characters per field (REQ-001-042)
 - Maximum 50 characters per field (REQ-001-042)
-- Continue button disabled until both name fields are valid and Terms acceptance is checked (REQ-001-043)
-- On first acceptance, the app MUST record Terms acceptance via FR-027 acceptance tracking (document type, version, locale, acceptedAt, channel) (REQ-001-044)
+- Continue button disabled until both name fields are valid and the Terms and Privacy Policy acceptance is checked (REQ-001-043)
+- The one checkbox covers the Terms & Conditions and the Privacy Policy. When the account is created (Screen 4), not before, the app MUST record both acceptances, each with the Current version (FR-027), via FR-027 acceptance tracking (document type, version, locale, acceptedAt, channel) (REQ-001-044)
 
 #### Screen 4: Account Creation Screen
 
@@ -413,6 +436,8 @@ flowchart TD
 - Password confirmation must match (REQ-001-046)
 - Create account button disabled until all fields valid (REQ-001-047)
 - Real-time password strength validation (REQ-001-128)
+- An email that already has a verified account gets the same neutral result as a new email: the screen goes on to the verification screen with a "check your email" message and reveals nothing, and the system sends the existing owner an email saying an account already exists (REQ-001-181)
+- An email whose account is still unverified may register again: the old unverified record is replaced by the new one and a new code is sent (REQ-001-181)
 
 **Notes**:
 
@@ -431,12 +456,14 @@ flowchart TD
 | OTP Code Input | text | Yes | Six separate input boxes for 6-digit verification code | Numeric only; all 6 digits required before Continue is enabled (REQ-001-146) | ENT-otp-code.code |
 | Continue Button | button | Yes | Primary CTA (green) | Disabled until all 6 digits entered; submits OTP for validation (REQ-001-146) | no graph field (control) |
 | Resend Code Link | link | Yes | "Resend code" link | Rate-limited; triggers new OTP email to registered address (REQ-001-049) | no graph field (control) |
+| Help and Support Entry | link | Conditional | "Contact support" entry | Shown only when the resend limit is reached or the email service is down; opens the support contact details (REQ-001-170, REQ-035-024) | no graph field (control) |
 
 **Business Rules**:
 
 - Email verification required for account activation (REQ-001-002)
 - 6-digit OTP sent automatically to email; codes expire after 15 minutes (configurable) (REQ-001-048, REQ-001-050)
 - Resend option available with rate limiting (REQ-001-049)
+- Wrong codes are limited as on the verification, reset and re-verification screens: after the same number of wrong codes as failed logins (FR-026 max login attempts, default 5) the code stops working and a new one must be requested, with the resend cooldown applying (REQ-001-180)
 
 #### Screen 6: Profile Creation Screen
 
@@ -546,6 +573,12 @@ flowchart TD
 - Forgot password link leads to recovery flow (REQ-001-137)
 - Footer link leads to registration flow (REQ-001-138)
 - Failed attempts tracked for security (REQ-001-007)
+- Login outcome by account state, when the credentials are correct (same list as Workflow 2, B3) (REQ-001-068, REQ-001-069):
+  - Suspended: login is blocked and the message tells the patient to contact support
+  - Email not verified: the patient goes to the verification screen (Screen 5) and a new code is sent
+  - Locked: login is blocked until the lock period set in FR-026 ends; after that login works again
+  - Deletion request open: login is allowed and the request stays open (FR-023)
+- First sign-in consent gate: after a successful login, a patient who has not yet given the general consent is shown the FR-027 consent prompt before the main app (REQ-027-062, REQ-001-187)
 
 #### Screen 10: Password Reset Initiation Screen
 
@@ -589,6 +622,7 @@ flowchart TD
 - Code expires after 15 minutes (configurable via Admin Settings A-09) (REQ-001-157)
 - Resend option available (REQ-001-049)
 - Invalid code shows error message (REQ-001-075)
+- After the same number of wrong codes as failed logins (FR-026 max login attempts, default 5) the code stops working and a new one must be requested; the resend cooldown applies (REQ-001-180)
 
 #### Screen 12: Password Reset Screen
 
@@ -603,14 +637,17 @@ flowchart TD
 | Instruction Text | text | Yes | "Enter a new password and login to their account" | Static instructional copy | no graph field (static content) |
 | New Password | text | Yes | New password input (masked) with visibility toggle | Must meet strength requirements: 12+ chars, 1 upper, 1 lower, 1 digit, 1 special char from `!@#$%^&(),.?":{}\|<>` (REQ-SYS-007) | ENT-patient.password_hash |
 | Confirm Password | text | Yes | Password confirmation input | Must match New Password field exactly (REQ-001-046) | ENT-patient.password_hash |
-| Save and Login Button | button | Yes | Primary CTA (green) | Disabled until both fields valid and matching; creates new session on success (REQ-001-150, REQ-001-076) | no graph field (control) |
+| Save and Login Button | button | Yes | Primary CTA (green) | Disabled until both fields valid and matching; updates the password and, unless the account is Suspended, creates a new session (REQ-001-150, REQ-001-076) | no graph field (control) |
 
 **Business Rules**:
 
 - New password must meet strength requirements (12+ chars, 1 upper, 1 lower, 1 digit, 1 special from !@#$%^&(),.?":{}|<>) (REQ-SYS-007)
 - Password confirmation must match (REQ-001-046)
 - Password visibility toggle available (REQ-001-159)
-- Successful reset creates new session (REQ-001-076)
+- A successful reset ends every existing session of the patient on every device (REQ-001-182), then by account status (REQ-001-076, REQ-016-223):
+  - Active: a new session is created
+  - Locked: the status becomes Active and a new session is created
+  - Suspended: the password is updated, no session is created, the status stays Suspended, and a neutral message tells the patient to contact support
 
 #### Screen 13: Profile Overview (Patient)
 
@@ -638,14 +675,15 @@ flowchart TD
 - Sensitive actions (delete account) require re-auth within the last 5 minutes (password or 6-digit OTP) (REQ-001-089)
 - If there is an active treatment or aftercare case, delete account is blocked with guidance to contact support (REQ-001-091)
 - If there is an active payment in progress, delete account is blocked until payment flow completes (REQ-001-092)
-- If there is an active inquiry, delete account is allowed and the system cancels the inquiry using FR-003 cancellation mechanics (status = "Cancelled"; cancellation reason = "Account Deleted (System)"; reason is not shared with providers) (REQ-003-103)
-- **Note**: System-triggered inquiry cancellation due to account deletion request is distinct from patient-initiated inquiry cancellation (FR-003 Workflow 5). Both end in status "Cancelled", but the cancellation reason provenance differs (system-generated vs patient-provided).
+- A deletion request is blocked while the patient has an inquiry at the Accepted stage or later (REQ-003-103, REQ-001-091)
+- An open inquiry in stage Inquiry or Quoted does not block the request: it is cancelled when an admin approves the request (FR-023), not at submission, using FR-003 cancellation mechanics (status = "Cancelled"; cancellation reason = "Account Deleted (System)"; reason is not shared with providers); a refused request cancels nothing (REQ-003-103)
+- **Note**: System-triggered inquiry cancellation due to account deletion approval is distinct from patient-initiated inquiry cancellation (FR-003 Workflow 5). Both end in status "Cancelled", but the cancellation reason provenance differs (system-generated vs patient-provided).
 
 **Acceptance Scenarios**:
 
 1. Given patient is authenticated, When opening Profile tab, Then avatar, name, email, and actions (Profile edit, Settings) are visible and tappable.
 2. Given patient taps Delete account, When re-auth is not fresh (>5 minutes), Then system prompts for password or sends 6-digit OTP to email and only proceeds on success. (REQ-001-089)
-3. Given patient has an active treatment or aftercare, When confirming Delete account, Then system blocks action and shows message “Account deletion is unavailable during active care; contact support.” (REQ-001-091)
+3. Given patient has an active treatment or aftercare, or an inquiry at the Accepted stage or later, When confirming Delete account, Then system blocks action and shows message “Account deletion is unavailable during active care; contact support.” (REQ-001-091)
 4. Given patient has a payment in progress, When confirming Delete account, Then system blocks action until payment finishes, with a message to retry later. (REQ-001-092)
 5. Given patient selects Logout, When confirmed, Then session tokens are revoked and user returns to Landing screen. (REQ-001-088)
 6. Given patient selects Reviews, When eligible (Completed ≥ 3 months), Then “Write review” CTA is shown; else read-only history only. (REQ-001-087)
@@ -662,7 +700,7 @@ flowchart TD
 | Avatar | image | No | Patient profile photo with add/update overlay | Tappable; opens image picker to update profile photo | ENT-patient.profile_image_url |
 | First Name | text | Yes | Patient's first name | Min 2, max 50 characters (REQ-001-042) | ENT-patient.first_name |
 | Last Name | text | Yes | Patient's last name | Min 2, max 50 characters (REQ-001-042) | ENT-patient.last_name |
-| Email Address | text | Yes | Patient's registered email address | Valid format; triggers 6-digit OTP re-verification if changed (REQ-001-081) | ENT-patient.email |
+| Email Address | text | Yes | Patient's registered email address | Valid format; if changed, a 6-digit code is sent to the new address and the login email stays the old one until the code is confirmed (REQ-001-081, REQ-001-183) | ENT-patient.email |
 | Phone Number | text | Yes | Phone number input with country code dropdown | Country code list centrally managed (Admin A-09); format validated per country code (REQ-001-054, REQ-001-053) | ENT-patient.phone, ENT-patient.phone_country_code |
 | Date of Birth | date | Yes | Date of birth picker | Minimum age 18; uses date picker overlay (REQ-001-052) | ENT-patient.date_of_birth |
 | Gender | select | Yes | Gender selection dropdown | Options: Male, Female, Other, Prefer not to say | ENT-patient.gender |
@@ -672,7 +710,7 @@ flowchart TD
 **Business Rules**:
 
 - Validation applied per field; back navigation available (REQ-001-085)
-- Email change triggers re-verification via 6-digit OTP (REQ-001-081)
+- Email change triggers re-verification via 6-digit OTP (REQ-001-081). Save on a changed email first runs identity re-verification (Screen 18) when the last sign-in check is older than 5 minutes (REQ-001-016, REQ-001-131), then sends the code to the NEW address. The login email stays the old address until the code is confirmed; after confirmation a notice goes to the old address (REQ-001-183)
 - Profile completion is the share of required profile fields that are filled, shown as a percentage from 0 to 100, with equal weight per field. The required fields are: First Name, Last Name, Email Address, Phone Number, Date of Birth, Gender and Country. The Avatar is optional and does not count. (REQ-001-166)
 
 #### Screen 15: Settings Main Screen
@@ -688,6 +726,8 @@ flowchart TD
 | Notification Settings | link | Yes | Row with bell icon + "Notification Settings" label + chevron | Navigates to Screen 15a | no graph field (control) |
 | Privacy & Security | link | Yes | Row with lock icon + "Privacy & Security" label + chevron | Navigates to Screen 15b | no graph field (control) |
 | Terms & Conditions | link | Yes | Row with document icon + "Terms & Conditions" label + chevron | Navigates to Screen 15d | no graph field (control) |
+| Consent | link | Yes | Row with consent icon + "Consent" label + chevron | Opens the general Consent view owned by FR-027 (REQ-027-016, REQ-001-185) | no graph field (control) |
+| Language | link | Yes | Row with globe icon + "Language" label + chevron | Opens the app language choice owned by FR-021 (REQ-021-002, REQ-001-165, REQ-001-185) | no graph field (control) |
 | Help & Support | link | Yes | Row with help/question icon + "Help & Support" label + chevron | Navigates to Help & Support flow (FR-033/FR-034) (REQ-001-103) | no graph field (control) |
 
 **Business Rules**:
@@ -696,6 +736,7 @@ flowchart TD
 - Tapping a navigation row opens the corresponding sub-screen and preserves back navigation to Screen 15 (REQ-001-160)
 - Help & Support routes to the Help Center & Support Access module (FR-033/FR-034) (REQ-001-103)
 - Settings items are patient-app only; no provider/admin controls appear here (REQ-001-102)
+- FR-001 owns this Settings Main screen and the Notification, Privacy and Terms sub-screens (Screens 15a to 15d); the Consent row opens the general Consent view (FR-027) and the Language row opens the language choice (FR-021) (REQ-001-185)
 
 **Minimal API/State (Reference)**:
 
@@ -719,16 +760,16 @@ flowchart TD
 | MVP Notice (Conditional) | text | Conditional | "Per-category preferences coming soon. For now, you can enable/disable all notifications by channel." | Shown only in MVP; removed in V2 when per-category toggles ship (REQ-001-104) | no graph field (static content) |
 | Global Email Toggle | toggle | Yes | Master switch: "Email Notifications" with ON/OFF state | Auto-saves immediately on toggle; default for new accounts: ON (REQ-001-107) | ENT-patient-notification-preferences.email_enabled |
 | Global Push Toggle | toggle | Yes | Master switch: "Push Notifications" with ON/OFF state | Auto-saves immediately on toggle; default for new accounts: ON (REQ-001-107) | ENT-patient-notification-preferences.push_enabled |
-| Mandatory Notifications Note | text | Yes | "Security notifications (password reset, account changes) are always sent and cannot be disabled." | Displayed below toggles as info text (REQ-001-105) | no graph field (static content) |
-| System Event Notifications Note | text | Yes | "You will receive automatic notifications when your inquiry, booking, or payment status changes (including Inquiry Cancelled, Quote Received, Booking Confirmed, Payment events, and Aftercare reminders). These keep you informed of important updates." | Read-only informational text; per FR-020 (REQ-001-106) | no graph field (static content) |
+| Mandatory Notifications Note | text | Yes | "Mandatory notices (such as password reset and account security notices) are always sent and cannot be disabled." | Displayed below toggles as info text (REQ-001-105) | no graph field (static content) |
+| System Event Notifications Note | text | Yes | "You will receive automatic notifications when your inquiry, booking, or payment status changes (including Inquiry Cancelled, Quote Received, Booking Confirmed, Payment events, and Aftercare reminders). These keep you informed of important updates." | Read-only informational text; per FR-020, apart from mandatory notices (REQ-020-038) (REQ-001-106) | no graph field (static content) |
 | Save Status Indicator (Conditional) | text | Conditional | "Saved" or "Saving..." feedback | Shown briefly after toggle change; success message: "Preferences saved" (REQ-001-154) | no graph field (static content) |
 | Error Message (Conditional) | text | Conditional | Displayed if save fails | "Failed to save preferences. Please try again." with Retry button; on failure, UI reverts to last saved state (REQ-001-109) | no graph field (static content) |
 
 **Business Rules**:
 
 - **MVP scope**: Only global Email/Push toggles available; per-category preferences (Inquiry, Quote, Booking, Payment, Aftercare, Marketing) are deferred to V2 (REQ-001-104)
-- Security-critical notifications (email verification, password reset, account security alerts) are mandatory and cannot be disabled — not affected by global toggles (REQ-001-105)
-- System event notifications (inquiry stage changes including Inquiry Cancelled, quote received, booking confirmed, payment events, aftercare reminders) are automatically sent per FR-020; user cannot disable individual events in MVP (REQ-001-106)
+- Mandatory notices as FR-020 defines them (REQ-020-038) are always sent and are not affected by global toggles (REQ-001-105)
+- All other system event notifications (inquiry stage changes including Inquiry Cancelled, quote received, booking confirmed, payment events, aftercare reminders) are sent per FR-020 and follow the channel toggles; user cannot disable individual events in MVP (REQ-001-106)
 - Changes auto-save immediately upon toggle (no explicit "Save" button); preference changes effective within 1 minute; default for new accounts: both Email and Push toggles ON (REQ-001-107)
 - Marketing notifications are OFF by default unless explicit consent is stored (applies when V2 categories ship) (REQ-001-108)
 - Notification preference records are owned by FR-030; this screen shows and edits them
@@ -785,14 +826,14 @@ flowchart TD
 
 **Business Rules**:
 
-- Policy content is read-only and must match the latest published Privacy Policy for the patient app (FR-027) (REQ-001-113)
+- Policy content is read-only and must match the Current version of the Privacy Policy for the patient app (FR-027) (REQ-001-113)
 - If a newer version is published while the user is viewing, the app may prompt to refresh but must not interrupt reading (REQ-001-115)
 - If content fails to load, show a non-blocking error state with Retry and Back navigation (REQ-001-114)
 - Analytics/audit (if implemented) must not capture the policy text itself; only view events and version identifiers (privacy-by-design) (REQ-001-116)
 
 **Acceptance Scenarios**:
 
-1. Given user opens Privacy Policy, Then the latest published policy content is shown with version label, last updated date (if available), and working back navigation (FR-027). (REQ-001-113)
+1. Given user opens Privacy Policy, Then the Current version of the policy is shown with version label, last updated date (if available), and working back navigation (FR-027). (REQ-001-113)
 
 #### Screen 15d: Terms & Conditions
 
@@ -812,14 +853,14 @@ flowchart TD
 
 **Business Rules**:
 
-- Terms content is read-only and must match the latest published Terms & Conditions for the patient app (FR-027)
+- Terms content is read-only and must match the Current version of the Terms & Conditions for the patient app (FR-027)
 - If a newer version is published while the user is viewing, the app may prompt to refresh but must not interrupt reading (REQ-001-115)
 - If content fails to load, show a non-blocking error state with Retry and Back navigation (REQ-001-114)
 - Analytics/audit (if implemented) must not capture the document text itself; only view events and version identifiers (privacy-by-design)
 
 **Acceptance Scenarios**:
 
-1. Given user opens Terms & Conditions, Then the latest published terms content is shown with version label, last updated date (if available), and working back navigation (FR-027).
+1. Given user opens Terms & Conditions, Then the Current version of the terms is shown with version label, last updated date (if available), and working back navigation (FR-027).
 
 **Help & Support Acceptance Scenario**:
 
@@ -840,22 +881,26 @@ flowchart TD
 |---|---|---|---|---|---|
 | Back Navigation | action | Yes | Back arrow to return to Profile Overview (Screen 13) | Top-left corner; cancels the deletion flow | no graph field (control) |
 | Warning Header | display | Yes | Warning icon + "Delete your account" title | Displayed at top; signals destructive action | no graph field (static content) |
-| Blocking Message | text | Conditional | Shown if active treatment/aftercare or payment in progress; includes "Contact support" link | Blocks request submission until blocking condition is resolved (REQ-001-091) | no graph field (static content) |
+| Blocking Message | text | Conditional | Shown if active treatment/aftercare, an inquiry at the Accepted stage or later, or payment in progress; includes "Contact support" link | Blocks request submission until blocking condition is resolved (REQ-001-091) | no graph field (static content) |
 | Consequences Section | text | Yes | Lists items that may be deleted/anonymized: PII, preferences, messages, reviews, uploaded media where not legally retained | Read-only informational text (REQ-001-093) | no graph field (static content) |
 | Retained Data Section | text | Yes | Explains what will be retained and why: medical + financial records retained for the one 10-year retention period (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period); restricted access | Read-only informational text (REQ-001-012) | no graph field (static content) |
-| Processing Timeline Notice | text | Yes | "Verified deletion requests completed within 30 calendar days (SLA)" | Read-only informational text (REQ-001-094) | no graph field (static content) |
+| Processing Timeline Notice | text | Yes | "Deletion requests are completed within 30 calendar days of submission" | Read-only informational text (REQ-001-094) | no graph field (static content) |
 | Reason for Deletion | select | No | Optional reason selector for account deletion | Optional; does not block submission; `deleteAccountRequest { reason? }`; options centrally managed in Admin Settings (FR-026, App Data → Account Deletion Reasons) (REQ-001-096) | ENT-deletion-request.reason |
-| Request Deletion Button | button | Yes | Primary CTA: "Request deletion" | Triggers identity re-verification (Screen 18) if last auth > 5 minutes; else shows confirmation modal (REQ-001-156) | no graph field (control) |
+| Reason Explanation | text | Conditional | Optional free-text field (max 500 characters) | Shown only when the selected reason requires an explanation (FR-026 setting); optional (REQ-026-092, REQ-001-186) | ENT-deletion-request.reason |
+| Request Deletion Button | button | Yes | Primary CTA: "Request deletion" | Hidden while a deletion request is open (REQ-001-186); triggers identity re-verification (Screen 18) if last auth > 5 minutes; else shows confirmation modal (REQ-001-156) | no graph field (control) |
 | Confirmation Modal | modal | Yes | "Submit deletion request?" with Confirm / Cancel actions | Shown after re-auth passes; Confirm submits DSR; Cancel returns to screen (REQ-001-162) | no graph field (control) |
 | Identity Re-verification | action | Conditional | Navigates to Screen 18 when last successful auth > 5 minutes | Required before showing confirmation modal when auth is stale | no graph field (control) |
 | Submission Confirmation | display | Conditional | "Deletion request submitted" with request reference and next-step instructions | Shown after successful DSR submission | ENT-deletion-request.request_id |
+| Additional Verification Input | action | Conditional | "Provide additional verification" input | Shown only while the request is in Verification Required; the patient gives the proof an admin asked for (REQ-023-034, REQ-001-186) | no graph field (control) |
+| Request Status Line | text | Conditional | Read-only status of the open request | Shown while a deletion request is open; the status is set by FR-023 (REQ-023-046, REQ-001-186) | no graph field (static content) |
 
 **Business Rules**:
 
 - Delete account is a request flow (DSR) queued for Admin review and fulfillment per FR-023; no immediate hard-delete occurs in-app (REQ-001-090)
 - If active treatment/aftercare exists, deletion request is blocked with guidance to contact support (patient safety) (REQ-001-091)
 - If payment is in progress, deletion request is blocked until payment completes (REQ-001-092)
-- If an active inquiry exists, deletion request is allowed and system auto-closes open inquiries (REQ-003-103)
+- The request is blocked while the patient has an inquiry at the Accepted stage or later; an open inquiry in stage Inquiry or Quoted does not block it and is cancelled when an admin approves the request (FR-023), not at submission; a refused request cancels nothing (REQ-003-103)
+- While a deletion request is open the screen shows the read-only request status, hides the Request Deletion button, and shows the additional-verification input only in Verification Required; the free-text reason field follows the selected reason (REQ-001-186)
 - Sensitive action re-auth required when last successful auth > 5 minutes; re-auth via Screen 18 (Identity Re-verification) using password or 6-digit email OTP (REQ-001-089, REQ-001-142)
 - Deletion reason is optional and must not block request submission (`deleteAccountRequest { reason? }`) (REQ-001-096)
 - Verification failures and throttling/lockout behavior follow configured authentication security policy (do not hardcode attempt counts in UI copy) (REQ-001-097)
@@ -911,7 +956,7 @@ flowchart TD
 
 #### Screen 18: Identity Re-verification (Shared Component)
 
-**Purpose**: Verify patient identity before performing sensitive actions (used by Screen 16 Delete Account and any future sensitive action requiring re-auth)
+**Purpose**: Verify patient identity before performing sensitive actions (used by Screen 14 Edit Profile on an email change, Screen 16 Delete Account and any future sensitive action requiring re-auth)
 
 **Data Fields**:
 
@@ -934,9 +979,10 @@ flowchart TD
 - Re-verification is required when last successful auth > 5 minutes (threshold is a platform setting managed in FR-026) (REQ-001-142)
 - Selecting "Email OTP" sends a 6-digit code to the registered email; code expires in 15 minutes; resend is rate-limited (REQ-001-098)
 - Verification failures, throttling, and any lockout behavior follow the configured authentication security policy (do not hardcode attempt counts in UI copy) (REQ-001-097)
+- A wrong email code counts toward the same limit as failed logins (FR-026 max login attempts, default 5); after the limit the code stops working and a new one must be requested, with the resend cooldown applying (REQ-001-180)
 - Successful verification returns the patient to the calling screen's next step (e.g., final confirmation modal for Delete Account) (REQ-001-099)
 - Patient can cancel at any time to exit without completing the sensitive action (REQ-001-100)
-- This screen is a shared component reused across all sensitive actions requiring re-auth (currently: Delete Account Screen 16; extensible to future sensitive actions) (REQ-001-101)
+- This screen is a shared component reused across all sensitive actions requiring re-auth (currently: Edit Profile Screen 14 when the email changes (REQ-001-016, REQ-001-131) and Delete Account Screen 16; extensible to future sensitive actions) (REQ-001-101)
 
 ### Admin Platform Screens
 
@@ -949,16 +995,17 @@ flowchart TD
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |---|---|---|---|---|---|
 | Patient List | list | Yes | Searchable and filterable list of all patient accounts | Supports search by name/email; filter by status (REQ-001-123) | ENT-patient.name, ENT-patient.email |
-| Status Indicator | display | Yes | Patient account status badge: Active, Suspended, Deactivated, Locked | Colour-coded for quick visual scan | ENT-patient.account_status |
+| Status Indicator | display | Yes | Patient account status badge: Active, Suspended, Locked | Colour-coded for quick visual scan | ENT-patient.account_status |
 | Profile Completion | display | Yes | Profile completion per patient, shown as a percentage from 0 to 100 | Read-only; share of required profile fields filled, equal weight per field (fields listed on Screen 14) (REQ-001-124) | ENT-patient.profile_completion_status |
 | Last Login | display | Yes | Timestamp of the patient's most recent login | Read-only; displayed in admin-configured timezone (REQ-001-125) | ENT-patient.last_login_at |
-| Action Buttons | button | Yes | Per-row action set: Edit, View, Suspend | Edit: modifies patient data with audit trail; View: read-only; Suspend: suspends account (status Suspended) | no graph field (control) |
+| Action Buttons | button | Yes | Per-row action set: Edit, View, Suspend | Edit: modifies patient data with audit trail; View: read-only; Suspend: starts the FR-016 suspension flow (A6, REQ-016-012); account status changes only through FR-016 flows (REQ-001-028) | no graph field (control) |
 
 **Business Rules**:
 
 - Admin can view all patient profiles (REQ-001-023)
 - Admin can edit patient information with reason logging (REQ-001-017)
-- Admin can suspend/reactivate accounts (REQ-001-028)
+- Account status changes only through the FR-016 flows (suspend A6, lift a suspension, unlock); FR-001 does not edit status (REQ-001-028)
+- The status list keeps the value Deactivated as a reserved value: nothing sets it, nothing shows it, and it has no behaviour (REQ-001-188)
 - All admin actions logged for audit trail (REQ-001-033)
 
 ## Business Rules
@@ -968,7 +1015,7 @@ flowchart TD
 1. **Registration Rules**
    - Email addresses must be unique across the platform (REQ-001-009)
    - Password must meet minimum security requirements
-   - Email verification required for account activation; the patient has no access until the email is verified (REQ-001-002, REQ-001-069)
+   - Email verification required for account activation; the patient has no access until the email is verified, and a login before that goes to the verification screen with a new code (REQ-001-002, REQ-001-069)
    - Profile completion required before inquiry submission (REQ-001-057)
 
 2. **Login Rules**
@@ -976,6 +1023,9 @@ flowchart TD
    - Lockout duration after failed attempts (configurable in Admin Settings A-09) (REQ-001-066)
    - Session timeout after 24 hours of inactivity (REQ-001-067)
    - Successful logins logged for security monitoring (REQ-001-008)
+   - Login outcome by account state (Suspended, email not verified, Locked, deletion request open): see Workflow 2, B3 (REQ-001-068, REQ-001-069)
+   - Wrong codes (registration, password reset, re-verification) share the failed-login limit: after it the code stops working and a new one is requested (REQ-001-180)
+   - A password reset by the patient, a password reset by an admin and a suspension each end every existing session of the patient on every device, as Change Password does (REQ-001-119); a reset then starts one new session where the account status allows it (REQ-001-182)
 
 3. **Password Rules**
    - Password strength: see system PRD, Platform-Wide Rules: Password and one-time-code policy (REQ-SYS-007)
@@ -1006,21 +1056,21 @@ flowchart TD
 ### Admin Editability Rules
 
 1. **Full Admin Override**
-   - Admin can edit ALL patient profile data (REQ-001-025)
-   - Admin can modify patient account status (REQ-001-026)
-   - Admin can reset patient passwords (REQ-001-027)
-   - Admin can suspend/reactivate patient accounts (REQ-001-028)
+   - Admin can edit all patient profile data, not account status (REQ-001-025)
+   - Admin can view patient account status and verification state; status changes run only through the FR-016 flows (REQ-001-026)
+   - Admin can reset patient passwords; the reset ends every existing session of the patient (REQ-001-027, REQ-001-182)
+   - Suspending, reactivating and unlocking accounts run through FR-016 (suspension is FR-016 A6, REQ-016-012); suspension ends every existing session of the patient (REQ-001-028, REQ-001-182)
 
 2. **Edit Capabilities**
-   - **Profile Data**: Modify name, email, phone, address, preferences (REQ-001-029)
-   - **Account Status**: Change account status (Active, Suspended, Deactivated, Locked), verification status (REQ-001-029)
-   - **Security**: Reset passwords, unlock accounts, modify security settings (REQ-001-029)
+   - **Profile Data**: Modify name, email, phone, address, preferences (REQ-001-029). An admin email change saves the new address as unverified, sends a notice to the old address, and at the patient's next login a code goes to the new address and the patient confirms it before the session starts (REQ-001-184)
+   - **Account Status**: Not edited in FR-001; suspend, lift and unlock run through FR-016 (REQ-001-029)
+   - **Security**: Reset passwords, modify security settings (REQ-001-029)
    - **Preferences**: Update language, currency, notification settings (REQ-001-029)
 
 3. **Edit Tracking**
    - All admin edits logged with timestamp and admin identification (REQ-001-033)
    - Change reason required for all modifications (REQ-001-132)
-   - Patient notified of every admin edit via email (REQ-001-034)
+   - Patient notified of every admin edit via email; the notice lists the changed fields, and there is no review screen (REQ-001-034, REQ-001-035)
    - Edit history maintained for audit trail (REQ-001-038)
 
 ### UI/UX Display Rules
@@ -1085,6 +1135,7 @@ flowchart TD
 - **FR-026**: App Settings & Security Policies (OTP + throttling config; re-verification threshold; landing background; centrally managed lists including account deletion reason options for Screen 16)
 - **FR-027**: Legal Content Management (Terms/Privacy content + acceptance tracking)
 - **FR-023**: Data Retention & Compliance (DSR deletion request handling)
+- **FR-016**: Admin account actions (suspension A6, lifting a suspension, unlock; account status changes only through these flows)
 
 ---
 
@@ -1163,6 +1214,7 @@ A patient successfully updates their profile information and manages account set
 ### Edge Cases
 
 - What happens when patient attempts to register with an email that already exists?
+  - **Ruling**: The patient sees the same neutral "check your email" result as for a new email, and the existing owner is emailed that an account already exists. An unverified account may register again with the same email; the old unverified record is replaced. (REQ-001-181)
 - How does system handle OTP delivery failure or email service unavailability?
   - **Ruling**: The patient sees a message and can tap Resend. When the resend limit is reached (the existing resend rate limit; no new setting) or the email service is still down, the app shows the Help and Support entry. (REQ-001-170)
 - What occurs if patient's device loses internet connection during registration process?
@@ -1171,6 +1223,7 @@ A patient successfully updates their profile information and manages account set
   - **Ruling**: Several devices are allowed. Each device has its own session; there is no limit on the number of devices. (REQ-001-172)
 - What happens when patient attempts to reset password for non-existent email?
 - How does system handle account lockout expiration and unlock process?
+  - **Ruling**: Login is blocked until the lock period set in FR-026 ends; after that login works again. A password reset also returns a Locked account to Active. (REQ-001-068, REQ-016-223)
 - What occurs if patient tries to delete account with active treatment/aftercare case?
 - How to manage session timeout and automatic logout behavior?
 - What happens when admin modifies patient profile while patient is viewing it?
@@ -1222,6 +1275,7 @@ A patient successfully updates their profile information and manages account set
 |------|---------|---------|--------|
 | 2026-11-22 | 1.7 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.6) is in `archived/prd-baseline-2026-11-08/fr001-patient-authentication/` and in git history. | AI |
 | 2026-11-23 | 1.8 | Independent compression review: 6 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | AI |
+| 2026-11-24 | 1.9 | Logic review pass 1: deletion request rules aligned with FR-003 and FR-023 (inquiries cancelled at approval, 30 days from submission, Screen 16 status and verification blocks); account status changes only through FR-016 (Deactivated kept as reserved); login outcomes by account state and password reset outcomes by status; sessions end on reset and suspension; wrong-code limit shares the failed-login setting; duplicate-email registration neutral; Current version wording for legal texts and Terms plus Privacy acceptance recorded at account creation; first-sign-in consent gate; Settings Consent and Language rows; mandatory notices follow FR-020; email change and admin email change confirmed by code to the new address. New rules REQ-001-180 to REQ-001-188. | AI |
 
 ## Appendix: Approvals
 

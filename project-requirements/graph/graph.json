@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T15:19:36Z",
+  "generated_at": "2026-11-24T15:30:47Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -17644,9 +17644,9 @@
       "owner_fr": "FR-001",
       "title": "Account status",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "description": "Account status shown as a badge: Active, Suspended, Deactivated or Locked."
+        "description": "Account status shown as a badge: Active, Suspended or Locked. Deactivated stays in the list as a reserved value: nothing sets it, nothing shows it (REQ-001-188)."
       }
     },
     {
@@ -17894,6 +17894,17 @@
       "version": 1,
       "attrs": {
         "description": "Unique patient code (HPID), shown beside the patient name everywhere (for example HP258742). Not the same as anonymized_id."
+      }
+    },
+    {
+      "id": "ENT-patient.pending_email",
+      "type": "Field",
+      "owner_fr": "FR-001",
+      "title": "Pending email",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "New email address typed on Edit Profile, held until the 6-digit code sent to it is confirmed. The login email stays the old address meanwhile; the value is cleared after confirmation (REQ-001-183)."
       }
     },
     {
@@ -34098,6 +34109,19 @@
       }
     },
     {
+      "id": "FLW-001-login-outcomes",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "B3: Login outcome by account state",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "B3: Login outcome by account state",
+        "prd_ref": "Alternative Flow B3"
+      }
+    },
+    {
       "id": "FLW-001-password-reset",
       "type": "Flow",
       "owner_fr": null,
@@ -34147,6 +34171,19 @@
         "kind": "alternative",
         "description": "Abandoned registration alternative flow (prd.md Alternative Flow A1).",
         "prd_ref": "Alternative Flow A1"
+      }
+    },
+    {
+      "id": "FLW-001-reset-by-status",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "C4: Password reset outcome by account status",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "C4: Password reset outcome by account status",
+        "prd_ref": "Alternative Flow C4"
       }
     },
     {
@@ -40450,11 +40487,11 @@
       "id": "REQ-001-025",
       "type": "Rule",
       "owner_fr": "FR-001",
-      "title": "Admin can edit all patient profile data",
+      "title": "Admin can edit all patient profile data, not account status",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admin can edit ALL patient profile data",
+        "statement": "Admin can edit all patient profile data, not account status; account status changes only through the FR-016 flows.",
         "rationale": "prd.md line 1009. Also stated in the PRD at line 46: \"Edit patient profile information with audit trail\"; line 296: \"Admin can edit patient profiles through admin platform\"."
       }
     },
@@ -40462,11 +40499,11 @@
       "id": "REQ-001-026",
       "type": "Rule",
       "owner_fr": "FR-001",
-      "title": "Admin can modify patient account status",
+      "title": "Admin can view account status; changes run through FR-016",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admin can modify patient account status",
+        "statement": "Admin can view patient account status and verification state; status changes run only through the FR-016 flows (suspend A6, lift a suspension, unlock).",
         "rationale": "prd.md line 1010. Also stated in the PRD at line 49: \"Manage patient account status and verification state\"."
       }
     },
@@ -40476,9 +40513,9 @@
       "owner_fr": "FR-001",
       "title": "Admin can reset patient passwords",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admin can reset patient passwords",
+        "statement": "Admin can reset patient passwords; the reset ends every existing session of the patient (REQ-001-182).",
         "rationale": "prd.md line 1011. Also stated in the PRD at line 48: \"Reset patient passwords\"."
       }
     },
@@ -40486,11 +40523,11 @@
       "id": "REQ-001-028",
       "type": "Rule",
       "owner_fr": "FR-001",
-      "title": "Admin can suspend and reactivate patient accounts",
+      "title": "Suspend, reactivate and unlock run through FR-016",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admin can suspend/reactivate patient accounts",
+        "statement": "Suspending, reactivating and unlocking patient accounts run through the FR-016 flows (suspension is FR-016 A6, REQ-016-012); a suspension ends every existing session of the patient (REQ-001-182).",
         "rationale": "prd.md line 1012. Also stated in the PRD at line 47: \"Suspend/reactivate patient accounts\"; line 919: \"Admin can suspend/reactivate accounts\"."
       }
     },
@@ -40500,9 +40537,9 @@
       "owner_fr": "FR-001",
       "title": "Admin edit capabilities by area",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Profile Data: Modify name, email, phone, address, preferences Account Status: Change account status (Active, Suspended, Deactivated, Locked), verification status Security: Reset passwords, unlock accounts, modify security settings Preferences: Update language, currency, notification settings",
+        "statement": "Profile Data: Modify name, email, phone, address, preferences (an email change follows REQ-001-184). Account Status: not edited in FR-001; suspend, lift and unlock run through FR-016. Security: Reset passwords, modify security settings. Preferences: Update language, currency, notification settings.",
         "rationale": "prd.md lines 974, 975, 976, 977. "
       }
     },
@@ -40522,11 +40559,11 @@
       "id": "REQ-001-031",
       "type": "Rule",
       "owner_fr": "FR-001",
-      "title": "Admin handles account deletion requests as soft-delete",
+      "title": "Admin handles account deletion requests; the account is anonymised as FR-023 rules",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Handle account deletion requests (soft-delete)",
+        "statement": "Handle account deletion requests (anonymised as FR-023 rules)",
         "rationale": "prd.md line 50. Also stated in the PRD at line 33: \"Request account deletion (soft-delete handled by admin)\"."
       }
     },
@@ -40560,9 +40597,9 @@
       "owner_fr": "FR-001",
       "title": "Patient notified of significant admin changes by email",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Patient notified of every admin edit via email",
+        "statement": "Patient notified of every admin edit via email; the notice lists the changed fields.",
         "rationale": "prd.md line 1023. Also stated in the PRD at line 297: \"W4D1_2 --> W4D1_3[\"Patient receives notification of changes\"]\"."
       }
     },
@@ -40570,11 +40607,11 @@
       "id": "REQ-001-035",
       "type": "Rule",
       "owner_fr": "FR-001",
-      "title": "Patient can accept or reject admin changes",
+      "title": "The notice lists the changed fields; no review screen",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Patient can review the changes (the admin edit is final; the patient does not accept or reject it)",
+        "statement": "The patient receives a notice listing the changed fields; there is no review screen (the admin edit is final; the patient does not accept or reject it).",
         "rationale": "prd.md line 303. "
       }
     },
@@ -40666,11 +40703,11 @@
       "id": "REQ-001-043",
       "type": "Rule",
       "owner_fr": "FR-001",
-      "title": "Continue disabled until names valid and Terms accepted",
+      "title": "Continue disabled until names valid and Terms and Privacy Policy accepted",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Continue button disabled until both name fields are valid and Terms acceptance is checked",
+        "statement": "Continue button disabled until both name fields are valid and the Terms and Privacy Policy acceptance is checked",
         "rationale": "prd.md line 368. "
       }
     },
@@ -40678,12 +40715,12 @@
       "id": "REQ-001-044",
       "type": "Rule",
       "owner_fr": "FR-001",
-      "title": "First Terms acceptance recorded via FR-027",
+      "title": "Terms and Privacy Policy acceptances recorded at account creation via FR-027",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "On first acceptance, the app MUST record Terms acceptance via FR-027 acceptance tracking (document type, version, locale, acceptedAt, channel)",
-        "rationale": "prd.md line 391. "
+        "statement": "One checkbox covers the Terms & Conditions and the Privacy Policy. When the account is created (Screen 4), not before, the app MUST record both acceptances, each with the Current version (FR-027), via FR-027 acceptance tracking (document type, version, locale, acceptedAt, channel)",
+        "rationale": "prd.md Screen 3 and Screen 4; the acceptance record needs the patient identity, which exists only once the account is created."
       }
     },
     {
@@ -40967,11 +41004,11 @@
       "id": "REQ-001-068",
       "type": "Rule",
       "owner_fr": "FR-001",
-      "title": "Account status validated on login",
+      "title": "Account state decides the login outcome",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Account status validation for login attempts",
+        "statement": "When the credentials are correct, a Suspended account is blocked with a contact-support message; a Locked account is blocked until the FR-026 lock period ends and then login works again; an account with a deletion request open can log in (FR-023).",
         "rationale": "prd.md line 1016. "
       }
     },
@@ -40979,11 +41016,11 @@
       "id": "REQ-001-069",
       "type": "Rule",
       "owner_fr": "FR-001",
-      "title": "Verification status checked for account access",
+      "title": "Unverified email goes to the verification screen",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Verification status checking for account access",
+        "statement": "When the credentials are correct and the email is not verified, the patient goes to the verification screen and a new code is sent.",
         "rationale": "prd.md line 1057. "
       }
     },
@@ -41063,11 +41100,11 @@
       "id": "REQ-001-076",
       "type": "Rule",
       "owner_fr": "FR-001",
-      "title": "Successful reset creates a new session",
+      "title": "Password reset ends all sessions; the new session depends on account status",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Successful reset creates new session",
+        "statement": "A successful reset ends every existing session of the patient (REQ-001-182), then by account status: Active gets a new session; Locked becomes Active and gets a new session; Suspended has the password updated, gets no session, stays Suspended (REQ-016-223) and sees a neutral contact-support message.",
         "rationale": "prd.md line 613. Also stated in the PRD at line 229: \"System creates new authenticated session\"."
       }
     },
@@ -41125,9 +41162,9 @@
       "owner_fr": "FR-001",
       "title": "Email change requires OTP re-verification",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Email change triggers re-verification via 6-digit OTP",
+        "statement": "Email change triggers re-verification via 6-digit OTP sent to the new address (REQ-001-183).",
         "rationale": "prd.md line 675. Also stated in the PRD at line 626: \"Valid format; triggers 6-digit OTP re-verification if changed\"."
       }
     },
@@ -41233,9 +41270,9 @@
       "owner_fr": "FR-001",
       "title": "Account deletion is a queued request, not a hard delete",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Delete account submits a data deletion request (DSR) queued for Admin review per FR-023",
+        "statement": "Delete account submits a data deletion request (DSR) queued for Admin review per FR-023. An open inquiry in stage Inquiry or Quoted does not block it and is cancelled when an admin approves the request, not at submission; a refused request cancels nothing (REQ-003-103).",
         "rationale": "prd.md line 637. Also stated in the PRD at line 814: \"Delete account is a request flow (DSR) queued for Admin review and fulfillment per FR-023; no immediate hard-delete occurs in-app\"."
       }
     },
@@ -41243,11 +41280,11 @@
       "id": "REQ-001-091",
       "type": "Rule",
       "owner_fr": "FR-001",
-      "title": "Deletion blocked during active treatment or aftercare",
+      "title": "Deletion blocked during active treatment, aftercare or an inquiry at Accepted or later",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "If there is an active treatment or aftercare case, delete account is blocked with guidance to contact support: the system shows the message “Account deletion is unavailable during active care; contact support.”, and the blocking message on the Delete Account screen includes a Contact support link.",
+        "statement": "If there is an active treatment or aftercare case, or an inquiry at the Accepted stage or later (REQ-003-103), delete account is blocked with guidance to contact support: the system shows the message \"Account deletion is unavailable during active care; contact support.\", and the blocking message on the Delete Account screen includes a Contact support link.",
         "rationale": "prd.md lines 639, 648, 843 (Profile Overview business rule, acceptance scenario 3 with the message, Delete Account Blocking Message row with the Contact support link)."
       }
     },
@@ -41279,11 +41316,11 @@
       "id": "REQ-001-094",
       "type": "Rule",
       "owner_fr": "FR-001",
-      "title": "Verified deletion requests completed within 30 days",
+      "title": "Deletion requests completed within 30 days of submission",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "\"Verified deletion requests completed within 30 calendar days (SLA)\"",
+        "statement": "\"Deletion requests are completed within 30 calendar days of submission\" (REQ-023-041)",
         "rationale": "Screen field row, prd.md line 846. "
       }
     },
@@ -41365,9 +41402,9 @@
       "owner_fr": "FR-001",
       "title": "Re-verification is a shared component",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "This screen is a shared component reused across all sensitive actions requiring re-auth (currently: Delete Account Screen 16; extensible to future sensitive actions)",
+        "statement": "This screen is a shared component reused across all sensitive actions requiring re-auth (currently: Edit Profile Screen 14 when the email changes, and Delete Account Screen 16; extensible to future sensitive actions)",
         "rationale": "prd.md line 939. "
       }
     },
@@ -41411,11 +41448,11 @@
       "id": "REQ-001-105",
       "type": "Rule",
       "owner_fr": "FR-001",
-      "title": "Security notifications cannot be disabled",
+      "title": "Mandatory notices cannot be disabled",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Security-critical notifications (email verification, password reset, account security alerts) are mandatory and cannot be disabled — not affected by global toggles",
+        "statement": "Mandatory notices as FR-020 defines them (REQ-020-038) are always sent and are not affected by global toggles",
         "rationale": "prd.md line 730. Also stated in the PRD at line 682: \"\"Security notifications (password reset, account changes) are always sent and cannot be disabled.\"\"."
       }
     },
@@ -41425,9 +41462,9 @@
       "owner_fr": "FR-001",
       "title": "System event notifications sent per FR-020",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System event notifications (inquiry stage changes including Inquiry Cancelled, quote received, booking confirmed, payment events, aftercare reminders) are automatically sent per FR-020; user cannot disable individual events in MVP",
+        "statement": "All other system event notifications (inquiry stage changes including Inquiry Cancelled, quote received, booking confirmed, payment events, aftercare reminders) are sent per FR-020 and follow the channel toggles; user cannot disable individual events in MVP",
         "rationale": "prd.md line 731. "
       }
     },
@@ -41507,11 +41544,11 @@
       "id": "REQ-001-113",
       "type": "Rule",
       "owner_fr": "FR-001",
-      "title": "Legal content read-only and matches latest published",
+      "title": "Legal content read-only and matches the Current version",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Policy content is read-only and must match the latest published Privacy Policy for the patient app (FR-027)",
+        "statement": "Policy content is read-only and must match the Current version of the Privacy Policy for the patient app (FR-027)",
         "rationale": "prd.md line 788. Also stated in the PRD at line 719: \"Privacy Policy is read-only static content sourced from the Legal Content system (FR-027)\"; line 774: \"Terms content is read-only and must match the latest published Terms & Conditions for the patient app (FR-027)\"."
       }
     },
@@ -41869,9 +41906,9 @@
       "owner_fr": "FR-001",
       "title": "Terms and Privacy Policy links keep the name form state",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "The Terms and Conditions and Privacy Policy links on the name screen open the latest published documents (FR-027) and do not disrupt the form state.",
+        "statement": "The Terms and Conditions and Privacy Policy links on the name screen open the Current version of each document (FR-027) and do not disrupt the form state.",
         "rationale": "Proposed from prd.md line 359-360 (table cells, not a PRD sentence)."
       }
     },
@@ -42283,6 +42320,114 @@
       "attrs": {
         "statement": "The confirmation message on the Password Changed screen must not include attempt limits or sensitive details.",
         "rationale": "prd.md line 903 (Password Changed Confirmation: Message Text row)."
+      }
+    },
+    {
+      "id": "REQ-001-180",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Wrong codes share the failed-login limit; the code then stops working",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A wrong 6-digit code (registration, password reset, re-verification) counts toward the same limit as failed logins (the FR-026 max login attempts setting, default 5). After the limit the code stops working and the patient must request a new one; the resend cooldown applies. There is no separate setting.",
+        "rationale": "FR-001 PRD Screens 5, 11 and 18; owner default 255 (other option: a separate new setting)."
+      }
+    },
+    {
+      "id": "REQ-001-181",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Duplicate email at registration gets the neutral result; an unverified account may register again",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A registration with an email that already has a verified account gets the same neutral \"check your email\" result as a new email and reveals nothing on screen; the system emails the existing owner that an account already exists. An unverified account may register again with the same email: the old unverified record is replaced and a new code is sent.",
+        "rationale": "FR-001 PRD Screen 4 and Edge Cases; consistent with the neutral reset message (Workflow 3, C3)."
+      }
+    },
+    {
+      "id": "REQ-001-182",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Password reset, admin reset and suspension end every existing session",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A password reset by the patient, a password reset by an admin and a suspension each end all existing sessions of the patient on every device, as Change Password does (REQ-001-119). After a patient reset a new session starts only where the account status allows it (REQ-001-076).",
+        "rationale": "FR-001 PRD Screen 12 and Login Rules; owner default 256 (other option: sessions end only on Change Password). FR-016 has no session-ending rule for suspension or admin reset."
+      }
+    },
+    {
+      "id": "REQ-001-183",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Email change: the code goes to the new address and the old email stays the login email until confirmed",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "When the patient changes the email on the profile, the 6-digit code is sent to the NEW address. The login email stays the old address, and the new one is held as pending (ENT-patient.pending_email), until the code is confirmed. After confirmation the new address becomes the login email, the pending value is cleared and a notice goes to the old address.",
+        "rationale": "FR-001 PRD Screen 14 and Screen 18."
+      }
+    },
+    {
+      "id": "REQ-001-184",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Admin email change: notice to the old address, the patient confirms the new address at the next login",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "An admin may change a patient's email. The new address is saved as unverified, a notice goes to the old address, and at the patient's next login a code is sent to the new address and the patient confirms it before the session starts.",
+        "rationale": "FR-001 PRD Admin Editability Rules; owner default 257 (other option: only the patient can change the email). FR-016 only says admins may update the email with justification and audit (REQ-016-013); the FR-016 side is queued."
+      }
+    },
+    {
+      "id": "REQ-001-185",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Settings Main has a Consent row and a Language row",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Settings Main (Screen 15) has a Consent row that opens the general Consent view (FR-027, REQ-027-016) and a Language row that opens the app language choice (FR-021, REQ-021-002, REQ-001-165). FR-001 owns Settings Main and the Notification, Privacy and Terms sub-screens; the two opened views are owned by FR-027 and FR-021.",
+        "rationale": "FR-001 PRD Screen 15."
+      }
+    },
+    {
+      "id": "REQ-001-186",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Delete Account screen shows the free-text reason, the extra-verification input and the request status",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Screen 16 shows three conditional blocks: the optional free-text reason (max 500 characters) when the chosen reason requires an explanation (REQ-026-092); the additional-verification input while the request is in Verification Required (REQ-023-034); and a read-only request status line while a request is open (REQ-023-046). The Request Deletion button is hidden while a request is open (REQ-023-037). No new screen.",
+        "rationale": "FR-001 PRD Screen 16."
+      }
+    },
+    {
+      "id": "REQ-001-187",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "First sign-in consent gate",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "After a successful login, a patient who has not given the general consent is shown the FR-027 consent prompt before the main app (REQ-027-062). A patient who does not accept stays in the limited state of REQ-027-033.",
+        "rationale": "FR-001 PRD Workflow 2 and Screen 9."
+      }
+    },
+    {
+      "id": "REQ-001-188",
+      "type": "Rule",
+      "owner_fr": "FR-001",
+      "title": "Deactivated is a reserved account status value",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The account status list keeps the value Deactivated as a reserved value: nothing sets it, nothing shows it and it has no behaviour. Account status changes only through the FR-016 flows.",
+        "rationale": "FR-001 PRD Screen 19; owner default 254 (other option: remove the value from the list)."
       }
     },
     {
@@ -106161,7 +106306,7 @@
       "owner_fr": "FR-001",
       "title": "Patient enters first and last name",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow Workflow 1 step 2"
       }
@@ -106172,7 +106317,7 @@
       "owner_fr": "FR-001",
       "title": "Patient creates the account with email and password",
       "status": "active",
-      "version": 3,
+      "version": 5,
       "attrs": {
         "prd_ref": "Main Flow Workflow 1 step 3"
       }
@@ -106183,7 +106328,7 @@
       "owner_fr": "FR-001",
       "title": "Patient enters the 6-digit verification code",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow Workflow 1 step 4"
       }
@@ -106260,7 +106405,7 @@
       "owner_fr": "FR-001",
       "title": "Patient enters email and password and taps Login",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow Workflow 2 step 2"
       }
@@ -106271,7 +106416,7 @@
       "owner_fr": "FR-001",
       "title": "System authenticates, creates the session, redirects to the dashboard and logs the login",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow Workflow 2 step 3"
       }
@@ -106293,7 +106438,7 @@
       "owner_fr": "FR-001",
       "title": "Patient enters the 6-digit reset code",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow Workflow 3 step 2"
       }
@@ -106313,9 +106458,9 @@
       "id": "STP-001-024",
       "type": "Step",
       "owner_fr": "FR-001",
-      "title": "System validates password strength, updates the password, creates a session and redirects",
+      "title": "System validates password strength, updates the password, ends all existing sessions and creates a new session unless the account is Suspended",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow Workflow 3 step 4"
       }
@@ -106326,7 +106471,7 @@
       "owner_fr": "FR-001",
       "title": "Patient opens the profile section",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow Workflow 4 step 1"
       }
@@ -106337,7 +106482,7 @@
       "owner_fr": "FR-001",
       "title": "Patient edits and saves profile fields",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow Workflow 4 step 2"
       }
@@ -106392,7 +106537,7 @@
       "owner_fr": "FR-001",
       "title": "System allows the Resend code option",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A2 step 1"
       }
@@ -106491,7 +106636,7 @@
       "owner_fr": "FR-001",
       "title": "System logs the security event",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step 3"
       }
@@ -106579,7 +106724,7 @@
       "owner_fr": "FR-001",
       "title": "Admin edits the patient profile through the admin platform",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow D1 step 1"
       }
@@ -106610,9 +106755,9 @@
       "id": "STP-001-124",
       "type": "Step",
       "owner_fr": "FR-001",
-      "title": "Patient reviews the changes (the admin edit is final)",
+      "title": "The notice lists the changed fields (the admin edit is final; no review screen)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow D1 step 4"
       }
@@ -106645,7 +106790,7 @@
       "owner_fr": "FR-001",
       "title": "Patient picks a row on the Settings Main screen",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Screen 15 Data Fields"
       }
@@ -106656,7 +106801,7 @@
       "owner_fr": "FR-001",
       "title": "Patient picks Change Password or Privacy Policy on the Privacy and Security menu",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Screen 15b Data Fields"
       }
@@ -106692,6 +106837,193 @@
       "version": 1,
       "attrs": {
         "prd_ref": "Screen 17a Data Fields"
+      }
+    },
+    {
+      "id": "STP-001-132",
+      "type": "Step",
+      "owner_fr": "FR-001",
+      "title": "System checks the account state when the credentials are correct",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B3"
+      }
+    },
+    {
+      "id": "STP-001-133",
+      "type": "Step",
+      "owner_fr": "FR-001",
+      "title": "System blocks a Suspended patient and shows the contact-support message",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B3"
+      }
+    },
+    {
+      "id": "STP-001-134",
+      "type": "Step",
+      "owner_fr": "FR-001",
+      "title": "System sends a patient with an unverified email to the verification screen with a new code",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B3"
+      }
+    },
+    {
+      "id": "STP-001-135",
+      "type": "Step",
+      "owner_fr": "FR-001",
+      "title": "When the lock period ends, login works again",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 step 4"
+      }
+    },
+    {
+      "id": "STP-001-136",
+      "type": "Step",
+      "owner_fr": "FR-001",
+      "title": "System keeps a Suspended patient without a session and shows the neutral contact-support message",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow C4"
+      }
+    },
+    {
+      "id": "STP-001-137",
+      "type": "Step",
+      "owner_fr": "FR-001",
+      "title": "System sets a Locked account to Active after the reset",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow C4"
+      }
+    },
+    {
+      "id": "STP-001-138",
+      "type": "Step",
+      "owner_fr": "FR-001",
+      "title": "System shows the neutral check-your-email result and emails the existing owner that an account already exists",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 4 Business Rules"
+      }
+    },
+    {
+      "id": "STP-001-139",
+      "type": "Step",
+      "owner_fr": "FR-001",
+      "title": "System replaces the old unverified record with the new registration and sends a new code",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 4 Business Rules"
+      }
+    },
+    {
+      "id": "STP-001-140",
+      "type": "Step",
+      "owner_fr": "FR-001",
+      "title": "System shows a patient without the general consent the consent prompt after login",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "prd_ref": "Workflow 2 step 3, Screen 9 Business Rules"
+      }
+    },
+    {
+      "id": "STP-001-141",
+      "type": "Step",
+      "owner_fr": "FR-001",
+      "title": "System sends the 6-digit code to the new email address and keeps the old email as the login email until it is confirmed",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 14 Business Rules"
+      }
+    },
+    {
+      "id": "STP-001-142",
+      "type": "Step",
+      "owner_fr": "FR-001",
+      "title": "Patient confirms the code; the new address becomes the login email and the old address gets a notice",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 14 Business Rules"
+      }
+    },
+    {
+      "id": "STP-001-143",
+      "type": "Step",
+      "owner_fr": "FR-001",
+      "title": "Patient switches the Email or Push channel on or off",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 15a Data Fields"
+      }
+    },
+    {
+      "id": "STP-001-144",
+      "type": "Step",
+      "owner_fr": "FR-001",
+      "title": "Patient reads the Privacy Policy",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 15c Data Fields"
+      }
+    },
+    {
+      "id": "STP-001-145",
+      "type": "Step",
+      "owner_fr": "FR-001",
+      "title": "Patient reads the Terms and Conditions",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 15d Data Fields"
+      }
+    },
+    {
+      "id": "STP-001-146",
+      "type": "Step",
+      "owner_fr": "FR-001",
+      "title": "Patient verifies identity with the password or an email code, then returns to the calling screen",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 18 Data Fields"
+      }
+    },
+    {
+      "id": "STP-001-147",
+      "type": "Step",
+      "owner_fr": "FR-001",
+      "title": "Patient logs out; session tokens are revoked and the Landing screen shows",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 13 Data Fields (Logout)"
+      }
+    },
+    {
+      "id": "STP-001-148",
+      "type": "Step",
+      "owner_fr": "FR-001",
+      "title": "System sends the old address a notice and saves the new address as unverified",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Admin Editability Rules, Edit Capabilities"
       }
     },
     {
@@ -147630,6 +147962,14 @@
       "calculated_by": null
     },
     {
+      "id": "ENT-patient.pending_email",
+      "entity_id": "ENT-patient",
+      "name": "pending_email",
+      "data_type": "text",
+      "required": false,
+      "calculated_by": null
+    },
+    {
       "id": "ENT-patient.phone",
       "entity_id": "ENT-patient",
       "name": "phone",
@@ -172550,6 +172890,12 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-001-login-outcomes",
+      "verb": "starts at",
+      "to_id": "STP-001-132",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-001-password-reset",
       "verb": "starts at",
       "to_id": "STP-001-021",
@@ -172571,6 +172917,12 @@
       "from_id": "FLW-001-registration-abandoned",
       "verb": "starts at",
       "to_id": "STP-001-041",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-001-reset-by-status",
+      "verb": "starts at",
+      "to_id": "STP-001-136",
       "attrs": {}
     },
     {
@@ -175254,7 +175606,7 @@
       "verb": "active in",
       "to_id": "STG-patient-01-registered",
       "attrs": {
-        "rules": 44
+        "rules": 46
       },
       "derived": true
     },
@@ -175272,7 +175624,7 @@
       "verb": "active in",
       "to_id": "STG-patient-03-active",
       "attrs": {
-        "rules": 137
+        "rules": 144
       },
       "derived": true
     },
@@ -175282,6 +175634,15 @@
       "to_id": "STG-patient-05-deleted",
       "attrs": {
         "rules": 6
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-001",
+      "verb": "active in",
+      "to_id": "STG-patient-06-deletion-requested",
+      "attrs": {
+        "rules": 1
       },
       "derived": true
     },
@@ -182074,7 +182435,43 @@
     {
       "from_id": "REQ-001-044",
       "verb": "applies to",
+      "to_id": "ENT-legal-acceptance.accepted_at",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-044",
+      "verb": "applies to",
+      "to_id": "ENT-legal-acceptance.channel",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-044",
+      "verb": "applies to",
+      "to_id": "ENT-legal-acceptance.document_type",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-044",
+      "verb": "applies to",
+      "to_id": "ENT-legal-acceptance.locale",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-044",
+      "verb": "applies to",
+      "to_id": "ENT-legal-acceptance.version",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-044",
+      "verb": "applies to",
       "to_id": "SCR-001-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-044",
+      "verb": "applies to",
+      "to_id": "SCR-001-02",
       "attrs": {}
     },
     {
@@ -183551,6 +183948,12 @@
       "from_id": "REQ-001-101",
       "verb": "applies at",
       "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-101",
+      "verb": "applies to",
+      "to_id": "SCR-001-12",
       "attrs": {}
     },
     {
@@ -185127,6 +185530,252 @@
     },
     {
       "from_id": "REQ-001-179",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-180",
+      "verb": "applies at",
+      "to_id": "STG-patient-01-registered",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-180",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-180",
+      "verb": "applies to",
+      "to_id": "ENT-otp-code",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-180",
+      "verb": "applies to",
+      "to_id": "ENT-otp-code.attempts",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-180",
+      "verb": "applies to",
+      "to_id": "SCR-001-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-180",
+      "verb": "applies to",
+      "to_id": "SCR-001-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-180",
+      "verb": "applies to",
+      "to_id": "SCR-001-18",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-180",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-180",
+      "verb": "governed by",
+      "to_id": "SET-max-login-attempts",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-181",
+      "verb": "applies at",
+      "to_id": "STG-patient-01-registered",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-181",
+      "verb": "applies to",
+      "to_id": "ENT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-181",
+      "verb": "applies to",
+      "to_id": "SCR-001-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-181",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-182",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-182",
+      "verb": "applies to",
+      "to_id": "ENT-patient-session",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-182",
+      "verb": "applies to",
+      "to_id": "SCR-001-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-182",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-183",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-183",
+      "verb": "applies to",
+      "to_id": "ENT-patient.email",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-183",
+      "verb": "applies to",
+      "to_id": "ENT-patient.pending_email",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-183",
+      "verb": "applies to",
+      "to_id": "SCR-001-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-183",
+      "verb": "applies to",
+      "to_id": "SCR-001-18",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-183",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-184",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-184",
+      "verb": "applies to",
+      "to_id": "ENT-patient.email",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-184",
+      "verb": "applies to",
+      "to_id": "ENT-patient.email_verified",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-184",
+      "verb": "applies to",
+      "to_id": "SCR-001-19",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-184",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-185",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-185",
+      "verb": "applies to",
+      "to_id": "SCR-001-24",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-185",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-186",
+      "verb": "applies at",
+      "to_id": "STG-patient-06-deletion-requested",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-186",
+      "verb": "applies to",
+      "to_id": "ENT-deletion-request.reason",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-186",
+      "verb": "applies to",
+      "to_id": "SCR-001-16",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-186",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-187",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-187",
+      "verb": "applies to",
+      "to_id": "SCR-001-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-187",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-188",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-188",
+      "verb": "applies to",
+      "to_id": "ENT-patient.account_status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-001-188",
       "verb": "decided by",
       "to_id": "SRC-PRD-001",
       "attrs": {}
@@ -357406,12 +358055,6 @@
     },
     {
       "from_id": "STP-001-002",
-      "verb": "applies",
-      "to_id": "REQ-001-044",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-001-002",
       "verb": "at",
       "to_id": "STG-patient-01-registered",
       "attrs": {}
@@ -357438,6 +358081,12 @@
       "from_id": "STP-001-003",
       "verb": "applies",
       "to_id": "REQ-001-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-003",
+      "verb": "applies",
+      "to_id": "REQ-001-044",
       "attrs": {}
     },
     {
@@ -357510,6 +358159,33 @@
     },
     {
       "from_id": "STP-001-003",
+      "verb": "next",
+      "to_id": "STP-001-138",
+      "attrs": {
+        "label": "Email already has a verified account",
+        "condition": "REQ-001-181"
+      }
+    },
+    {
+      "from_id": "STP-001-003",
+      "verb": "next",
+      "to_id": "STP-001-139",
+      "attrs": {
+        "label": "Email has an unverified account",
+        "condition": "REQ-001-181"
+      }
+    },
+    {
+      "from_id": "STP-001-003",
+      "verb": "next",
+      "to_id": "STP-027-011",
+      "attrs": {
+        "label": "Terms and Privacy Policy acceptance recorded at account creation",
+        "condition": "REQ-027-062"
+      }
+    },
+    {
+      "from_id": "STP-001-003",
       "verb": "on",
       "to_id": "SCR-001-02",
       "attrs": {}
@@ -357536,6 +358212,12 @@
       "from_id": "STP-001-004",
       "verb": "applies",
       "to_id": "REQ-001-050",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-004",
+      "verb": "applies",
+      "to_id": "REQ-001-180",
       "attrs": {}
     },
     {
@@ -357832,6 +358514,14 @@
     },
     {
       "from_id": "STP-001-012",
+      "verb": "next",
+      "to_id": "STP-001-132",
+      "attrs": {
+        "label": "Credentials correct, account not Active"
+      }
+    },
+    {
+      "from_id": "STP-001-012",
       "verb": "on",
       "to_id": "SCR-001-07",
       "attrs": {}
@@ -357856,6 +358546,12 @@
     },
     {
       "from_id": "STP-001-013",
+      "verb": "applies",
+      "to_id": "REQ-001-068",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-013",
       "verb": "at",
       "to_id": "STG-patient-03-active",
       "attrs": {}
@@ -357865,6 +358561,15 @@
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-001-013",
+      "verb": "next",
+      "to_id": "STP-001-140",
+      "attrs": {
+        "label": "Patient has not given the general consent",
+        "condition": "REQ-001-187"
+      }
     },
     {
       "from_id": "STP-001-021",
@@ -357926,6 +358631,12 @@
       "from_id": "STP-001-022",
       "verb": "applies",
       "to_id": "REQ-001-075",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-022",
+      "verb": "applies",
+      "to_id": "REQ-001-180",
       "attrs": {}
     },
     {
@@ -358031,6 +358742,12 @@
     {
       "from_id": "STP-001-024",
       "verb": "applies",
+      "to_id": "REQ-001-182",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-024",
+      "verb": "applies",
       "to_id": "REQ-SYS-007",
       "attrs": {}
     },
@@ -358045,6 +358762,24 @@
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-001-024",
+      "verb": "next",
+      "to_id": "STP-001-136",
+      "attrs": {
+        "label": "Suspended",
+        "condition": "REQ-001-076"
+      }
+    },
+    {
+      "from_id": "STP-001-024",
+      "verb": "next",
+      "to_id": "STP-001-137",
+      "attrs": {
+        "label": "Locked",
+        "condition": "REQ-001-076"
+      }
     },
     {
       "from_id": "STP-001-031",
@@ -358069,6 +358804,14 @@
       "verb": "next",
       "to_id": "STP-001-032",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-001-031",
+      "verb": "next",
+      "to_id": "STP-001-147",
+      "attrs": {
+        "label": "Logout"
+      }
     },
     {
       "from_id": "STP-001-031",
@@ -358102,6 +358845,12 @@
     },
     {
       "from_id": "STP-001-032",
+      "verb": "applies",
+      "to_id": "REQ-001-183",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-032",
       "verb": "at",
       "to_id": "STG-patient-03-active",
       "attrs": {}
@@ -358117,6 +358866,24 @@
       "verb": "next",
       "to_id": "STP-001-033",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-001-032",
+      "verb": "next",
+      "to_id": "STP-001-141",
+      "attrs": {
+        "label": "Email changed",
+        "condition": "REQ-001-183"
+      }
+    },
+    {
+      "from_id": "STP-001-032",
+      "verb": "next",
+      "to_id": "STP-001-146",
+      "attrs": {
+        "label": "Email changed and last sign-in check older than 5 minutes",
+        "condition": "REQ-001-142"
+      }
     },
     {
       "from_id": "STP-001-032",
@@ -358224,6 +358991,12 @@
       "from_id": "STP-001-051",
       "verb": "applies",
       "to_id": "REQ-001-049",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-051",
+      "verb": "applies",
+      "to_id": "REQ-001-170",
       "attrs": {}
     },
     {
@@ -358522,6 +359295,12 @@
     },
     {
       "from_id": "STP-001-083",
+      "verb": "next",
+      "to_id": "STP-001-135",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-083",
       "verb": "on",
       "to_id": "SCR-001-07",
       "attrs": {}
@@ -358756,6 +359535,15 @@
     },
     {
       "from_id": "STP-001-121",
+      "verb": "next",
+      "to_id": "STP-001-148",
+      "attrs": {
+        "label": "Email changed",
+        "condition": "REQ-001-184"
+      }
+    },
+    {
+      "from_id": "STP-001-121",
       "verb": "on",
       "to_id": "SCR-001-19",
       "attrs": {}
@@ -358942,6 +359730,12 @@
     },
     {
       "from_id": "STP-001-127",
+      "verb": "applies",
+      "to_id": "REQ-001-185",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-127",
       "verb": "at",
       "to_id": "STG-patient-03-active",
       "attrs": {}
@@ -358957,6 +359751,22 @@
       "verb": "next",
       "to_id": "STP-001-128",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-001-127",
+      "verb": "next",
+      "to_id": "STP-001-143",
+      "attrs": {
+        "label": "Notification Settings"
+      }
+    },
+    {
+      "from_id": "STP-001-127",
+      "verb": "next",
+      "to_id": "STP-001-145",
+      "attrs": {
+        "label": "Terms and Conditions"
+      }
     },
     {
       "from_id": "STP-001-127",
@@ -358999,6 +359809,14 @@
       "verb": "next",
       "to_id": "STP-001-129",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-001-128",
+      "verb": "next",
+      "to_id": "STP-001-144",
+      "attrs": {
+        "label": "Privacy Policy"
+      }
     },
     {
       "from_id": "STP-001-128",
@@ -359124,6 +359942,594 @@
       "from_id": "STP-001-131",
       "verb": "on",
       "to_id": "SCR-001-26",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-132",
+      "verb": "applies",
+      "to_id": "REQ-001-068",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-132",
+      "verb": "applies",
+      "to_id": "REQ-001-069",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-132",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-132",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-132",
+      "verb": "next",
+      "to_id": "STP-001-081",
+      "attrs": {
+        "label": "Locked",
+        "condition": "REQ-001-068"
+      }
+    },
+    {
+      "from_id": "STP-001-132",
+      "verb": "next",
+      "to_id": "STP-001-133",
+      "attrs": {
+        "label": "Suspended",
+        "condition": "REQ-001-068"
+      }
+    },
+    {
+      "from_id": "STP-001-132",
+      "verb": "next",
+      "to_id": "STP-001-134",
+      "attrs": {
+        "label": "Email not verified",
+        "condition": "REQ-001-069",
+        "back": true
+      }
+    },
+    {
+      "from_id": "STP-001-132",
+      "verb": "on",
+      "to_id": "SCR-001-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-133",
+      "verb": "applies",
+      "to_id": "REQ-001-068",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-133",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-133",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-133",
+      "verb": "on",
+      "to_id": "SCR-001-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-134",
+      "verb": "applies",
+      "to_id": "REQ-001-050",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-134",
+      "verb": "applies",
+      "to_id": "REQ-001-069",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-134",
+      "verb": "at",
+      "to_id": "STG-patient-01-registered",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-134",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-134",
+      "verb": "next",
+      "to_id": "STP-001-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-134",
+      "verb": "on",
+      "to_id": "SCR-001-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-135",
+      "verb": "applies",
+      "to_id": "REQ-001-066",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-135",
+      "verb": "applies",
+      "to_id": "REQ-001-068",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-135",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-135",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-135",
+      "verb": "on",
+      "to_id": "SCR-001-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-136",
+      "verb": "applies",
+      "to_id": "REQ-001-076",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-136",
+      "verb": "applies",
+      "to_id": "REQ-016-223",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-136",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-136",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-136",
+      "verb": "on",
+      "to_id": "SCR-001-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-137",
+      "verb": "applies",
+      "to_id": "REQ-001-076",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-137",
+      "verb": "applies",
+      "to_id": "REQ-016-223",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-137",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-137",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-137",
+      "verb": "on",
+      "to_id": "SCR-001-10",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-138",
+      "verb": "applies",
+      "to_id": "REQ-001-181",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-138",
+      "verb": "at",
+      "to_id": "STG-patient-01-registered",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-138",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-138",
+      "verb": "next",
+      "to_id": "STP-001-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-138",
+      "verb": "on",
+      "to_id": "SCR-001-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-139",
+      "verb": "applies",
+      "to_id": "REQ-001-181",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-139",
+      "verb": "at",
+      "to_id": "STG-patient-01-registered",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-139",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-139",
+      "verb": "next",
+      "to_id": "STP-001-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-139",
+      "verb": "on",
+      "to_id": "SCR-001-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-140",
+      "verb": "applies",
+      "to_id": "REQ-001-187",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-140",
+      "verb": "applies",
+      "to_id": "REQ-027-062",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-140",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-140",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-140",
+      "verb": "next",
+      "to_id": "STP-027-010",
+      "attrs": {
+        "label": "Consent prompt",
+        "condition": "REQ-027-062"
+      }
+    },
+    {
+      "from_id": "STP-001-140",
+      "verb": "on",
+      "to_id": "SCR-001-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-141",
+      "verb": "applies",
+      "to_id": "REQ-001-081",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-141",
+      "verb": "applies",
+      "to_id": "REQ-001-183",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-141",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-141",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-141",
+      "verb": "next",
+      "to_id": "STP-001-142",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-141",
+      "verb": "on",
+      "to_id": "SCR-001-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-142",
+      "verb": "applies",
+      "to_id": "REQ-001-183",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-142",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-142",
+      "verb": "done by",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-142",
+      "verb": "on",
+      "to_id": "SCR-001-12",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-143",
+      "verb": "applies",
+      "to_id": "REQ-001-105",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-143",
+      "verb": "applies",
+      "to_id": "REQ-001-106",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-143",
+      "verb": "applies",
+      "to_id": "REQ-001-107",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-143",
+      "verb": "applies",
+      "to_id": "REQ-001-109",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-143",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-143",
+      "verb": "done by",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-143",
+      "verb": "on",
+      "to_id": "SCR-001-13",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-144",
+      "verb": "applies",
+      "to_id": "REQ-001-113",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-144",
+      "verb": "applies",
+      "to_id": "REQ-001-114",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-144",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-144",
+      "verb": "done by",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-144",
+      "verb": "on",
+      "to_id": "SCR-001-14",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-145",
+      "verb": "applies",
+      "to_id": "REQ-001-113",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-145",
+      "verb": "applies",
+      "to_id": "REQ-001-114",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-145",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-145",
+      "verb": "done by",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-145",
+      "verb": "on",
+      "to_id": "SCR-001-15",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-146",
+      "verb": "applies",
+      "to_id": "REQ-001-098",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-146",
+      "verb": "applies",
+      "to_id": "REQ-001-099",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-146",
+      "verb": "applies",
+      "to_id": "REQ-001-100",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-146",
+      "verb": "applies",
+      "to_id": "REQ-001-142",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-146",
+      "verb": "applies",
+      "to_id": "REQ-001-180",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-146",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-146",
+      "verb": "done by",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-146",
+      "verb": "next",
+      "to_id": "STP-001-141",
+      "attrs": {
+        "label": "Back to Edit Profile"
+      }
+    },
+    {
+      "from_id": "STP-001-146",
+      "verb": "on",
+      "to_id": "SCR-001-18",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-147",
+      "verb": "applies",
+      "to_id": "REQ-001-088",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-147",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-147",
+      "verb": "done by",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-147",
+      "verb": "next",
+      "to_id": "STP-001-001",
+      "attrs": {
+        "label": "Back to the Landing screen",
+        "back": true
+      }
+    },
+    {
+      "from_id": "STP-001-147",
+      "verb": "on",
+      "to_id": "SCR-001-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-148",
+      "verb": "applies",
+      "to_id": "REQ-001-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-148",
+      "verb": "applies",
+      "to_id": "REQ-001-184",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-148",
+      "verb": "at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-148",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-001-148",
+      "verb": "on",
+      "to_id": "SCR-001-19",
       "attrs": {}
     },
     {
@@ -446917,6 +448323,102 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-152931-5a1556fe",
+      "at": "2026-11-24T15:29:31.719663+00:00",
+      "changed_by": "controller",
+      "reason": "FR-001 logic review pass 1 follow-up: clear the open hand-off markers on STP-001-003 and STP-001-140, whose links to FR-027 are now stitched as next edges",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "STP-001-003",
+        "STP-001-140"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 2
+    },
+    {
+      "id": "cs-20261124-152741-df83c514",
+      "at": "2026-11-24T15:27:41.301073+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-001 logic review pass 1: deletion request aligned with FR-003 and FR-023 (inquiries cancelled at approval, Accepted-or-later block, 30 days from submission, Screen 16 conditional blocks), account status only through FR-016 (Deactivated reserved), login and password reset outcomes by account state, sessions end on reset and suspension, wrong-code limit shares the login limit, neutral duplicate-email registration, Current version wording and Terms plus Privacy acceptance at account creation, first-sign-in consent gate, Settings Consent and Language rows, mandatory notices as FR-020 defines them, changed-fields notice, email change and admin email change confirmed by a code to the new address, steps for Screens 13, 14, 15, 18 and Logout.",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-patient.pending_email",
+        "FLW-001-login-outcomes",
+        "FLW-001-reset-by-status",
+        "REQ-001-180",
+        "REQ-001-181",
+        "REQ-001-182",
+        "REQ-001-183",
+        "REQ-001-184",
+        "REQ-001-185",
+        "REQ-001-186",
+        "REQ-001-187",
+        "REQ-001-188",
+        "STP-001-132",
+        "STP-001-133",
+        "STP-001-134",
+        "STP-001-135",
+        "STP-001-136",
+        "STP-001-137",
+        "STP-001-138",
+        "STP-001-139",
+        "STP-001-140",
+        "STP-001-141",
+        "STP-001-142",
+        "STP-001-143",
+        "STP-001-144",
+        "STP-001-145",
+        "STP-001-146",
+        "STP-001-147",
+        "STP-001-148"
+      ],
+      "nodes_updated": [
+        "ENT-patient.account_status",
+        "REQ-001-025",
+        "REQ-001-026",
+        "REQ-001-027",
+        "REQ-001-028",
+        "REQ-001-029",
+        "REQ-001-031",
+        "REQ-001-034",
+        "REQ-001-035",
+        "REQ-001-043",
+        "REQ-001-044",
+        "REQ-001-068",
+        "REQ-001-069",
+        "REQ-001-076",
+        "REQ-001-081",
+        "REQ-001-090",
+        "REQ-001-091",
+        "REQ-001-094",
+        "REQ-001-101",
+        "REQ-001-105",
+        "REQ-001-106",
+        "REQ-001-113",
+        "REQ-001-144",
+        "STP-001-002",
+        "STP-001-003",
+        "STP-001-004",
+        "STP-001-012",
+        "STP-001-013",
+        "STP-001-022",
+        "STP-001-024",
+        "STP-001-031",
+        "STP-001-032",
+        "STP-001-051",
+        "STP-001-083",
+        "STP-001-121",
+        "STP-001-124",
+        "STP-001-127",
+        "STP-001-128"
+      ],
+      "edges_added": 168,
+      "edges_removed": 1,
+      "rows": 371
+    },
     {
       "id": "cs-20261124-151820-cac6d7f7",
       "at": "2026-11-24T15:18:20.790562+00:00",

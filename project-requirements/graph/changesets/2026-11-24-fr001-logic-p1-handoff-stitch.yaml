@@ -1,0 +1,6 @@
+# FR-001 logic review pass 1 follow-up: the two FR-001 hand-offs to FR-027 are stitched as 'next' links (STP-001-003 next STP-027-011, STP-001-140 next STP-027-010), so their open hand-off markers are cleared.
+reason: "FR-001 logic review pass 1 follow-up: clear the open hand-off markers on STP-001-003 and STP-001-140, whose links to FR-027 are now stitched as next edges"
+by: controller
+operations:
+  - {"op": "update_node", "id": "STP-001-003", "attrs": {"handoff_to": null}}
+  - {"op": "update_node", "id": "STP-001-140", "attrs": {"handoff_to": null}}
