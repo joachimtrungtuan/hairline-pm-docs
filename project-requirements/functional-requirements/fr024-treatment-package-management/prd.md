@@ -65,7 +65,8 @@ This module directly impacts provider quote submission capabilities and ensures 
 
 **In Scope**:
 
-- System notifications when admin saves a new treatment as Active (all active providers notified) (REQ-024-041)
+- System notifications the first time a treatment becomes Active, by any route (all active providers notified) (REQ-024-041)
+- System notifications when an Inactive treatment is switched back to Active (only providers that have a pricing configuration for it notified) (REQ-024-042)
 - System notifications when admin deactivates treatments (providers who offer the treatment notified) (REQ-024-043)
 - Provider receives confirmation when packages are successfully created/updated (REQ-024-044)
 
@@ -129,7 +130,7 @@ This module directly impacts provider quote submission capabilities and ensures 
 11. System uploads media files to S-05: Media Storage Service
 12. System generates CDN URLs for video and images
 13. System saves treatment record with the status the admin chose
-14. Only when the treatment was saved as Active, system sends notification to all active providers: "New treatment available in catalog" (REQ-024-041)
+14. When the treatment becomes Active for the first time, system sends notification to all active providers: "New treatment available in catalog" (REQ-024-041). A treatment saved as Draft or Inactive sends nothing until it first becomes Active, by any route (an edit that activates it, or a media upload retry that ends Active)
 15. Providers who receive the notification can now configure pricing for the new treatment
 
 ### Alternative Flows
@@ -146,7 +147,7 @@ This module directly impacts provider quote submission capabilities and ensures 
   6. Admin clicks "Update Treatment"
   7. System creates new version of treatment record (versioning for audit trail)
   8. System updates CDN URLs if media files changed
-  9. System notifies providers who currently offer this treatment about the update (REQ-024-042)
+  9. System notifies providers who currently offer this treatment about the update (REQ-024-042). If the edit switches an Inactive treatment back to Active, the notice is "treatment available again" and goes only to providers that have a pricing configuration for it; if the edit makes a Draft treatment Active for the first time, the new-treatment notice of the main flow is sent instead (REQ-024-041)
   10. Existing provider quotes using this treatment remain unchanged (versioned)
 - **Outcome**: Treatment information updated, providers notified, historical quotes unaffected
 
@@ -154,15 +155,15 @@ This module directly impacts provider quote submission capabilities and ensures 
 
 - **Trigger**: Admin decides to retire a treatment type (outdated technique, compliance issue)
 - **Steps**:
-  1. Admin navigates to treatment in catalog
+  1. Admin navigates to an Active treatment in catalog (Deactivate shows only on Active treatments; a Draft or Pending Media Upload treatment has no Deactivate action, and an Inactive one is reactivated through Edit, see A1)
   2. Admin clicks "Deactivate Treatment"
   3. System checks if any open quotes (draft or sent) or open FR-006 bookings (Accepted, Confirmed, In Progress, Aftercare) use this treatment (REQ-024-051)
-  4. System displays warning: "X providers currently offer this treatment, Y active quotes exist"
+  4. System displays warning: "X providers currently offer this treatment, Y active quotes and Z open bookings exist" (X counts Offered configurations of Active providers, the same count as Number of Providers)
   5. Admin confirms deactivation
   6. System changes treatment status to "Inactive"
   7. System prevents providers from selecting this treatment in new quotes
   8. System sends notification to the providers who offer this treatment: "Treatment [Name] has been deactivated" (REQ-024-043)
-  9. Sent quotes and bookings using this treatment continue unaffected; a draft quote that uses it must pick another treatment before it can be sent (REQ-024-052)
+  9. Sent quotes and bookings keep the treatment version they recorded and continue unaffected; a draft quote that uses it must pick another treatment before it can be sent (REQ-024-052)
 - **Outcome**: Treatment hidden from new quote creation, sent quotes and bookings honored
 
 **A3: Provider Configures Treatment Pricing**:
@@ -182,8 +183,8 @@ This module directly impacts provider quote submission capabilities and ensures 
   6. Provider clicks "Save Pricing"
   7. System validates pricing (no negative values, max > min)
   8. System saves provider-specific treatment pricing configuration
-  9. Treatment now available for provider to select when creating quotes
-- **Outcome**: Provider can now offer this treatment in quotes with configured pricing
+  9. The configuration is stored; the treatment is available for the provider to select when creating quotes only while its status is "Offered" (a "Not Offered" configuration is stored but does not make the treatment available) (REQ-024-059)
+- **Outcome**: Provider can now offer this treatment in quotes with configured pricing once it is set to Offered
 
 **B1: Treatment Creation Validation Error**:
 
@@ -205,16 +206,53 @@ This module directly impacts provider quote submission capabilities and ensures 
 
 **B2: Media Upload Failure**:
 
-- **Trigger**: Network interruption or storage service unavailable during media upload
+- **Trigger**: Network interruption or storage service unavailable during media upload (a video, an image, or an educational PDF; the steps are the same for each)
 - **Steps**:
   1. Admin uploads treatment video during creation
   2. Upload to S-05: Media Storage Service fails
   3. System retries upload up to 3 times
   4. If all retries fail, system displays error: "Media upload failed, please try again"
-  5. System saves treatment record without media (marked as "Pending Media Upload")
+  5. System saves treatment record without media (marked as "Pending Media Upload") and stores the status the admin chose on the form (Active or Inactive) with the record
   6. Admin can retry media upload separately
-  7. Once media successfully uploaded, system updates treatment record
+  7. Once media successfully uploaded, system updates treatment record and restores the stored status (REQ-024-100); if it ends Active for the first time, the new-treatment notice is sent (REQ-024-041)
+- **On an edit**: If an upload fails while the admin updates an Active treatment, the edit is not saved: the previous version and its status stay live for providers, and the system reports which file failed (REQ-024-049)
 - **Outcome**: Treatment created but media upload deferred, admin can complete later
+
+**A7: Admin Manages Treatment Types**:
+
+- **Trigger**: Admin needs a new treatment type or a corrected type name
+- **Steps**:
+  1. Admin opens the treatment type list (Screen 6) from the treatment settings area (REQ-024-037)
+  2. Admin clicks "Add Type" or "Edit" and enters a unique type name (max 100 characters)
+  3. System saves the type; the Treatment Type field on Screens 1 and 2 shows it with no code change (REQ-024-039)
+- **Outcome**: Treatment types stay one managed list
+
+**A8: Admin Reviews Provider Packages (read-only)**:
+
+- **Trigger**: Admin needs to look at a provider's packages for support
+- **Steps**:
+  1. Admin opens the provider packages view (Screen 7) from the treatment settings area (REQ-024-037)
+  2. Admin selects a provider; the system lists that provider's Active and Inactive packages only, because drafts stay with the provider's own team (REQ-024-040; REQ-024-057)
+  3. Admin clicks "View Details" to read the full package version content; no Edit, Clone, Deactivate, or bulk action is offered (REQ-024-040)
+- **Outcome**: Admin sees the package for support without being able to change it
+
+**A9: Admin Manages Aftercare Templates**:
+
+- **Trigger**: Admin needs a new or corrected medication or post-op instruction template
+- **Steps**:
+  1. Admin opens the aftercare templates (Screen 8) from the treatment settings area (REQ-024-037)
+  2. Admin clicks "Add Template" or "Edit", chooses Medication or Post-Op Instruction, enters the name and content, and saves (REQ-024-085)
+  3. System makes the template available to providers in aftercare documentation (FR-010; FR-011) (REQ-024-085)
+- **Outcome**: Providers pick medication and customise instructions only from admin templates
+
+**A10: Provider Quick Copies Pricing**:
+
+- **Trigger**: Provider wants to reuse the pricing of one treatment for another
+- **Steps**:
+  1. Provider clicks "Quick Copy Pricing" on a treatment card of Screen 3 and picks the treatment to copy from (REQ-024-062)
+  2. System fills the pricing fields (base price, price per graft, graft counts) with the values of the chosen treatment (REQ-024-062)
+  3. Provider continues with A3 step 4: reviews and edits the values, sets the status Offered or Not Offered, and saves; the same validation and availability rules apply (REQ-024-060; REQ-024-059)
+- **Outcome**: Pricing configured faster, with the provider still confirming every value
 
 ---
 
@@ -239,13 +277,13 @@ This module directly impacts provider quote submission capabilities and ensures 
 7. Provider builds the day-by-day treatment plan using relative days (Day 1, Day 2, and so on), each with a description; the plan never holds calendar dates
 8. Provider uploads package images (optional, max 3 images, 2MB each)
 9. Provider adds package terms and conditions (optional, markdown supported)
-10. Provider sets the package status: "Active" or "Inactive" (default Active); "Save as Draft" keeps an unfinished package as Draft, and the form also auto-saves a draft every 30 seconds
+10. Provider sets the package status: "Active" or "Inactive" (default Active); "Save as Draft" keeps an unfinished package as Draft (offered only for a package that has never been Active), and the form also auto-saves a draft every 30 seconds; auto-save overwrites the working draft and creates no version (REQ-024-057)
 11. Provider clicks "Save Package"
 12. System validates inputs (name not empty, standard price > 0, at least one included item, plan days consecutive from Day 1)
 13. System uploads images to S-05: Media Storage Service
-14. System saves the package as version 1, linked to the provider account
+14. System saves the package as version 1, linked to the provider account (a draft has no version until it is first saved as Active or Inactive)
 15. System displays success message: "Package created successfully" (REQ-024-044)
-16. Package now appears in provider's package list; its availability in quote creation follows FR-004
+16. Package now appears in provider's package list; only an Active package can be selected in quote creation, and its availability there follows FR-004 (REQ-004-056)
 
 **Not packaged**: The date range, additional notes, and documents are entered per inquiry during quote creation (FR-004). They are never stored on a package.
 
@@ -261,9 +299,9 @@ This module directly impacts provider quote submission capabilities and ensures 
   2. Provider searches or filters for package to edit
   3. Provider clicks "Edit" on package card
   4. System displays package edit form with the values of the current version
-  5. Provider modifies fields (standard price, included items, travel services, relative-day plan, description, images, terms, or status)
+  5. Provider modifies fields (standard price, included items, travel services, relative-day plan, description, images, terms, or status). The status select offers Active or Inactive; Draft is offered only for a package that has never been Active. If the provider sets Inactive, the open-quote warning and confirmation of A5 apply before the save (REQ-024-072)
   6. Provider clicks "Update Package"
-  7. System saves the changes as a new version of the same package (v1, v2, v3, and so on); the package ID stays the same
+  7. System saves the changes as a new version of the same package (v1, v2, v3, and so on); the package ID stays the same. A version is created only by a successful Update of an Active or Inactive package; auto-save creates none, and a status change by Deactivate is not versioned content (REQ-024-008)
   8. The previous version becomes read-only: it can be viewed but never edited again
   9. Existing quotes never change, whether they are drafts, sent, or accepted; each quote option keeps its own copy and the version it recorded
   10. New quote options copy the latest version (REQ-024-070)
@@ -275,11 +313,11 @@ This module directly impacts provider quote submission capabilities and ensures 
 - **Trigger**: Provider no longer wants to offer a specific package (seasonal unavailability, cost changes)
 - **Steps**:
   1. Provider navigates to "Products & Services > Packages"
-  2. Provider clicks "Deactivate" on package card
+  2. Provider clicks "Deactivate" on an Active package card (Deactivate shows only on Active packages; a Draft package has none, and an Inactive package is reactivated through Edit, see A4)
   3. System counts the open quotes (status draft or sent) that contain a quote option copied from this package (see Usage Count in Field Calculation Rules)
-  4. System displays warning: "This package is used in N open quotes. Deactivating hides it from new quotes; existing quotes are not changed." (REQ-024-072)
+  4. System displays warning: "This package is used in N open quotes. Deactivating hides it from new quotes; existing quotes are not changed." (REQ-024-072). The same warning and confirmation apply on every route to Inactive: the status select of the edit form (A4) and the bulk "Deactivate Selected" (A11)
   5. Provider confirms deactivation
-  6. System changes package status to "Inactive"
+  6. System changes package status to "Inactive" (a status change only: no new version is created)
   7. System prevents provider from adding this package to new quotes
   8. Existing quote options copied from this package keep their own copy and remain valid
 - **Outcome**: Package hidden from new quotes, existing commitments honored
@@ -313,6 +351,16 @@ This module directly impacts provider quote submission capabilities and ensures 
   7. System validates successfully and creates package
 - **Outcome**: Package creation prevented until validation passes
 
+**A11: Provider Quick Price Edit and Bulk Deactivate**:
+
+- **Trigger**: Provider wants to change one package price fast, or deactivate several packages at once, from the package list
+- **Steps**:
+  1. On the package list (Screen 4), provider either clicks the pencil icon on a package and enters a new standard price, or selects Active packages and clicks "Deactivate Selected" (REQ-024-077)
+  2. Quick price edit: system saves the new price as a new package version, because a quick price edit is a library edit (REQ-024-077; REQ-024-008)
+  3. Bulk deactivate: system shows one combined count of the open quotes that use any of the selected packages and asks for one confirmation (REQ-024-072)
+  4. On the provider's confirmation, system sets each selected package to Inactive without creating versions (REQ-024-072)
+- **Outcome**: Fast edits and bulk deactivation keep the same protections as the single-package paths
+
 ---
 
 ## Screen Specifications
@@ -331,19 +379,19 @@ This module directly impacts provider quote submission capabilities and ensures 
 | Treatment Type | select | Yes | Category from the managed treatment type list | Must select from the managed list | ENT-treatment.type |
 | Status | badge | N/A | Visual indicator: "Draft", "Active" (green), "Inactive" (gray), or "Pending Media Upload" | Read-only display (REQ-024-048) | ENT-treatment.status |
 | Video Thumbnail | image | No | Thumbnail of treatment video if available | Display CDN URL | ENT-treatment.video_thumbnail_url |
-| Number of Providers | number | N/A | Count of providers currently offering this treatment | Calculated field (REQ-024-055) | ENT-treatment.provider_count |
+| Number of Providers | number | N/A | Count of Active providers that currently offer this treatment | Calculated field (REQ-024-055) | ENT-treatment.provider_count |
 | Last Updated | date | N/A | Timestamp of last modification | Auto-generated (REQ-024-056) | ENT-treatment.updated_at |
-| Actions | buttons | N/A | Edit, Deactivate, View Details buttons | N/A | no graph field (control) |
+| Actions | buttons | N/A | Edit, Deactivate (Active treatments only), View Details buttons | N/A | no graph field (control) |
 
 **Business Rules**:
 
-- Active treatments appear at top of list, inactive treatments at bottom (REQ-024-054)
+- Treatments are ordered Active first, then Pending Media Upload, then Draft, with Inactive last (REQ-024-054)
 - Search box filters by treatment name in real-time (REQ-024-054)
 - Filter dropdown allows filtering by treatment type (REQ-024-054)
 - "Create New Treatment" button always visible at top right (REQ-024-054)
-- Deactivate button is always available; the confirmation warning shows how many providers and open quotes are affected (REQ-024-051; REQ-024-054)
+- Deactivate button shows only on Active treatments; a Draft, Pending Media Upload, or Inactive treatment has no Deactivate action. The confirmation warning shows how many providers, open quotes, and open bookings are affected (REQ-024-051; REQ-024-054)
 - Edit button available for all treatments regardless of status (REQ-024-054)
-- Number of providers shows count of providers who currently offer this treatment (status Offered) (REQ-024-055)
+- Number of providers shows the count of Active providers whose pricing configuration for this treatment is Offered (REQ-024-055)
 
 **Notes**:
 
@@ -381,6 +429,8 @@ This module directly impacts provider quote submission capabilities and ensures 
 - Image upload allows drag-and-drop or click-to-browse (REQ-024-089)
 - Markdown editor provides preview pane for description (REQ-024-090)
 - Deactivating treatment triggers warning if providers currently offer it (REQ-024-051)
+- An Inactive treatment is reactivated here by setting the status to Active; the save is a versioned edit and sends the notice of REQ-024-042 (REQ-024-003)
+- If a media upload fails while editing an Active treatment, the edit is not saved: the previous version and its status stay live and the failed file is reported (REQ-024-049)
 - Saving creates new version with timestamp (audit trail) (REQ-024-013)
 - Cancel button discards changes and returns to treatment list (REQ-024-057)
 
@@ -427,7 +477,7 @@ This module directly impacts provider quote submission capabilities and ensures 
 | Package Name | text (read-only) | N/A | Display name of package | Display only | ENT-package.name |
 | Included Items | text (read-only) | N/A | Short summary of the included items | Display only | ENT-package.included_items_summary |
 | Standard Price | number (read-only) | N/A | Package standard price in the system quote currency | Display only | ENT-package.standard_price |
-| Status | badge (read-only) | N/A | Draft, Active, or Inactive | Display only | ENT-package.status |
+| Status | badge (read-only) | N/A | Active or Inactive | Display only (drafts are not listed) | ENT-package.status |
 | Version | text (read-only) | N/A | Current library version | Display only | ENT-package.version |
 | Usage Count | number (read-only) | N/A | Quote options copied from this package whose parent quote is still open | Calculated field (see Field Calculation Rules) (REQ-024-074) | ENT-package.usage_count |
 | Last Updated | date (read-only) | N/A | Timestamp of last modification | Display only (REQ-024-056) | ENT-package.updated_at |
@@ -436,6 +486,7 @@ This module directly impacts provider quote submission capabilities and ensures 
 **Business Rules**:
 
 - Admin selects a provider to see that provider's packages (REQ-024-040)
+- The screen lists only Active and Inactive packages; a package draft is visible only to the provider's own team (REQ-024-040; REQ-024-057)
 - The screen offers no Edit, Clone, Deactivate, or bulk action; providers own their packages (REQ-024-040)
 - View Details shows the full package version content (included items, travel services, plan, images, terms) read-only (REQ-024-040)
 - The view is for support only (see Privacy Rule 2) (REQ-024-040)
@@ -494,8 +545,8 @@ This module directly impacts provider quote submission capabilities and ensures 
 - See REQ-024-032.
 - Maximum graft count must be greater than minimum graft count (REQ-024-060)
 - Price per graft is optional (some treatments are fixed price, not graft-based) (REQ-024-060)
-- Saving pricing configuration makes treatment available in quote creation (REQ-024-059)
-- Provider can disable offering without deleting pricing configuration (re-enable later) (REQ-024-006)
+- Saving a valid pricing configuration stores it; the treatment is available in quote creation only while its status is Offered (REQ-024-059)
+- Provider can disable offering without deleting pricing configuration (re-enable later). Switching to Not Offered blocks new quotes for that treatment; drafts and sent quotes already holding it are unchanged, and a draft can still be sent (REQ-024-006)
 
 **Notes**:
 
@@ -524,7 +575,7 @@ This module directly impacts provider quote submission capabilities and ensures 
 | Version | text | N/A | Current library version (e.g., "v3") | Auto-generated | ENT-package.version |
 | Usage Count | number | N/A | Number of quote options copied from this package whose parent quote is still open (draft or sent) | Calculated field (see Field Calculation Rules) (REQ-024-074) | ENT-package.usage_count |
 | Last Updated | date | N/A | Timestamp of last modification | Auto-generated (REQ-024-056) | ENT-package.updated_at |
-| Actions | buttons | N/A | Edit, Clone, Deactivate, View Details buttons | N/A | no graph field (control) |
+| Actions | buttons | N/A | Edit, Clone, Deactivate (Active packages only), View Details buttons | N/A | no graph field (control) |
 
 **Business Rules**:
 
@@ -533,7 +584,7 @@ This module directly impacts provider quote submission capabilities and ensures 
 - Filter dropdown allows filtering by status (REQ-024-076)
 - "Create New Package" button always visible at top right (REQ-024-076)
 - Clone button creates copy of package for quick variations (REQ-024-073)
-- Deactivate button warns "used in N open quotes" when open quotes contain an option copied from this package (REQ-024-072)
+- Deactivate button shows only on Active packages and warns "used in N open quotes" when open quotes contain an option copied from this package (REQ-024-072)
 - See REQ-024-074.
 - Packages can be sorted by name, price, or usage count (REQ-024-076)
 
@@ -543,7 +594,7 @@ This module directly impacts provider quote submission capabilities and ensures 
 - Display status with badges (Active = green, Inactive = grey, Draft shown with its own label)
 - Show quick-edit pencil icon on hover for fast price updates; a quick price edit is a library edit and saves a new package version (REQ-024-077)
 - Pagination: 20 packages per page (REQ-024-076)
-- Provide bulk actions: "Deactivate Selected", "Export to CSV" (REQ-024-077)
+- Provide bulk actions: "Deactivate Selected" (one combined count of open quotes and one confirmation, REQ-024-072), "Export to CSV" (REQ-024-077)
 
 ---
 
@@ -564,7 +615,7 @@ This module directly impacts provider quote submission capabilities and ensures 
 | Standard Price | number | Yes | Default price that prefills each date-range price row of a quote option created from this package (FR-004) | Must be > 0; system quote currency shown read-only (REQ-024-065) | ENT-package.standard_price |
 | Package Images | file upload (multiple) | No | Photos of hotel, transport, etc. | JPEG/PNG, max 3 images, 2MB each (REQ-024-067) | ENT-package.image_urls |
 | Terms & Conditions | textarea | No | Package-specific terms | Max 1,000 chars (REQ-024-065) | ENT-package.terms_conditions |
-| Status | select | Yes | Draft (unfinished, cannot be selected in quotes), Active (can be selected in quotes), or Inactive | Default: Active (REQ-024-057) | ENT-package.status |
+| Status | select | Yes | Active (can be selected in quotes) or Inactive; Draft (unfinished, cannot be selected in quotes) only for a package that has never been Active | Default: Active (REQ-024-057) | ENT-package.status |
 | Version | text (read-only) | N/A | Current library version; saving an edit creates the next version | Auto-generated | ENT-package.version |
 
 **Business Rules**:
@@ -577,8 +628,8 @@ This module directly impacts provider quote submission capabilities and ensures 
 - Image upload supports drag-and-drop or click-to-browse (REQ-024-089)
 - Markdown editor for description with preview pane (REQ-024-090)
 - A new package is saved as version 1, linked to the provider account; whether it can be used in quote creation follows FR-004 (REQ-024-069)
-- See REQ-024-008.
-- See REQ-024-072.
+- A version is created only by a successful Update of an Active or Inactive package; auto-save overwrites the working draft and creates no version, and a status change by Deactivate is not versioned content (REQ-024-008)
+- Setting the status to Inactive in this form shows the same open-quote warning and needs the same confirmation as Deactivate (REQ-024-072)
 - Cancel button discards changes and returns to package list (REQ-024-057)
 
 **Notes**:
@@ -587,7 +638,7 @@ This module directly impacts provider quote submission capabilities and ensures 
 - Show image thumbnails after upload with remove/reorder options (REQ-024-092)
 - Description is always required; images are optional (REQ-024-065)
 - Display character count for description field (REQ-024-097)
-- Auto-save a draft every 30 seconds to prevent data loss, and provide a "Save as Draft" option to save an incomplete package; a draft is a package status, is visible only to the provider's own team, and cannot be selected in a quote (REQ-024-057)
+- Auto-save a draft every 30 seconds to prevent data loss, and provide a "Save as Draft" option to save an incomplete package; a draft is a package status for a package that has never been Active, is visible only to the provider's own team, and cannot be selected in a quote; auto-save overwrites the working draft and creates no version (REQ-024-057)
 - Show success message: "Package saved successfully" (REQ-024-044)
 
 ---
@@ -598,8 +649,8 @@ This module directly impacts provider quote submission capabilities and ensures 
 
 - **Rule 1**: All treatments are globally managed by admin and available to all active providers (REQ-024-038)
 - **Rule 2**: Each provider manages their own package catalog independently
-- **Rule 3**: Treatment and package versions are immutable once saved; every library edit creates a new version, and quotes keep the version they copied (REQ-024-013; REQ-024-014; REQ-024-018)
-- **Rule 4**: Deactivating a package does not affect existing quotes or bookings. Deactivating a treatment does not affect sent quotes or bookings; a draft quote that uses it must pick another treatment before it can be sent (REQ-024-003; REQ-024-052)
+- **Rule 3**: Treatment and package versions are immutable once saved; every successful Update creates a new version, while auto-save and the Deactivate action create none, and quotes keep the version they copied (REQ-024-013; REQ-024-014; REQ-024-018)
+- **Rule 4**: Deactivating a package does not affect existing quotes or bookings. Deactivating a treatment does not affect sent quotes or bookings, which keep the treatment version they recorded; a draft quote that uses it must pick another treatment before it can be sent (REQ-024-003; REQ-024-052)
 - **Rule 5**: Pricing configuration is per-provider for treatments, per-package for packages; all library prices use the system quote currency and no treatment or package carries its own currency (REQ-024-032)
 - **Rule 6**: All timestamps displayed in the user's local timezone (REQ-024-056)
 - **Rule 7**: Media files (videos, images) are served via CDN with caching for performance
@@ -607,6 +658,7 @@ This module directly impacts provider quote submission capabilities and ensures 
 - **Rule 9**: See REQ-004-033, REQ-004-016 and REQ-004-015.
 - **Rule 10**: Packages are deactivated or archived, never hard-deleted, because quote options keep the source package ID and version (REQ-024-033)
 - **Rule 11**: Every package field a patient can see (name, description, included items, travel services, plan, duration, images, and terms) comes from the quote option's own copy, never from the latest library version; FR-004 owns this (REQ-004-060)
+- **Rule 12**: A package is not tied to a treatment: a provider may use any of its Active packages with any treatment it offers; FR-004 owns how a quote picks the treatment and its packages (REQ-024-101; REQ-004-058)
 - Providers have authority to set their own pricing without admin approval (REQ-024-061)
 - There is no separate review step before activation: the admin who saves a treatment as Active is the approval (quality control)
 
@@ -644,14 +696,8 @@ There are two distinct ways a package's content can change. They must never be c
 - Providers access platform via modern web browsers (Chrome, Firefox, Safari - last 2 versions)
 - **External Service 1**: CDN (CloudFront, Cloudflare, or equivalent)
   - **Failure handling**: No fallback to direct S3 URLs; display placeholder image for failed loads (REQ-024-099)
-- **External Service 2**: Media Processing Service (AWS MediaConvert or equivalent)
-  - **Purpose**: Transcode uploaded treatment videos to multiple formats/resolutions for device compatibility
-  - **Integration**: Trigger transcoding job on video upload, generate HLS/DASH streams for adaptive bitrate
-  - **Failure handling**: Queue transcoding job for retry, notify admin if transcoding fails after 3 attempts
-- **External Service 3**: Image Optimization Service (Cloudinary, imgix, or equivalent)
-  - **Purpose**: Automatically resize, compress, and optimize treatment and package images
-  - **Integration**: Upload original image, receive optimized versions for web/mobile display
-  - **Failure handling**: Use original image if optimization fails, log error for admin review
+- **Implementation note, media processing (not a requirement)**: the development team may pass uploaded treatment videos through a media processing service (AWS MediaConvert or equivalent) to make playback versions for different devices. What an admin uploads stays MP4 only (REQ-024-045). Retry limits and any alert to an admin after repeated failure are engineering choices; this module defines no requirement, step, or status for them
+- **Implementation note, image optimisation (not a requirement)**: the development team may pass treatment and package images through an image optimisation service (Cloudinary, imgix, or equivalent) to resize and compress them, using the original image and logging the error when optimisation fails. Accepted formats stay JPEG and PNG (REQ-024-045; REQ-024-067); this module defines no requirement, step, or status for it
 - **Integration 1**: Admin platform sends treatment CRUD operations to shared treatment API
   - **Authentication**: Admin JWT token with elevated permissions
 - **Integration 2**: Provider platform queries treatment catalog and manages packages via provider API
@@ -669,7 +715,7 @@ There are two distinct ways a package's content can change. They must never be c
 - Treatment status (Active or Inactive on save; Draft through "Save as Draft"; Pending Media Upload is set by the system when a media upload fails) (REQ-024-048)
 - Treatment types (a managed list maintained on the Treatment Types screen) (REQ-024-039)
 - Medication templates and post-op instruction templates (Aftercare Templates screen) (REQ-024-085)
-- Creation limits, as admin settings: treatment creation per admin per hour (default 10) and package creation per provider per hour (default 50); each is a whole number of 1 or more (REQ-024-098; REQ-024-078)
+- Creation limits, as admin settings: treatment creation per admin per hour (default 10) and package creation per provider per hour (default 50); each is a whole number of 1 or more (REQ-024-098; REQ-024-078). Only the first save of a new record counts, whether Save Treatment, Save Package, or Save as Draft; saving a clone counts as a new record, while auto-save, edits, and media upload retries do not. When the limit is reached the save is refused with "You have reached the limit of [N] new treatments per hour. Please try again later." (admin) or "You have reached the limit of [N] new packages per hour. Please try again later." (provider), where N is the setting value
 
 **Fixed in Codebase (Not Editable)**:
 
@@ -703,19 +749,18 @@ There are two distinct ways a package's content can change. They must never be c
 
 - Provider must configure pricing for a treatment before offering it in quotes (REQ-024-059)
 - See REQ-024-006.
-- There is no total limit on how many packages a provider can create; package creation is limited to 50 per hour per provider by default (admin setting) (REQ-024-078)
-- See REQ-024-008.
-- Permission checks for package creation/editing based on staff role (REQ-024-082)
+- There is no total limit on how many packages a provider can create; package creation is limited to 50 per hour per provider by default (admin setting); the counting rule and the message when the limit is reached are in Admin Editability Rules (REQ-024-078)
+- A version is created only by a successful Update of an Active or Inactive package (REQ-024-008)
+- Permission checks by staff role gate these actions: package create, edit, clone, deactivate, quick price edit, and treatment pricing configuration (REQ-024-082)
 
 ### Localization Rules
 
-**Translatable Content** (uses i18n keys from FR-021):
+**Translatable Content**:
 
-- Treatment descriptions and technique specifications (REQ-024-081)
-- Package names and descriptions
-- All UI labels and error messages
+- Admin-authored library text (treatment descriptions and technique specifications) and all UI labels and error messages use FR-021 translation keys; FR-021 holds a treatment-library key group for the admin-authored text (REQ-024-081)
+- Provider-authored package names and descriptions are user-written free text: they are shown as written, and machine-translated for the reader only when the FR-021 free-text translation switch is on (REQ-021-119; REQ-024-081)
 
-Before production release, implementation must ensure all treatment- and package-related strings are registered with the translation management system defined in FR-021 (translation readiness checklist). (REQ-024-081)
+Before production release, implementation must ensure all keyed treatment and package strings are registered with the translation management system defined in FR-021 (translation readiness checklist). (REQ-024-081)
 
 **Non-Translatable Content** (remains in English for consistency):
 
@@ -723,13 +768,13 @@ Before production release, implementation must ensure all treatment- and package
 - Package item service type codes (medical, travel, accommodation, transport, flight, other)
 - Media file names and CDN URLs
 
-**Note**: This module depends on FR-021 (Multi-Language & Localization) for i18n infrastructure. FR-021 must be updated to include treatment and package content in its translation management scope.
+**Note**: This module depends on FR-021 (Multi-Language & Localization) for translation keys and for the free-text translation switch.
 
 ### Field Calculation Rules
 
 **Calculated Fields** (auto-generated, not user input):
 
-- **Number of Providers** (Screen 1): `COUNT(provider_treatment_pricing WHERE treatment_id = X AND status = 'Offered')` (REQ-024-055)
+- **Number of Providers** (Screen 1): `COUNT(provider_treatment_pricing WHERE treatment_id = X AND status = 'Offered' AND provider account is Active)`. The treatment deactivation warning uses the same count (REQ-024-055)
 - **Usage Count** (Screen 4): `COUNT(quote options WHERE source_package_id = X AND parent quote status IN ('draft', 'sent'))`. It counts the FR-004 quote options copied from any version of this package whose parent quote is still open. The deactivation warning "used in N open quotes" shows the number of distinct open parent quotes among them. Status values follow FR-004 (REQ-024-074)
 - **Last Updated** (all screens): Database `updated_at` timestamp, displayed in user's local timezone (REQ-024-056)
 
@@ -745,8 +790,9 @@ Related FRs:
 
 - FR-004 (Module PR-02, Inquiry & Quote Management): providers select treatments and packages from this module when creating quotes
 - FR-001 (Module P-01, Auth & Profile Management): provider authentication required to access package management features
-- FR-009 (Module PR-01, Auth & Team Management): role-based permissions determine which provider staff can manage packages (REQ-009-003, role-based access control for provider features; REQ-009-011, provider role permissions are defined centrally in FR-031)
-- FR-021 (Modules P-01, PR-06, A-09, S-02, S-03, Multi-Language & Localization): treatment descriptions, package names/descriptions require multi-language support
+- FR-009 (Module PR-01, Auth & Team Management): role-based permissions determine which provider staff can manage packages and treatment pricing (REQ-009-003, role-based access control for provider features; REQ-009-011, provider role permissions are defined centrally in FR-031)
+- FR-030 (Notification Rules & Configuration): the new-treatment, treatment-updated, and treatment-deactivated notices (REQ-024-041; REQ-024-042; REQ-024-043) are sent through its notification catalogue
+- FR-021 (Modules P-01, PR-06, A-09, S-02, S-03, Multi-Language & Localization): translation keys for treatment descriptions, technique specifications, and UI labels; the free-text translation switch for provider-authored package names and descriptions (REQ-021-119)
 - FR-026 (Module A-09, App Settings & Security Policies, self-dependency): this module is part of A-09 and shares configuration infrastructure (same settings management UI patterns, audit logging, versioning mechanisms); active system configuration is the source of the system quote currency used by FR-004 for the parent quote currency
 - FR-010 (Module PR-03, Treatment Execution & Documentation) and FR-011 (Module P-05, Aftercare & Progress Monitoring): providers prescribe medication and give post-op instructions from the templates this module owns; the medication templates and post-op instruction templates (REQ-024-085) are the lists those modules use, and FR-010 and FR-011 point here for ownership
 - FR-029 (Payment System Configuration): exchange rates for the system quote currency
@@ -781,7 +827,7 @@ Provider views admin-created treatments and configures pricing for treatments th
 
 1. **Given** provider is logged into provider platform, **When** provider navigates to "Products & Services > Treatments > Treatment Pricing", **Then** system displays list of all active treatments from admin catalog
 2. **Given** provider selects treatment to configure, **When** provider enters base price (£2,500), price per graft (£2.00), graft range (1,000-5,000), and toggles status to "Offered", **Then** system saves pricing configuration and displays success message
-3. **Given** provider has configured treatment pricing, **When** provider creates new quote and selects treatment, **Then** the treatment appears in the quote; the configured Base Price is a reference only and may prefill a price row only where FR-004 allows (REQ-004-044)
+3. **Given** provider has configured treatment pricing and set it to Offered, **When** provider creates new quote and selects treatment, **Then** the treatment appears in the quote; the configured Base Price is a reference only and may prefill a price row only where FR-004 allows (REQ-004-044)
 
 ---
 
@@ -863,7 +909,7 @@ Provider needs to temporarily stop offering a package (seasonal hotel unavailabi
 
 - **How to manage provider selecting deactivated treatment during quote creation?** Provider cannot select deactivated treatments. If treatment is deactivated while provider has draft quote open, system refreshes available treatments and displays warning: "Treatment [Name] is no longer available. Please select a different treatment." (REQ-024-052)
 
-- **What happens when media upload fails during treatment creation?** System retries upload 3 times with exponential backoff. If all retries fail, system saves treatment record with status "Pending Media Upload" and displays error: "Video upload failed. Treatment saved without media. You can upload the video later by editing the treatment." Providers do not see or use a treatment in Pending Media Upload status until media is added. Admin can edit treatment to retry upload. After a successful retry the treatment takes the status the admin picks on that save (Active or Inactive). (REQ-024-049; REQ-024-100)
+- **What happens when media upload fails during treatment creation?** System retries upload 3 times with exponential backoff. If all retries fail, system saves treatment record with status "Pending Media Upload" and displays error: "Video upload failed. Treatment saved without media. You can upload the video later by editing the treatment." Providers do not see or use a treatment in Pending Media Upload status until media is added. Admin can edit treatment to retry upload. The status the admin chose on the form (Active or Inactive) is stored with the record and restored when the retry succeeds. The same applies to an image or an educational PDF. If an upload fails while an Active treatment is being edited, the edit is not saved: the previous version and its status stay live and the failed file is reported to the admin. (REQ-024-049; REQ-024-100)
 
 - **What occurs if two admins simultaneously edit the same treatment?** See system PRD, Platform-Wide Rules: Concurrent admin edits: warn, then last save wins. If the admin continues, the save becomes the current version and the earlier version stays in the version history.
 
@@ -875,13 +921,14 @@ Provider needs to temporarily stop offering a package (seasonal hotel unavailabi
 
 - **REQ-024-001**: System MUST allow admins to create treatments with name, type, description, video, images, and technique specifications
 - **REQ-024-002**: System MUST allow admins to edit existing treatments, creating new versions without modifying historical records
-- **REQ-024-003**: System MUST allow admins to activate or deactivate treatments, affecting availability for new quotes and draft quotes only; sent quotes and bookings are not affected
+- **REQ-024-003**: System MUST allow admins to activate or deactivate treatments, affecting availability for new quotes and draft quotes only; sent quotes and bookings are not affected. Deactivate is offered only on Active treatments; an Inactive treatment is reactivated through Edit, which is versioned and sends the notice of REQ-024-042; Draft and Pending Media Upload treatments have no Deactivate action
 - **REQ-024-004**: System MUST allow providers to view all active treatments from admin catalog
 - **REQ-024-005**: System MUST allow providers to configure pricing for treatments they want to offer (base price, price per graft, graft ranges)
-- **REQ-024-006**: System MUST allow providers to enable or disable treatment offerings without deleting pricing configuration
-- **REQ-024-007**: System MUST allow providers to create packages with name, description, included items, included travel services, relative-day treatment plan, standard price, images, and status (Draft, Active, or Inactive)
-- **REQ-024-008**: System MUST allow providers to edit existing packages in the package library; each save MUST create a new package version (v1, v2, and so on), keep earlier versions read-only, and never change existing quotes
-- **REQ-024-009**: System MUST allow providers to deactivate packages, hiding them from new quotes while preserving existing quotes
+- **REQ-024-006**: System MUST allow providers to enable or disable treatment offerings without deleting pricing configuration; switching to Not Offered blocks new quotes for that treatment, leaves existing drafts and sent quotes unchanged, and a draft can still be sent
+- **REQ-024-007**: System MUST allow providers to create packages with name, description, included items, included travel services, relative-day treatment plan, standard price, images, and status (Draft, Active, or Inactive); Draft applies only to a package that has never been Active
+- **REQ-024-008**: System MUST allow providers to edit existing packages in the package library; each successful Update of an Active or Inactive package MUST create a new package version (v1, v2, and so on), keep earlier versions read-only, and never change existing quotes. Auto-save overwrites the working draft and creates no version, and a status change by Deactivate is not versioned content
+- **REQ-024-009**: System MUST allow providers to deactivate packages, hiding them from new quotes while preserving existing quotes; Deactivate is offered only on Active packages
+- **REQ-024-101**: A package is not tied to a treatment; a provider may use any of its Active packages with any treatment it offers
 - Quote selection of one treatment and one to five Active packages, the one-alternative-option-per-package rule, the standard-price prefill, and the Treatment and Package ID/version kept on the quote are owned by FR-004: REQ-004-033 and REQ-004-016 (see also REQ-004-001 and REQ-004-015). Formerly REQ-024-010, REQ-024-011, and REQ-024-012
 - Inline package edits made during quote creation stay in that quote only and are never written back to the library package: owned by FR-004, REQ-004-017 and REQ-004-034. Formerly REQ-024-030
 - A package never stores a date range, additional notes, or documents; they are entered per inquiry in FR-004 (REQ-004-057). Formerly REQ-024-031
@@ -893,7 +940,7 @@ Provider needs to temporarily stop offering a package (seasonal hotel unavailabi
 
 ### Data Requirements
 
-- **REQ-024-013**: System MUST maintain versioned treatment records with immutable history (no update-in-place)
+- **REQ-024-013**: System MUST maintain versioned treatment records with immutable history (no update-in-place of content); each successful Update Treatment creates a version, and Deactivate changes the status without creating one
 - **REQ-024-014**: System MUST maintain versioned package records with immutable history, including each version's included items, travel services, and relative-day plan
 - **REQ-024-015**: System MUST store media files (videos, images) in S3-compatible object storage with CDN delivery
 - **REQ-024-016**: System MUST track which providers offer which treatments (provider-treatment pricing configuration)
@@ -925,6 +972,7 @@ Provider needs to temporarily stop offering a package (seasonal hotel unavailabi
 |------|---------|---------|--------|
 | 2026-11-22 | 1.8 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.7) and the change requests CR-FR024-20261016-01 (change-request-2026-10-16-mtg002-quote-model-alignment.md) and change-request-2026-09-10-quote-option-provenance-alignment.md are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 | 2026-11-23 | 1.9 | Independent compression review: 1 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
+| 2026-11-24 | 2.0 | Logic review pass 1: closed gaps in treatment and package status rules (new-treatment notice on first Active, reactivation through Edit, Deactivate only on Active records, Draft only for a never-Active package, versions only on a successful Update, open-quote and open-booking warnings on every route); chosen status stored and restored on retried uploads; Screen 7 lists only Active and Inactive packages; packages not tied to a treatment; Number of Providers counts Offered configurations of Active providers; Not Offered effect on new quotes; creation-limit message and counting rule; permission-gated actions named; media-processing and image-optimisation paragraphs marked as implementation notes; FR-021 approach for library text and package free text; short flows added for Screens 6 to 8, Quick Copy Pricing, quick price edit, and bulk actions. | Product Owner / Documentation |
 
 ---
 
@@ -942,4 +990,4 @@ Provider needs to temporarily stop offering a package (seasonal hotel unavailabi
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-11-23
+**Last Updated**: 2026-11-24

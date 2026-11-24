@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T11:13:06Z",
+  "generated_at": "2026-11-24T11:16:19Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -16882,9 +16882,9 @@
       "owner_fr": "FR-024",
       "title": "Package status",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "description": "Draft (unfinished; visible only to the provider's own team and not selectable in quotes), Active or Inactive; Tab 7 warns when a source package was edited or deactivated."
+        "description": "Draft (unfinished, only for a package that has never been Active; visible only to the provider's own team and not selectable in quotes), Active or Inactive; Tab 7 warns when a source package was edited or deactivated."
       }
     },
     {
@@ -31812,9 +31812,9 @@
       "owner_fr": "FR-024",
       "title": "Number of providers",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Count of providers whose pricing configuration for this treatment is Offered. Calculated."
+        "description": "Count of Active providers whose pricing configuration for this treatment is Offered. Calculated."
       }
     },
     {
@@ -31834,9 +31834,9 @@
       "owner_fr": "FR-024",
       "title": "Treatment status",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Draft (saved as draft, visible to admins only), Active (visible to providers and selectable in new quotes), Inactive (hidden), or Pending Media Upload (set by the system when a media upload fails; providers do not see or use the treatment until media is added). The admin chooses Active or Inactive on save."
+        "description": "Draft (saved as draft, visible to admins only), Active (visible to providers and selectable in new quotes), Inactive (hidden), or Pending Media Upload (set by the system when a media upload fails; the status the admin chose is stored and restored on a successful retry; providers do not see or use the treatment until media is added). The admin chooses Active or Inactive on save."
       }
     },
     {
@@ -33739,9 +33739,9 @@
       "owner_fr": "FR-024",
       "title": "Treatment added",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "treatment.added: sent to all active providers when an admin saves a new treatment as Active (\"New treatment available in catalog\")."
+        "description": "treatment.added: sent to all active providers the first time a treatment becomes Active, by any route (\"New treatment available in catalog\")."
       }
     },
     {
@@ -33849,9 +33849,9 @@
       "owner_fr": "FR-024",
       "title": "Treatment updated",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "treatment.updated: sent to providers who currently offer the treatment when an admin updates it."
+        "description": "treatment.updated: sent to providers who currently offer the treatment when an admin updates it; also used with \"treatment available again\" wording when an Inactive treatment returns to Active, sent only to providers with a pricing configuration."
       }
     },
     {
@@ -36957,6 +36957,32 @@
       }
     },
     {
+      "id": "FLW-024-admin-package-review",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "A8: Admin Reviews Provider Packages (read-only)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A8: Admin Reviews Provider Packages (read-only)",
+        "prd_ref": "A8"
+      }
+    },
+    {
+      "id": "FLW-024-aftercare-templates",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "A9: Admin Manages Aftercare Templates",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A9: Admin Manages Aftercare Templates",
+        "prd_ref": "A9"
+      }
+    },
+    {
       "id": "FLW-024-configure-treatment-pricing",
       "type": "Flow",
       "owner_fr": null,
@@ -37061,6 +37087,19 @@
       }
     },
     {
+      "id": "FLW-024-package-quick-edit-bulk",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "A11: Provider Quick Price Edit and Bulk Deactivate",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A11: Provider Quick Price Edit and Bulk Deactivate",
+        "prd_ref": "A11"
+      }
+    },
+    {
       "id": "FLW-024-package-validation-error",
       "type": "Flow",
       "owner_fr": null,
@@ -37071,6 +37110,32 @@
         "kind": "alternative",
         "description": "B3: Package Creation Validation Error",
         "prd_ref": "B3"
+      }
+    },
+    {
+      "id": "FLW-024-quick-copy-pricing",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "A10: Provider Quick Copies Pricing",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A10: Provider Quick Copies Pricing",
+        "prd_ref": "A10"
+      }
+    },
+    {
+      "id": "FLW-024-treatment-types",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "A7: Admin Manages Treatment Types",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A7: Admin Manages Treatment Types",
+        "prd_ref": "A7"
       }
     },
     {
@@ -39591,7 +39656,7 @@
       "owner_fr": null,
       "title": "Treatment & Package Management",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "module": "fr024-treatment-package-management",
         "prd_path": "project-requirements/functional-requirements/fr024-treatment-package-management/prd.md",
@@ -77121,10 +77186,10 @@
       "owner_fr": "FR-024",
       "title": "Admin activates or deactivates treatments",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST allow admins to activate or deactivate treatments, affecting availability for new quotes and draft quotes only; sent quotes and bookings are not affected",
-        "rationale": "Functional Requirements Summary; Alternative Flow A2 step 9."
+        "statement": "System MUST allow admins to activate or deactivate treatments, affecting availability for new quotes and draft quotes only; sent quotes and bookings are not affected. Deactivate is offered only on Active treatments; an Inactive treatment is reactivated through Edit, which is versioned and sends the notice of REQ-024-042; Draft and Pending Media Upload treatments have no Deactivate action.",
+        "rationale": "Functional Requirements Summary; Alternative Flows A1 and A2; Screen 1 business rules."
       }
     },
     {
@@ -77157,10 +77222,10 @@
       "owner_fr": "FR-024",
       "title": "Providers enable or disable offerings without losing pricing",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST allow providers to enable or disable treatment offerings without deleting pricing configuration; a treatment pricing configuration is Not Offered until the provider sets it to Offered",
-        "rationale": "prd.md lines 486, 499 (Screen 3 Status Toggle default Not Offered; disabling keeps the pricing configuration)"
+        "statement": "System MUST allow providers to enable or disable treatment offerings without deleting pricing configuration; a treatment pricing configuration is Not Offered until the provider sets it to Offered. Switching to Not Offered blocks new quotes for that treatment, leaves existing drafts and sent quotes unchanged, and a draft can still be sent.",
+        "rationale": "Screen 3 Status Toggle and business rules; Core Requirements."
       }
     },
     {
@@ -77169,10 +77234,10 @@
       "owner_fr": "FR-024",
       "title": "Providers create packages",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST allow providers to create packages with name, description, included items, included travel services, relative-day treatment plan, standard price, images, and status (Draft, Active, or Inactive)",
-        "rationale": "Functional Requirements Summary; Main Flow: Provider Creates Package step 10."
+        "statement": "System MUST allow providers to create packages with name, description, included items, included travel services, relative-day treatment plan, standard price, images, and status (Draft, Active, or Inactive); Draft applies only to a package that has never been Active.",
+        "rationale": "Functional Requirements Summary; Main Flow: Provider Creates Package step 10; Screen 5 Status."
       }
     },
     {
@@ -77181,10 +77246,10 @@
       "owner_fr": "FR-024",
       "title": "Package edit creates a new version",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST allow providers to edit existing packages in the package library; each save MUST create a new package version (v1, v2, and so on), keep earlier versions read-only, and never change existing quotes",
-        "rationale": "Functional Requirements Summary (PRD line 1015)."
+        "statement": "System MUST allow providers to edit existing packages in the package library; each successful Update of an Active or Inactive package MUST create a new package version (v1, v2, and so on), keep earlier versions read-only, and never change existing quotes. Auto-save overwrites the working draft and creates no version, and a status change by Deactivate is not versioned content.",
+        "rationale": "Functional Requirements Summary; Alternative Flow A4 step 7; Screen 5 business rules."
       }
     },
     {
@@ -77193,10 +77258,10 @@
       "owner_fr": "FR-024",
       "title": "Providers deactivate packages",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST allow providers to deactivate packages, hiding them from new quotes while preserving existing quotes",
-        "rationale": "Functional Requirements Summary (PRD line 1016)."
+        "statement": "System MUST allow providers to deactivate packages, hiding them from new quotes while preserving existing quotes; Deactivate is offered only on Active packages, and an Inactive package is reactivated through Edit.",
+        "rationale": "Functional Requirements Summary; Alternative Flow A5; Screen 4 business rules."
       }
     },
     {
@@ -77205,10 +77270,10 @@
       "owner_fr": "FR-024",
       "title": "Treatment records are versioned and immutable",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST maintain versioned treatment records with immutable history (no update-in-place)",
-        "rationale": "Functional Requirements Summary (PRD line 1028)."
+        "statement": "System MUST maintain versioned treatment records with immutable history (no update-in-place of content); each successful Update Treatment creates a version, and Deactivate changes the status without creating one.",
+        "rationale": "Functional Requirements Summary; General Module Rule 3."
       }
     },
     {
@@ -77493,22 +77558,22 @@
       "owner_fr": "FR-024",
       "title": "Admin views provider packages read-only for support",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admin can view provider packages in read-only mode for support purposes only and cannot modify individual provider packages; provider ownership is enforced. View Details shows the full package version content (included items, travel services, plan, images, terms) read-only.",
-        "rationale": "prd.md lines 57-58, 421, 440-442 (Module Scope, Screen 7 purpose and business rules), line 627 (Privacy Rule 2)"
+        "statement": "Admin can view provider packages in read-only mode for support purposes only and cannot modify individual provider packages; provider ownership is enforced. The view lists only Active and Inactive packages, because a package draft is visible only to the provider's own team. View Details shows the full package version content (included items, travel services, plan, images, terms) read-only.",
+        "rationale": "Module Scope (Admin Platform); Screen 7 purpose and business rules; Privacy Rule 2."
       }
     },
     {
       "id": "REQ-024-041",
       "type": "Rule",
       "owner_fr": "FR-024",
-      "title": "New treatment: all active providers notified",
+      "title": "First time a treatment becomes Active: all active providers notified",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "When an admin saves a new treatment as Active, System sends all active providers the notification \"New treatment available in catalog\", and providers can then configure pricing for it.",
-        "rationale": "Communication Structure and Main Flow: Admin Creates Treatment step 14 (notice only when saved Active)."
+        "statement": "The first time a treatment becomes Active, by any route (saved as Active, an edit that activates a Draft, or a media upload retry that ends Active), System sends all active providers the notification \"New treatment available in catalog\", and providers can then configure pricing for it. A treatment saved as Draft or Inactive sends nothing until it first becomes Active.",
+        "rationale": "Communication Structure; Main Flow: Admin Creates Treatment step 14; Alternative Flows A1 step 9 and B2 step 7."
       }
     },
     {
@@ -77517,10 +77582,10 @@
       "owner_fr": "FR-024",
       "title": "Treatment update: providers who offer it notified",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "When an admin updates a treatment, System notifies the providers who currently offer that treatment about the update (for example \"Treatment [FUE] video has been updated\").",
-        "rationale": "Alternative Flow A1 step 9 (PRD line 148); User Story 5."
+        "statement": "When an admin updates a treatment, System notifies the providers who currently offer that treatment about the update (for example \"Treatment [FUE] video has been updated\"). When the update switches an Inactive treatment back to Active, the notice reads \"treatment available again\" and goes only to providers that have a pricing configuration for it; the same treatment-updated event is used and no new event is added.",
+        "rationale": "Communication Structure; Alternative Flow A1 step 9; User Story 5."
       }
     },
     {
@@ -77589,9 +77654,9 @@
       "owner_fr": "FR-024",
       "title": "Failed media upload retries, then saves without media",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "When a media upload to S-05 fails, System retries up to 3 times with exponential backoff. If all retries fail it shows an error (\"Media upload failed, please try again\"), saves the treatment record without media marked \"Pending Media Upload\", and the admin can retry the upload separately by editing the treatment; once the upload succeeds the record is updated. Providers do not see or use a treatment in Pending Media Upload status until media is added.",
+        "statement": "When a media upload to S-05 fails (a video, an image, or an educational PDF), System retries up to 3 times with exponential backoff. If all retries fail it shows an error (\"Media upload failed, please try again\"), saves the treatment record without media marked \"Pending Media Upload\", stores the status the admin chose on the form with the record, and the admin can retry the upload separately by editing the treatment; once the upload succeeds the record is updated. Providers do not see or use a treatment in Pending Media Upload status until media is added. If an upload fails while an Active treatment is being edited, the edit is not saved: the previous version and its status stay live and the failed file is reported to the admin.",
         "rationale": "Alternative Flow B2; Edge Cases (media upload failure)."
       }
     },
@@ -77601,10 +77666,10 @@
       "owner_fr": "FR-024",
       "title": "Treatment deactivation warns and needs admin confirmation",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Before deactivating a treatment, System checks the open quotes (draft or sent) and the open FR-006 bookings (Accepted, Confirmed, In Progress, Aftercare) that use it, shows a warning with the number of providers offering it and of active quotes, and requires the admin to confirm; on confirmation the status becomes Inactive.",
-        "rationale": "prd.md lines 158-163 (A2 steps 1-6); line 345 (Screen 1: Deactivate is always available and the confirmation warning shows how many providers and open quotes are affected); line 384 (Screen 2 rule)"
+        "statement": "Before deactivating a treatment, System checks the open quotes (draft or sent) and the open FR-006 bookings (Accepted, Confirmed, In Progress, Aftercare) that use it, shows a warning with the number of providers offering it (Offered configurations of Active providers, the Number of Providers count), of active quotes, and of open bookings, and requires the admin to confirm; on confirmation the status becomes Inactive.",
+        "rationale": "Alternative Flow A2 steps 1-6; Screen 1 business rules."
       }
     },
     {
@@ -77613,9 +77678,9 @@
       "owner_fr": "FR-024",
       "title": "Deactivated treatment cannot be picked for new quotes",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Providers cannot select a deactivated treatment in new quotes. If a treatment is deactivated while a provider has a draft quote open, System refreshes the available treatments and warns \"Treatment [Name] is no longer available. Please select a different treatment.\" Sent quotes and bookings using the treatment continue unaffected; a draft quote that uses it must pick another treatment before it can be sent.",
+        "statement": "Providers cannot select a deactivated treatment in new quotes. If a treatment is deactivated while a provider has a draft quote open, System refreshes the available treatments and warns \"Treatment [Name] is no longer available. Please select a different treatment.\" Sent quotes and bookings using the treatment keep the treatment version they recorded and continue unaffected; a draft quote that uses it must pick another treatment before it can be sent.",
         "rationale": "Alternative Flow A2 steps 7 and 9; Edge Cases; General Module Rule 4."
       }
     },
@@ -77637,9 +77702,9 @@
       "owner_fr": "FR-024",
       "title": "Admin treatment list: order, search, filter, edit",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The admin treatment list shows Active treatments first and Inactive last, filters by treatment name in real time and by treatment type, shows \"Create New Treatment\" at all times, keeps Deactivate always available, allows Edit on every treatment regardless of status, and shows 20 treatments per page.",
+        "statement": "The admin treatment list shows Active treatments first, then Pending Media Upload, then Draft, with Inactive last; filters by treatment name in real time and by treatment type; shows \"Create New Treatment\" at all times; shows Deactivate only on Active treatments; allows Edit on every treatment regardless of status; and shows 20 treatments per page.",
         "rationale": "Screen 1 business rules and notes."
       }
     },
@@ -77649,10 +77714,10 @@
       "owner_fr": "FR-024",
       "title": "Number of Providers counts providers offering the treatment",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Number of Providers on the admin treatment list is the count of provider treatment pricing configurations for that treatment whose status is Offered. It is calculated, not entered.",
-        "rationale": "prd.md lines 335, 347, 701 (Screen 1 Number of Providers: providers whose pricing configuration status is Offered; Field Calculation Rules)"
+        "statement": "Number of Providers on the admin treatment list is the count of provider treatment pricing configurations for that treatment whose status is Offered and whose provider account is Active. It is calculated, not entered; the treatment deactivation warning uses the same count.",
+        "rationale": "Screen 1 Number of Providers; Field Calculation Rules."
       }
     },
     {
@@ -77673,9 +77738,9 @@
       "owner_fr": "FR-024",
       "title": "Draft auto-save and Cancel on the treatment and package forms",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The admin treatment form and the package form each auto-save a draft every 30 seconds to prevent data loss and offer Save as Draft. A saved draft has status Draft: a treatment draft is visible to admins only; a package draft is visible only to the provider's own team and cannot be selected in a quote. Cancel on either form discards unsaved changes and returns to the list.",
+        "statement": "The admin treatment form and the package form each auto-save a draft every 30 seconds to prevent data loss and offer Save as Draft. A saved draft has status Draft: a treatment draft is visible to admins only; a package draft is visible only to the provider's own team and cannot be selected in a quote. Draft applies to a package only while it has never been Active. Auto-save overwrites the working draft and creates no version. Cancel on either form discards unsaved changes and returns to the list.",
         "rationale": "Screen 2 and Screen 5 rules and notes."
       }
     },
@@ -77697,10 +77762,10 @@
       "owner_fr": "FR-024",
       "title": "Pricing must be configured before a treatment is offered in quotes",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "A provider must set a base price to enable \"Offered\" status and must configure pricing for a treatment before offering it in quotes. Saving the pricing configuration makes the treatment available in quote creation.",
-        "rationale": "Screen 3 rules (PRD lines 423, 428); Provider Editability (line 602); A3 steps 5 and 9 (lines 180, 184)."
+        "statement": "A provider must set a base price to enable \"Offered\" status and must configure pricing for a treatment before offering it in quotes. Saving the pricing configuration stores it; the treatment is available in quote creation only while the configuration status is Offered.",
+        "rationale": "Screen 3 rules; Alternative Flow A3 steps 5 and 9."
       }
     },
     {
@@ -77805,9 +77870,9 @@
       "owner_fr": "FR-024",
       "title": "A new package is version 1 and an Active one is selectable at once",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System saves a new package as version 1, linked to the provider account. Whether it can be used in quote creation follows FR-004.",
+        "statement": "System saves a new package as version 1, linked to the provider account; a draft has no version until it is first saved as Active or Inactive. Whether it can be used in quote creation follows FR-004: only an Active package can be selected.",
         "rationale": "Main Flow: Provider Creates Package steps 14 and 16; Screen 5 rules."
       }
     },
@@ -77841,10 +77906,10 @@
       "owner_fr": "FR-024",
       "title": "Package deactivation warns of open quotes and needs confirmation",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Before deactivating a package, System counts the open quotes (draft or sent) that contain a quote option copied from the package, warns \"This package is used in N open quotes. Deactivating hides it from new quotes; existing quotes are not changed.\", and requires the provider to confirm; if the package is used in open quotes, confirmation is required. On confirmation the status becomes Inactive.",
-        "rationale": "Alternative Flow A5 steps 3-6 (PRD lines 278-281); Screen 4 rules (line 467); Screen 5 rules (line 512); User Story 6."
+        "statement": "Before a package becomes Inactive, by any route (Deactivate, setting the status to Inactive on the edit form, or the bulk Deactivate Selected), System counts the open quotes (draft or sent) that contain a quote option copied from the package, warns \"This package is used in N open quotes. Deactivating hides it from new quotes; existing quotes are not changed.\", and requires the provider to confirm; if the package is used in open quotes, confirmation is required. The bulk action shows one combined count and asks for one confirmation. On confirmation the status becomes Inactive, without creating a version.",
+        "rationale": "Alternative Flows A4 step 5, A5 steps 3-6 and A11; Screen 4 and Screen 5 rules; User Story 6."
       }
     },
     {
@@ -77853,10 +77918,10 @@
       "owner_fr": "FR-024",
       "title": "Provider can clone a package",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Provider can clone an existing package. System creates a new package record copied from the original with \"(Copy)\" appended to the name; the provider edits the name, duration, and price and saves it.",
-        "rationale": "Alternative Flow A6 (PRD lines 286-297); Screen 4 rules (line 466)."
+        "statement": "Provider can clone an existing package. System creates a new package record copied from the original with \"(Copy)\" appended to the name; the provider edits the name, duration, and price and saves it. Saving a clone counts as a new record toward the package creation limit.",
+        "rationale": "Alternative Flow A6; Screen 4 rules; Admin Editability Rules."
       }
     },
     {
@@ -77901,10 +77966,10 @@
       "owner_fr": "FR-024",
       "title": "Bulk actions and quick price edit on the package list",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The package list offers the bulk actions \"Deactivate Selected\" and \"Export to CSV\". A quick price edit from the list (a pencil icon shows on hover) is a library edit and saves a new package version.",
-        "rationale": "prd.md lines 545, 547 (Screen 4 notes)"
+        "statement": "The package list offers the bulk actions \"Deactivate Selected\" (one combined count of open quotes and one confirmation) and \"Export to CSV\". A quick price edit from the list (a pencil icon shows on hover) is a library edit and saves a new package version.",
+        "rationale": "Screen 4 notes; Alternative Flow A11."
       }
     },
     {
@@ -77913,10 +77978,10 @@
       "owner_fr": "FR-024",
       "title": "No platform limit on packages per provider",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "There is no total limit on how many packages a provider can create; package creation is limited to 50 per hour per provider by default (admin setting).",
-        "rationale": "Provider Editability Rules, Business Rules for Providers; Admin Editability Rules."
+        "statement": "There is no total limit on how many packages a provider can create; package creation is limited to 50 per hour per provider by default (admin setting). Only the first save of a new package counts (Save Package, Save as Draft, or saving a clone); auto-save, edits, and media upload retries do not. When the limit is reached the save is refused with \"You have reached the limit of [N] new packages per hour. Please try again later.\", where N is the setting value.",
+        "rationale": "Provider Editability Rules; Admin Editability Rules."
       }
     },
     {
@@ -77947,24 +78012,24 @@
       "id": "REQ-024-081",
       "type": "Rule",
       "owner_fr": "FR-024",
-      "title": "Treatment and package text is translatable via FR-021",
+      "title": "Library text and labels use translation keys; package free text follows the free-text switch",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Treatment descriptions and technique specifications, package names and descriptions, and all UI labels and error messages are translatable and use i18n keys from FR-021. Treatment type codes (FUE, FUT, DHI, Sapphire FUE, Robotic), package item service type codes, and media file names and CDN URLs stay in English. Before production release all treatment- and package-related strings must be registered with the FR-021 translation management system.",
-        "rationale": "Localization Rules (PRD lines 607-623)."
+        "statement": "Admin-authored library text (treatment descriptions and technique specifications) and all UI labels and error messages use FR-021 translation keys; FR-021 holds a treatment-library key group for the admin-authored text. Provider-authored package names and descriptions are free text: they are shown as written, and machine-translated for the reader only when the FR-021 free-text translation switch is on (REQ-021-119). Treatment type codes (FUE, FUT, DHI, Sapphire FUE, Robotic), package item service type codes, and media file names and CDN URLs stay in English. Before production release all keyed treatment and package strings must be registered with the FR-021 translation management system.",
+        "rationale": "Localization Rules; Dependencies, FR-021."
       }
     },
     {
       "id": "REQ-024-082",
       "type": "Rule",
       "owner_fr": "FR-024",
-      "title": "Provider staff role permissions gate package management",
+      "title": "Provider staff role permissions gate package and pricing actions",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Role-based permissions (FR-009) determine which provider staff can create and edit packages; package creation and editing are permission-checked by staff role.",
-        "rationale": "Internal Dependencies, FR-009 (PRD lines 686-688). The permission matrix is owned by FR-009."
+        "statement": "Role-based permissions (FR-009) determine which provider staff can use these actions: package create, edit, clone, deactivate, quick price edit, and treatment pricing configuration; each is permission-checked by staff role. The permission matrix is owned by FR-009 and FR-031.",
+        "rationale": "Internal Dependencies, FR-009; Provider Editability Rules."
       }
     },
     {
@@ -78154,10 +78219,10 @@
       "owner_fr": "FR-024",
       "title": "Treatment creation rate limit",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "Treatment creation is limited to 10 per hour per admin by default; the limit is an admin setting and a whole number of 1 or more.",
-        "rationale": "prd.md lines 642, 880 (Admin Editability Rules; Security Considerations threat mitigation)"
+        "statement": "Treatment creation is limited to 10 per hour per admin by default; the limit is an admin setting and a whole number of 1 or more. Only the first save of a new treatment counts (Save Treatment or Save as Draft); auto-save, edits, and media upload retries do not. When the limit is reached the save is refused with \"You have reached the limit of [N] new treatments per hour. Please try again later.\", where N is the setting value.",
+        "rationale": "Admin Editability Rules; Security Considerations threat mitigation."
       }
     },
     {
@@ -78176,12 +78241,24 @@
       "id": "REQ-024-100",
       "type": "Rule",
       "owner_fr": "FR-024",
-      "title": "Status after a successful media upload retry",
+      "title": "Chosen status stored and restored after a media upload retry",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "After a successful media upload retry, a treatment in Pending Media Upload takes the status the admin picks on that save (Active or Inactive).",
-        "rationale": "prd.md line 998 (edge case: media upload fails during treatment creation); owner answer 2026-11-22"
+        "statement": "The status the admin chose on the form (Active or Inactive) is stored with a treatment record saved as Pending Media Upload and restored when a media upload retry succeeds; the same applies to an image or an educational PDF.",
+        "rationale": "Edge Cases (media upload failure); Alternative Flow B2."
+      }
+    },
+    {
+      "id": "REQ-024-101",
+      "type": "Rule",
+      "owner_fr": "FR-024",
+      "title": "A package is not tied to a treatment",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A package is not tied to a treatment: a provider may use any of its Active packages with any treatment it offers. FR-004 owns how a quote picks the treatment and its packages.",
+        "rationale": "General Module Rule 12 and Core Requirements; owner ruling on package and treatment independence."
       }
     },
     {
@@ -99397,10 +99474,10 @@
       "owner_fr": "FR-024",
       "title": "Admin Treatment Catalog",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
-        "description": "Admin list of every treatment with search by name, filter by type, Active-first order and 20 per page; entry to create, edit, deactivate and view details."
+        "description": "Admin list of every treatment with search by name, filter by type, Active-first order (then Pending Media Upload, Draft, Inactive) and 20 per page; entry to create, edit, view details, and deactivate (shown only on Active treatments)."
       }
     },
     {
@@ -99421,10 +99498,10 @@
       "owner_fr": "FR-024",
       "title": "Provider Treatment Pricing Configuration",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "provider",
-        "description": "Provider view of Active catalog treatments with read-only treatment content and editable pricing: base price, price per graft, graft range and Offered toggle. The system quote currency is shown read-only (SET-quote-currency)."
+        "description": "Provider view of Active catalog treatments with read-only treatment content and editable pricing: base price, price per graft, graft range and Offered toggle; a saved configuration makes the treatment available in quote creation only while it is Offered. The system quote currency is shown read-only (SET-quote-currency)."
       }
     },
     {
@@ -99433,10 +99510,10 @@
       "owner_fr": "FR-024",
       "title": "Provider Package Catalog",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "provider",
-        "description": "Provider list of own packages with search, status filter, sort, Active-first order, 20 per page, Clone, Deactivate, bulk deactivate and CSV export."
+        "description": "Provider list of own packages with search, status filter, sort, Active-first order, 20 per page, Clone, Deactivate (shown only on Active packages), bulk deactivate with one combined open-quote count and one confirmation, and CSV export."
       }
     },
     {
@@ -99469,10 +99546,10 @@
       "owner_fr": "FR-024",
       "title": "Admin Provider Packages",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
-        "description": "Read-only admin view of a provider's package catalog for support purposes only; View Details shows the full package version content. No edit, clone, deactivate or bulk action."
+        "description": "Read-only admin view of a provider's Active and Inactive packages for support purposes only (drafts are not listed); View Details shows the full package version content. No edit, clone, deactivate or bulk action."
       }
     },
     {
@@ -101853,9 +101930,9 @@
       "owner_fr": "FR-024",
       "title": "Package creation rate limit",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Maximum package creations per provider per hour; a whole number of 1 or more. There is no total limit on how many packages a provider can create (Admin Editability Rules, Provider Editability Rules).",
+        "description": "Maximum new packages per provider per hour; a whole number of 1 or more. Only the first save of a new record counts, and a clone counts. There is no total limit on how many packages a provider can create (Admin Editability Rules, Provider Editability Rules).",
         "default": "50",
         "unit": "creations per provider per hour"
       }
@@ -102574,9 +102651,9 @@
       "owner_fr": "FR-024",
       "title": "Treatment creation rate limit",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Maximum treatment creations per admin per hour; a whole number of 1 or more (Admin Editability Rules, Security Considerations).",
+        "description": "Maximum new treatments per admin per hour; a whole number of 1 or more. Only the first save of a new record counts (Admin Editability Rules, Security Considerations).",
         "default": "10",
         "unit": "creations per admin per hour"
       }
@@ -117693,7 +117770,7 @@
       "owner_fr": "FR-024",
       "title": "System saves the treatment record with the status the admin chose",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow: Admin Creates Treatment step 13"
       }
@@ -117702,9 +117779,9 @@
       "id": "STP-024-014",
       "type": "Step",
       "owner_fr": "FR-024",
-      "title": "When the treatment was saved as Active, System sends the new-treatment notification to all active providers",
+      "title": "When the treatment becomes Active for the first time, by any route, System sends the new-treatment notification to all active providers",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow: Admin Creates Treatment step 14"
       }
@@ -117812,9 +117889,9 @@
       "id": "STP-024-029",
       "type": "Step",
       "owner_fr": "FR-024",
-      "title": "System notifies providers who currently offer the treatment",
+      "title": "System notifies providers about the update; an Inactive treatment switched back to Active sends the treatment-available-again notice only to providers with a pricing configuration, and a Draft made Active for the first time sends the new-treatment notice",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A1 step 9"
       }
@@ -117834,9 +117911,9 @@
       "id": "STP-024-031",
       "type": "Step",
       "owner_fr": "FR-024",
-      "title": "Admin opens the treatment in the catalog",
+      "title": "Admin opens an Active treatment in the catalog",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A2 step 1"
       }
@@ -117845,9 +117922,9 @@
       "id": "STP-024-032",
       "type": "Step",
       "owner_fr": "FR-024",
-      "title": "Admin clicks Deactivate Treatment",
+      "title": "Admin clicks Deactivate Treatment (shown only on Active treatments)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "A2 step 2"
       }
@@ -117856,9 +117933,9 @@
       "id": "STP-024-034",
       "type": "Step",
       "owner_fr": "FR-024",
-      "title": "System displays the warning with the provider and active quote counts",
+      "title": "System displays the warning with the provider, active quote and open booking counts",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A2 step 4"
       }
@@ -117911,9 +117988,9 @@
       "id": "STP-024-039",
       "type": "Step",
       "owner_fr": "FR-024",
-      "title": "Sent quotes and bookings using the treatment continue unaffected; a draft quote that uses it must pick another treatment before it can be sent",
+      "title": "Sent quotes and bookings keep the treatment version they recorded and continue unaffected; a draft quote that uses it must pick another treatment before it can be sent",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A2 step 9"
       }
@@ -117988,9 +118065,9 @@
       "id": "STP-024-048",
       "type": "Step",
       "owner_fr": "FR-024",
-      "title": "System saves the provider-specific pricing configuration",
+      "title": "System stores the provider-specific pricing configuration",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A3 step 8"
       }
@@ -117999,9 +118076,9 @@
       "id": "STP-024-049",
       "type": "Step",
       "owner_fr": "FR-024",
-      "title": "Treatment becomes available for the provider to select when creating quotes",
+      "title": "Treatment becomes available for the provider to select when creating quotes only while its status is Offered",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A3 step 9"
       }
@@ -118122,7 +118199,7 @@
       "owner_fr": "FR-024",
       "title": "System displays the media upload failure error",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "B2 step 4"
       }
@@ -118131,9 +118208,9 @@
       "id": "STP-024-065",
       "type": "Step",
       "owner_fr": "FR-024",
-      "title": "System saves the treatment record without media marked Pending Media Upload",
+      "title": "System saves the treatment record without media marked Pending Media Upload and stores the status the admin chose",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "B2 step 5"
       }
@@ -118153,9 +118230,9 @@
       "id": "STP-024-067",
       "type": "Step",
       "owner_fr": "FR-024",
-      "title": "System updates the treatment record once the upload succeeds",
+      "title": "System updates the treatment record and restores the stored status once the upload succeeds",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "B2 step 7"
       }
@@ -118263,9 +118340,9 @@
       "id": "STP-024-080",
       "type": "Step",
       "owner_fr": "FR-024",
-      "title": "Provider sets the package status Active or Inactive (default Active), or saves the package as a draft; the form also auto-saves a draft every 30 seconds",
+      "title": "Provider sets the package status Active or Inactive (default Active), or saves the package as a draft (only for a package never Active); the form also auto-saves a draft every 30 seconds without creating a version",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow: Provider Creates Package step 10"
       }
@@ -118296,9 +118373,9 @@
       "id": "STP-024-084",
       "type": "Step",
       "owner_fr": "FR-024",
-      "title": "System saves the package as version 1 linked to the provider account",
+      "title": "System saves the package as version 1 linked to the provider account; a draft has no version until it is first saved as Active or Inactive",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Provider Creates Package step 14"
       }
@@ -118309,7 +118386,7 @@
       "owner_fr": "FR-024",
       "title": "System displays the success message Package created successfully",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Provider Creates Package step 15"
       }
@@ -118318,9 +118395,9 @@
       "id": "STP-024-086",
       "type": "Step",
       "owner_fr": "FR-024",
-      "title": "Package appears in the provider list and, when Active, is selectable during quote creation",
+      "title": "Package, now Active, appears in the provider list and is selectable during quote creation as FR-004 allows",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow: Provider Creates Package step 16"
       }
@@ -118373,9 +118450,9 @@
       "id": "STP-024-095",
       "type": "Step",
       "owner_fr": "FR-024",
-      "title": "Provider modifies package fields",
+      "title": "Provider modifies package fields, including the status Active or Inactive; setting Inactive shows the open-quote warning and confirmation",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "A4 step 5"
       }
@@ -118395,9 +118472,9 @@
       "id": "STP-024-097",
       "type": "Step",
       "owner_fr": "FR-024",
-      "title": "System saves the changes as a new package version",
+      "title": "System saves the changes as a new package version; only a successful Update of an Active or Inactive package creates one",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A4 step 7"
       }
@@ -118450,9 +118527,9 @@
       "id": "STP-024-102",
       "type": "Step",
       "owner_fr": "FR-024",
-      "title": "Provider clicks Deactivate on the package",
+      "title": "Provider clicks Deactivate on an Active package",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "A5 step 2"
       }
@@ -118472,9 +118549,9 @@
       "id": "STP-024-104",
       "type": "Step",
       "owner_fr": "FR-024",
-      "title": "System displays the open-quotes warning",
+      "title": "System displays the open-quotes warning; the same warning applies on every route to Inactive",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A5 step 4"
       }
@@ -118494,9 +118571,9 @@
       "id": "STP-024-106",
       "type": "Step",
       "owner_fr": "FR-024",
-      "title": "System changes the package status to Inactive",
+      "title": "System changes the package status to Inactive without creating a version",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A5 step 6"
       }
@@ -118584,7 +118661,7 @@
       "owner_fr": "FR-024",
       "title": "System creates a new package record",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "A6 step 6"
       }
@@ -118653,6 +118730,204 @@
       "version": 1,
       "attrs": {
         "prd_ref": "B3 step 7"
+      }
+    },
+    {
+      "id": "STP-024-128",
+      "type": "Step",
+      "owner_fr": "FR-024",
+      "title": "Admin opens the treatment type list from the treatment settings area",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A7 step 1"
+      }
+    },
+    {
+      "id": "STP-024-129",
+      "type": "Step",
+      "owner_fr": "FR-024",
+      "title": "Admin clicks Add Type or Edit and enters a unique type name",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A7 step 2"
+      }
+    },
+    {
+      "id": "STP-024-130",
+      "type": "Step",
+      "owner_fr": "FR-024",
+      "title": "System saves the type and the Treatment Type field on Screens 1 and 2 shows it",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A7 step 3"
+      }
+    },
+    {
+      "id": "STP-024-131",
+      "type": "Step",
+      "owner_fr": "FR-024",
+      "title": "Admin opens the provider packages view from the treatment settings area",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A8 step 1"
+      }
+    },
+    {
+      "id": "STP-024-132",
+      "type": "Step",
+      "owner_fr": "FR-024",
+      "title": "Admin selects a provider",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A8 step 2"
+      }
+    },
+    {
+      "id": "STP-024-133",
+      "type": "Step",
+      "owner_fr": "FR-024",
+      "title": "System lists that provider's Active and Inactive packages only; drafts stay with the provider's own team",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A8 step 2"
+      }
+    },
+    {
+      "id": "STP-024-134",
+      "type": "Step",
+      "owner_fr": "FR-024",
+      "title": "Admin clicks View Details to read the full package version content; no edit, clone, deactivate or bulk action is offered",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A8 step 3"
+      }
+    },
+    {
+      "id": "STP-024-135",
+      "type": "Step",
+      "owner_fr": "FR-024",
+      "title": "Admin opens the aftercare templates from the treatment settings area",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A9 step 1"
+      }
+    },
+    {
+      "id": "STP-024-136",
+      "type": "Step",
+      "owner_fr": "FR-024",
+      "title": "Admin adds or edits a medication or post-op instruction template and saves it",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A9 step 2"
+      }
+    },
+    {
+      "id": "STP-024-137",
+      "type": "Step",
+      "owner_fr": "FR-024",
+      "title": "System makes the template available to providers in aftercare documentation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A9 step 3"
+      }
+    },
+    {
+      "id": "STP-024-138",
+      "type": "Step",
+      "owner_fr": "FR-024",
+      "title": "Provider clicks Quick Copy Pricing on a treatment card and picks the treatment to copy from",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A10 step 1"
+      }
+    },
+    {
+      "id": "STP-024-139",
+      "type": "Step",
+      "owner_fr": "FR-024",
+      "title": "System fills the pricing fields with the values of the chosen treatment",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A10 step 2"
+      }
+    },
+    {
+      "id": "STP-024-140",
+      "type": "Step",
+      "owner_fr": "FR-024",
+      "title": "Provider reviews and edits the copied values and sets the status Offered or Not Offered",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A10 step 3"
+      }
+    },
+    {
+      "id": "STP-024-141",
+      "type": "Step",
+      "owner_fr": "FR-024",
+      "title": "On the package list, provider either clicks the pencil icon and enters a new standard price, or selects Active packages and clicks Deactivate Selected",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A11 step 1"
+      }
+    },
+    {
+      "id": "STP-024-142",
+      "type": "Step",
+      "owner_fr": "FR-024",
+      "title": "System saves the new price as a new package version, because a quick price edit is a library edit",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A11 step 2"
+      }
+    },
+    {
+      "id": "STP-024-143",
+      "type": "Step",
+      "owner_fr": "FR-024",
+      "title": "System shows one combined count of the open quotes that use any selected package and asks for one confirmation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A11 step 3"
+      }
+    },
+    {
+      "id": "STP-024-144",
+      "type": "Step",
+      "owner_fr": "FR-024",
+      "title": "On the provider's confirmation, System sets each selected package to Inactive without creating versions",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A11 step 4"
+      }
+    },
+    {
+      "id": "STP-024-145",
+      "type": "Step",
+      "owner_fr": "FR-024",
+      "title": "If the upload fails while an Active treatment is being edited, System does not save the edit, keeps the previous version and status live, and reports the failed file",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B2 On an edit"
       }
     },
     {
@@ -172028,6 +172303,18 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-024-admin-package-review",
+      "verb": "starts at",
+      "to_id": "STP-024-131",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-024-aftercare-templates",
+      "verb": "starts at",
+      "to_id": "STP-024-135",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-024-configure-treatment-pricing",
       "verb": "starts at",
       "to_id": "STP-024-041",
@@ -172076,9 +172363,27 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-024-package-quick-edit-bulk",
+      "verb": "starts at",
+      "to_id": "STP-024-141",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-024-package-validation-error",
       "verb": "starts at",
       "to_id": "STP-024-121",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-024-quick-copy-pricing",
+      "verb": "starts at",
+      "to_id": "STP-024-138",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-024-treatment-types",
+      "verb": "starts at",
+      "to_id": "STP-024-128",
       "attrs": {}
     },
     {
@@ -176952,7 +177257,7 @@
       "verb": "active in",
       "to_id": "STG-provider-03-active",
       "attrs": {
-        "rules": 58
+        "rules": 59
       },
       "derived": true
     },
@@ -177001,7 +177306,19 @@
     {
       "from_id": "FR-024",
       "verb": "references",
+      "to_id": "REQ-004-056",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-024",
+      "verb": "references",
       "to_id": "REQ-004-057",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-024",
+      "verb": "references",
+      "to_id": "REQ-004-058",
       "attrs": {}
     },
     {
@@ -177026,6 +177343,12 @@
       "from_id": "FR-024",
       "verb": "references",
       "to_id": "REQ-015-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-024",
+      "verb": "references",
+      "to_id": "REQ-021-119",
       "attrs": {}
     },
     {
@@ -263896,6 +264219,18 @@
     {
       "from_id": "REQ-024-082",
       "verb": "applies to",
+      "to_id": "SCR-024-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-024-082",
+      "verb": "applies to",
+      "to_id": "SCR-024-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-024-082",
+      "verb": "applies to",
       "to_id": "SCR-024-05",
       "attrs": {}
     },
@@ -264285,6 +264620,24 @@
     },
     {
       "from_id": "REQ-024-100",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-024",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-024-101",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-024-101",
+      "verb": "applies to",
+      "to_id": "ENT-package",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-024-101",
       "verb": "decided by",
       "to_id": "SRC-PRD-024",
       "attrs": {}
@@ -393590,7 +393943,10 @@
       "from_id": "STP-024-013",
       "verb": "next",
       "to_id": "STP-024-014",
-      "attrs": {}
+      "attrs": {
+        "label": "treatment saved as Active",
+        "condition": "REQ-024-041"
+      }
     },
     {
       "from_id": "STP-024-013",
@@ -393901,6 +394257,12 @@
     {
       "from_id": "STP-024-029",
       "verb": "applies",
+      "to_id": "REQ-024-041",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-029",
+      "verb": "applies",
       "to_id": "REQ-024-042",
       "attrs": {}
     },
@@ -394182,6 +394544,12 @@
     },
     {
       "from_id": "STP-024-039",
+      "verb": "applies",
+      "to_id": "REQ-024-052",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-039",
       "verb": "at",
       "to_id": "STG-provider-03-active",
       "attrs": {}
@@ -394424,12 +394792,21 @@
       "from_id": "STP-024-048",
       "verb": "next",
       "to_id": "STP-024-049",
-      "attrs": {}
+      "attrs": {
+        "label": "status is Offered",
+        "condition": "REQ-024-059"
+      }
     },
     {
       "from_id": "STP-024-048",
       "verb": "on",
       "to_id": "SCR-024-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-049",
+      "verb": "applies",
+      "to_id": "REQ-024-006",
       "attrs": {}
     },
     {
@@ -394778,7 +395155,19 @@
       "from_id": "STP-024-064",
       "verb": "next",
       "to_id": "STP-024-065",
-      "attrs": {}
+      "attrs": {
+        "label": "upload fails while creating the treatment",
+        "condition": "REQ-024-049"
+      }
+    },
+    {
+      "from_id": "STP-024-064",
+      "verb": "next",
+      "to_id": "STP-024-145",
+      "attrs": {
+        "label": "upload fails while editing an Active treatment",
+        "condition": "REQ-024-049"
+      }
     },
     {
       "from_id": "STP-024-064",
@@ -394790,6 +395179,12 @@
       "from_id": "STP-024-065",
       "verb": "applies",
       "to_id": "REQ-024-049",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-065",
+      "verb": "applies",
+      "to_id": "REQ-024-100",
       "attrs": {}
     },
     {
@@ -394849,7 +395244,19 @@
     {
       "from_id": "STP-024-067",
       "verb": "applies",
+      "to_id": "REQ-024-041",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-067",
+      "verb": "applies",
       "to_id": "REQ-024-049",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-067",
+      "verb": "applies",
+      "to_id": "REQ-024-100",
       "attrs": {}
     },
     {
@@ -395166,6 +395573,12 @@
     },
     {
       "from_id": "STP-024-080",
+      "verb": "applies",
+      "to_id": "REQ-024-057",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-080",
       "verb": "at",
       "to_id": "STG-provider-config-01-configuration",
       "attrs": {}
@@ -395312,7 +395725,10 @@
       "from_id": "STP-024-085",
       "verb": "next",
       "to_id": "STP-024-086",
-      "attrs": {}
+      "attrs": {
+        "label": "package saved as Active",
+        "condition": "REQ-024-069"
+      }
     },
     {
       "from_id": "STP-024-085",
@@ -395342,12 +395758,6 @@
       "from_id": "STP-024-086",
       "verb": "done by",
       "to_id": "ACT-system",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-024-086",
-      "verb": "next",
-      "to_id": "STP-004-006",
       "attrs": {}
     },
     {
@@ -395480,6 +395890,12 @@
       "from_id": "STP-024-095",
       "verb": "applies",
       "to_id": "REQ-024-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-095",
+      "verb": "applies",
+      "to_id": "REQ-024-072",
       "attrs": {}
     },
     {
@@ -396072,6 +396488,12 @@
     },
     {
       "from_id": "STP-024-116",
+      "verb": "applies",
+      "to_id": "REQ-024-078",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-116",
       "verb": "at",
       "to_id": "STG-provider-03-active",
       "attrs": {}
@@ -396260,6 +396682,540 @@
       "from_id": "STP-024-127",
       "verb": "on",
       "to_id": "SCR-024-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-128",
+      "verb": "applies",
+      "to_id": "REQ-024-037",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-128",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-128",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-128",
+      "verb": "next",
+      "to_id": "STP-024-129",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-128",
+      "verb": "on",
+      "to_id": "SCR-024-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-129",
+      "verb": "applies",
+      "to_id": "REQ-024-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-129",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-129",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-129",
+      "verb": "next",
+      "to_id": "STP-024-130",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-129",
+      "verb": "on",
+      "to_id": "SCR-024-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-130",
+      "verb": "applies",
+      "to_id": "REQ-024-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-130",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-130",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-130",
+      "verb": "on",
+      "to_id": "SCR-024-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-131",
+      "verb": "applies",
+      "to_id": "REQ-024-037",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-131",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-131",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-131",
+      "verb": "next",
+      "to_id": "STP-024-132",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-131",
+      "verb": "on",
+      "to_id": "SCR-024-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-132",
+      "verb": "applies",
+      "to_id": "REQ-024-040",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-132",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-132",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-132",
+      "verb": "next",
+      "to_id": "STP-024-133",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-132",
+      "verb": "on",
+      "to_id": "SCR-024-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-133",
+      "verb": "applies",
+      "to_id": "REQ-024-040",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-133",
+      "verb": "applies",
+      "to_id": "REQ-024-057",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-133",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-133",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-133",
+      "verb": "next",
+      "to_id": "STP-024-134",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-133",
+      "verb": "on",
+      "to_id": "SCR-024-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-134",
+      "verb": "applies",
+      "to_id": "REQ-024-040",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-134",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-134",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-134",
+      "verb": "on",
+      "to_id": "SCR-024-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-135",
+      "verb": "applies",
+      "to_id": "REQ-024-037",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-135",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-135",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-135",
+      "verb": "next",
+      "to_id": "STP-024-136",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-135",
+      "verb": "on",
+      "to_id": "SCR-024-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-136",
+      "verb": "applies",
+      "to_id": "REQ-024-085",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-136",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-136",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-136",
+      "verb": "next",
+      "to_id": "STP-024-137",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-136",
+      "verb": "on",
+      "to_id": "SCR-024-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-137",
+      "verb": "applies",
+      "to_id": "REQ-024-085",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-137",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-137",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-137",
+      "verb": "on",
+      "to_id": "SCR-024-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-138",
+      "verb": "applies",
+      "to_id": "REQ-024-062",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-138",
+      "verb": "at",
+      "to_id": "STG-provider-config-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-138",
+      "verb": "done by",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-138",
+      "verb": "next",
+      "to_id": "STP-024-139",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-138",
+      "verb": "on",
+      "to_id": "SCR-024-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-139",
+      "verb": "applies",
+      "to_id": "REQ-024-062",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-139",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-139",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-139",
+      "verb": "next",
+      "to_id": "STP-024-140",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-139",
+      "verb": "on",
+      "to_id": "SCR-024-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-140",
+      "verb": "applies",
+      "to_id": "REQ-024-059",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-140",
+      "verb": "applies",
+      "to_id": "REQ-024-060",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-140",
+      "verb": "at",
+      "to_id": "STG-provider-config-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-140",
+      "verb": "done by",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-140",
+      "verb": "next",
+      "to_id": "STP-024-046",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-140",
+      "verb": "on",
+      "to_id": "SCR-024-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-141",
+      "verb": "applies",
+      "to_id": "REQ-024-077",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-141",
+      "verb": "at",
+      "to_id": "STG-provider-config-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-141",
+      "verb": "done by",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-141",
+      "verb": "next",
+      "to_id": "STP-024-142",
+      "attrs": {
+        "label": "quick price edit",
+        "condition": "REQ-024-077"
+      }
+    },
+    {
+      "from_id": "STP-024-141",
+      "verb": "next",
+      "to_id": "STP-024-143",
+      "attrs": {
+        "label": "Deactivate Selected",
+        "condition": "REQ-024-077"
+      }
+    },
+    {
+      "from_id": "STP-024-141",
+      "verb": "on",
+      "to_id": "SCR-024-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-142",
+      "verb": "applies",
+      "to_id": "REQ-024-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-142",
+      "verb": "applies",
+      "to_id": "REQ-024-077",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-142",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-142",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-142",
+      "verb": "on",
+      "to_id": "SCR-024-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-143",
+      "verb": "applies",
+      "to_id": "REQ-024-072",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-143",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-143",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-143",
+      "verb": "next",
+      "to_id": "STP-024-144",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-143",
+      "verb": "on",
+      "to_id": "SCR-024-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-144",
+      "verb": "applies",
+      "to_id": "REQ-024-072",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-144",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-144",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-144",
+      "verb": "on",
+      "to_id": "SCR-024-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-145",
+      "verb": "applies",
+      "to_id": "REQ-024-049",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-145",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-145",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-145",
+      "verb": "on",
+      "to_id": "SCR-024-02",
       "attrs": {}
     },
     {
@@ -439551,6 +440507,103 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261124-111516-5a77a700",
+      "at": "2026-11-24T11:15:16.176541+00:00",
+      "changed_by": "docs-manager",
+      "reason": "FR-024 logic review pass 1: first-Active notice by any route and reactivation notice, Deactivate only on Active records, Draft only for a never-Active package, versions only on a successful Update, open-quote warning on every route to Inactive, open booking count in the treatment warning, Offered-only availability and Not Offered effect, Number of Providers counts Offered configurations of Active providers, packages not tied to a treatment, stored chosen status restored on a retried upload and failed edit upload keeping the live version, creation-limit message and counting rule, permission-gated actions named, FR-021 translation approach, and short flows for the admin screens, Quick Copy Pricing, quick price edit and bulk actions.",
+      "source_id": null,
+      "nodes_added": [
+        "FLW-024-admin-package-review",
+        "FLW-024-aftercare-templates",
+        "FLW-024-package-quick-edit-bulk",
+        "FLW-024-quick-copy-pricing",
+        "FLW-024-treatment-types",
+        "REQ-024-101",
+        "STP-024-128",
+        "STP-024-129",
+        "STP-024-130",
+        "STP-024-131",
+        "STP-024-132",
+        "STP-024-133",
+        "STP-024-134",
+        "STP-024-135",
+        "STP-024-136",
+        "STP-024-137",
+        "STP-024-138",
+        "STP-024-139",
+        "STP-024-140",
+        "STP-024-141",
+        "STP-024-142",
+        "STP-024-143",
+        "STP-024-144",
+        "STP-024-145"
+      ],
+      "nodes_updated": [
+        "ENT-package.status",
+        "ENT-treatment.provider_count",
+        "ENT-treatment.status",
+        "EVT-treatment-added",
+        "EVT-treatment-updated",
+        "FR-024",
+        "REQ-024-003",
+        "REQ-024-006",
+        "REQ-024-007",
+        "REQ-024-008",
+        "REQ-024-009",
+        "REQ-024-013",
+        "REQ-024-040",
+        "REQ-024-041",
+        "REQ-024-042",
+        "REQ-024-049",
+        "REQ-024-051",
+        "REQ-024-052",
+        "REQ-024-054",
+        "REQ-024-055",
+        "REQ-024-057",
+        "REQ-024-059",
+        "REQ-024-069",
+        "REQ-024-072",
+        "REQ-024-073",
+        "REQ-024-077",
+        "REQ-024-078",
+        "REQ-024-081",
+        "REQ-024-082",
+        "REQ-024-098",
+        "REQ-024-100",
+        "SCR-024-01",
+        "SCR-024-03",
+        "SCR-024-04",
+        "SCR-024-07",
+        "SET-package-creation-rate-limit",
+        "SET-treatment-creation-rate-limit",
+        "STP-024-013",
+        "STP-024-014",
+        "STP-024-029",
+        "STP-024-031",
+        "STP-024-032",
+        "STP-024-034",
+        "STP-024-039",
+        "STP-024-048",
+        "STP-024-049",
+        "STP-024-064",
+        "STP-024-065",
+        "STP-024-067",
+        "STP-024-080",
+        "STP-024-084",
+        "STP-024-085",
+        "STP-024-086",
+        "STP-024-095",
+        "STP-024-097",
+        "STP-024-102",
+        "STP-024-104",
+        "STP-024-106",
+        "STP-024-116"
+      ],
+      "edges_added": 115,
+      "edges_removed": 5,
+      "rows": 324
+    },
     {
       "id": "cs-20261124-111203-b98464dd",
       "at": "2026-11-24T11:12:03.904762+00:00",
