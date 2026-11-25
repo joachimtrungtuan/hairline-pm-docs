@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T08:38:15Z",
+  "generated_at": "2026-11-25T08:39:32Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -82343,11 +82343,11 @@
       "id": "REQ-026-070",
       "type": "Rule",
       "owner_fr": "FR-026",
-      "title": "Throttling changes apply immediately, with no staging",
+      "title": "Throttling changes are saved without staging and apply once the platforms receive them",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Authentication throttling changes apply immediately upon save (no staging); new login attempts apply the new throttling policy immediately after propagation.",
+        "statement": "Authentication throttling changes take effect on save with no staging and reach the Patient and Provider platforms within 60 seconds (REQ-026-005); new login attempts apply the new throttling policy once the platform has received it.",
         "rationale": "Screen 2 business rules, restated by Main Flow step 16."
       }
     },
@@ -124995,7 +124995,7 @@
       "owner_fr": "FR-026",
       "title": "FR-004 copies currency and expiry onto a sent quote",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A7 step 6"
       }
@@ -421461,12 +421461,6 @@
       "attrs": {}
     },
     {
-      "from_id": "STP-026-077",
-      "verb": "on",
-      "to_id": "SCR-026-09",
-      "attrs": {}
-    },
-    {
       "from_id": "STP-026-078",
       "verb": "applies",
       "to_id": "REQ-026-030",
@@ -463504,6 +463498,21 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-083817-3d666acb",
+      "at": "2026-11-25T08:38:17.328694+00:00",
+      "changed_by": "controller",
+      "reason": "Throttling changes reach the platforms within 60 seconds and apply once received (not immediately); the step where FR-004 copies currency and expiry onto a sent quote happens in FR-004, not on Screen 5d.",
+      "source_id": "SRC-PRD-026",
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-026-070",
+        "STP-026-077"
+      ],
+      "edges_added": 0,
+      "edges_removed": 1,
+      "rows": 3
+    },
     {
       "id": "cs-20261125-083702-95a94ac9",
       "at": "2026-11-25T08:37:02.631848+00:00",

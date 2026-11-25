@@ -146,7 +146,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
 13. System invalidates settings cache
 14. System displays success message: "Authentication throttling updated successfully (v1.3)"
 15. Within 60 seconds, Patient Platform and Provider Platform poll settings API and receive updated throttling policy
-16. New login attempts on Patient and Provider platforms immediately apply new throttling rules (7 attempts, 10-minute lockout)
+16. New login attempts on Patient and Provider platforms apply the new throttling rules (7 attempts, 10-minute lockout) once the platform has received the new policy (REQ-026-070)
 
 ### Alternative Flows
 
@@ -388,7 +388,7 @@ The App Settings & Security Policies module provides a centralized, audited, and
 **Notes**:
 
 - Display current values prominently before edit
-- Show preview of impact: "Users will be locked out after X failed attempts for Y minutes" (REQ-026-135)
+- Show impact preview: "Users will be locked out after X failed attempts for Y minutes" (REQ-026-135)
 - Display warning if reducing security (e.g., increasing attempts or reducing lockout) (REQ-026-132)
 - On save, a modal prompts for the mandatory change reason (10-500 chars) (REQ-026-002)
 
@@ -1065,6 +1065,7 @@ The following modules consume FR-026 infrastructure. They are listed here for tr
   - Quote Expiring Soon Lead Time: 12 hours
   - Slot-Hold Duration: 48 hours
   - Hold Expiring Soon Lead Time: 12 hours
+  - Why needed: FR-005 places the slot hold at acceptance and FR-006 manages it; both consume the slot-hold duration. FR-006 also consumes the hold-expiring-soon lead time for the patient reminder.
 - **Analytics Configuration**:
   - TTFQ SLA Target: 120 minutes
   - At Risk Threshold: 7 days
@@ -1072,7 +1073,6 @@ The following modules consume FR-026 infrastructure. They are listed here for tr
   - Price Outlier Threshold: 30%
   - Benchmark Refresh Frequency: Weekly
   - Target Monthly Commission: not set (reference line hidden)
-- **Why needed**: FR-005 places the slot hold at acceptance and FR-006 manages it; both consume the slot-hold duration. FR-006 also consumes the hold-expiring-soon lead time for the patient reminder.
 
 **Carried from dropped sections (original wording)**:
 
@@ -1380,6 +1380,7 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 | 2026-11-24 | 1.19 | Logic review pass 1: permissions replace the working role names, with a screen-to-permission table (REQ-026-001, REQ-026-054); treatment areas seeded Hair, Beard and Both (REQ-026-034); head scan Settings reduced to two quality minimums (default 40 each) and video limits marked unused (REQ-026-117); admin sign-in uses the shared lockout and the fixed FR-031 throttle together (REQ-026-116); Change Type System for FR-029 currency versions (REQ-026-142); creation limits owned by other features listed on Screen 8 (REQ-026-140); reminder skip rule when a lead time is raised (REQ-026-031); country CSV columns, final active country guard and deactivation warning for FR-028 (REQ-026-128, REQ-026-141, REQ-026-129); emergency contact at-least-one rule (REQ-026-143); bounds for the re-verification threshold and admin inactivity timeout; seeding and empty rules for timezones, notification types, landing images, acceptance terms; Settings API outage at hold placement (REQ-026-144). | Product Owner / Documentation |
 | 2026-11-24 | 1.20 | Logic review pass 2: one shared failed-attempt counter with reset and lowered-limit rule (REQ-026-145); admin session limit and timeout enforcement (REQ-026-116); flag upload added to the country scenario (REQ-026-122); expiry value in the email variable and resend under the version and expiry in force (REQ-026-072, REQ-026-073, REQ-026-106); admin times in the browser timezone (REQ-026-050); emergency contact check only on a save that changes those rows (REQ-026-143); flag missing means an empty flag (REQ-026-011, REQ-026-128); stale head scan wording fixed. | Product Owner / Documentation |
 | 2026-11-25 | 1.21 | Cross-FR alignment: Screen 8 lists the search results page size and the provider search default sort owned by FR-022 (REQ-026-140); FR-031 confirmed the permission split for the App Data lists and the OTP settings. | Documentation |
+| 2026-11-25 | 1.22 | Backlog points settled: the throttling change now says new login attempts apply the policy once received (no longer "immediately", REQ-026-070), the Screen 2 preview note uses the same "impact preview" wording as Screen 3, and the slot-hold "Why needed" line sits under Quote Configuration in the seed values. | Claude (AI Assistant) |
 
 ---
 

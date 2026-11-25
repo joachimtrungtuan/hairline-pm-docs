@@ -1,0 +1,7 @@
+# FR-026 backlog settle: throttling propagation wording, and the FR-004 copy step is no longer placed on the Quote Configuration screen.
+reason: "Throttling changes reach the platforms within 60 seconds and apply once received (not immediately); the step where FR-004 copies currency and expiry onto a sent quote happens in FR-004, not on Screen 5d."
+by: controller
+source_id: SRC-PRD-026
+operations:
+  - {"op": "update_node", "id": "REQ-026-070", "title": "Throttling changes are saved without staging and apply once the platforms receive them", "attrs": {"statement": "Authentication throttling changes take effect on save with no staging and reach the Patient and Provider platforms within 60 seconds (REQ-026-005); new login attempts apply the new throttling policy once the platform has received it.", "rationale": "Screen 2 business rules, restated by Main Flow step 16."}}
+  - {"op": "remove_edge", "from": "STP-026-077", "verb": "on", "to": "SCR-026-09"}
