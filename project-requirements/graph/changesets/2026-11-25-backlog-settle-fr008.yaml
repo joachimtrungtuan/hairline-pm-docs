@@ -1,0 +1,10 @@
+# FR-008 backlog points settled (PRD v3.5): cancellation routes of a Confirmed booking reach the TravelContext close step, and the replacement-booking step is tied to the provider-fault transfer rule.
+# Edges from FR-006 steps to an FR-008 step; the FR-006 nodes are not changed. No node is added or removed.
+reason: "FR-008 backlog settle: FR-006 provider-withdrawal and unpaid-balance cancellations of a Confirmed booking reach STP-008-029 (REQ-008-028); STP-008-030 follows STP-008-029 only on the provider-fault transfer branch (REQ-008-032)."
+by: controller
+source_id: SRC-PRD-008
+operations:
+  - {"op": "remove_edge", "from": "STP-008-029", "verb": "next", "to": "STP-008-030"}
+  - {"op": "add_edge", "from": "STP-008-029", "verb": "next", "to": "STP-008-030", "attrs": {"label": "Replacement booking confirmed after a provider-fault transfer", "condition": "REQ-008-032"}}
+  - {"op": "add_edge", "from": "STP-006-502", "verb": "next", "to": "STP-008-029", "attrs": {"label": "Confirmed booking cancelled", "condition": "REQ-008-028"}}
+  - {"op": "add_edge", "from": "STP-006-902", "verb": "next", "to": "STP-008-029", "attrs": {"label": "Confirmed booking cancelled", "condition": "REQ-008-028"}}

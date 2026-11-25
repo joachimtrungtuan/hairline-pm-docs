@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T08:01:27Z",
+  "generated_at": "2026-11-25T08:05:49Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -29590,9 +29590,9 @@
       "owner_fr": "FR-009",
       "title": "Action type",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Key Entities lists six values; the Screen 6 and Screen 11 filter categories are broader."
+        "description": "Values are listed in the enum. The Screen 6 filter groups them as Login, Inquiry, Quote, Treatment, Patient Communication and Settings (REQ-009-110); the Screen 11 filter groups them as Login, Patient Access, Data Export, Settings Change, Communication and Treatment (REQ-009-122)."
       }
     },
     {
@@ -29601,9 +29601,9 @@
       "owner_fr": "FR-009",
       "title": "Description",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Also carries the Reason for Change entered on Screen 3."
+        "description": "Also carries the Reason for Change entered on Screen 3 and the reason entered for a Suspend on Screen 4."
       }
     },
     {
@@ -52268,9 +52268,9 @@
       "owner_fr": "FR-009",
       "title": "A2: expired invitation resent with new token and expiry",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "For an Expired invitation, System checks that a seat is free and blocks the resend with the Screen 2 seat limit message when none is (the invitation stays Expired); a Pending invitation already holds its seat, so it has no seat check and no seat change. System generates new invitation token and sends new email Old invitation token invalidated; the old link stops working Outcome: Team member receives fresh invitation with new 7-day expiry",
+        "statement": "The Owner can resend any Pending or Expired invitation; a Manager can resend only invitations for Clinical Staff and Billing Staff, the same limit as for inviting (REQ-009-001) and cancelling (REQ-009-193). For an Expired invitation, System checks that a seat is free and blocks the resend with the Screen 2 seat limit message when none is (the invitation stays Expired); a Pending invitation already holds its seat, so it has no seat check and no seat change. System generates new invitation token and sends new email Old invitation token invalidated; the old link stops working Outcome: Team member receives fresh invitation with new 7-day expiry",
         "rationale": "prd.md lines 134-136 (checked against the PRD text)."
       }
     },
@@ -52652,9 +52652,9 @@
       "owner_fr": "FR-009",
       "title": "Suspensions use the removal modal with a different final state",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Suspensions use same modal with different final state. A suspension emits the team member suspended event and records who set it (REQ-009-192).",
+        "statement": "Suspensions use same modal with different final state. A suspension emits the team member suspended event and records who set it (REQ-009-192). The reason entered for a suspension is recorded in the audit entry (description); the removal reason fields on the team member record hold removal reasons only.",
         "rationale": "prd.md line 416 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -54523,12 +54523,12 @@
       "id": "REQ-010-046",
       "type": "Rule",
       "owner_fr": "FR-010",
-      "title": "Treatment documentation retained at least 7 years",
+      "title": "Treatment documentation retention follows the system 10-year Rule",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "Treatment documentation retention follows the system PRD, Platform-Wide Rules: One 10-year retention period",
-        "rationale": "Overlaps the 7+ year retention for photos in REQ-010-013; possible duplicate within this FR. Archived FR-010 PRD baseline, lines 573."
+        "rationale": "Pointer to REQ-SYS-002; the retention period is held once in the system PRD."
       }
     },
     {
@@ -54669,10 +54669,10 @@
       "owner_fr": "FR-010",
       "title": "No-Show: the booking stays Confirmed and any refund follows the FR-006 refund rules",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "If a case is flagged as No-Show, the booking stays Confirmed and any refund follows the FR-006 refund rules (EC-004).",
-        "rationale": "References EC-004, which does not exist in this PRD (product owner question). Archived FR-010 PRD baseline, lines 607."
+        "statement": "If a case is flagged as No-Show, the booking stays Confirmed and any refund follows the FR-006 refund rules.",
+        "rationale": "The refund rules are owned by FR-006; this rule only states that the No-Show label changes no status."
       }
     },
     {
@@ -111900,7 +111900,7 @@
       "owner_fr": "FR-006",
       "title": "System releases holds, reservations and calendar slots and blocks further payment; for a Confirmed booking it starts the full refund and the cancellation of the remaining installments",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Alternative Flow B4 step 2"
       }
@@ -112187,7 +112187,7 @@
       "owner_fr": "FR-006",
       "title": "System sends booking.cancelled with the cause and the system-filled fee and refund amounts to patient and provider and applies the refund ladder",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B8 steps 3 and 4"
       }
@@ -113562,7 +113562,7 @@
       "owner_fr": "FR-008",
       "title": "System closes the original TravelContext",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step B2S2"
       }
@@ -378884,6 +378884,15 @@
       }
     },
     {
+      "from_id": "STP-006-502",
+      "verb": "next",
+      "to_id": "STP-008-029",
+      "attrs": {
+        "label": "Confirmed booking cancelled",
+        "condition": "REQ-008-028"
+      }
+    },
+    {
       "from_id": "STP-006-503",
       "verb": "applies",
       "to_id": "REQ-006-015",
@@ -379790,6 +379799,15 @@
       "to_id": "STP-007-022",
       "attrs": {
         "label": "refund ladder applies"
+      }
+    },
+    {
+      "from_id": "STP-006-902",
+      "verb": "next",
+      "to_id": "STP-008-029",
+      "attrs": {
+        "label": "Confirmed booking cancelled",
+        "condition": "REQ-008-028"
       }
     },
     {
@@ -384786,7 +384804,8 @@
       "verb": "next",
       "to_id": "STP-008-030",
       "attrs": {
-        "label": "Replacement booking confirmed"
+        "label": "Replacement booking confirmed after a provider-fault transfer",
+        "condition": "REQ-008-032"
       }
     },
     {
@@ -462659,6 +462678,55 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-080359-535d3410",
+      "at": "2026-11-25T08:03:59.826413+00:00",
+      "changed_by": "controller",
+      "reason": "Filing fixes from requirements already written: REQ-SYS-001 holds the identity unlock point (booking confirmation, first successful payment), REQ-SYS-002 holds the 10-year retention, and FR-006 owns the refund rules.",
+      "source_id": "SRC-PRD-010",
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-010-045",
+        "REQ-010-046",
+        "REQ-010-059"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 7
+    },
+    {
+      "id": "cs-20261125-080244-d8d8b62d",
+      "at": "2026-11-25T08:02:44.635416+00:00",
+      "changed_by": "controller",
+      "reason": "Backlog points settled: Manager resend limited like invite and cancel; Suspend reason recorded in the audit entry; stale action type description replaced.",
+      "source_id": "SRC-PRD-009",
+      "nodes_added": [],
+      "nodes_updated": [
+        "ENT-team-activity-audit-log.action_type",
+        "ENT-team-activity-audit-log.description",
+        "REQ-009-048",
+        "REQ-009-082"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 4
+    },
+    {
+      "id": "cs-20261125-080128-f21b0026",
+      "at": "2026-11-25T08:01:28.470078+00:00",
+      "changed_by": "controller",
+      "reason": "FR-008 backlog settle: FR-006 provider-withdrawal and unpaid-balance cancellations of a Confirmed booking reach STP-008-029 (REQ-008-028); STP-008-030 follows STP-008-029 only on the provider-fault transfer branch (REQ-008-032).",
+      "source_id": "SRC-PRD-008",
+      "nodes_added": [],
+      "nodes_updated": [
+        "STP-006-502",
+        "STP-006-902",
+        "STP-008-029"
+      ],
+      "edges_added": 3,
+      "edges_removed": 1,
+      "rows": 4
+    },
     {
       "id": "cs-20261125-075854-086ed60d",
       "at": "2026-11-25T07:58:54.264280+00:00",

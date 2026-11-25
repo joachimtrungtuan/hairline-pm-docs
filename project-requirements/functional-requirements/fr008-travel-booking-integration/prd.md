@@ -3,7 +3,7 @@
 **Module**: P-04: Travel & Logistics | A-04: Travel Management | S-04: Travel API Gateway (future phase)
 **Feature Branch**: `fr008-travel-booking-integration`
 **Created**: 2025-11-10
-**Last Updated**: 2026-11-24
+**Last Updated**: 2026-11-25
 **Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-008 from system-prd.md; cross-checked with transcriptions (HairlineApp-Part1/2, ProviderPlatformPart1, AdminPlatformPart1/2, HairlineOverview); SRC-MTG-002, CR-FR008-20260929-01, CR-FR008-20261016-01, and Product Owner binary-path decision of 2026-09-29
 
@@ -181,7 +181,7 @@ flowchart TD
 **A1: Passport Submission Rejected (Validation Failure)**
 
 - **Trigger**: Patient attempts to submit passport details but fails validation (missing required fields, invalid dates, or passport photo quality checks fail).
-- **Outcome**: Submission is rejected; **no passport record is created/updated**; patient remains on Screen 1 with field-level errors. Passport status remains **Awaiting** until a successful submission is completed.
+- **Outcome**: Submission is rejected; **no passport record is created/updated**; patient remains on Screen 1 with field-level errors. Passport status remains **Awaiting** until a successful submission is completed. (REQ-008-047)
 - **Flow Diagram**:
 
 ```mermaid
@@ -703,7 +703,7 @@ Return flight uses the same fields, shown as a separate sub-section. If the retu
 | Date of Issue | `passport_issue` | Plain text | Editable | ENT-passport-record.passport_issue |
 | Date of Expiry | `passport_expiry` | Plain text | Editable | ENT-passport-record.passport_expiry |
 | Submitted By | — | Patient name + timestamp | Read-only | ENT-passport-record.submitted_by, ENT-passport-record.submitted_at |
-| Status | — | Submitted / Incomplete / Awaiting | Read-only badge | ENT-travel-context.passport_status |
+| Status | — | Submitted / Incomplete / Awaiting | Read-only badge | ENT-travel-context.passport_status, ENT-passport-record.status |
 
 **Tab 1 Business Rules**:
 
@@ -876,6 +876,7 @@ Same fields as Outbound Flight. Displayed as a separate sub-section below. If th
 - All notifications via email + in-app. Every notice this feature sends is an MVP notice and needs an entry in the FR-030 notification catalogue. (REQ-008-071)
 - The provider also receives a notice when the patient declares no travel needed and when an admin overrides that declaration. (REQ-008-059, REQ-008-080)
 - When an admin soft-deletes a passport, flight or hotel record, its owner (patient for the passport and in Path B, provider for Path A flight and hotel) receives a notice asking them to enter it again. (REQ-008-067, REQ-008-076)
+- When the replacement TravelContext starts in `travel-date-review-required` after a provider-fault transfer, the patient, the replacement provider and admin are notified. (REQ-008-072)
 - There are no automatic reminders at MVP: after the initial request, the only follow-up is the admin's manual Re-notify. (REQ-008-060)
 - Patient profile: Home location, preferred language (for notification formatting).
 
@@ -1005,6 +1006,7 @@ Related FRs: FR-001 (patient authentication), FR-004 (quote option `included_ser
 | 2026-11-23 | 3.2 | Independent compression review: 2 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 | 2026-11-24 | 3.3 | Logic review pass 1, gaps closed without new screens: replacement-booking carry-over and copy only when the travel path matches, carried items not requested again (REQ-008-032, REQ-008-005, REQ-008-034); Overall Status required items per path (REQ-008-077); admin can mark the passport Incomplete and the patient may then resubmit (REQ-008-065, REQ-008-052); soft-deleted flight and hotel records re-entered by their owner (REQ-008-067); Path B patient can mark a flight or the hotel Not needed, new rule REQ-008-083 (default recorded for owner review); admin override and Re-notify placed on Screen 11 (REQ-008-059, REQ-008-060); travel-date review trigger named as the FR-006 booking.rescheduled event (REQ-008-062, REQ-008-028); no automatic reminders at MVP and FR-030 catalogue entries needed (REQ-008-060, REQ-008-071); original provider loses passport access when a booking closes (REQ-008-050, REQ-008-061, default recorded for owner review); Package Travel Items named from a stored label list (REQ-008-044); Travel section placement in FR-006 Screens 2, 4 and 6; hotel equals the FR-004 accommodation item type (REQ-008-018). | Product Owner / Documentation |
 | 2026-11-24 | 3.4 | Logic review pass 2, gaps closed without new screens: a Not-needed item is shown as Not needed, is not Awaiting and is not eligible for Re-notify (REQ-008-064, REQ-008-080, REQ-008-081); Path B Screen 5 rows always shown as the record (REQ-008-056); no-travel declaration shown to the provider with a notice on declaration and override (REQ-008-059, REQ-008-080, default recorded for owner review); replacement carry-over also keeps Not-needed marks, the declaration and an Incomplete passport mark, shown as carried over for admin review (REQ-008-032, default recorded); the FR-004 `included_services` checklist decides path and labels (REQ-008-018, REQ-008-044); all Path B items Not needed gives Overall Status Complete (REQ-008-077, default recorded); Incomplete passport is pending and eligible for Re-notify (REQ-008-060); owner notice after an admin soft-delete (REQ-008-067, REQ-008-076); no transportation details when the hotel is Not needed (REQ-008-013, REQ-008-083); reschedule review rules and acknowledgment cleared and asked again (REQ-008-062, REQ-008-031, default recorded); Screen 1 "Use these details" and "Enter new details" controls (REQ-008-051); Screen 7 field column realigned; provider passport access also ends at Completed (REQ-008-050, REQ-008-061, default recorded). | Product Owner / Documentation |
+| 2026-11-25 | 3.5 | Backlog points settled: the replacement-transfer notice to patient, replacement provider and admin is stated under Notifications (REQ-008-072), the passport validation rejection cites REQ-008-047, and the Screen 12 passport Status row carries the passport record status field. | Claude (AI Assistant) |
 
 ---
 
@@ -1017,4 +1019,4 @@ Approved by the Product Owner as part of the requirements baseline of 2026-11-25
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-11-24
+**Last Updated**: 2026-11-25
