@@ -97,7 +97,7 @@ The Patient Help Center & Support Submission module provides the patient-facing 
 - In-app deep link from other screens (e.g., contextual help links from booking, payment, or aftercare screens) (REQ-035-033)
 - Push notification tap (e.g., tapping a case status change notification navigates to Ticket Detail) (REQ-035-033)
 - Report a Problem row on the Help & Support Hub opens Contact Support (Screen 5) with the category preset to Technical Issue; the system attaches the device, operating system, app version, and report time per FR-034 REQ-034-164 (REQ-035-033)
-- Help and Support entry for a person who is not logged in (for example when sign-up fails, FR-001 REQ-001-170): shows only the support contact details (phone and email), with no case and no help content (REQ-035-024, REQ-035-033)
+- Help and Support entry for a person who is not logged in (for example when sign-up fails, FR-001 REQ-001-170): shows only the support contact details that are set (the phone, the email, or both), with no case and no help content (REQ-035-024, REQ-035-033)
 
 ---
 
@@ -195,7 +195,7 @@ flowchart TD
     A5S3 --> A5S4["4. System adds reply to communication thread"]
     A5S4 --> A5S5["5. System automatically reopens case to Open status"]
     A5S5 --> A5S5a["5a. System sends the admin a support.case_reopened notice, in addition to the reply notice (FR-034 REQ-034-092)"]
-    A5S5 --> A5S6["6. Patient sees status badge update immediately"]
+    A5S5 --> A5S6["6. System updates the status badge immediately, so the patient sees the new status"]
     A5S6 --> A5S7["7. Admin receives support.case_user_reply notification via FR-020"]
 ```
 
@@ -288,7 +288,7 @@ flowchart TD
 - Search covers all published patient-audience Help Center content (FAQs, Articles, Resources, Videos); results are ranked by relevance; if no results match, show a "Contact Support" prompt. Full-text search is required for P1 and must not be downgraded to browse-only behavior. (REQ-035-036)
 - **[Design Addition — not in FR-033/FR-034]** Emergency contact section is a healthcare UX best practice for post-procedure patient safety; the section is always rendered while at least one value is set — it cannot be hidden or require scrolling past it. Emergency phone and email values are two App Settings owned by FR-026 (support emergency contact phone and email); this screen displays them. Each row is shown only when its setting has a value: a row with no value is left out, and the Contact Support row stays. FR-026 refuses a save that changes the phone or the email and leaves both blank, but both values are blank at launch until an admin sets one; while both are blank the whole section is hidden and the other Hub rows stay (REQ-035-039, REQ-035-040; FR-026 REQ-026-143)
 - See REQ-035-010.
-- A person who is not logged in sees only the support contact details (phone and email) when reaching Help and Support, for example when sign-up fails (FR-001 REQ-001-170); no case and no help content is shown (REQ-035-024, REQ-035-033)
+- A person who is not logged in sees only the support contact details that are set (the phone, the email, or both) when reaching Help and Support, for example when sign-up fails (FR-001 REQ-001-170); no case and no help content is shown (REQ-035-024, REQ-035-033)
 - "My Support Tickets" badge count reflects open + in-progress tickets only; hidden when count is 0 (REQ-035-041)
 
 ---
@@ -690,9 +690,9 @@ A patient preparing for their upcoming procedure browses the Help Center for edu
 
 ### Security & Privacy Requirements
 
-- **REQ-035-024**: System MUST require patient authentication to access Help Center content, submit support requests, and view tickets; a person who is not logged in sees only the support contact details (phone and email), with no case and no help content
+- **REQ-035-024**: System MUST require patient authentication to access Help Center content, submit support requests, and view tickets; a person who is not logged in sees only the support contact details that are set (the phone, the email, or both), with no case and no help content
 - **REQ-035-025**: System MUST ensure patients can only view their own support cases — no access to other patients' cases
-- **REQ-035-026**: Retired. Encryption in transit and at rest (TLS 1.3, AES-256) is recorded once in the system PRD security requirements, which this module follows
+- **REQ-035-026**: Retired. Encryption in transit and at rest (TLS 1.3, AES-256) is recorded once in the system PRD security requirements (REQ-SYS-004), which this module follows
 - **REQ-035-027**: System MUST aggregate "Was this helpful?" feedback without storing individual patient identity (FR-033 Privacy Rule 2)
 
 ### Integration Requirements
@@ -717,6 +717,7 @@ A patient preparing for their upcoming procedure browses the Help Center for edu
 | 2026-11-24 | 1.4 | Logic review pass 1: not-logged-in view, Report a Problem entry, optional emergency rows, Immediately closure (no Resolved window), notification-setting wording, new flows A6 (Resolved case closes) and B3 (submission cannot complete now), reopen notice, original request shown on Ticket Detail, refusal of a reply sent after closure, related content up to 4, single "within 24 hours on business days" wording. See update log FR035_LOGIC_REVIEW_PASS_1_2026-11-24. | Product Owner / Documentation |
 | 2026-11-24 | 1.5 | Logic review pass 2: Closed Case Banner email link shown only with a support email, at least one support contact value always set (FR-026), Resolved case from the list reaches the reopen path, reply failure rule, offline queue limit (one request, 24 hours), resolution email switch named as in FR-034, lifecycle moves back (patient reply, Admin reopen), Report a Problem preset, notice stop for deleted patients on flow A6, failed virus scan branch, notice tap entry. See update log FR035_LOGIC_REVIEW_PASS_2_2026-11-24. | Product Owner / Documentation |
 | 2026-11-25 | 1.6 | Cross-FR alignment: 1-minute reach for content changes (REQ-035-028); vote and view write paths (REQ-035-007, REQ-035-092); excerpt and video description sources (REQ-035-091); Booking Reference on the support form (REQ-035-090); Settings Main owner FR-001 Screen 15 (REQ-001-185); emergency contact section hidden while both values are blank (REQ-035-040). | Product Owner / Documentation |
+| 2026-11-25 | 1.7 | Backlog points settled: the not-logged-in support contact lines read "that are set (the phone, the email, or both)" (REQ-035-024); the retired encryption rule REQ-035-026 cites REQ-SYS-004; flow A5 step 6 is done by the system (the status badge update). | Claude (AI Assistant) |
 
 ---
 

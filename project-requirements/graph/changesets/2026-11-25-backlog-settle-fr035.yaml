@@ -1,0 +1,9 @@
+# Backlog points settled for FR-035: not-logged-in contact wording and the status-badge step actor.
+reason: "Not-logged-in view shows whichever support contact details are set (REQ-035-040, REQ-026-143); the status badge update after a reply to a Resolved case is done by the system."
+by: controller
+source_id: SRC-PRD-035
+operations:
+  - {"op": "update_node", "id": "REQ-035-024", "attrs": {"statement": "System MUST require patient authentication to access Help Center content, submit support requests, and view tickets; a person who is not logged in sees only the support contact details that are set (the phone, the email, or both), with no case and no help content"}}
+  - {"op": "update_node", "id": "STP-035-056", "title": "System updates the status badge immediately, so the patient sees the new status"}
+  - {"op": "remove_edge", "from": "STP-035-056", "verb": "done by", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "STP-035-056", "verb": "done by", "to": "ACT-system"}

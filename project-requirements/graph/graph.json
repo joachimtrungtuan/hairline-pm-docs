@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T09:01:05Z",
+  "generated_at": "2026-11-25T09:02:22Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -97161,9 +97161,9 @@
       "owner_fr": "FR-035",
       "title": "Patient authentication required; not-logged-in view shows only support contact details",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST require patient authentication to access Help Center content, submit support requests, and view tickets; a person who is not logged in sees only the support contact details (phone and email), with no case and no help content",
+        "statement": "System MUST require patient authentication to access Help Center content, submit support requests, and view tickets; a person who is not logged in sees only the support contact details that are set (the phone, the email, or both), with no case and no help content",
         "rationale": "Security Considerations Authentication (639) and Dependencies FR-001 (544)."
       }
     },
@@ -137483,9 +137483,9 @@
       "id": "STP-035-056",
       "type": "Step",
       "owner_fr": "FR-035",
-      "title": "Patient sees the status badge update immediately",
+      "title": "System updates the status badge immediately, so the patient sees the new status",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A5 step 6"
       }
@@ -457735,7 +457735,7 @@
     {
       "from_id": "STP-035-056",
       "verb": "done by",
-      "to_id": "ACT-patient",
+      "to_id": "ACT-system",
       "attrs": {}
     },
     {
@@ -463901,6 +463901,21 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-090107-9412340e",
+      "at": "2026-11-25T09:01:07.161979+00:00",
+      "changed_by": "controller",
+      "reason": "Not-logged-in view shows whichever support contact details are set (REQ-035-040, REQ-026-143); the status badge update after a reply to a Resolved case is done by the system.",
+      "source_id": "SRC-PRD-035",
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-035-024",
+        "STP-035-056"
+      ],
+      "edges_added": 1,
+      "edges_removed": 1,
+      "rows": 4
+    },
     {
       "id": "cs-20261125-085950-28ffd64b",
       "at": "2026-11-25T08:59:50.292888+00:00",
