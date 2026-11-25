@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T08:47:49Z",
+  "generated_at": "2026-11-25T08:49:34Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -8156,9 +8156,9 @@
       "owner_fr": "FR-029",
       "title": "Currency exchange rate",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "description": "Entity 9 — Currency Exchange Rate: `date`, `base_currency`, `target_currency`, `exchange_rate`, `fetched_at`"
+        "description": "Currency Exchange Rate: one fetched rate per currency pair per day (`date`, `base_currency`, `target_currency`, `exchange_rate`, `fetched_at`). FR-029 owns this entity (moved in from FR-014); FR-014 reads the daily rates and does not define the entity."
       }
     },
     {
@@ -85219,9 +85219,9 @@
       "owner_fr": "FR-029",
       "title": "Allow admins to enable or disable split payment",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST allow admins to enable or disable split payment (installment) feature globally"
+        "statement": "System MUST allow admins to enable or disable split payment (installment) feature globally. The split payment configuration is one global record: there are no tiers and no separate installment plan by booking amount or by region"
       }
     },
     {
@@ -85386,9 +85386,9 @@
       "owner_fr": "FR-029",
       "title": "Provide RESTful API for Payment Processing Service to query payment configuration",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST provide RESTful API for Payment Processing Service to query payment configuration (Stripe accounts, currency pair effective rates, deposit rates, effective commission settings, installment rules)",
+        "statement": "System MUST provide RESTful API for Payment Processing Service to query payment configuration (Stripe accounts, currency pair effective rates, deposit rates, effective commission settings, installment rules), and the calling service MUST authenticate with API keys or mutual TLS",
         "rationale": "prd.md line 1240 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -86188,9 +86188,9 @@
       "owner_fr": "FR-029",
       "title": "Use last known good configuration when unavailable",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Rule 4: System must gracefully handle payment processing when configuration data is unavailable (use last known good configuration)",
+        "statement": "Rule 4: System must gracefully handle payment processing when configuration data is unavailable (use last known good configuration, alert the admin, and retry with exponential backoff)",
         "rationale": "prd.md line 766 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -86273,9 +86273,9 @@
       "owner_fr": "FR-029",
       "title": "Refunds follow the refund ladder",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Refund Rule: Refunds on a cancelled booking follow the refund ladder set on Screen 7 and locked at booking confirmation: the refund percentage depends on how many days before the procedure date the booking is cancelled. The launch default is more than 30 days, 90 percent; 15 to 30 days, 50 percent; under 15 days, 0 percent. It is one global setting that FR-006, FR-007, FR-007B and FR-017 read; each provider's own cancellation terms do not replace it",
+        "statement": "Refund Rule: Refunds on a cancelled booking follow the refund ladder set on Screen 7 and locked at booking confirmation: the refund percentage depends on how many days before the procedure date the booking is cancelled. The launch default is more than 30 days, 90 percent; 15 to 30 days, 50 percent; under 15 days, 0 percent. It is one global setting that FR-006, FR-007, FR-007B and FR-017 read; each provider's own cancellation terms do not replace it. The refund is that percentage of the amount the patient has paid so far, excluding late fees (FR-007B REQ-007B-022; FR-006 and FR-007 compute it)",
         "rationale": "FR-029 PRD, Refund Rule; the ladder itself is REQ-029-142."
       }
     },
@@ -86790,9 +86790,9 @@
       "owner_fr": "FR-029",
       "title": "An admin acknowledges a rate-protection warning to clear it",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST let an admin acknowledge a pair's rate-protection warning on Screen 2B, log the acknowledgement, and clear the warning only by that action; afterwards the pair is compared with the rate at that moment until the change against the rate 24 hours earlier is again within the threshold.",
+        "statement": "System MUST let an admin acknowledge a pair's rate-protection warning on Screen 2B, log the acknowledgement, and clear the warning only by that action; afterwards the pair is compared with the rate at that moment until the change against the rate 24 hours earlier is again within the threshold. No comparison runs for 24 hours after a pair is created or switched between manual and auto-fetch mode.",
         "rationale": "FR-029 PRD, Boundary Flow B5 and Screen 2B."
       }
     },
@@ -463575,6 +463575,25 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-084820-cbe2eab4",
+      "at": "2026-11-25T08:48:20.901100+00:00",
+      "changed_by": "controller",
+      "reason": "Filing fixes from the 2026-11-25 backlog settlement: statements widened to what the PRD and FR-007B already say.",
+      "source_id": "SRC-PRD-029",
+      "nodes_added": [],
+      "nodes_updated": [
+        "ENT-currency-exchange-rate",
+        "REQ-029-017",
+        "REQ-029-033",
+        "REQ-029-102",
+        "REQ-029-110",
+        "REQ-029-155"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 6
+    },
     {
       "id": "cs-20261125-084635-ca2196a2",
       "at": "2026-11-25T08:46:35.831008+00:00",
