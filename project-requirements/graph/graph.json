@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T08:16:19Z",
+  "generated_at": "2026-11-25T08:17:42Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -64681,9 +64681,9 @@
       "owner_fr": "FR-016",
       "title": "Notify the patient when an admin action affects them",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST notify the patient when an admin takes an action that affects them; delivery follows the FR-020 notification service Rule; the notices raised by this module (suspension, suspension end, password reset by an admin, manual and bulk notices, policy warnings) each need an FR-020 event",
+        "statement": "System MUST notify the patient when an admin takes an action that affects them; delivery follows the FR-020 notification service Rule, and every notice is an event of the FR-030 catalogue (FR-020 REQ-020-005). The notices raised by this module are suspension, suspension end, suspension lifted, password reset by an admin (account.password_reset, FR-030 REQ-030-028), manual and bulk notices, and policy warnings (account.formal_warning, FR-030 REQ-030-264); the notices without a catalogue event yet need one in FR-030",
         "rationale": "Stated in prd.md, Functional Requirements Summary, Integration Requirements."
       }
     },
@@ -118362,7 +118362,7 @@
       "owner_fr": "FR-016",
       "title": "Admin opens the deletion request on Screen 8 and reviews it; the admin may contact the patient",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B5 step 1"
       }
@@ -118373,7 +118373,7 @@
       "owner_fr": "FR-016",
       "title": "If the identity proof is not sufficient the request becomes Verification Required and the admin validates the additional verification on Screen 8",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow B5 step 2"
       }
@@ -118384,7 +118384,7 @@
       "owner_fr": "FR-016",
       "title": "Admin approves a request in Pending Admin Review (a Verification Required request is validated first) with the retention confirmation and a justification, or denies a request in Pending Admin Review or Verification Required with a reason; on approval the active bookings and financial obligations are checked",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow B5 step 3"
       }
@@ -118395,7 +118395,7 @@
       "owner_fr": "FR-016",
       "title": "If an active obligation exists, approval is blocked: the request stays Pending Admin Review, marked blocked by obligation, until the obligation ends",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow B5 step 4"
       }
@@ -118417,9 +118417,9 @@
       "owner_fr": "FR-016",
       "title": "System anonymizes or archives the data in place per FR-023",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow B5 step 6"
+        "prd_ref": "Alternative Flow B5 step 5"
       }
     },
     {
@@ -118428,9 +118428,9 @@
       "owner_fr": "FR-016",
       "title": "System sends the patient one outcome notice with the actions taken and the legal basis",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "prd_ref": "Alternative Flow B5 step 8"
+        "prd_ref": "Alternative Flow B5 step 5"
       }
     },
     {
@@ -118439,9 +118439,9 @@
       "owner_fr": "FR-016",
       "title": "The request ends Fulfilled with the actions taken recorded on the request",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "prd_ref": "Alternative Flow B5 step 9"
+        "prd_ref": "Alternative Flow B5 step 5"
       }
     },
     {
@@ -118450,9 +118450,9 @@
       "owner_fr": "FR-016",
       "title": "If a cancellation fails, the suspension still applies, the failed bookings are listed and marked Cancellation failed, and the admin retries each through the FR-006 cancel action",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "A6 step 11"
+        "prd_ref": "Alternative Flow A6 step 11"
       }
     },
     {
@@ -400111,7 +400111,7 @@
     {
       "from_id": "STP-016-111",
       "verb": "at",
-      "to_id": "STG-patient-05-deleted",
+      "to_id": "STG-patient-06-deletion-requested",
       "attrs": {}
     },
     {
@@ -400147,7 +400147,7 @@
     {
       "from_id": "STP-016-112",
       "verb": "at",
-      "to_id": "STG-patient-05-deleted",
+      "to_id": "STG-patient-06-deletion-requested",
       "attrs": {}
     },
     {
@@ -400189,7 +400189,7 @@
     {
       "from_id": "STP-016-113",
       "verb": "at",
-      "to_id": "STG-patient-05-deleted",
+      "to_id": "STG-patient-06-deletion-requested",
       "attrs": {}
     },
     {
@@ -400240,7 +400240,7 @@
     {
       "from_id": "STP-016-114",
       "verb": "at",
-      "to_id": "STG-patient-05-deleted",
+      "to_id": "STG-patient-06-deletion-requested",
       "attrs": {}
     },
     {
@@ -462750,6 +462750,28 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-081628-709e1e19",
+      "at": "2026-11-25T08:16:28.361228+00:00",
+      "changed_by": "controller",
+      "reason": "Backlog points settled for FR-016: patient notices are FR-030 catalogue events; deletion request review steps sit at Deletion requested as in FR-023; step prd_ref values match the compressed flows.",
+      "source_id": "SRC-PRD-016",
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-016-027",
+        "STP-016-111",
+        "STP-016-112",
+        "STP-016-113",
+        "STP-016-114",
+        "STP-016-116",
+        "STP-016-118",
+        "STP-016-119",
+        "STP-016-120"
+      ],
+      "edges_added": 4,
+      "edges_removed": 4,
+      "rows": 13
+    },
     {
       "id": "cs-20261125-081505-7324f0b6",
       "at": "2026-11-25T08:15:05.560996+00:00",

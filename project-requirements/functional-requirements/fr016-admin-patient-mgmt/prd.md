@@ -74,7 +74,7 @@ This is a critical operational module that ensures the platform can provide effe
 - Admin viewing patient-provider message history (read-only monitoring)
 - Admin viewing patient support history/context via Support Center (see FR-034)
 - Admin ability to flag/review communications for policy violations
-- System-generated notifications to patients when admin takes action (suspension, suspension end, password reset, manual notice, policy warning); each of these notices needs a matching event in FR-020 (REQ-016-027)
+- System-generated notifications to patients when admin takes action (suspension, suspension end, suspension lifted, password reset, manual and bulk notices, policy warning); each of these notices is an event of the FR-030 catalogue (REQ-016-027)
 
 **Out of Scope**:
 
@@ -635,6 +635,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 - "Show Only My Actions" toggle to filter by logged-in admin (REQ-016-166)
 - Audit log integrates with system-wide audit service (S-06)
 - Tamper-proof checksums ensure log integrity (REQ-016-214)
+- The audit entry carries an approval status field that is reserved for a future approval workflow; nothing sets it, this screen does not show it, and it has no behaviour (ENT-admin-action-log.approval_status)
 - Retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
 - Entries can originate from any admin role defined in FR-031; each entry records the acting admin, whose actions are limited to that role's FR-031 permissions (REQ-016-168)
 
@@ -772,6 +773,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
   - **Failure handling**: If Stripe API unavailable, display cached payment status with warning; retry failed refunds automatically
 - **Email Service (SendGrid / AWS SES)**
   - **Failure handling**: Queue emails for retry if service unavailable; notify admin if email delivery fails
+- **Operating assumptions** (planning assumptions about how the admin team works; they are not system rules and nothing enforces them):
 - Admins access platform via desktop/laptop browsers (Chrome, Firefox, Safari - latest 2 versions)
 - Admin interface supports screen resolutions ≥ 1366x768 (responsive design for tablets acceptable)
 - Admin team operates during business hours with on-call coverage for emergencies (24/7 monitoring not required initially)
@@ -812,7 +814,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 
 ## Dependencies
 
-Related FRs: FR-001 (patient profile data, authentication status, account metadata), FR-003 (patient inquiries, quotes received, quote acceptance history), FR-006 (booking status, payment history, governed booking actions), FR-011 (patient aftercare status, milestone completion), FR-012 (patient-provider and patient-support communications), FR-002 (patient head scan assets), FR-015 (provider suspension and deactivation cascade), FR-034 (Support Center and Ticketing), FR-020 (notifications to patients). Shared services: S-05 Media Storage Service, S-06 Audit Log Service.
+Related FRs: FR-001 (patient profile data, authentication status, account metadata), FR-003 (patient inquiries, quotes received, quote acceptance history), FR-006 (booking status, payment history, governed booking actions), FR-011 (patient aftercare status, milestone completion), FR-012 (patient-provider and patient-support communications), FR-002 (patient head scan assets), FR-015 (provider suspension and deactivation cascade), FR-034 (Support Center and Ticketing), FR-020 (notifications to patients), FR-030 (notification event catalogue). Shared services: S-05 Media Storage Service, S-06 Audit Log Service.
 
 ---
 
@@ -899,7 +901,7 @@ Automated system flags patient-provider conversation containing keywords suggest
 1. **Given** automated system detects flagged keywords in patient-provider conversation, **When** flag is triggered, **Then** system generates notification in admin dashboard and marks conversation with red flag icon
 2. **Given** admin navigates to patient's Communications tab, **When** admin views conversation list, **Then** flagged conversation highlighted with warning indicator and flag reason displayed
 3. **Given** admin clicks flagged conversation, **When** conversation thread loads, **Then** flagged messages highlighted with keyword indicator; admin can review full context
-4. **Given** admin determines policy violation occurred, **When** admin clicks "Take Action" button, **Then** admin selects action (formal warning to the patient, or suspend account), enters justification, and confirms; system logs decision and executes action
+4. **Given** admin determines policy violation occurred, **When** admin clicks "Take Action" button, **Then** admin selects action (formal warning to the patient, or suspend account, which runs Flow A6 and asks for the suspension duration), enters justification, and confirms; system logs decision and executes action
 
 ---
 
@@ -1038,7 +1040,7 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 - **REQ-016-024**: System MUST integrate with patient authentication module (P-01) for password reset and account unlock functionality
 - **REQ-016-025**: System MUST integrate with payment module (P-03) to display transaction history and initiate refunds via Stripe API
 - **REQ-016-026**: System MUST integrate with media storage service (S-05) to display patient head scan media with secure signed URLs
-- **REQ-016-027**: System MUST notify the patient when an admin takes an action that affects them; delivery follows the FR-020 notification service Rule; the notices raised by this module (suspension, suspension end, password reset by an admin, manual and bulk notices, policy warnings) each need an FR-020 event
+- **REQ-016-027**: System MUST notify the patient when an admin takes an action that affects them; delivery follows the FR-020 notification service Rule, and every notice is an event of the FR-030 catalogue (FR-020 REQ-020-005). The notices raised by this module are suspension, suspension end, suspension lifted, password reset by an admin (account.password_reset, FR-030 REQ-030-028), manual and bulk notices, and policy warnings (account.formal_warning, FR-030 REQ-030-264); the notices without a catalogue event yet need one in FR-030
 
 ---
 
@@ -1053,6 +1055,7 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 | 2026-11-24 | 1.19 | Logic review pass 2: Approve shown only for Pending Admin Review (Verification Required is validated first, Deny allowed from both); refunds started here enter an FR-007 manual refund approved by another billing admin; Payment Retry and Send Payment Reminder use the FR-007B Retry Charge access; suspension cascade names the cause Patient account suspended, lists booking ids cancelled, failed and left untouched, marks failed ones Cancellation failed and retries through the FR-006 cancel action; a password reset never changes a Suspended status; while suspended, conversations are read-only and open inquiries and quotes stay as they are; Take Action on a flagged conversation offers a patient warning or suspension (provider warning removed); audit action types Payment Reminder, Provider Medical Report Request and Data Export added; flows for Lift Suspension, Unlock Account, automatic suspension end and Take Action added; a denied deletion request ends Denied with the patient notified. | Product Owner / Documentation |
 | 2026-11-25 | 1.20 | Cross-FR alignment: Billing Admin and the Retry Charge and Send Payment Reminders permissions named; reset and suspension end every session; unlock clears the lock fields; an admin email change is saved as unverified and Overview shows the verification state (REQ-016-226); Deactivated noted as a reserved FR-001 value; Communications tab follows the FR-012 flag colours, keyword list, resolve-not-remove rule, deferred export and unmasked admin view; booking request wording follows the FR-034 request type and the case reference is a plain reference without View Support Center (REQ-016-227). | Product Owner / Documentation |
 | 2026-11-25 | 1.21 | Owner ruling 2026-11-25 follow-up: the Overview tab shows the patient Email Delivery Issue flag read-only, the same indicator providers now have in FR-015 (REQ-030-156). | Product Owner / Documentation |
+| 2026-11-25 | 1.22 | Backlog points settled: patient notices name the FR-030 catalogue (suspension lifted added to the list, existing events for password reset and policy warning cited); Take Action in User Story 5 points to the duration step of Flow A6; the reserved approval status field of the audit entry is noted on Screen 7; the operating assumptions are labelled as assumptions. | Claude (AI Assistant) |
 
 ---
 
