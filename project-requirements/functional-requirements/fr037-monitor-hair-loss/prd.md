@@ -626,10 +626,10 @@ flowchart TD
 - Monitoring entries, medical answers, scans, advice, assignments, and exports are medical data. Their encryption in transit and at rest is the single platform-wide security Rule in the system PRD; this FR keeps no separate encryption requirement.
 - Access is limited to the patient, authorized Admin users, and the currently assigned provider for advice-mode cases. (REQ-037-025)
 - Providers see only an anonymized patient identifier on every FR-037 screen for the whole case lifetime. FR-037 has no payment event, so no de-anonymization trigger exists in this FR; Admin retains full identity visibility. (REQ-037-028, REQ-037-083)
-- Provider access ends immediately on withdrawal, Admin ending the assignment, provider suspension or deactivation, reassignment away, case completion, or conversion.
+- Provider access ends immediately on withdrawal, Admin ending the assignment, provider suspension or deactivation, case completion, or conversion. (REQ-037-046)
 - Case records, entries, advice, assignment history, conversion provenance, and PDF exports follow the single platform-wide retention Rule in the system PRD (one 10-year period for all record types); this FR keeps no separate retention period.
 - Raw monitoring scan media is medical data and follows the same Rule. No shorter raw-media lifecycle applies.
-- Every view, export, edit, assignment, withdrawal, and conversion of medical data, and every advice-cadence change, is audited. (REQ-037-026)
+- Every view, export, edit, assignment, withdrawal, and conversion of medical data, and every advice-cadence change, is audited. An advice-cadence change is global and belongs to no case, so it is recorded in the platform's centralized audit log (Audit Log Service, S-06), not as a monitoring case audit entry. (REQ-037-026)
 - Download links for generated PDFs follow the single platform-wide download-link Rule in the system PRD (links expire and check the requester's permission); this FR keeps no separate rule for them.
 - Pre-assignment preview links must use an unguessable token, expire at the Admin-selected time, support revocation, expose only the approved preview dataset, and record creation, access, expiry, and revocation events. (REQ-037-051)
 - Retain raw scan media for the platform-wide retention period set in the system PRD; storage tiering may move it to cold storage but must not delete it earlier.
@@ -777,7 +777,7 @@ flowchart TD
 ### Security & Privacy Requirements
 
 - **REQ-037-025**: System MUST enforce patient, current assigned provider, and authorized Admin access boundaries.
-- **REQ-037-026**: System MUST audit all medical-data access, advice submissions and edits, preview-link creation/access/expiry/revocation, exports, assignments, withdrawals, conversions, and advice-cadence changes.
+- **REQ-037-026**: System MUST audit all medical-data access, advice submissions and edits, preview-link creation/access/expiry/revocation, exports, assignments, withdrawals, conversions, and advice-cadence changes. An advice-cadence change is global and belongs to no case, so it MUST be recorded in the platform's centralized audit log (Audit Log Service, S-06), not as a monitoring case audit entry.
 - **REQ-037-027**: Admin edits MUST preserve version history and require a reason.
 - **REQ-037-028**: Provider-facing FR-037 screens MUST show an anonymized patient identifier for the entire case lifetime and MUST NOT expose patient full name or contact details.
 
@@ -798,6 +798,7 @@ flowchart TD
 | 2.31 | 2026-11-24 | Logic review fixes: scan save call, staged-photo cleanup and quality rule; conversion hand-off, photo references, draft and idempotency rules; summary calculation (Initial Severity, period start, date order, zero logs, deleted entries); reminders scoped to transplant-progress cases; Retry PDF and continue-without-PDF; Admin cannot edit case status; edited advice notifies the patient and only the author may edit; advice cadence and pause rules; assignment end paths (withdrawal, Admin, FR-015 suspension or deactivation); preview revocation and Admin queue exit; advice-state versus case-status labels; assignment status values; exclusivity end paths. | Product Owner / Documentation |
 | 2.32 | 2026-11-24 | Logic review fixes: open advice window expires when the assignment ends; Request Treatment shows no confirmation (Step A states that monitoring ends on submission); advice state ended and the Assign and Share gates require an active case; assignment-end notifications and a recorded end cause and Admin end reason; Admin-editable list limited to patient-supplied data, logs, ratings, scan metadata and advice; PDF failure after three tries, retry on a converted case and attach to the inquiry; Duration stored as the FR-026-managed option reference and label; provider routing evaluated when the inquiry submission succeeds; Admin advice-text change notifies the patient; first recorded severity naming; resumed conversion draft rebuilt; preview expiry 1 to 14 days; cadence changes audited. | Product Owner / Documentation |
 | 2.33 | 2026-11-25 | Cross-FR alignment: zero-log severity summary shows the Initial Severity as a one-point trend (REQ-037-057). | Product Owner / Documentation |
+| 2.34 | 2026-11-25 | Backlog points settled: "reassignment away" removed from the access-end list because reassignment happens only after an assignment has ended; the global advice-cadence change is recorded in the platform audit log, not as a case audit entry (REQ-037-026, REQ-037-046). | Claude (AI Assistant) |
 
 ---
 
@@ -807,7 +808,7 @@ Approved by the Product Owner as part of the requirements baseline of 2026-11-25
 
 ---
 
-**Document Version**: 2.33
+**Document Version**: 2.34
 **Template Version**: 2.0.0
 **Last Updated**: 2026-11-25
 **Next Review**: Upon a major requirement change

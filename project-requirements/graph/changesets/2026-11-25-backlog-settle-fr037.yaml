@@ -1,0 +1,8 @@
+# FR-037 backlog points settled: no reassignment end cause; the global cadence change goes to the platform audit log.
+reason: "Backlog points settled for FR-037: reassignment is not an assignment end cause (Assign Provider is allowed only in pending states, REQ-037-094); an advice-cadence change is global and is audited in the platform audit log, not as a case audit entry."
+by: controller
+source_id: SRC-PRD-037
+operations:
+  - {"op": "update_node", "id": "REQ-037-046", "attrs": {"statement": "Provider access ends immediately on withdrawal, Admin ending the assignment, provider suspension or deactivation, case completion, or conversion. Providers can view scans and media only while assigned to the advice case."}}
+  - {"op": "retire_enum_value", "field_id": "ENT-monitoring-provider-assignment.end_cause", "value": "reassigned"}
+  - {"op": "update_node", "id": "REQ-037-026", "attrs": {"statement": "System MUST audit all medical-data access, advice submissions and edits, preview-link creation/access/expiry/revocation, exports, assignments, withdrawals, conversions, and advice-cadence changes. An advice-cadence change is global and belongs to no case, so it MUST be recorded in the platform's centralized audit log (Audit Log Service, S-06), not as a monitoring case audit entry."}}

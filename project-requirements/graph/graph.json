@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T09:04:18Z",
+  "generated_at": "2026-11-25T09:05:48Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -15122,7 +15122,7 @@
       "owner_fr": "FR-037",
       "title": "End cause",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "How an assignment ended other than by the provider's withdrawal (that is status withdrawn): Admin ended it, the provider was suspended or deactivated, the case was completed or converted, or a reassignment replaced it. Empty while the assignment is active. Shown on Screens 12 and 13."
       }
@@ -98255,9 +98255,9 @@
       "owner_fr": "FR-037",
       "title": "Medical-data access, advice, preview, export, assignment, withdrawal and conversion audited",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST audit all medical-data access, advice submissions and edits, preview-link creation/access/expiry/revocation, exports, assignments, withdrawals, conversions, and advice-cadence changes.",
+        "statement": "System MUST audit all medical-data access, advice submissions and edits, preview-link creation/access/expiry/revocation, exports, assignments, withdrawals, conversions, and advice-cadence changes. An advice-cadence change is global and belongs to no case, so it MUST be recorded in the platform's centralized audit log (Audit Log Service, S-06), not as a monitoring case audit entry.",
         "rationale": "Restated by Data and Privacy Rules (every view, export, edit, assignment, withdrawal and conversion of medical data is audited) and Screen 13 Audit History."
       }
     },
@@ -98496,9 +98496,9 @@
       "owner_fr": "FR-037",
       "title": "Provider access ends immediately; scans visible only while assigned",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Provider access ends immediately on withdrawal, Admin ending the assignment, provider suspension or deactivation, reassignment away, case completion, or conversion. Providers can view scans and media only while assigned to the advice case.",
+        "statement": "Provider access ends immediately on withdrawal, Admin ending the assignment, provider suspension or deactivation, case completion, or conversion. Providers can view scans and media only while assigned to the advice case.",
         "rationale": "Data and Privacy Rules; Screen 4 business rules; Security Considerations (revoke provider media access when assignment ends)."
       }
     },
@@ -165610,12 +165610,6 @@
       "value": "case_converted",
       "label": "Case converted",
       "sort_order": 3
-    },
-    {
-      "field_id": "ENT-monitoring-provider-assignment.end_cause",
-      "value": "reassigned",
-      "label": "Replaced by reassignment",
-      "sort_order": 4
     },
     {
       "field_id": "ENT-monitoring-provider-assignment.status",
@@ -463901,6 +463895,22 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-090435-13c5b6e4",
+      "at": "2026-11-25T09:04:35.188857+00:00",
+      "changed_by": "controller",
+      "reason": "Backlog points settled for FR-037: reassignment is not an assignment end cause (Assign Provider is allowed only in pending states, REQ-037-094); an advice-cadence change is global and is audited in the platform audit log, not as a case audit entry.",
+      "source_id": "SRC-PRD-037",
+      "nodes_added": [],
+      "nodes_updated": [
+        "ENT-monitoring-provider-assignment.end_cause",
+        "REQ-037-026",
+        "REQ-037-046"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 3
+    },
     {
       "id": "cs-20261125-090304-494e1889",
       "at": "2026-11-25T09:03:04.106079+00:00",
