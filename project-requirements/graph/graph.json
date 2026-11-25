@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T07:45:38Z",
+  "generated_at": "2026-11-25T07:47:29Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -45426,9 +45426,9 @@
       "owner_fr": "FR-004",
       "title": "Money on withdrawal follows FR-006 placeholder",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Money handling for provider withdrawal after acceptance follows the FR-006 provider-fault placeholder; exact refund and payment-allocation mechanics are owned by FR-007, FR-007B, and FR-017."
+        "statement": "Money handling for provider withdrawal after acceptance follows the FR-006 provider-fault terms (REQ-006-053); exact refund and payment-allocation mechanics are owned by FR-007, FR-007B, and FR-017."
       }
     },
     {
@@ -46529,9 +46529,9 @@
       "owner_fr": "FR-004",
       "title": "An open replacement quote is cancelled without notice when an admin closes or cancels the inquiry",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "When an admin closes the inquiry (Close inquiry on FR-006 Screen 6) or cancels it (FR-006 Screen 9), System MUST move any open replacement quote (draft or sent) of that inquiry to `cancelled_inquiry_cancelled`, MUST NOT send `quote.cancelled_inquiry` to the replacement provider, and no `quote.expired` follows. The cascade trigger is owned by FR-003 (REQ-003-013) and FR-006.",
+        "statement": "When an admin closes the inquiry (Close inquiry on FR-006 Screen 6) or cancels it (FR-006 Screen 9), System MUST move any open replacement quote (draft or sent) of that inquiry to `cancelled_inquiry_cancelled`, MUST NOT send `quote.cancelled_inquiry` to any provider (an admin close or cancellation sends no provider notice, REQ-020-020, REQ-003-127), and no `quote.expired` follows. The cascade trigger is owned by FR-003 (REQ-003-013) and FR-006.",
         "rationale": "The replacement quote is admin-authored and never offered to the patient, so the provider is not told and the cancellation, not expiry, ends it."
       }
     },
@@ -462232,6 +462232,21 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-074613-c1af89ba",
+      "at": "2026-11-25T07:46:13.430441+00:00",
+      "changed_by": "controller",
+      "reason": "Backlog points settled: REQ-004-012 cites the FR-006 provider-fault terms; REQ-004-111 sends quote.cancelled_inquiry to no provider on an admin close or cancellation.",
+      "source_id": "SRC-PRD-004",
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-004-012",
+        "REQ-004-111"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 2
+    },
     {
       "id": "cs-20261125-074422-fe4530b5",
       "at": "2026-11-25T07:44:22.567951+00:00",
