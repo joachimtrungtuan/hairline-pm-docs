@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T09:05:48Z",
+  "generated_at": "2026-11-25T09:18:01Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -92,7 +92,7 @@
       "owner_fr": null,
       "title": "Platform administrator",
       "status": "active",
-      "version": 45,
+      "version": 46,
       "attrs": {
         "description": "Hairline operations staff who onboard providers, run billing and configure the platform (system PRD persona 4).",
         "group": "admin"
@@ -1650,6 +1650,17 @@
       "status": "active",
       "version": 1,
       "attrs": {}
+    },
+    {
+      "id": "ENT-admin-user-account.profile_picture",
+      "type": "Field",
+      "owner_fr": "FR-036",
+      "title": "Profile picture",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "The admin's own picture, JPEG or PNG; size limits not yet decided."
+      }
     },
     {
       "id": "ENT-admin-user-account.role_change_acknowledged_at",
@@ -40233,6 +40244,84 @@
       }
     },
     {
+      "id": "FLW-036-activity-log",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin views their own activity log",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Admin views their own activity log",
+        "prd_ref": "Alternative Flow A4"
+      }
+    },
+    {
+      "id": "FLW-036-change-password",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin changes their own password",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Admin changes their own password",
+        "prd_ref": "Alternative Flow A2"
+      }
+    },
+    {
+      "id": "FLW-036-main",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin updates their own profile",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "main",
+        "description": "Admin updates their own profile",
+        "prd_ref": "Main Flow"
+      }
+    },
+    {
+      "id": "FLW-036-password-refused",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Password change refused",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A password change is refused because the current password is wrong or the new password fails the policy",
+        "prd_ref": "Alternative Flow B1"
+      }
+    },
+    {
+      "id": "FLW-036-picture",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Admin changes the profile picture",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "Admin changes the profile picture",
+        "prd_ref": "Alternative Flow A1"
+      }
+    },
+    {
+      "id": "FLW-036-profile-entry-refused",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Entry refused on the profile",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A name, phone number or picture file breaks its rule and is refused",
+        "prd_ref": "Alternative Flow B2"
+      }
+    },
+    {
       "id": "FLW-037-active-case",
       "type": "Flow",
       "owner_fr": null,
@@ -40828,6 +40917,19 @@
         "module": "fr035-patient-help-support",
         "prd_path": "project-requirements/functional-requirements/fr035-patient-help-support/prd.md",
         "summary": "The Patient Help Center & Support Submission module provides the patient-facing interface for accessing self-service help content and submitting support requests directly from the patient mobile app."
+      }
+    },
+    {
+      "id": "FR-036",
+      "type": "FR",
+      "owner_fr": null,
+      "title": "Admin Profile & Settings Management",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "module": "fr036-admin-profile-settings",
+        "prd_path": "project-requirements/functional-requirements/fr036-admin-profile-settings/prd.md",
+        "summary": "Admin Profile & Settings Management lets every admin user manage their own profile, account settings and notification preferences, independently of team management and access control (FR-031)."
       }
     },
     {
@@ -97948,6 +98050,186 @@
       }
     },
     {
+      "id": "REQ-036-001",
+      "type": "Rule",
+      "owner_fr": "FR-036",
+      "title": "Admin manages only their own profile, settings and preferences, independent of FR-031 permissions",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Every admin, whatever their role, MUST be able to view and change only their own profile, account settings and notification preferences; these screens do not depend on the team-management or access-control permissions of FR-031.",
+        "rationale": "FR-036 summary in system-prd.md, Profile Management; PRD Functional Requirements Summary."
+      }
+    },
+    {
+      "id": "REQ-036-002",
+      "type": "Rule",
+      "owner_fr": "FR-036",
+      "title": "Admin changes own first and last name under the FR-031 name rules",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The admin MUST be able to change their own first name and last name; both follow the name rules of REQ-031-033 (2 to 50 characters, letters, spaces and hyphens only).",
+        "rationale": "FR-036 summary in system-prd.md, Profile Management; PRD Functional Requirements Summary."
+      }
+    },
+    {
+      "id": "REQ-036-003",
+      "type": "Rule",
+      "owner_fr": "FR-036",
+      "title": "Admin uploads a JPEG or PNG profile picture with a size check",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The admin MUST be able to upload a profile picture as a JPEG or PNG file, and the system MUST check the file size before accepting it; the size and dimension limits are Not yet decided (open question 1).",
+        "rationale": "FR-036 summary in system-prd.md, Profile Management; PRD Functional Requirements Summary."
+      }
+    },
+    {
+      "id": "REQ-036-004",
+      "type": "Rule",
+      "owner_fr": "FR-036",
+      "title": "Assigned role and permissions shown read-only on the profile",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The admin MUST see their assigned role and its permissions on the profile as read-only information; only FR-031 changes them (REQ-031-050).",
+        "rationale": "FR-036 summary in system-prd.md, Profile Management; PRD Functional Requirements Summary."
+      }
+    },
+    {
+      "id": "REQ-036-005",
+      "type": "Rule",
+      "owner_fr": "FR-036",
+      "title": "Admin changes own optional phone number in E.164 format",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The admin MUST be able to change their own phone number, which is optional and in E.164 format (REQ-031-033); an invalid number shows the message of REQ-031-121.",
+        "rationale": "FR-036 summary in system-prd.md, Profile Management; PRD Functional Requirements Summary."
+      }
+    },
+    {
+      "id": "REQ-036-006",
+      "type": "Rule",
+      "owner_fr": "FR-036",
+      "title": "Admin changes own email; confirmation not yet decided",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The admin MUST be able to change their own email address; how the change is confirmed before it takes effect is Not yet decided (open question 2).",
+        "rationale": "FR-036 summary in system-prd.md, Profile Management; PRD Functional Requirements Summary."
+      }
+    },
+    {
+      "id": "REQ-036-007",
+      "type": "Rule",
+      "owner_fr": "FR-036",
+      "title": "Password change needs the correct current password and meets the password policy",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The admin MUST be able to change their own password only after entering the current password correctly, and the new password MUST meet the platform password policy (REQ-SYS-007); a wrong current password or a new password that fails the policy leaves the password unchanged.",
+        "rationale": "FR-036 summary in system-prd.md, Account Settings; PRD Functional Requirements Summary."
+      }
+    },
+    {
+      "id": "REQ-036-008",
+      "type": "Rule",
+      "owner_fr": "FR-036",
+      "title": "Admin chooses own Admin Platform language once multi-language support exists",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The admin MUST be able to choose their own Admin Platform language from the Active languages (REQ-021-004, REQ-021-076), the choice is stored as their preference (REQ-021-117), and the setting is offered once multi-language support (FR-021) is implemented.",
+        "rationale": "FR-036 summary in system-prd.md, Account Settings; PRD Functional Requirements Summary."
+      }
+    },
+    {
+      "id": "REQ-036-009",
+      "type": "Rule",
+      "owner_fr": "FR-036",
+      "title": "Timezone setting not yet decided; times follow REQ-026-050 meanwhile",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Until the timezone setting is decided (open question 3), admin screens MUST show times as REQ-026-050 states.",
+        "rationale": "FR-036 summary in system-prd.md, Account Settings; PRD Functional Requirements Summary."
+      }
+    },
+    {
+      "id": "REQ-036-010",
+      "type": "Rule",
+      "owner_fr": "FR-036",
+      "title": "Notification preferences are stored per admin, not per role",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Each admin MUST have their own notification preferences, stored per admin and not per role.",
+        "rationale": "FR-036 summary in system-prd.md, Notification Preferences; PRD Functional Requirements Summary."
+      }
+    },
+    {
+      "id": "REQ-036-011",
+      "type": "Rule",
+      "owner_fr": "FR-036",
+      "title": "Admin switches email and in-app notices per event category",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The admin MUST be able to switch email and in-app notices on or off for each event category; the categories and the starting values are Not yet decided (open question 4).",
+        "rationale": "FR-036 summary in system-prd.md, Notification Preferences; PRD Functional Requirements Summary."
+      }
+    },
+    {
+      "id": "REQ-036-012",
+      "type": "Rule",
+      "owner_fr": "FR-036",
+      "title": "Notices respect admin preferences; locked notices still go by email",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The system MUST respect each admin's notification preferences when it sends notices (FR-020); a locked notice is still sent by email whatever the preference, as REQ-030-208 states.",
+        "rationale": "FR-036 summary in system-prd.md, Notification Preferences; PRD Functional Requirements Summary."
+      }
+    },
+    {
+      "id": "REQ-036-013",
+      "type": "Rule",
+      "owner_fr": "FR-036",
+      "title": "Own activity log is read-only",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The admin MUST be able to view their own activity log, which is read-only: no entry can be edited or deleted (REQ-SYS-009).",
+        "rationale": "FR-036 summary in system-prd.md, Activity & Audit; PRD Functional Requirements Summary."
+      }
+    },
+    {
+      "id": "REQ-036-014",
+      "type": "Rule",
+      "owner_fr": "FR-036",
+      "title": "Activity log row shows timestamp, action type, affected entities and IP address",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Each activity log row MUST show the timestamp, the action type, the affected entities and the IP address; which actions are listed is Not yet decided (open question 5).",
+        "rationale": "FR-036 summary in system-prd.md, Activity & Audit; PRD Functional Requirements Summary."
+      }
+    },
+    {
+      "id": "REQ-036-015",
+      "type": "Rule",
+      "owner_fr": "FR-036",
+      "title": "Activity log filters by date range and action type",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The admin MUST be able to filter the activity log by date range and action type; both filters behave as stated in REQ-022-117.",
+        "rationale": "FR-036 summary in system-prd.md, Activity & Audit; PRD Functional Requirements Summary."
+      }
+    },
+    {
       "id": "REQ-037-001",
       "type": "Rule",
       "owner_fr": "FR-037",
@@ -104148,6 +104430,42 @@
       }
     },
     {
+      "id": "SCR-036-01",
+      "type": "Screen",
+      "owner_fr": "FR-036",
+      "title": "My Profile",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "platform": "admin",
+        "description": "Admin Platform page where an admin views and edits their own profile details (PRD Screen 1)."
+      }
+    },
+    {
+      "id": "SCR-036-02",
+      "type": "Screen",
+      "owner_fr": "FR-036",
+      "title": "Account Settings",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "platform": "admin",
+        "description": "Admin Platform page where an admin changes their own password and language (PRD Screen 2). The timezone row is not yet decided."
+      }
+    },
+    {
+      "id": "SCR-036-04",
+      "type": "Screen",
+      "owner_fr": "FR-036",
+      "title": "My Activity Log",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "platform": "admin",
+        "description": "Admin Platform page where an admin reads their own sign-ins and actions, read-only (PRD Screen 4)."
+      }
+    },
+    {
       "id": "SCR-037-01",
       "type": "Screen",
       "owner_fr": "FR-037",
@@ -108058,6 +108376,15 @@
       "type": "Source",
       "owner_fr": null,
       "title": "FR-035 PRD: Patient Help Center & Support Submission",
+      "status": "active",
+      "version": 1,
+      "attrs": {}
+    },
+    {
+      "id": "SRC-PRD-036",
+      "type": "Source",
+      "owner_fr": null,
+      "title": "FR-036 PRD: Admin Profile & Settings Management",
       "status": "active",
       "version": 1,
       "attrs": {}
@@ -137766,6 +138093,248 @@
       }
     },
     {
+      "id": "STP-036-001",
+      "type": "Step",
+      "owner_fr": "FR-036",
+      "title": "Admin opens My Profile",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 1"
+      }
+    },
+    {
+      "id": "STP-036-002",
+      "type": "Step",
+      "owner_fr": "FR-036",
+      "title": "System shows the current values with role and permissions read-only",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 2"
+      }
+    },
+    {
+      "id": "STP-036-003",
+      "type": "Step",
+      "owner_fr": "FR-036",
+      "title": "Admin edits first name, last name or phone number",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 3"
+      }
+    },
+    {
+      "id": "STP-036-004",
+      "type": "Step",
+      "owner_fr": "FR-036",
+      "title": "Admin selects Save",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 4"
+      }
+    },
+    {
+      "id": "STP-036-005",
+      "type": "Step",
+      "owner_fr": "FR-036",
+      "title": "System checks the entries against the name and phone rules",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 5"
+      }
+    },
+    {
+      "id": "STP-036-006",
+      "type": "Step",
+      "owner_fr": "FR-036",
+      "title": "System stores the changes and shows a confirmation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Main Flow step 6"
+      }
+    },
+    {
+      "id": "STP-036-007",
+      "type": "Step",
+      "owner_fr": "FR-036",
+      "title": "Admin selects a JPEG or PNG file",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 1"
+      }
+    },
+    {
+      "id": "STP-036-008",
+      "type": "Step",
+      "owner_fr": "FR-036",
+      "title": "System checks the file type and size",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 2"
+      }
+    },
+    {
+      "id": "STP-036-009",
+      "type": "Step",
+      "owner_fr": "FR-036",
+      "title": "System shows the new picture on the profile",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A1 step 3"
+      }
+    },
+    {
+      "id": "STP-036-010",
+      "type": "Step",
+      "owner_fr": "FR-036",
+      "title": "Admin opens Account Settings",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 1"
+      }
+    },
+    {
+      "id": "STP-036-011",
+      "type": "Step",
+      "owner_fr": "FR-036",
+      "title": "Admin enters the current password and the new password",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 2"
+      }
+    },
+    {
+      "id": "STP-036-012",
+      "type": "Step",
+      "owner_fr": "FR-036",
+      "title": "System verifies the current password",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 3"
+      }
+    },
+    {
+      "id": "STP-036-013",
+      "type": "Step",
+      "owner_fr": "FR-036",
+      "title": "System checks the new password against the password policy",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 4"
+      }
+    },
+    {
+      "id": "STP-036-014",
+      "type": "Step",
+      "owner_fr": "FR-036",
+      "title": "System stores the new password and shows a confirmation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 5"
+      }
+    },
+    {
+      "id": "STP-036-015",
+      "type": "Step",
+      "owner_fr": "FR-036",
+      "title": "Admin opens My Activity Log",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4 step 1"
+      }
+    },
+    {
+      "id": "STP-036-016",
+      "type": "Step",
+      "owner_fr": "FR-036",
+      "title": "System shows the admin's own entries",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4 step 2"
+      }
+    },
+    {
+      "id": "STP-036-017",
+      "type": "Step",
+      "owner_fr": "FR-036",
+      "title": "Admin sets a date range or action type",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4 step 3"
+      }
+    },
+    {
+      "id": "STP-036-018",
+      "type": "Step",
+      "owner_fr": "FR-036",
+      "title": "System shows the matching entries",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A4 step 4"
+      }
+    },
+    {
+      "id": "STP-036-019",
+      "type": "Step",
+      "owner_fr": "FR-036",
+      "title": "System refuses the password change, keeps the existing password and shows an error",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1 step 2"
+      }
+    },
+    {
+      "id": "STP-036-020",
+      "type": "Step",
+      "owner_fr": "FR-036",
+      "title": "Admin corrects the password entries",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B1 step 3"
+      }
+    },
+    {
+      "id": "STP-036-021",
+      "type": "Step",
+      "owner_fr": "FR-036",
+      "title": "System shows the error on the field and stores nothing for that entry",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 step 2"
+      }
+    },
+    {
+      "id": "STP-036-022",
+      "type": "Step",
+      "owner_fr": "FR-036",
+      "title": "Admin corrects the entry",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 step 3"
+      }
+    },
+    {
       "id": "STP-037-001",
       "type": "Step",
       "owner_fr": "FR-037",
@@ -139740,6 +140309,14 @@
       "entity_id": "ENT-admin-user-account",
       "name": "preferred_language",
       "data_type": "text",
+      "required": false,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-admin-user-account.profile_picture",
+      "entity_id": "ENT-admin-user-account",
+      "name": "profile_picture",
+      "data_type": "media",
       "required": false,
       "calculated_by": null
     },
@@ -171898,6 +172475,24 @@
     {
       "from_id": "ACT-platform-admin",
       "verb": "uses",
+      "to_id": "SCR-036-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "ACT-platform-admin",
+      "verb": "uses",
+      "to_id": "SCR-036-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "ACT-platform-admin",
+      "verb": "uses",
+      "to_id": "SCR-036-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "ACT-platform-admin",
+      "verb": "uses",
       "to_id": "SCR-037-14",
       "attrs": {}
     },
@@ -180050,6 +180645,42 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-036-activity-log",
+      "verb": "starts at",
+      "to_id": "STP-036-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-036-change-password",
+      "verb": "starts at",
+      "to_id": "STP-036-010",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-036-main",
+      "verb": "starts at",
+      "to_id": "STP-036-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-036-password-refused",
+      "verb": "starts at",
+      "to_id": "STP-036-019",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-036-picture",
+      "verb": "starts at",
+      "to_id": "STP-036-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-036-profile-entry-refused",
+      "verb": "starts at",
+      "to_id": "STP-036-021",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-037-active-case",
       "verb": "starts at",
       "to_id": "STP-037-004",
@@ -186026,6 +186657,135 @@
       "from_id": "FR-035",
       "verb": "references",
       "to_id": "REQ-SYS-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-036",
+      "verb": "active in",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {
+        "rules": 15
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-036",
+      "verb": "references",
+      "to_id": "REQ-021-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-036",
+      "verb": "references",
+      "to_id": "REQ-021-076",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-036",
+      "verb": "references",
+      "to_id": "REQ-021-117",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-036",
+      "verb": "references",
+      "to_id": "REQ-021-129",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-036",
+      "verb": "references",
+      "to_id": "REQ-022-117",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-036",
+      "verb": "references",
+      "to_id": "REQ-026-050",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-036",
+      "verb": "references",
+      "to_id": "REQ-030-208",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-036",
+      "verb": "references",
+      "to_id": "REQ-031-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-036",
+      "verb": "references",
+      "to_id": "REQ-031-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-036",
+      "verb": "references",
+      "to_id": "REQ-031-050",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-036",
+      "verb": "references",
+      "to_id": "REQ-031-053",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-036",
+      "verb": "references",
+      "to_id": "REQ-031-094",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-036",
+      "verb": "references",
+      "to_id": "REQ-031-121",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-036",
+      "verb": "references",
+      "to_id": "REQ-032-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-036",
+      "verb": "references",
+      "to_id": "REQ-032-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-036",
+      "verb": "references",
+      "to_id": "REQ-032-021",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-036",
+      "verb": "references",
+      "to_id": "REQ-SYS-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-036",
+      "verb": "references",
+      "to_id": "REQ-SYS-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-036",
+      "verb": "references",
+      "to_id": "REQ-SYS-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-036",
+      "verb": "references",
+      "to_id": "REQ-SYS-010",
       "attrs": {}
     },
     {
@@ -310709,6 +311469,438 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-036-001",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-001",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-001",
+      "verb": "applies to",
+      "to_id": "SCR-036-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-001",
+      "verb": "applies to",
+      "to_id": "SCR-036-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-001",
+      "verb": "applies to",
+      "to_id": "SCR-036-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-001",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-002",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-002",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-002",
+      "verb": "applies to",
+      "to_id": "ENT-admin-user-account.first_name",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-002",
+      "verb": "applies to",
+      "to_id": "ENT-admin-user-account.last_name",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-002",
+      "verb": "applies to",
+      "to_id": "SCR-036-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-002",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-003",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-003",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-003",
+      "verb": "applies to",
+      "to_id": "ENT-admin-user-account.profile_picture",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-003",
+      "verb": "applies to",
+      "to_id": "SCR-036-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-003",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-004",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-004",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-004",
+      "verb": "applies to",
+      "to_id": "ENT-admin-user-account.assigned_role_id",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-004",
+      "verb": "applies to",
+      "to_id": "SCR-036-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-004",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-005",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-005",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-005",
+      "verb": "applies to",
+      "to_id": "ENT-admin-user-account.phone_number",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-005",
+      "verb": "applies to",
+      "to_id": "SCR-036-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-005",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-006",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-006",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-006",
+      "verb": "applies to",
+      "to_id": "ENT-admin-user-account.email",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-006",
+      "verb": "applies to",
+      "to_id": "SCR-036-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-006",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-007",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-007",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-007",
+      "verb": "applies to",
+      "to_id": "ENT-admin-user-account.password_hash",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-007",
+      "verb": "applies to",
+      "to_id": "SCR-036-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-007",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-008",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-008",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-008",
+      "verb": "applies to",
+      "to_id": "ENT-admin-user-account.preferred_language",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-008",
+      "verb": "applies to",
+      "to_id": "SCR-036-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-008",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-009",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-009",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-009",
+      "verb": "applies to",
+      "to_id": "SCR-036-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-009",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-010",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-010",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-010",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-011",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-011",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-011",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-012",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-012",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-012",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-013",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-013",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-013",
+      "verb": "applies to",
+      "to_id": "SCR-036-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-013",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-014",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-014",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-014",
+      "verb": "applies to",
+      "to_id": "ENT-admin-audit-trail-entry.action_type",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-014",
+      "verb": "applies to",
+      "to_id": "ENT-admin-audit-trail-entry.ip_address",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-014",
+      "verb": "applies to",
+      "to_id": "ENT-admin-audit-trail-entry.timestamp",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-014",
+      "verb": "applies to",
+      "to_id": "SCR-036-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-014",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-036",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-015",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-015",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-015",
+      "verb": "applies to",
+      "to_id": "ENT-admin-audit-trail-entry.action_type",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-015",
+      "verb": "applies to",
+      "to_id": "ENT-admin-audit-trail-entry.timestamp",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-015",
+      "verb": "applies to",
+      "to_id": "SCR-036-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-036-015",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-036",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-037-001",
       "verb": "applies at",
       "to_id": "STG-monitoring-01-baseline",
@@ -357173,6 +358365,134 @@
         "provenance": "user input",
         "label": "Case Title",
         "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-036-01",
+      "verb": "belongs to",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "SCR-036-01",
+      "verb": "shows",
+      "to_id": "ENT-admin-user-account.assigned_role_id",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Assigned Role",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-036-01",
+      "verb": "shows",
+      "to_id": "ENT-admin-user-account.email",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Email",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-036-01",
+      "verb": "shows",
+      "to_id": "ENT-admin-user-account.first_name",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "First Name",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-036-01",
+      "verb": "shows",
+      "to_id": "ENT-admin-user-account.last_name",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Last Name",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-036-01",
+      "verb": "shows",
+      "to_id": "ENT-admin-user-account.phone_number",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Phone Number",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-036-01",
+      "verb": "shows",
+      "to_id": "ENT-admin-user-account.profile_picture",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Profile Picture",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-036-02",
+      "verb": "belongs to",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "SCR-036-02",
+      "verb": "shows",
+      "to_id": "ENT-admin-user-account.password_hash",
+      "attrs": {
+        "provenance": "user input",
+        "label": "New Password",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-036-02",
+      "verb": "shows",
+      "to_id": "ENT-admin-user-account.preferred_language",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Language",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-036-04",
+      "verb": "belongs to",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "SCR-036-04",
+      "verb": "shows",
+      "to_id": "ENT-admin-audit-trail-entry.action_type",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Action Type",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-036-04",
+      "verb": "shows",
+      "to_id": "ENT-admin-audit-trail-entry.ip_address",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "IP Address",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-036-04",
+      "verb": "shows",
+      "to_id": "ENT-admin-audit-trail-entry.timestamp",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Timestamp",
+        "editable": false
       }
     },
     {
@@ -458597,6 +459917,660 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-036-001",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-001",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-001",
+      "verb": "next",
+      "to_id": "STP-036-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-001",
+      "verb": "on",
+      "to_id": "SCR-036-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-002",
+      "verb": "applies",
+      "to_id": "REQ-036-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-002",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-002",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-002",
+      "verb": "next",
+      "to_id": "STP-036-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-002",
+      "verb": "on",
+      "to_id": "SCR-036-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-003",
+      "verb": "applies",
+      "to_id": "REQ-036-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-003",
+      "verb": "applies",
+      "to_id": "REQ-036-005",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-003",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-003",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-003",
+      "verb": "next",
+      "to_id": "STP-036-004",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-003",
+      "verb": "on",
+      "to_id": "SCR-036-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-004",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-004",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-004",
+      "verb": "next",
+      "to_id": "STP-036-005",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-004",
+      "verb": "on",
+      "to_id": "SCR-036-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-005",
+      "verb": "applies",
+      "to_id": "REQ-036-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-005",
+      "verb": "applies",
+      "to_id": "REQ-036-005",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-005",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-005",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-005",
+      "verb": "next",
+      "to_id": "STP-036-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-005",
+      "verb": "next",
+      "to_id": "STP-036-021",
+      "attrs": {
+        "label": "a name or phone number breaks its rule",
+        "condition": "REQ-036-002"
+      }
+    },
+    {
+      "from_id": "STP-036-005",
+      "verb": "on",
+      "to_id": "SCR-036-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-006",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-006",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-006",
+      "verb": "on",
+      "to_id": "SCR-036-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-007",
+      "verb": "applies",
+      "to_id": "REQ-036-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-007",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-007",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-007",
+      "verb": "next",
+      "to_id": "STP-036-008",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-007",
+      "verb": "on",
+      "to_id": "SCR-036-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-008",
+      "verb": "applies",
+      "to_id": "REQ-036-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-008",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-008",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-008",
+      "verb": "next",
+      "to_id": "STP-036-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-008",
+      "verb": "next",
+      "to_id": "STP-036-021",
+      "attrs": {
+        "label": "the picture file fails the check",
+        "condition": "REQ-036-003"
+      }
+    },
+    {
+      "from_id": "STP-036-008",
+      "verb": "on",
+      "to_id": "SCR-036-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-009",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-009",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-009",
+      "verb": "on",
+      "to_id": "SCR-036-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-010",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-010",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-010",
+      "verb": "next",
+      "to_id": "STP-036-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-010",
+      "verb": "on",
+      "to_id": "SCR-036-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-011",
+      "verb": "applies",
+      "to_id": "REQ-036-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-011",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-011",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-011",
+      "verb": "next",
+      "to_id": "STP-036-012",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-011",
+      "verb": "on",
+      "to_id": "SCR-036-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-012",
+      "verb": "applies",
+      "to_id": "REQ-036-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-012",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-012",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-012",
+      "verb": "next",
+      "to_id": "STP-036-013",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-012",
+      "verb": "next",
+      "to_id": "STP-036-019",
+      "attrs": {
+        "label": "the current password is wrong",
+        "condition": "REQ-036-007"
+      }
+    },
+    {
+      "from_id": "STP-036-012",
+      "verb": "on",
+      "to_id": "SCR-036-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-013",
+      "verb": "applies",
+      "to_id": "REQ-036-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-013",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-013",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-013",
+      "verb": "next",
+      "to_id": "STP-036-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-013",
+      "verb": "next",
+      "to_id": "STP-036-019",
+      "attrs": {
+        "label": "the new password fails the policy",
+        "condition": "REQ-036-007"
+      }
+    },
+    {
+      "from_id": "STP-036-013",
+      "verb": "on",
+      "to_id": "SCR-036-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-014",
+      "verb": "applies",
+      "to_id": "REQ-036-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-014",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-014",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-014",
+      "verb": "on",
+      "to_id": "SCR-036-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-015",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-015",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-015",
+      "verb": "next",
+      "to_id": "STP-036-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-015",
+      "verb": "on",
+      "to_id": "SCR-036-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-016",
+      "verb": "applies",
+      "to_id": "REQ-036-013",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-016",
+      "verb": "applies",
+      "to_id": "REQ-036-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-016",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-016",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-016",
+      "verb": "next",
+      "to_id": "STP-036-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-016",
+      "verb": "on",
+      "to_id": "SCR-036-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-017",
+      "verb": "applies",
+      "to_id": "REQ-036-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-017",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-017",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-017",
+      "verb": "next",
+      "to_id": "STP-036-018",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-017",
+      "verb": "on",
+      "to_id": "SCR-036-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-018",
+      "verb": "applies",
+      "to_id": "REQ-036-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-018",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-018",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-018",
+      "verb": "on",
+      "to_id": "SCR-036-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-019",
+      "verb": "applies",
+      "to_id": "REQ-036-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-019",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-019",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-019",
+      "verb": "next",
+      "to_id": "STP-036-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-019",
+      "verb": "on",
+      "to_id": "SCR-036-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-020",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-020",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-020",
+      "verb": "next",
+      "to_id": "STP-036-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-020",
+      "verb": "on",
+      "to_id": "SCR-036-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-021",
+      "verb": "applies",
+      "to_id": "REQ-036-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-021",
+      "verb": "applies",
+      "to_id": "REQ-036-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-021",
+      "verb": "applies",
+      "to_id": "REQ-036-005",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-021",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-021",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-021",
+      "verb": "next",
+      "to_id": "STP-036-022",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-021",
+      "verb": "on",
+      "to_id": "SCR-036-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-022",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-022",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-022",
+      "verb": "next",
+      "to_id": "STP-036-003",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-036-022",
+      "verb": "on",
+      "to_id": "SCR-036-01",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-037-001",
       "verb": "applies",
       "to_id": "REQ-037-001",
@@ -463814,6 +465788,14 @@
       "lifecycle": "incorporated"
     },
     {
+      "id": "SRC-PRD-036",
+      "kind": "document",
+      "ref": "project-requirements/functional-requirements/fr036-admin-profile-settings/prd.md",
+      "section": null,
+      "date": "2026-11-25",
+      "lifecycle": "pending review"
+    },
+    {
       "id": "SRC-PRD-037",
       "kind": "document",
       "ref": "project-requirements/functional-requirements/fr037-monitor-hair-loss/prd.md",
@@ -463895,6 +465877,70 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-091631-a610bbe8",
+      "at": "2026-11-25T09:16:31.408308+00:00",
+      "changed_by": "controller",
+      "reason": "First Draft PRD for FR-036 (Admin Profile & Settings Management), written from the FR-036 summary in the system PRD and live rules cited by id; awaiting Product Owner approval, not covered by the 2026-11-25 baseline sign-off.",
+      "source_id": "SRC-PRD-036",
+      "nodes_added": [
+        "ENT-admin-user-account.profile_picture",
+        "FLW-036-activity-log",
+        "FLW-036-change-password",
+        "FLW-036-main",
+        "FLW-036-password-refused",
+        "FLW-036-picture",
+        "FLW-036-profile-entry-refused",
+        "FR-036",
+        "REQ-036-001",
+        "REQ-036-002",
+        "REQ-036-003",
+        "REQ-036-004",
+        "REQ-036-005",
+        "REQ-036-006",
+        "REQ-036-007",
+        "REQ-036-008",
+        "REQ-036-009",
+        "REQ-036-010",
+        "REQ-036-011",
+        "REQ-036-012",
+        "REQ-036-013",
+        "REQ-036-014",
+        "REQ-036-015",
+        "SCR-036-01",
+        "SCR-036-02",
+        "SCR-036-04",
+        "SRC-PRD-036",
+        "STP-036-001",
+        "STP-036-002",
+        "STP-036-003",
+        "STP-036-004",
+        "STP-036-005",
+        "STP-036-006",
+        "STP-036-007",
+        "STP-036-008",
+        "STP-036-009",
+        "STP-036-010",
+        "STP-036-011",
+        "STP-036-012",
+        "STP-036-013",
+        "STP-036-014",
+        "STP-036-015",
+        "STP-036-016",
+        "STP-036-017",
+        "STP-036-018",
+        "STP-036-019",
+        "STP-036-020",
+        "STP-036-021",
+        "STP-036-022"
+      ],
+      "nodes_updated": [
+        "ACT-platform-admin"
+      ],
+      "edges_added": 222,
+      "edges_removed": 0,
+      "rows": 498
+    },
     {
       "id": "cs-20261125-090435-13c5b6e4",
       "at": "2026-11-25T09:04:35.188857+00:00",

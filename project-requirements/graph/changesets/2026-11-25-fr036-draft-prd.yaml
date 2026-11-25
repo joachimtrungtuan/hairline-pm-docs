@@ -1,0 +1,276 @@
+# FR-036 Admin Profile & Settings Management: first Draft PRD filed in the graph. Draft, awaiting Product Owner approval; rules that depend on open questions carry "Not yet decided" in their statements.
+reason: "First Draft PRD for FR-036 (Admin Profile & Settings Management), written from the FR-036 summary in the system PRD and live rules cited by id; awaiting Product Owner approval, not covered by the 2026-11-25 baseline sign-off."
+by: controller
+source_id: SRC-PRD-036
+operations:
+  - {"op": "add_source", "id": "SRC-PRD-036", "title": "FR-036 PRD: Admin Profile & Settings Management", "kind": "document", "ref": "project-requirements/functional-requirements/fr036-admin-profile-settings/prd.md", "lifecycle": "pending review", "date": "2026-11-25"}
+  - {"op": "add_node", "id": "FR-036", "type": "FR", "title": "Admin Profile & Settings Management", "attrs": {"module": "fr036-admin-profile-settings", "prd_path": "project-requirements/functional-requirements/fr036-admin-profile-settings/prd.md", "summary": "Admin Profile & Settings Management lets every admin user manage their own profile, account settings and notification preferences, independently of team management and access control (FR-031)."}}
+  - {"op": "add_field", "id": "ENT-admin-user-account.profile_picture", "entity_id": "ENT-admin-user-account", "name": "profile_picture", "data_type": "media", "title": "Profile picture", "owner_fr": "FR-036", "required": false, "attrs": {"description": "The admin's own picture, JPEG or PNG; size limits not yet decided."}}
+  - {"op": "add_node", "id": "SCR-036-01", "type": "Screen", "owner_fr": "FR-036", "title": "My Profile", "attrs": {"platform": "admin", "description": "Admin Platform page where an admin views and edits their own profile details (PRD Screen 1)."}}
+  - {"op": "add_node", "id": "SCR-036-02", "type": "Screen", "owner_fr": "FR-036", "title": "Account Settings", "attrs": {"platform": "admin", "description": "Admin Platform page where an admin changes their own password and language (PRD Screen 2). The timezone row is not yet decided."}}
+  - {"op": "add_node", "id": "SCR-036-04", "type": "Screen", "owner_fr": "FR-036", "title": "My Activity Log", "attrs": {"platform": "admin", "description": "Admin Platform page where an admin reads their own sign-ins and actions, read-only (PRD Screen 4)."}}
+  - {"op": "add_node", "id": "REQ-036-001", "type": "Rule", "owner_fr": "FR-036", "title": "Admin manages only their own profile, settings and preferences, independent of FR-031 permissions", "attrs": {"statement": "Every admin, whatever their role, MUST be able to view and change only their own profile, account settings and notification preferences; these screens do not depend on the team-management or access-control permissions of FR-031.", "rationale": "FR-036 summary in system-prd.md, Profile Management; PRD Functional Requirements Summary."}}
+  - {"op": "add_node", "id": "REQ-036-002", "type": "Rule", "owner_fr": "FR-036", "title": "Admin changes own first and last name under the FR-031 name rules", "attrs": {"statement": "The admin MUST be able to change their own first name and last name; both follow the name rules of REQ-031-033 (2 to 50 characters, letters, spaces and hyphens only).", "rationale": "FR-036 summary in system-prd.md, Profile Management; PRD Functional Requirements Summary."}}
+  - {"op": "add_node", "id": "REQ-036-003", "type": "Rule", "owner_fr": "FR-036", "title": "Admin uploads a JPEG or PNG profile picture with a size check", "attrs": {"statement": "The admin MUST be able to upload a profile picture as a JPEG or PNG file, and the system MUST check the file size before accepting it; the size and dimension limits are Not yet decided (open question 1).", "rationale": "FR-036 summary in system-prd.md, Profile Management; PRD Functional Requirements Summary."}}
+  - {"op": "add_node", "id": "REQ-036-004", "type": "Rule", "owner_fr": "FR-036", "title": "Assigned role and permissions shown read-only on the profile", "attrs": {"statement": "The admin MUST see their assigned role and its permissions on the profile as read-only information; only FR-031 changes them (REQ-031-050).", "rationale": "FR-036 summary in system-prd.md, Profile Management; PRD Functional Requirements Summary."}}
+  - {"op": "add_node", "id": "REQ-036-005", "type": "Rule", "owner_fr": "FR-036", "title": "Admin changes own optional phone number in E.164 format", "attrs": {"statement": "The admin MUST be able to change their own phone number, which is optional and in E.164 format (REQ-031-033); an invalid number shows the message of REQ-031-121.", "rationale": "FR-036 summary in system-prd.md, Profile Management; PRD Functional Requirements Summary."}}
+  - {"op": "add_node", "id": "REQ-036-006", "type": "Rule", "owner_fr": "FR-036", "title": "Admin changes own email; confirmation not yet decided", "attrs": {"statement": "The admin MUST be able to change their own email address; how the change is confirmed before it takes effect is Not yet decided (open question 2).", "rationale": "FR-036 summary in system-prd.md, Profile Management; PRD Functional Requirements Summary."}}
+  - {"op": "add_node", "id": "REQ-036-007", "type": "Rule", "owner_fr": "FR-036", "title": "Password change needs the correct current password and meets the password policy", "attrs": {"statement": "The admin MUST be able to change their own password only after entering the current password correctly, and the new password MUST meet the platform password policy (REQ-SYS-007); a wrong current password or a new password that fails the policy leaves the password unchanged.", "rationale": "FR-036 summary in system-prd.md, Account Settings; PRD Functional Requirements Summary."}}
+  - {"op": "add_node", "id": "REQ-036-008", "type": "Rule", "owner_fr": "FR-036", "title": "Admin chooses own Admin Platform language once multi-language support exists", "attrs": {"statement": "The admin MUST be able to choose their own Admin Platform language from the Active languages (REQ-021-004, REQ-021-076), the choice is stored as their preference (REQ-021-117), and the setting is offered once multi-language support (FR-021) is implemented.", "rationale": "FR-036 summary in system-prd.md, Account Settings; PRD Functional Requirements Summary."}}
+  - {"op": "add_node", "id": "REQ-036-009", "type": "Rule", "owner_fr": "FR-036", "title": "Timezone setting not yet decided; times follow REQ-026-050 meanwhile", "attrs": {"statement": "Until the timezone setting is decided (open question 3), admin screens MUST show times as REQ-026-050 states.", "rationale": "FR-036 summary in system-prd.md, Account Settings; PRD Functional Requirements Summary."}}
+  - {"op": "add_node", "id": "REQ-036-010", "type": "Rule", "owner_fr": "FR-036", "title": "Notification preferences are stored per admin, not per role", "attrs": {"statement": "Each admin MUST have their own notification preferences, stored per admin and not per role.", "rationale": "FR-036 summary in system-prd.md, Notification Preferences; PRD Functional Requirements Summary."}}
+  - {"op": "add_node", "id": "REQ-036-011", "type": "Rule", "owner_fr": "FR-036", "title": "Admin switches email and in-app notices per event category", "attrs": {"statement": "The admin MUST be able to switch email and in-app notices on or off for each event category; the categories and the starting values are Not yet decided (open question 4).", "rationale": "FR-036 summary in system-prd.md, Notification Preferences; PRD Functional Requirements Summary."}}
+  - {"op": "add_node", "id": "REQ-036-012", "type": "Rule", "owner_fr": "FR-036", "title": "Notices respect admin preferences; locked notices still go by email", "attrs": {"statement": "The system MUST respect each admin's notification preferences when it sends notices (FR-020); a locked notice is still sent by email whatever the preference, as REQ-030-208 states.", "rationale": "FR-036 summary in system-prd.md, Notification Preferences; PRD Functional Requirements Summary."}}
+  - {"op": "add_node", "id": "REQ-036-013", "type": "Rule", "owner_fr": "FR-036", "title": "Own activity log is read-only", "attrs": {"statement": "The admin MUST be able to view their own activity log, which is read-only: no entry can be edited or deleted (REQ-SYS-009).", "rationale": "FR-036 summary in system-prd.md, Activity & Audit; PRD Functional Requirements Summary."}}
+  - {"op": "add_node", "id": "REQ-036-014", "type": "Rule", "owner_fr": "FR-036", "title": "Activity log row shows timestamp, action type, affected entities and IP address", "attrs": {"statement": "Each activity log row MUST show the timestamp, the action type, the affected entities and the IP address; which actions are listed is Not yet decided (open question 5).", "rationale": "FR-036 summary in system-prd.md, Activity & Audit; PRD Functional Requirements Summary."}}
+  - {"op": "add_node", "id": "REQ-036-015", "type": "Rule", "owner_fr": "FR-036", "title": "Activity log filters by date range and action type", "attrs": {"statement": "The admin MUST be able to filter the activity log by date range and action type; both filters behave as stated in REQ-022-117.", "rationale": "FR-036 summary in system-prd.md, Activity & Audit; PRD Functional Requirements Summary."}}
+  - {"op": "add_edge", "from": "FR-036", "verb": "references", "to": "REQ-031-033"}
+  - {"op": "add_edge", "from": "FR-036", "verb": "references", "to": "REQ-031-050"}
+  - {"op": "add_edge", "from": "FR-036", "verb": "references", "to": "REQ-031-121"}
+  - {"op": "add_edge", "from": "FR-036", "verb": "references", "to": "REQ-031-017"}
+  - {"op": "add_edge", "from": "FR-036", "verb": "references", "to": "REQ-031-053"}
+  - {"op": "add_edge", "from": "FR-036", "verb": "references", "to": "REQ-031-094"}
+  - {"op": "add_edge", "from": "FR-036", "verb": "references", "to": "REQ-SYS-007"}
+  - {"op": "add_edge", "from": "FR-036", "verb": "references", "to": "REQ-SYS-009"}
+  - {"op": "add_edge", "from": "FR-036", "verb": "references", "to": "REQ-SYS-002"}
+  - {"op": "add_edge", "from": "FR-036", "verb": "references", "to": "REQ-SYS-010"}
+  - {"op": "add_edge", "from": "FR-036", "verb": "references", "to": "REQ-021-004"}
+  - {"op": "add_edge", "from": "FR-036", "verb": "references", "to": "REQ-021-076"}
+  - {"op": "add_edge", "from": "FR-036", "verb": "references", "to": "REQ-021-117"}
+  - {"op": "add_edge", "from": "FR-036", "verb": "references", "to": "REQ-021-129"}
+  - {"op": "add_edge", "from": "FR-036", "verb": "references", "to": "REQ-026-050"}
+  - {"op": "add_edge", "from": "FR-036", "verb": "references", "to": "REQ-022-117"}
+  - {"op": "add_edge", "from": "FR-036", "verb": "references", "to": "REQ-030-208"}
+  - {"op": "add_edge", "from": "FR-036", "verb": "references", "to": "REQ-032-001"}
+  - {"op": "add_edge", "from": "FR-036", "verb": "references", "to": "REQ-032-020"}
+  - {"op": "add_edge", "from": "FR-036", "verb": "references", "to": "REQ-032-021"}
+  - {"op": "add_edge", "from": "REQ-036-001", "verb": "decided by", "to": "SRC-PRD-036"}
+  - {"op": "add_edge", "from": "REQ-036-001", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-036-001", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-036-001", "verb": "applies to", "to": "SCR-036-01"}
+  - {"op": "add_edge", "from": "REQ-036-001", "verb": "applies to", "to": "SCR-036-02"}
+  - {"op": "add_edge", "from": "REQ-036-001", "verb": "applies to", "to": "SCR-036-04"}
+  - {"op": "add_edge", "from": "REQ-036-002", "verb": "decided by", "to": "SRC-PRD-036"}
+  - {"op": "add_edge", "from": "REQ-036-002", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-036-002", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-036-002", "verb": "applies to", "to": "ENT-admin-user-account.first_name"}
+  - {"op": "add_edge", "from": "REQ-036-002", "verb": "applies to", "to": "ENT-admin-user-account.last_name"}
+  - {"op": "add_edge", "from": "REQ-036-002", "verb": "applies to", "to": "SCR-036-01"}
+  - {"op": "add_edge", "from": "REQ-036-003", "verb": "decided by", "to": "SRC-PRD-036"}
+  - {"op": "add_edge", "from": "REQ-036-003", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-036-003", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-036-003", "verb": "applies to", "to": "ENT-admin-user-account.profile_picture"}
+  - {"op": "add_edge", "from": "REQ-036-003", "verb": "applies to", "to": "SCR-036-01"}
+  - {"op": "add_edge", "from": "REQ-036-004", "verb": "decided by", "to": "SRC-PRD-036"}
+  - {"op": "add_edge", "from": "REQ-036-004", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-036-004", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-036-004", "verb": "applies to", "to": "ENT-admin-user-account.assigned_role_id"}
+  - {"op": "add_edge", "from": "REQ-036-004", "verb": "applies to", "to": "SCR-036-01"}
+  - {"op": "add_edge", "from": "REQ-036-005", "verb": "decided by", "to": "SRC-PRD-036"}
+  - {"op": "add_edge", "from": "REQ-036-005", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-036-005", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-036-005", "verb": "applies to", "to": "ENT-admin-user-account.phone_number"}
+  - {"op": "add_edge", "from": "REQ-036-005", "verb": "applies to", "to": "SCR-036-01"}
+  - {"op": "add_edge", "from": "REQ-036-006", "verb": "decided by", "to": "SRC-PRD-036"}
+  - {"op": "add_edge", "from": "REQ-036-006", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-036-006", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-036-006", "verb": "applies to", "to": "ENT-admin-user-account.email"}
+  - {"op": "add_edge", "from": "REQ-036-006", "verb": "applies to", "to": "SCR-036-01"}
+  - {"op": "add_edge", "from": "REQ-036-007", "verb": "decided by", "to": "SRC-PRD-036"}
+  - {"op": "add_edge", "from": "REQ-036-007", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-036-007", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-036-007", "verb": "applies to", "to": "ENT-admin-user-account.password_hash"}
+  - {"op": "add_edge", "from": "REQ-036-007", "verb": "applies to", "to": "SCR-036-02"}
+  - {"op": "add_edge", "from": "REQ-036-008", "verb": "decided by", "to": "SRC-PRD-036"}
+  - {"op": "add_edge", "from": "REQ-036-008", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-036-008", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-036-008", "verb": "applies to", "to": "ENT-admin-user-account.preferred_language"}
+  - {"op": "add_edge", "from": "REQ-036-008", "verb": "applies to", "to": "SCR-036-02"}
+  - {"op": "add_edge", "from": "REQ-036-009", "verb": "decided by", "to": "SRC-PRD-036"}
+  - {"op": "add_edge", "from": "REQ-036-009", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-036-009", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-036-009", "verb": "applies to", "to": "SCR-036-02"}
+  - {"op": "add_edge", "from": "REQ-036-010", "verb": "decided by", "to": "SRC-PRD-036"}
+  - {"op": "add_edge", "from": "REQ-036-010", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-036-010", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-036-011", "verb": "decided by", "to": "SRC-PRD-036"}
+  - {"op": "add_edge", "from": "REQ-036-011", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-036-011", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-036-012", "verb": "decided by", "to": "SRC-PRD-036"}
+  - {"op": "add_edge", "from": "REQ-036-012", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-036-012", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-036-013", "verb": "decided by", "to": "SRC-PRD-036"}
+  - {"op": "add_edge", "from": "REQ-036-013", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-036-013", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-036-013", "verb": "applies to", "to": "SCR-036-04"}
+  - {"op": "add_edge", "from": "REQ-036-014", "verb": "decided by", "to": "SRC-PRD-036"}
+  - {"op": "add_edge", "from": "REQ-036-014", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-036-014", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-036-014", "verb": "applies to", "to": "SCR-036-04"}
+  - {"op": "add_edge", "from": "REQ-036-014", "verb": "applies to", "to": "ENT-admin-audit-trail-entry.timestamp"}
+  - {"op": "add_edge", "from": "REQ-036-014", "verb": "applies to", "to": "ENT-admin-audit-trail-entry.action_type"}
+  - {"op": "add_edge", "from": "REQ-036-014", "verb": "applies to", "to": "ENT-admin-audit-trail-entry.ip_address"}
+  - {"op": "add_edge", "from": "REQ-036-015", "verb": "decided by", "to": "SRC-PRD-036"}
+  - {"op": "add_edge", "from": "REQ-036-015", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-036-015", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-036-015", "verb": "applies to", "to": "SCR-036-04"}
+  - {"op": "add_edge", "from": "REQ-036-015", "verb": "applies to", "to": "ENT-admin-audit-trail-entry.timestamp"}
+  - {"op": "add_edge", "from": "REQ-036-015", "verb": "applies to", "to": "ENT-admin-audit-trail-entry.action_type"}
+  - {"op": "add_edge", "from": "SCR-036-01", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-036-01"}
+  - {"op": "add_edge", "from": "SCR-036-02", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-036-02"}
+  - {"op": "add_edge", "from": "SCR-036-04", "verb": "belongs to", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "ACT-platform-admin", "verb": "uses", "to": "SCR-036-04"}
+  - {"op": "add_edge", "from": "SCR-036-01", "verb": "shows", "to": "ENT-admin-user-account.profile_picture", "attrs": {"provenance": "retrieved", "label": "Profile Picture", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-036-01", "verb": "shows", "to": "ENT-admin-user-account.first_name", "attrs": {"provenance": "retrieved", "label": "First Name", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-036-01", "verb": "shows", "to": "ENT-admin-user-account.last_name", "attrs": {"provenance": "retrieved", "label": "Last Name", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-036-01", "verb": "shows", "to": "ENT-admin-user-account.email", "attrs": {"provenance": "retrieved", "label": "Email", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-036-01", "verb": "shows", "to": "ENT-admin-user-account.phone_number", "attrs": {"provenance": "retrieved", "label": "Phone Number", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-036-01", "verb": "shows", "to": "ENT-admin-user-account.assigned_role_id", "attrs": {"provenance": "retrieved", "label": "Assigned Role", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-036-02", "verb": "shows", "to": "ENT-admin-user-account.password_hash", "attrs": {"provenance": "user input", "label": "New Password", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-036-02", "verb": "shows", "to": "ENT-admin-user-account.preferred_language", "attrs": {"provenance": "retrieved", "label": "Language", "editable": true}}
+  - {"op": "add_edge", "from": "SCR-036-04", "verb": "shows", "to": "ENT-admin-audit-trail-entry.timestamp", "attrs": {"provenance": "retrieved", "label": "Timestamp", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-036-04", "verb": "shows", "to": "ENT-admin-audit-trail-entry.action_type", "attrs": {"provenance": "retrieved", "label": "Action Type", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-036-04", "verb": "shows", "to": "ENT-admin-audit-trail-entry.ip_address", "attrs": {"provenance": "retrieved", "label": "IP Address", "editable": false}}
+  - {"op": "add_node", "id": "STP-036-001", "type": "Step", "owner_fr": "FR-036", "title": "Admin opens My Profile", "attrs": {"prd_ref": "Main Flow step 1"}}
+  - {"op": "add_node", "id": "STP-036-002", "type": "Step", "owner_fr": "FR-036", "title": "System shows the current values with role and permissions read-only", "attrs": {"prd_ref": "Main Flow step 2"}}
+  - {"op": "add_node", "id": "STP-036-003", "type": "Step", "owner_fr": "FR-036", "title": "Admin edits first name, last name or phone number", "attrs": {"prd_ref": "Main Flow step 3"}}
+  - {"op": "add_node", "id": "STP-036-004", "type": "Step", "owner_fr": "FR-036", "title": "Admin selects Save", "attrs": {"prd_ref": "Main Flow step 4"}}
+  - {"op": "add_node", "id": "STP-036-005", "type": "Step", "owner_fr": "FR-036", "title": "System checks the entries against the name and phone rules", "attrs": {"prd_ref": "Main Flow step 5"}}
+  - {"op": "add_node", "id": "STP-036-006", "type": "Step", "owner_fr": "FR-036", "title": "System stores the changes and shows a confirmation", "attrs": {"prd_ref": "Main Flow step 6"}}
+  - {"op": "add_node", "id": "STP-036-007", "type": "Step", "owner_fr": "FR-036", "title": "Admin selects a JPEG or PNG file", "attrs": {"prd_ref": "Alternative Flow A1 step 1"}}
+  - {"op": "add_node", "id": "STP-036-008", "type": "Step", "owner_fr": "FR-036", "title": "System checks the file type and size", "attrs": {"prd_ref": "Alternative Flow A1 step 2"}}
+  - {"op": "add_node", "id": "STP-036-009", "type": "Step", "owner_fr": "FR-036", "title": "System shows the new picture on the profile", "attrs": {"prd_ref": "Alternative Flow A1 step 3"}}
+  - {"op": "add_node", "id": "STP-036-010", "type": "Step", "owner_fr": "FR-036", "title": "Admin opens Account Settings", "attrs": {"prd_ref": "Alternative Flow A2 step 1"}}
+  - {"op": "add_node", "id": "STP-036-011", "type": "Step", "owner_fr": "FR-036", "title": "Admin enters the current password and the new password", "attrs": {"prd_ref": "Alternative Flow A2 step 2"}}
+  - {"op": "add_node", "id": "STP-036-012", "type": "Step", "owner_fr": "FR-036", "title": "System verifies the current password", "attrs": {"prd_ref": "Alternative Flow A2 step 3"}}
+  - {"op": "add_node", "id": "STP-036-013", "type": "Step", "owner_fr": "FR-036", "title": "System checks the new password against the password policy", "attrs": {"prd_ref": "Alternative Flow A2 step 4"}}
+  - {"op": "add_node", "id": "STP-036-014", "type": "Step", "owner_fr": "FR-036", "title": "System stores the new password and shows a confirmation", "attrs": {"prd_ref": "Alternative Flow A2 step 5"}}
+  - {"op": "add_node", "id": "STP-036-015", "type": "Step", "owner_fr": "FR-036", "title": "Admin opens My Activity Log", "attrs": {"prd_ref": "Alternative Flow A4 step 1"}}
+  - {"op": "add_node", "id": "STP-036-016", "type": "Step", "owner_fr": "FR-036", "title": "System shows the admin's own entries", "attrs": {"prd_ref": "Alternative Flow A4 step 2"}}
+  - {"op": "add_node", "id": "STP-036-017", "type": "Step", "owner_fr": "FR-036", "title": "Admin sets a date range or action type", "attrs": {"prd_ref": "Alternative Flow A4 step 3"}}
+  - {"op": "add_node", "id": "STP-036-018", "type": "Step", "owner_fr": "FR-036", "title": "System shows the matching entries", "attrs": {"prd_ref": "Alternative Flow A4 step 4"}}
+  - {"op": "add_node", "id": "STP-036-019", "type": "Step", "owner_fr": "FR-036", "title": "System refuses the password change, keeps the existing password and shows an error", "attrs": {"prd_ref": "Alternative Flow B1 step 2"}}
+  - {"op": "add_node", "id": "STP-036-020", "type": "Step", "owner_fr": "FR-036", "title": "Admin corrects the password entries", "attrs": {"prd_ref": "Alternative Flow B1 step 3"}}
+  - {"op": "add_node", "id": "STP-036-021", "type": "Step", "owner_fr": "FR-036", "title": "System shows the error on the field and stores nothing for that entry", "attrs": {"prd_ref": "Alternative Flow B2 step 2"}}
+  - {"op": "add_node", "id": "STP-036-022", "type": "Step", "owner_fr": "FR-036", "title": "Admin corrects the entry", "attrs": {"prd_ref": "Alternative Flow B2 step 3"}}
+  - {"op": "add_node", "id": "FLW-036-main", "type": "Flow", "title": "Admin updates their own profile", "attrs": {"kind": "main", "description": "Admin updates their own profile", "prd_ref": "Main Flow"}}
+  - {"op": "add_node", "id": "FLW-036-picture", "type": "Flow", "title": "Admin changes the profile picture", "attrs": {"kind": "alternative", "description": "Admin changes the profile picture", "prd_ref": "Alternative Flow A1"}}
+  - {"op": "add_node", "id": "FLW-036-change-password", "type": "Flow", "title": "Admin changes their own password", "attrs": {"kind": "alternative", "description": "Admin changes their own password", "prd_ref": "Alternative Flow A2"}}
+  - {"op": "add_node", "id": "FLW-036-activity-log", "type": "Flow", "title": "Admin views their own activity log", "attrs": {"kind": "alternative", "description": "Admin views their own activity log", "prd_ref": "Alternative Flow A4"}}
+  - {"op": "add_node", "id": "FLW-036-password-refused", "type": "Flow", "title": "Password change refused", "attrs": {"kind": "alternative", "description": "A password change is refused because the current password is wrong or the new password fails the policy", "prd_ref": "Alternative Flow B1"}}
+  - {"op": "add_node", "id": "FLW-036-profile-entry-refused", "type": "Flow", "title": "Entry refused on the profile", "attrs": {"kind": "alternative", "description": "A name, phone number or picture file breaks its rule and is refused", "prd_ref": "Alternative Flow B2"}}
+  - {"op": "add_edge", "from": "STP-036-001", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-036-001", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-036-001", "verb": "on", "to": "SCR-036-01"}
+  - {"op": "add_edge", "from": "STP-036-002", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-036-002", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-036-002", "verb": "on", "to": "SCR-036-01"}
+  - {"op": "add_edge", "from": "STP-036-002", "verb": "applies", "to": "REQ-036-004"}
+  - {"op": "add_edge", "from": "STP-036-003", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-036-003", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-036-003", "verb": "on", "to": "SCR-036-01"}
+  - {"op": "add_edge", "from": "STP-036-003", "verb": "applies", "to": "REQ-036-002"}
+  - {"op": "add_edge", "from": "STP-036-003", "verb": "applies", "to": "REQ-036-005"}
+  - {"op": "add_edge", "from": "STP-036-004", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-036-004", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-036-004", "verb": "on", "to": "SCR-036-01"}
+  - {"op": "add_edge", "from": "STP-036-005", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-036-005", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-036-005", "verb": "on", "to": "SCR-036-01"}
+  - {"op": "add_edge", "from": "STP-036-005", "verb": "applies", "to": "REQ-036-002"}
+  - {"op": "add_edge", "from": "STP-036-005", "verb": "applies", "to": "REQ-036-005"}
+  - {"op": "add_edge", "from": "STP-036-006", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-036-006", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-036-006", "verb": "on", "to": "SCR-036-01"}
+  - {"op": "add_edge", "from": "STP-036-007", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-036-007", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-036-007", "verb": "on", "to": "SCR-036-01"}
+  - {"op": "add_edge", "from": "STP-036-007", "verb": "applies", "to": "REQ-036-003"}
+  - {"op": "add_edge", "from": "STP-036-008", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-036-008", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-036-008", "verb": "on", "to": "SCR-036-01"}
+  - {"op": "add_edge", "from": "STP-036-008", "verb": "applies", "to": "REQ-036-003"}
+  - {"op": "add_edge", "from": "STP-036-009", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-036-009", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-036-009", "verb": "on", "to": "SCR-036-01"}
+  - {"op": "add_edge", "from": "STP-036-010", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-036-010", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-036-010", "verb": "on", "to": "SCR-036-02"}
+  - {"op": "add_edge", "from": "STP-036-011", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-036-011", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-036-011", "verb": "on", "to": "SCR-036-02"}
+  - {"op": "add_edge", "from": "STP-036-011", "verb": "applies", "to": "REQ-036-007"}
+  - {"op": "add_edge", "from": "STP-036-012", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-036-012", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-036-012", "verb": "on", "to": "SCR-036-02"}
+  - {"op": "add_edge", "from": "STP-036-012", "verb": "applies", "to": "REQ-036-007"}
+  - {"op": "add_edge", "from": "STP-036-013", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-036-013", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-036-013", "verb": "on", "to": "SCR-036-02"}
+  - {"op": "add_edge", "from": "STP-036-013", "verb": "applies", "to": "REQ-036-007"}
+  - {"op": "add_edge", "from": "STP-036-014", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-036-014", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-036-014", "verb": "on", "to": "SCR-036-02"}
+  - {"op": "add_edge", "from": "STP-036-014", "verb": "applies", "to": "REQ-036-007"}
+  - {"op": "add_edge", "from": "STP-036-015", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-036-015", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-036-015", "verb": "on", "to": "SCR-036-04"}
+  - {"op": "add_edge", "from": "STP-036-016", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-036-016", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-036-016", "verb": "on", "to": "SCR-036-04"}
+  - {"op": "add_edge", "from": "STP-036-016", "verb": "applies", "to": "REQ-036-013"}
+  - {"op": "add_edge", "from": "STP-036-016", "verb": "applies", "to": "REQ-036-014"}
+  - {"op": "add_edge", "from": "STP-036-017", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-036-017", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-036-017", "verb": "on", "to": "SCR-036-04"}
+  - {"op": "add_edge", "from": "STP-036-017", "verb": "applies", "to": "REQ-036-015"}
+  - {"op": "add_edge", "from": "STP-036-018", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-036-018", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-036-018", "verb": "on", "to": "SCR-036-04"}
+  - {"op": "add_edge", "from": "STP-036-018", "verb": "applies", "to": "REQ-036-015"}
+  - {"op": "add_edge", "from": "STP-036-019", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-036-019", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-036-019", "verb": "on", "to": "SCR-036-02"}
+  - {"op": "add_edge", "from": "STP-036-019", "verb": "applies", "to": "REQ-036-007"}
+  - {"op": "add_edge", "from": "STP-036-020", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-036-020", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-036-020", "verb": "on", "to": "SCR-036-02"}
+  - {"op": "add_edge", "from": "STP-036-021", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-036-021", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-036-021", "verb": "on", "to": "SCR-036-01"}
+  - {"op": "add_edge", "from": "STP-036-021", "verb": "applies", "to": "REQ-036-002"}
+  - {"op": "add_edge", "from": "STP-036-021", "verb": "applies", "to": "REQ-036-003"}
+  - {"op": "add_edge", "from": "STP-036-021", "verb": "applies", "to": "REQ-036-005"}
+  - {"op": "add_edge", "from": "STP-036-022", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-036-022", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-036-022", "verb": "on", "to": "SCR-036-01"}
+  - {"op": "add_edge", "from": "STP-036-001", "verb": "next", "to": "STP-036-002"}
+  - {"op": "add_edge", "from": "STP-036-002", "verb": "next", "to": "STP-036-003"}
+  - {"op": "add_edge", "from": "STP-036-003", "verb": "next", "to": "STP-036-004"}
+  - {"op": "add_edge", "from": "STP-036-004", "verb": "next", "to": "STP-036-005"}
+  - {"op": "add_edge", "from": "STP-036-005", "verb": "next", "to": "STP-036-006"}
+  - {"op": "add_edge", "from": "STP-036-007", "verb": "next", "to": "STP-036-008"}
+  - {"op": "add_edge", "from": "STP-036-008", "verb": "next", "to": "STP-036-009"}
+  - {"op": "add_edge", "from": "STP-036-010", "verb": "next", "to": "STP-036-011"}
+  - {"op": "add_edge", "from": "STP-036-011", "verb": "next", "to": "STP-036-012"}
+  - {"op": "add_edge", "from": "STP-036-012", "verb": "next", "to": "STP-036-013"}
+  - {"op": "add_edge", "from": "STP-036-013", "verb": "next", "to": "STP-036-014"}
+  - {"op": "add_edge", "from": "STP-036-015", "verb": "next", "to": "STP-036-016"}
+  - {"op": "add_edge", "from": "STP-036-016", "verb": "next", "to": "STP-036-017"}
+  - {"op": "add_edge", "from": "STP-036-017", "verb": "next", "to": "STP-036-018"}
+  - {"op": "add_edge", "from": "STP-036-019", "verb": "next", "to": "STP-036-020"}
+  - {"op": "add_edge", "from": "STP-036-021", "verb": "next", "to": "STP-036-022"}
+  - {"op": "add_edge", "from": "STP-036-005", "verb": "next", "to": "STP-036-021", "attrs": {"label": "a name or phone number breaks its rule", "condition": "REQ-036-002"}}
+  - {"op": "add_edge", "from": "STP-036-008", "verb": "next", "to": "STP-036-021", "attrs": {"label": "the picture file fails the check", "condition": "REQ-036-003"}}
+  - {"op": "add_edge", "from": "STP-036-012", "verb": "next", "to": "STP-036-019", "attrs": {"label": "the current password is wrong", "condition": "REQ-036-007"}}
+  - {"op": "add_edge", "from": "STP-036-013", "verb": "next", "to": "STP-036-019", "attrs": {"label": "the new password fails the policy", "condition": "REQ-036-007"}}
+  - {"op": "add_edge", "from": "STP-036-020", "verb": "next", "to": "STP-036-011"}
+  - {"op": "add_edge", "from": "STP-036-022", "verb": "next", "to": "STP-036-003"}
+  - {"op": "add_edge", "from": "FLW-036-main", "verb": "starts at", "to": "STP-036-001"}
+  - {"op": "add_edge", "from": "FLW-036-picture", "verb": "starts at", "to": "STP-036-007"}
+  - {"op": "add_edge", "from": "FLW-036-change-password", "verb": "starts at", "to": "STP-036-010"}
+  - {"op": "add_edge", "from": "FLW-036-activity-log", "verb": "starts at", "to": "STP-036-015"}
+  - {"op": "add_edge", "from": "FLW-036-password-refused", "verb": "starts at", "to": "STP-036-019"}
+  - {"op": "add_edge", "from": "FLW-036-profile-entry-refused", "verb": "starts at", "to": "STP-036-021"}
