@@ -1,0 +1,13 @@
+# Backlog points settled for FR-021: one name for the publish and rollback reason input, and an inactive-locale rule for admin users.
+reason: "Backlog points settled from rules already in the PRD: the change reason is for English source edits and the Change summary is the reason for a publish or rollback; the Admin Platform falls back like the Patient App and Provider Dashboard when a selected locale becomes inactive."
+by: controller
+source_id: SRC-PRD-021
+operations:
+  - {"op": "update_node", "id": "REQ-021-087", "title": "Change reason is required for English source edits", "attrs": {"statement": "Change reason: Required when editing English source. The reason for a publish or rollback is the Change summary (REQ-021-102)."}}
+  - {"op": "update_node", "id": "REQ-021-102", "attrs": {"statement": "Change summary: Required for publish/rollback. It is the one reason input for a publish or rollback, including the publish summary entered on Import and Publish Version and the rollback reason."}}
+  - {"op": "add_node", "id": "REQ-021-129", "type": "Rule", "owner_fr": "FR-021", "title": "Inactive admin locale falls back to the fallback locale", "attrs": {"statement": "If an admin's selected locale becomes inactive, the Admin Platform falls back to the configured fallback locale.", "rationale": "PRD Screen 3 business rules; same behavior as REQ-021-060 (Patient App) and REQ-021-067 (Provider Dashboard) and General Module Rule 9."}}
+  - {"op": "add_edge", "from": "REQ-021-129", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-021-129", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-021-129", "verb": "applies to", "to": "ENT-locale"}
+  - {"op": "add_edge", "from": "REQ-021-129", "verb": "applies to", "to": "SCR-021-03"}
+  - {"op": "add_edge", "from": "REQ-021-129", "verb": "decided by", "to": "SRC-PRD-021"}
