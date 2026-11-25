@@ -199,3 +199,20 @@ Known gaps: the graph linter reports 28 open findings (`/usr/bin/python3 scripts
 | `deferred-backlog/` | Issues the team chose to defer, with reason and revisit trigger |
 | `project-requirements/implementation-backlog.md` | Open points per FR left for the implementation phase: read the section of your FR before you build it |
 | `project-requirements/templates/` | PRD and change-request templates |
+
+## 9. Patient mobile API: endpoints to keep stable
+
+For developers reworking the backend. The patient mobile app is being built in parallel against the Postman collection `PATIENT-MOBILE-handoff` (96 requests). Those requests are a contract with the mobile team. The full list, and the corrections the requirements ask for, are in `reports/2026-11-25/patient-mobile-api-contract-vs-requirements-2026-11-25.md`.
+
+While you rework the backend:
+
+- **Do not rename, move or remove** any of the listed paths.
+- **Do not rename, remove or change the type of** a request field, a response field or a status value on them. Example responses in the collection, once added, are part of the contract.
+- **Add, do not change.** New fields, new optional parameters, new error codes and new requests are fine. A new request field must be optional, or the current app breaks.
+- **When a change cannot be made by adding**, publish a new version of the request (as with `/v2/accept-quote`) and keep the old one working until the mobile team confirms the app has moved.
+- **Before any breaking change**, raise it with the product team and the mobile team. Do not ship it and report it afterwards.
+- **Internal changes are free**: tables, services, queues and admin or provider endpoints may change, as long as the listed requests still answer the same way.
+
+Check before you merge: if your change touches a controller, route, resource or serializer behind one of the listed requests, compare the request and response with the collection.
+
+Seven requests have an open contract decision (section 3 of the report). Leave them unchanged until that decision is recorded there.
