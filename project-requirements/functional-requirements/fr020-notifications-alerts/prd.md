@@ -93,6 +93,7 @@ In Scope:
 | Aftercare | Aftercare Escalation / Red Flag Triggered | `aftercare.escalation_triggered` | Provider, Admin, Patient (optional) | Details in the FR-030 catalogue entry. | REQ-030-075 |
 | Aftercare | Standalone Aftercare Payment Confirmed | `aftercare.standalone_payment_confirmed` | Patient, Provider (optional), Admin (optional) | Used for standalone aftercare flow payment confirmation | REQ-020-121 |
 | Aftercare | Aftercare Provider Reassigned | `aftercare.provider_reassigned` | Patient, Provider (new aftercare provider) | Details in the FR-030 catalogue entry. | REQ-030-077 |
+| Aftercare | Aftercare Team Message | `aftercare.team_message` | Patient | Details in the FR-030 catalogue entry. | REQ-030-295 |
 | Monitoring | Monitoring Case Pending Assignment | `monitoring.assignment_pending` | Admin | Advice-mode hair-loss monitoring case activated and awaiting provider assignment (FR-037 only) | REQ-020-123 |
 | Monitoring | Monitoring Provider Assigned | `monitoring.provider_assigned` | Patient, Provider | Initial assignment only; a reassignment uses `monitoring.provider_reassigned` (FR-037 only) | REQ-020-124 |
 | Monitoring | Monitoring Provider Withdrawn | `monitoring.provider_withdrawn` | Admin, Patient | Provider withdraws with reason; case returns to Admin as Pending Reassignment (FR-037 only) | REQ-020-125 |
@@ -473,7 +474,7 @@ Acceptance Scenarios:
 ## Functional Requirements Summary
 
 - REQ-020-001: System MUST send email for key events per templates.
-- REQ-020-002: System MUST send push notifications to mobile app.
+- REQ-020-002: System MUST send push notifications to the patient mobile app on iOS and Android. No other push platform is supported.
 - REQ-020-003: Post-MVP (future phase): System MUST support optional/configurable SMS for urgent events. SMS is not available in MVP; no SMS is sent until a later phase enables it.
 - REQ-020-004: System MUST allow patients to configure notification preferences (MVP: global Email/Push toggles managed in FR-001: Patient Authentication & Profile Management).
 - REQ-020-005: System MUST support notification event types in the FR-030 MVP event catalog (Admin-Configurable Notification Event Types), routed to enabled channels and templates.
@@ -509,6 +510,7 @@ Acceptance Scenarios:
 | 2026-11-24 | 2.18 | Logic review pass 2: the three variants of the provider-caused cancellation notice are chosen in a stated order; the redistribution reminder is dropped when no confirmation is awaited; `booking.cancelled` causes follow FR-006 and a suspension or deactivation closure sends `booking.provider_fault_replacement` only; the Admin-close `inquiry.cancelled` variant says no replacement will follow; an Admin close sends no `quote.cancelled_inquiry` notice and an account-deletion cancellation does; a notice counts as complete when its first attempt is handed to a channel or it ends `failed`; `dsr.fulfilled` goes by email to the captured address with no in-app record; every patient notice creates the in-app record; the 5-minute figure is a first-attempt target in the acceptance scenario; an archived-notice link opens the dropdown on provider and admin surfaces. | Product Owner / Documentation |
 | 2026-11-25 | 2.19 | Cross-FR alignment: the table is stated as not repeating every FR-030 catalogue event; the appointment reminder reads 7 days and 1 day before; booking cancelled, payment received, payment failed, system escalation and system alert rows say mandatory; the monitoring assignment, withdrawal, advice and conversion-to-inquiry rows are FR-037 only and the provider-assigned row covers the initial assignment only; the closure-rejected notice says the account keeps its current status; the provider-caused cancellation row no longer restates the patient toggles; an attempt has no in-app row and an email attempt carries an opened marker. | Product Owner / Documentation |
 | 2026-11-25 | 2.20 | Owner ruling 2026-11-25 follow-up: quote.cancelled_inquiry never goes to the provider of a replacement quote, whether draft or sent (REQ-020-020). | Product Owner / Documentation |
+| 2026-11-25 | 2.21 | Owner ruling 2026-11-25: push notifications go to the patient mobile app on iOS and Android only (REQ-020-002); the catalogue mirror gains `aftercare.team_message` (REQ-030-295). | Claude (AI Assistant) |
 
 ---
 

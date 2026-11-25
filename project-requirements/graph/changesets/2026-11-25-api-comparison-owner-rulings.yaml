@@ -1,0 +1,22 @@
+# Owner rulings of 2026-11-25 on the API comparison: aftercare team reply and push platforms.
+reason: "Aftercare team reply shown in app with a notification; push limited to iOS and Android."
+by: controller
+source_id: SRC-PRD-011
+operations:
+  - {"op": "add_node", "id": "EVT-aftercare-team-message", "type": "Event", "owner_fr": "FR-030", "title": "Aftercare team message", "attrs": {"description": "aftercare.team_message: notice to the patient, by push and email, when the aftercare team sends a message or replies to the patient's Contact Support message. FR-011 is the producer; FR-030 owns notification delivery."}}
+  - {"op": "add_node", "id": "REQ-011-103", "type": "Rule", "owner_fr": "FR-011", "title": "Aftercare team messages reach the patient in the app with a notification", "attrs": {"statement": "When a member of the aftercare team sends the patient a message from the aftercare case, including a reply to a Contact Support message, System MUST record it as an aftercare communication entry (entry type message, sender role aftercare_team), MUST show it to the patient in the Messages list on the Aftercare Dashboard (Screen 1) together with the patient's own Contact Support messages in chronological order, and MUST send the patient the `aftercare.team_message` notification by push and email (FR-030 REQ-030-295). The patient answers through Contact Support (REQ-011-102).", "rationale": "Business Rules, owner ruling 2026-11-25."}}
+  - {"op": "add_node", "id": "REQ-030-295", "type": "Rule", "owner_fr": "FR-030", "title": "Catalog event: Aftercare Team Message", "attrs": {"statement": "Aftercare Team Message (aftercare.team_message) is an admin-configurable notification event. Primary recipients: Patient. Sent when the aftercare team sends the patient a message or replies to the patient's Contact Support message (FR-011 REQ-011-103). Channels push and email; it opens the Messages list on the patient Aftercare Dashboard", "rationale": "Event Catalog table, row aftercare.team_message. Category: Aftercare."}}
+  - {"op": "update_node", "id": "REQ-020-002", "attrs": {"statement": "System MUST send push notifications to the patient mobile app on iOS and Android. No other push platform is supported."}}
+  - {"op": "add_edge", "from": "REQ-011-103", "verb": "applies at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "REQ-011-103", "verb": "applies to", "to": "SCR-011-01"}
+  - {"op": "add_edge", "from": "REQ-011-103", "verb": "applies to", "to": "ENT-aftercare-communication-entry"}
+  - {"op": "add_edge", "from": "REQ-011-103", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-011-103", "verb": "applies to", "to": "EVT-aftercare-team-message"}
+  - {"op": "add_edge", "from": "REQ-011-103", "verb": "decided by", "to": "SRC-PRD-011"}
+  - {"op": "add_edge", "from": "REQ-030-295", "verb": "applies at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "REQ-030-295", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-030-295", "verb": "applies to", "to": "EVT-aftercare-team-message"}
+  - {"op": "add_edge", "from": "REQ-030-295", "verb": "decided by", "to": "SRC-PRD-030"}
+  - {"op": "add_edge", "from": "STG-aftercare-02-follow-up", "verb": "emits", "to": "EVT-aftercare-team-message"}
+  - {"op": "add_edge", "from": "FR-011", "verb": "references", "to": "REQ-030-295"}
+  - {"op": "add_edge", "from": "FR-020", "verb": "references", "to": "REQ-030-295"}

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T04:59:21Z",
+  "generated_at": "2026-11-25T05:36:06Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -32964,6 +32964,17 @@
       }
     },
     {
+      "id": "EVT-aftercare-team-message",
+      "type": "Event",
+      "owner_fr": "FR-030",
+      "title": "Aftercare team message",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "aftercare.team_message: notice to the patient, by push and email, when the aftercare team sends a message or replies to the patient's Contact Support message. FR-011 is the producer; FR-030 owns notification delivery."
+      }
+    },
+    {
       "id": "EVT-analytics-export-ready",
       "type": "Event",
       "owner_fr": "FR-030",
@@ -40625,7 +40636,7 @@
       "owner_fr": null,
       "title": "Aftercare & Recovery Management",
       "status": "active",
-      "version": 9,
+      "version": 10,
       "attrs": {
         "module": "fr011-aftercare-recovery-management",
         "prd_path": "project-requirements/functional-requirements/fr011-aftercare-recovery-management/prd.md",
@@ -40742,7 +40753,7 @@
       "owner_fr": null,
       "title": "Notifications & Alerts",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "module": "fr020-notifications-alerts",
         "prd_path": "project-requirements/functional-requirements/fr020-notifications-alerts/prd.md",
@@ -56578,6 +56589,18 @@
       "version": 1,
       "attrs": {
         "statement": "Contact Support on the patient Aftercare Dashboard (Screen 1) MUST let the patient send a text message to the aftercare team at any time while the aftercare plan is open. System MUST record it as an aftercare communication entry (entry type message, sender role patient) on the plan and show it in the aftercare team's communication log for that patient. It is not an FR-012 conversation, and FR-012 chat with the provider stays separate (REQ-011-080)."
+      }
+    },
+    {
+      "id": "REQ-011-103",
+      "type": "Rule",
+      "owner_fr": "FR-011",
+      "title": "Aftercare team messages reach the patient in the app with a notification",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "When a member of the aftercare team sends the patient a message from the aftercare case, including a reply to a Contact Support message, System MUST record it as an aftercare communication entry (entry type message, sender role aftercare_team), MUST show it to the patient in the Messages list on the Aftercare Dashboard (Screen 1) together with the patient's own Contact Support messages in chronological order, and MUST send the patient the `aftercare.team_message` notification by push and email (FR-030 REQ-030-295). The patient answers through Contact Support (REQ-011-102).",
+        "rationale": "Business Rules, owner ruling 2026-11-25."
       }
     },
     {
@@ -74149,9 +74172,9 @@
       "owner_fr": "FR-020",
       "title": "Push notifications sent to the mobile app",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST send push notifications to mobile app.",
+        "statement": "System MUST send push notifications to the patient mobile app on iOS and Android. No other push platform is supported.",
         "rationale": "Functional Requirements Summary, prd.md line 490."
       }
     },
@@ -90315,6 +90338,18 @@
       "attrs": {
         "statement": "Recurring Export Failed (analytics.recurring_export_failed) is an admin-configurable notification event. Primary recipients: Provider (the configuration owner). After the last retry of a scheduled run has failed, the person who set up the export gets an in-app notice (FR-014 REQ-014-323)",
         "rationale": "Event Catalog table, row analytics.recurring_export_failed. Category: System/Operations. Event nodes: none (Rule only)."
+      }
+    },
+    {
+      "id": "REQ-030-295",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Aftercare Team Message",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Aftercare Team Message (aftercare.team_message) is an admin-configurable notification event. Primary recipients: Patient. Sent when the aftercare team sends the patient a message or replies to the patient's Contact Support message (FR-011 REQ-011-103). Channels push and email; it opens the Messages list on the patient Aftercare Dashboard",
+        "rationale": "Event Catalog table, row aftercare.team_message. Category: Aftercare."
       }
     },
     {
@@ -108233,7 +108268,7 @@
       "owner_fr": null,
       "title": "Follow-up",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "timeline": "aftercare",
         "sequence": 2,
@@ -181434,7 +181469,7 @@
       "verb": "active in",
       "to_id": "STG-aftercare-02-follow-up",
       "attrs": {
-        "rules": 56
+        "rules": 57
       },
       "derived": true
     },
@@ -181631,6 +181666,12 @@
       "from_id": "FR-011",
       "verb": "references",
       "to_id": "REQ-030-077",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-011",
+      "verb": "references",
+      "to_id": "REQ-030-295",
       "attrs": {}
     },
     {
@@ -183521,6 +183562,12 @@
       "derived": true
     },
     {
+      "from_id": "FR-020",
+      "verb": "references",
+      "to_id": "REQ-030-295",
+      "attrs": {}
+    },
+    {
       "from_id": "FR-021",
       "verb": "active in",
       "to_id": "STG-admin-01-configuration",
@@ -184782,7 +184829,7 @@
       "verb": "active in",
       "to_id": "STG-aftercare-02-follow-up",
       "attrs": {
-        "rules": 9
+        "rules": 10
       },
       "derived": true
     },
@@ -220056,6 +220103,42 @@
     },
     {
       "from_id": "REQ-011-102",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-011-103",
+      "verb": "applies at",
+      "to_id": "STG-aftercare-02-follow-up",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-011-103",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-011-103",
+      "verb": "applies to",
+      "to_id": "ENT-aftercare-communication-entry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-011-103",
+      "verb": "applies to",
+      "to_id": "EVT-aftercare-team-message",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-011-103",
+      "verb": "applies to",
+      "to_id": "SCR-011-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-011-103",
       "verb": "decided by",
       "to_id": "SRC-PRD-011",
       "attrs": {}
@@ -295709,6 +295792,30 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-030-295",
+      "verb": "applies at",
+      "to_id": "STG-aftercare-02-follow-up",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-295",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-295",
+      "verb": "applies to",
+      "to_id": "EVT-aftercare-team-message",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-295",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-031-001",
       "verb": "applies at",
       "to_id": "STG-admin-01-configuration",
@@ -360969,6 +361076,12 @@
       "from_id": "STG-aftercare-02-follow-up",
       "verb": "emits",
       "to_id": "EVT-aftercare-team-assigned",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-aftercare-02-follow-up",
+      "verb": "emits",
+      "to_id": "EVT-aftercare-team-message",
       "attrs": {}
     },
     {
@@ -462085,6 +462198,27 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-053449-67d8019a",
+      "at": "2026-11-25T05:34:49.517931+00:00",
+      "changed_by": "controller",
+      "reason": "Aftercare team reply shown in app with a notification; push limited to iOS and Android.",
+      "source_id": "SRC-PRD-011",
+      "nodes_added": [
+        "EVT-aftercare-team-message",
+        "REQ-011-103",
+        "REQ-030-295"
+      ],
+      "nodes_updated": [
+        "FR-011",
+        "FR-020",
+        "REQ-020-002",
+        "STG-aftercare-02-follow-up"
+      ],
+      "edges_added": 13,
+      "edges_removed": 0,
+      "rows": 31
+    },
     {
       "id": "cs-20261125-045803-eab7b2d8",
       "at": "2026-11-25T04:58:03.572030+00:00",
