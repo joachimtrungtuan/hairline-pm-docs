@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T07:44:02Z",
+  "generated_at": "2026-11-25T07:45:38Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -43968,9 +43968,9 @@
       "owner_fr": "FR-003",
       "title": "Inquiry cancellation cascade to draft, sent and expired quotes",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "System MUST auto-cancel only the draft, sent, and expired quotes when an inquiry is cancelled by the patient or by an approved account deletion, with distinct cancellation status \"Cancelled (Inquiry Cancelled)\"; quotes in any other status MUST keep their status and cause, and `quote.cancelled_inquiry` (FR-020) MUST go only to providers whose quotes were cancelled by this cascade, never to the provider of a replacement quote (REQ-003-127).",
+        "statement": "System MUST auto-cancel only the draft, sent, and expired quotes when an inquiry is cancelled by the patient or by an approved account deletion, with distinct cancellation status \"Cancelled (Inquiry Cancelled)\"; quotes in any other status MUST keep their status and cause, and `quote.cancelled_inquiry` (FR-020) MUST go only to providers whose quotes were cancelled by this cascade.",
         "rationale": "Restated by Alternative Flow A4, Workflow 5 outcome, Alternative Flow E3 and Cancellation Rules 4 (all associated draft, sent and expired quotes auto-cancelled with status Cancelled (Inquiry Cancelled)).",
         "aliases": "REQ-004-013"
       }
@@ -45263,9 +45263,9 @@
       "owner_fr": "FR-003",
       "title": "Admin cancellation or Close inquiry also cancels a replacement draft, with no provider notice",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "When an admin cancels the booking through FR-006 Screen 9 or closes the inquiry through Close inquiry on FR-006 Screen 6, System MUST move any open replacement quote (draft or sent) of that inquiry to `Cancelled (Inquiry Cancelled)`, MUST NOT send `quote.cancelled_inquiry` to any provider (an admin cancellation or close sends no provider notice, REQ-020-020; the replacement provider is not told), and no `quote.expired` follows. The quote-side behaviour is owned by FR-004 (REQ-004-111). The patient cancellation path has no replacement quote, because a replacement exists only after acceptance.",
+        "statement": "When an admin cancels the booking through FR-006 Screen 9 or closes the inquiry through Close inquiry on FR-006 Screen 6, System MUST move any open replacement quote (draft or sent) of that inquiry to `Cancelled (Inquiry Cancelled)`, MUST NOT send `quote.cancelled_inquiry` to any provider (an admin cancellation or close sends no provider notice, REQ-020-020), and no `quote.expired` follows. The quote-side behaviour is owned by FR-004 (REQ-004-111). The patient cancellation path has no replacement quote, because a replacement exists only after acceptance.",
         "rationale": "The rule that owns the cascade trigger (REQ-003-013) covers the patient and account-deletion paths only, so the admin paths needed their own trigger in this FR.",
         "distinct_from": "REQ-004-111"
       }
@@ -462232,6 +462232,21 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-074422-fe4530b5",
+      "at": "2026-11-25T07:44:22.567951+00:00",
+      "changed_by": "controller",
+      "reason": "Patient cancellation and account deletion cannot meet a replacement quote (it exists only after acceptance), so the cascade rule carries no replacement carve-out; the admin cancel rule already forbids any provider notice.",
+      "source_id": "SRC-PRD-003",
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-003-013",
+        "REQ-003-127"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 2
+    },
     {
       "id": "cs-20261125-074246-a800a0c0",
       "at": "2026-11-25T07:42:46.987630+00:00",

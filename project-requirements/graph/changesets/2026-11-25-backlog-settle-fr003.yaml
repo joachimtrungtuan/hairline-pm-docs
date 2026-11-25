@@ -1,0 +1,7 @@
+# Backlog points settled for FR-003: replacement-provider carve-outs removed from the patient cancellation cascade rule and the admin cancel rule.
+reason: "Patient cancellation and account deletion cannot meet a replacement quote (it exists only after acceptance), so the cascade rule carries no replacement carve-out; the admin cancel rule already forbids any provider notice."
+by: controller
+source_id: SRC-PRD-003
+operations:
+  - {"op": "update_node", "id": "REQ-003-013", "attrs": {"statement": "System MUST auto-cancel only the draft, sent, and expired quotes when an inquiry is cancelled by the patient or by an approved account deletion, with distinct cancellation status \"Cancelled (Inquiry Cancelled)\"; quotes in any other status MUST keep their status and cause, and `quote.cancelled_inquiry` (FR-020) MUST go only to providers whose quotes were cancelled by this cascade."}}
+  - {"op": "update_node", "id": "REQ-003-127", "attrs": {"statement": "When an admin cancels the booking through FR-006 Screen 9 or closes the inquiry through Close inquiry on FR-006 Screen 6, System MUST move any open replacement quote (draft or sent) of that inquiry to `Cancelled (Inquiry Cancelled)`, MUST NOT send `quote.cancelled_inquiry` to any provider (an admin cancellation or close sends no provider notice, REQ-020-020), and no `quote.expired` follows. The quote-side behaviour is owned by FR-004 (REQ-004-111). The patient cancellation path has no replacement quote, because a replacement exists only after acceptance."}}
