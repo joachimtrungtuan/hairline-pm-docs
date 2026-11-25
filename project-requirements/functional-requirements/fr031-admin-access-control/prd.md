@@ -1065,8 +1065,13 @@ FR-026 refers to these permission names for its screens: View Settings, Edit Set
 - **Rule 9**: Role names for system-defined roles (admin + provider) MUST be immutable (not editable/renamable); only custom admin roles can be renamed. (REQ-031-055)
 - **Rule 10**: After an admin user's role changes, the user MUST acknowledge the change within 24 hours of it taking effect; the acknowledgement time is stored on the account and shown to Super Admins, who see an "Overdue" flag when it is late; nothing is blocked and no reminder is sent (REQ-031-124)
 - Every existing role can be assigned to new or existing users; roles have no active or inactive status and cannot be deactivated (REQ-031-036)
-- **Role Definition**: An admin role may be assigned to admin users; a provider role may be assigned across provider organizations. Each role has permission grants; cloned admin roles retain an independent permission snapshot. (REQ-031-057)
+- **Role Definition**: Each role has permission grants held in the permission matrix; a cloned admin role is an independent copy of its source (REQ-031-013; REQ-031-057; REQ-031-129)
 - **Admin User Account**: One admin user has one assigned role; one role can be assigned to many admin users (REQ-031-050)
+
+### Assumptions
+
+These are working assumptions, not requirements; they carry no requirement id and no rule above depends on them.
+
 - Admin platform accessed via modern web browsers (Chrome, Firefox, Safari, Edge - latest 2 versions)
 - Admin users will primarily access platform from trusted devices/networks (office, VPN)
 - Super Admins will review and update team member roles periodically (quarterly or when responsibilities change)
@@ -1083,7 +1088,11 @@ FR-026 refers to these permission names for its screens: View Settings, Edit Set
 - **Privacy Rule 3**: Password reset requests logged in audit trail with requester identity (REQ-031-092)
 - **Audit Rule**: All access to sensitive features (billing, patient medical data, provider financial data) MUST be logged with: timestamp, user ID, action, IP address, outcome (REQ-031-091)
 - **GDPR Compliance**: Admin user data (email, name) can be anonymized on account deletion request, but audit trail preserved with anonymized identifiers (REQ-031-022)
-- **System Clock / Time Service**: Accurate timestamps for audit trail entries and token expiration; System time (NTP synchronized); Use server time as fallback; alert if time drift detected
+### Architecture, Integration and Security Notes
+
+Technical notes for the development team. A line carries a requirement id only where a rule above or in the summary states it.
+
+- **System Clock / Time Service**: Accurate timestamps for audit trail entries and token expiration (REQ-031-014; REQ-031-037); System time (NTP synchronized); Use server time as fallback; alert if time drift detected
 - **Architecture**: Role-based access control (RBAC) implemented via middleware on all admin API endpoints
 - **Technology**: Permission checks execute before business logic (fail-fast approach)
 - **Integration 1**: Admin API endpoints check permissions via middleware
@@ -1142,6 +1151,9 @@ FR-026 refers to these permission names for its screens: View Settings, Edit Set
 - **FR-009**: Provider Team & Role Management (consumes and enforces the provider role permission matrices configured in FR-031)
 - **FR-015**: Provider Management (provider organizations and oversight of provider team members)
 - **FR-020**: Notifications & Alerts (transactional email/in-app alerts for admin invitations, role changes, suspensions, and audit events; module S-03 Notification Service)
+- **FR-030**: Notification Rules & Configuration (the notification retry rule used for failed invitation emails; the catalogue entry for the provider role sync failure alert)
+- **FR-022**: Search & Filtering (the criteria for the Admin Users list and the audit trail filters)
+- **FR-034**: Support Center & Ticketing System (the Support Center settings and the support audit export are Super Admin-only actions, REQ-031-067; its permissions are configured in the FR-031 matrix)
 - **FR-007**: Payment processing (approval step and 2-business-day escalation for Issue Refunds)
 - **FR-007B**: Split Payment / Installment Plans (consumes the Retry Charge and Resolve Installments permissions)
 - **FR-027**: Legal content settings (the Admin Terms of Service text; acceptance at account set-up belongs to FR-031)
@@ -1346,6 +1358,7 @@ As a platform administrator, I need the system to prevent any Super Admin accoun
 | 2026-11-24 | 1.6 | Logic review pass 2 applied. Sensitive-permission warning added to the invitation and role-change flows; the role-change acknowledgement is shown to the affected admin on the admin dashboard; new Deleted account status and the status each account action is offered on; Super Admin invitations can be cancelled or resent until accepted and only Active Super Admins count for the single-Super-Admin banner; Pending Send starts at the first failed delivery; provider role sync can be retried by a Super Admin; new permissions Resolve Installments (admin), Edit Notification Settings (provider) and View and Edit Billing Settings (renamed from Manage Bank Details); provider default table gains View Profile and Edit Profile for Manager; refunds raised by the only holder of Issue Refunds wait for a second holder; small wording fixes. See the update log of the same date. | Documentation |
 | 2026-11-25 | 1.7 | Cross-FR alignment. Permission descriptions now name what neighbouring modules gate on them: Edit Patients covers password reset, unlock, lifting a suspension and action on a flagged conversation (FR-016); Process Payouts covers the FR-017 payout actions under financial re-authentication; Manage App Data names the FR-026 App Data lists; Manage Treatment Catalog adds the medication and post-op instruction templates; Manage Authentication Policies names the admin session settings; Export Reports noted as gating nothing in FR-014. Send Payment Reminders added to the Billing Admin defaults, mirroring Retry Charge. Aftercare Coordinator screens named. Session limit and timeout changes apply from each open session's next request. | Documentation |
 | 2026-11-25 | 1.8 | Owner ruling 2026-11-25: the permission View and Edit Billing Settings is split into View Billing Settings (grantable) and Edit Billing Settings (Owner only). Defaults: Owner holds both, Billing Staff holds View Billing Settings only, Manager and Clinical Staff hold neither. View Billing Settings is grantable to any provider role; Edit Billing Settings stays Owner only and cannot be granted to any other role (REQ-031-068), and the Owner always holds both. | Documentation |
+| 2026-11-25 | 1.9 | Backlog points settled: former assumption bullets moved under an Assumptions heading and the technical notes under their own heading, citations on the Role Definition and System Clock lines corrected, one role to many admin users stated in REQ-031-050, clone independence in REQ-031-129, the provider role save message aligned to the 5-second rule, and FR-030, FR-022 and FR-034 added to Dependencies. | Claude (AI Assistant) |
 
 ---
 
@@ -1358,4 +1371,4 @@ Approved by the Product Owner as part of the requirements baseline of 2026-11-25
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-11-25 (billing settings view ruling; prior approval dated 2026-01-04)
+**Last Updated**: 2026-11-25 (backlog points settled; prior approval dated 2026-01-04)

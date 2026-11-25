@@ -1,0 +1,8 @@
+# Backlog points settled for FR-031: provider role save message aligned to the 5-second rule; one role to many admin users; clone independence.
+reason: "Backlog points settled: REQ-031-075 message matches the PRD step and Rule 3 (5 seconds); REQ-031-050 states one role may be held by many admin users; REQ-031-129 states a cloned role is independent of its source."
+by: controller
+source_id: SRC-PRD-031
+operations:
+  - {"op": "update_node", "id": "REQ-031-075", "attrs": {"statement": "System shows a permission comparison before a change is confirmed: current versus new role permissions with the effective date/time on a role change, and additions and removals on a provider permission edit. After a provider role save it shows \"Provider role permissions updated. Changes reach all [Role] members within 5 seconds and apply on their next request.\""}}
+  - {"op": "update_node", "id": "REQ-031-050", "attrs": {"statement": "All admin users MUST have exactly one role assigned (no \"roleless\" accounts); one role can be assigned to many admin users."}}
+  - {"op": "update_node", "id": "REQ-031-129", "attrs": {"statement": "System MUST let a Super Admin delete a custom admin role only while no admin user (including an Invited account, but not a Deleted one) and no pending role change holds it, and MUST name a cloned role \"Copy of [role name]\", editable and cut to 50 characters; a cloned role is an independent copy, so later edits to either role do not change the other; roles have no active or inactive status."}}

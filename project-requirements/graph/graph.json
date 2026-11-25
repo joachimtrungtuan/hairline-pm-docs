@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T08:43:33Z",
+  "generated_at": "2026-11-25T08:47:49Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -90878,9 +90878,9 @@
       "owner_fr": "FR-031",
       "title": "Every admin user holds exactly one role",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "All admin users MUST have exactly one role assigned (no \"roleless\" accounts).",
+        "statement": "All admin users MUST have exactly one role assigned (no \"roleless\" accounts); one role can be assigned to many admin users.",
         "rationale": "Business Rule 1; Key Entities, Entity 1 (one admin user has one assigned role)."
       }
     },
@@ -91118,9 +91118,9 @@
       "owner_fr": "FR-031",
       "title": "Permission comparison shown before confirming",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System shows a permission comparison before a change is confirmed: current versus new role permissions with the effective date/time on a role change, and additions and removals on a provider permission edit. After a provider role save it shows \"Provider role permissions updated. Changes will take effect for all [Role] members on next page load.\"",
+        "statement": "System shows a permission comparison before a change is confirmed: current versus new role permissions with the effective date/time on a role change, and additions and removals on a provider permission edit. After a provider role save it shows \"Provider role permissions updated. Changes reach all [Role] members within 5 seconds and apply on their next request.\"",
         "rationale": "Alternative Flows A2 step 7 and A4 steps 7 and 15. The \"next page load\" wording conflicts with next API call and 5 seconds elsewhere; see the migration report decision list."
       }
     },
@@ -91767,9 +91767,9 @@
       "owner_fr": "FR-031",
       "title": "Delete and clone custom admin roles",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST let a Super Admin delete a custom admin role only while no admin user (including an Invited account, but not a Deleted one) and no pending role change holds it, and MUST name a cloned role \"Copy of [role name]\", editable and cut to 50 characters; roles have no active or inactive status.",
+        "statement": "System MUST let a Super Admin delete a custom admin role only while no admin user (including an Invited account, but not a Deleted one) and no pending role change holds it, and MUST name a cloned role \"Copy of [role name]\", editable and cut to 50 characters; a cloned role is an independent copy, so later edits to either role do not change the other; roles have no active or inactive status.",
         "rationale": "PRD Alternative Flow A11; Tab 1 actions and rules."
       }
     },
@@ -463575,6 +463575,22 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-084635-ca2196a2",
+      "at": "2026-11-25T08:46:35.831008+00:00",
+      "changed_by": "controller",
+      "reason": "Backlog points settled: REQ-031-075 message matches the PRD step and Rule 3 (5 seconds); REQ-031-050 states one role may be held by many admin users; REQ-031-129 states a cloned role is independent of its source.",
+      "source_id": "SRC-PRD-031",
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-031-050",
+        "REQ-031-075",
+        "REQ-031-129"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 3
+    },
     {
       "id": "cs-20261125-084220-c190f714",
       "at": "2026-11-25T08:42:20.120609+00:00",
