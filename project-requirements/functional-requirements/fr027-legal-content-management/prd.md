@@ -260,7 +260,7 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
 
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |------------|------|----------|-------------|------------------|-------------|
-| Document Type | select | Yes | T&C, Privacy, Consent | Must be supported type | ENT-legal-acceptance.document_type |
+| Document Type | select | Yes | T&C, Privacy, Consent; the Cancellation Policy is not listed because it has no acceptance records (REQ-027-026) | Must be supported type | ENT-legal-acceptance.document_type |
 | Version | select | Yes | Version for the detail list | Must exist | ENT-legal-acceptance.version |
 | User Filter | search/filter | No | Search by name/email/user ID | Input sanitized (REQ-027-057) | ENT-legal-acceptance.user_id |
 | Status Filter | select | Yes | Accepted / Pending | See REQ-027-056. | no graph field (control) |
@@ -412,6 +412,7 @@ Related FRs: FR-006 (booking and payment screens that link to the full Cancellat
 | 2026-11-24 | 1.7 | Logic review pass 2 (16 findings, FR-027 side 15, FR-022 queued): one acceptance base and Pending set for prompts, reminders, re-accept count and rate, with a fixed audience per document type (REQ-027-053, REQ-027-021, REQ-027-032, REQ-027-035, REQ-027-062); banner and alert both start 14 days after Current; Screen 5 limited-access exit; Admin may add a missing locale text to a Current version; audit actions per event (REQ-027-013); Audit trail also opens unfiltered; settings, withdraw and rejected second Publish as flow steps; provider first-run and sign-in prompts; alert and notice recipients; Consent entry in patient Settings; restore draft Material Change fixed on Screen 2. Owner defaults 87 and 88. | Product Owner / Documentation |
 | 2026-11-25 | 1.8 | Cross-FR alignment: legal notices are catalogue events owned by FR-030 (REQ-030-239 to REQ-030-241); the REQ-006-038 acknowledgment at booking is separate from legal acceptance (REQ-027-026). | Product Owner / Documentation |
 | 2026-11-25 | 1.9 | Owner ruling: the Cancellation Policy has no per-version acceptance record here, but the patient acknowledges it with a checkbox at every booking; that per-booking acknowledgment is owned and stored by FR-006 with the booking (REQ-006-038), records the policy version shown, and is not counted in acceptance rates, the Pending set or reminders (REQ-027-026). | Product Owner / Documentation |
+| 2026-11-25 | 1.10 | Backlog points settled: the reminder limit in REQ-027-014 and the Scheduled status in REQ-027-008 are now carried in the graph rule text as in the PRD, Screen 4A states why the Cancellation Policy is not a Document Type there, and the Cancellation Policy acknowledgment at booking was already ruled in REQ-027-026. | Claude (AI Assistant) |
 
 ---
 

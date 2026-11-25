@@ -1,0 +1,7 @@
+# FR-027 backlog settle: graph rule text brought in line with the live PRD (REQ-027-008, REQ-027-014).
+reason: "Backlog points settled: REQ-027-014 now points to the reminder limit and cadence rule, REQ-027-008 now points to the version model rule, as in the PRD."
+by: controller
+source_id: SRC-PRD-027
+operations:
+  - {"op": "update_node", "id": "REQ-027-014", "attrs": {"statement": "Users SHOULD receive clear prompts and reminders for pending acceptance respecting rate limits (reminder cadence and limit in REQ-027-063)", "rationale": "Restated by Communication Structure, CL-1 and the Screen 4 business rule. The reminder limit is set by Admin in the Legal settings panel (REQ-027-059, SET-legal-reminder-limit); the cadence and the limit are applied by the daily job (REQ-027-063)."}}
+  - {"op": "update_node", "id": "REQ-027-008", "attrs": {"statement": "Legal document entities MUST include: type, locale (for translation only, no regional content variants), version, status (draft/scheduled/current/archived), effective date, change summary; version-level attributes and locale texts follow REQ-027-061"}}

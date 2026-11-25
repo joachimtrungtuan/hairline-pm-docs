@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T08:39:32Z",
+  "generated_at": "2026-11-25T08:41:15Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -83334,9 +83334,9 @@
       "owner_fr": "FR-027",
       "title": "Legal document entity content",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Legal document entities MUST include: type, locale (for translation only, no regional content variants), version, status (draft/scheduled/current/archived), effective date, change summary",
+        "statement": "Legal document entities MUST include: type, locale (for translation only, no regional content variants), version, status (draft/scheduled/current/archived), effective date, change summary; version-level attributes and locale texts follow REQ-027-061",
         "rationale": "Data Requirements. Scheduled is a stored status because the publish flow depends on it (REQ-027-030, REQ-027-060)."
       }
     },
@@ -83406,10 +83406,10 @@
       "owner_fr": "FR-027",
       "title": "Prompts and reminders for pending acceptance within rate limits",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Users SHOULD receive clear prompts and reminders for pending acceptance respecting rate limits",
-        "rationale": "Restated by Communication Structure (lines 58, 60: in-app prompts to accept new versions; user reminders rate-limited), CL-1 (line 349: show rate-limited reminders) and Screen 4 business rule (line 234: reminders respect rate limits). The rate limit value is not stated."
+        "statement": "Users SHOULD receive clear prompts and reminders for pending acceptance respecting rate limits (reminder cadence and limit in REQ-027-063)",
+        "rationale": "Restated by Communication Structure, CL-1 and the Screen 4 business rule. The reminder limit is set by Admin in the Legal settings panel (REQ-027-059, SET-legal-reminder-limit); the cadence and the limit are applied by the daily job (REQ-027-063)."
       }
     },
     {
@@ -463498,6 +463498,21 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-084002-0841231f",
+      "at": "2026-11-25T08:40:02.492914+00:00",
+      "changed_by": "controller",
+      "reason": "Backlog points settled: REQ-027-014 now points to the reminder limit and cadence rule, REQ-027-008 now points to the version model rule, as in the PRD.",
+      "source_id": "SRC-PRD-027",
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-027-008",
+        "REQ-027-014"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 3
+    },
     {
       "id": "cs-20261125-083817-3d666acb",
       "at": "2026-11-25T08:38:17.328694+00:00",
