@@ -889,7 +889,6 @@ Batch F applied in commit `23b83ce`.
 
 ## Added 2026-11-25 after the owner rulings
 
-- Constitution: the priority list still shows "monitor hair loss" and "monitor transplant progress" as P3, while the system PRD lists FR-037 and FR-038 as P1 (Next Phase). Align the constitution to the system PRD, or confirm the lower priority with the owner.
 - `templates/prd-template.md` still has the older section layout; bring it in line with constitution Part C (rules C-PRD-25 to C-PRD-28).
 - FR-023 and FR-025 have no User Scenarios section, and FR-025 has no Summary section, which Part C requires.
 

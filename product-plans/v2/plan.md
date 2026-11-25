@@ -79,7 +79,7 @@ The static repository audit found that the two dashboards are **not fully implem
 
 1. Approve the four-phase approach and reject a big-bang launch.
 2. Make pilot approval conditional on signed-off Phase 1 route, privacy/RBAC, session, quote-state, and scheduling gates.
-3. Decide whether FR-037/FR-038 Admin monitoring is required for the first clinical release or formally deferred.
+3. Decide whether FR-037/FR-038 Admin monitoring is required for the first clinical release or formally deferred. **Decided by the product owner on 2026-11-25: required; FR-037 and FR-038 are built with the clinical release (Phase 2).**
 4. Assign accountable FE, BE, security, product, and QA owners to the six immediate actions.
 5. Approve a separate runtime reliability assessment after the implementation gaps for each phase are closed.
 

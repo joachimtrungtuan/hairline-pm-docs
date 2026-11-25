@@ -1798,7 +1798,7 @@ Option prices are never added together.
 
 ### FR-037: Monitor Your Hair Loss
 
-**Priority**: P1 (Next Phase)
+**Priority**: P1 (MVP; built with the clinical release, by owner decision of 2026-11-25)
 **Module(s)**: P-05: Aftercare & Progress Monitoring, P-07: 3D Scan Capture & Viewing, PR-07: Communication & Messaging, A-01: Patient Management & Oversight, A-09: System Settings & Configuration, S-03: Notification Service, S-05: Media Storage Service
 
 **Goal**: Enable patients to monitor hair loss longitudinally through self-monitoring or limited provider-advice mode, then complete/export the case or convert it into a treatment inquiry without re-entering existing information.
@@ -1837,7 +1837,7 @@ Option prices are never added together.
 
 ### FR-038: Monitor Your Transplant Progress
 
-**Priority**: P1 (Next Phase)
+**Priority**: P1 (MVP; built with the clinical release, by owner decision of 2026-11-25)
 **Module(s)**: P-05: Aftercare & Progress Monitoring, P-07: 3D Scan Capture & Viewing, A-01: Patient Management & Oversight
 
 **Goal**: Provide a provider-free, self-paced utility for tracking transplant progress outside a managed aftercare package, with optional conversion into FR-011 standalone aftercare.

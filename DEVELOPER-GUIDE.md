@@ -202,7 +202,7 @@ Known gaps: the graph linter reports 28 open findings (`/usr/bin/python3 scripts
 
 ## 9. Patient mobile API: endpoints to keep stable
 
-For developers reworking the backend. The patient mobile app is being built in parallel against the Postman collection `PATIENT-MOBILE-handoff` (96 requests). Those requests are a contract with the mobile team. The full list, and the corrections the requirements ask for, are in `reports/2026-11-25/patient-mobile-api-contract-vs-requirements-2026-11-25.md`.
+For developers reworking the backend. The patient mobile app is being built in parallel against an agreed API collection of 96 requests. Those requests are a contract with the mobile team. The full list, and the corrections the requirements ask for, are in `reports/2026-11-25/patient-mobile-api-contract-vs-requirements-2026-11-25.md`.
 
 While you rework the backend:
 
@@ -216,3 +216,18 @@ While you rework the backend:
 Check before you merge: if your change touches a controller, route, resource or serializer behind one of the listed requests, compare the request and response with the collection.
 
 Seven requests have an open contract decision (section 3 of the report). Leave them unchanged until that decision is recorded there.
+
+## 10. Build order
+
+Build in four phases, in this order. A phase starts only when the one before it works end to end. The patient app, the dashboards and the backend follow the same phases: a patient feature is built in the phase of the dashboard feature it depends on.
+
+| Phase | Goal | FRs |
+|---|---|---|
+| 1. Commercial pilot | Onboard providers; take a patient from sign-up to a quote | FR-001, FR-002, FR-003, FR-004, FR-005, FR-009, FR-015, FR-024, FR-025, FR-026, FR-027, FR-031, the profile and pricing parts of FR-032, and the search (FR-022) and notifications (FR-020) these flows need |
+| 2. Clinical and patient operations | Carry out a paid treatment and its aftercare safely | FR-006, FR-007, FR-007B, FR-008, FR-010, FR-011, FR-012, FR-016, FR-029, FR-034, FR-035, FR-037, FR-038, the invoice and refund parts of FR-017, and the rest of FR-020 |
+| 3. Settlement and partner growth | Pay providers; open promotions and affiliates | The reconciliation and payout parts of FR-017, the provider earnings part of FR-014, FR-018, FR-019 |
+| 4. Scale and optimisation | Analytics, localisation, remaining settings | The rest of FR-014, FR-013, FR-021, FR-023, FR-028, FR-030, FR-033, FR-036, and the rest of FR-022 and FR-032 |
+
+- Phases 1 and 2 together are the core business journey. Finish both before anything in Phases 3 and 4.
+- Do not start a feature from a later phase early, even if it looks small. If a current-phase feature needs a rule owned by a later-phase FR, build only that rule.
+- If you are unsure which phase a piece of work belongs to, ask the product team.

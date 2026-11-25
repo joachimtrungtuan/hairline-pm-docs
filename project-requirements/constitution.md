@@ -1,6 +1,6 @@
 # Hairline Platform Constitution
 
-**Version**: 1.1.0
+**Version**: 1.1.1
 **Ratified**: 2025-10-23
 **Last amended**: 2026-11-25 (rules corrected to agree with the system PRD and the FR PRDs; see the change log)
 **Structure revised**: 2026-11-25 (restructure and merge of the executive summary)
@@ -604,10 +604,13 @@ React Native/Flutter for cross-platform
    - Leave provider reviews (with before/after photos)
    - View provider ratings and reviews
 
-**Additional Features** (P3 - Future):
+**Monitoring** (P1 - built with the clinical release; FR-037, FR-038):
 
 - Monitor hair loss (3D scan tracking for non-patients)
 - Monitor transplant progress (for patients who booked outside the app)
+
+**Additional Features** (P3 - Future):
+
 - Standalone aftercare service purchase
 
 #### Tenant 2: Provider Platform (Web Application)
@@ -1197,5 +1200,6 @@ FR-035 (Patient Help Center and Support Submission) was listed here as planned. 
   - `C-SEC-16`: states both halves (not reachable through normal application interfaces; retrievable for compliance audits).
   - Principle VII and Part D tenant lists: module scope notes (head scan media V1 photo set, V2 true 3D; S-04, S-05, PR-02).
   - Part C: PRD structure replaced by the compressed structure; `C-PRD-1`, `C-PRD-6`, `C-PRD-7`, `C-PRD-9`, `C-PRD-12`, `C-PRD-14` reworded; `C-PRD-8`, `C-PRD-10`, `C-PRD-11` retired in place; `C-PRD-25` to `C-PRD-28` added; the FR-011 template statement replaced by the canonical templates directory.
+- 1.1.1 (2026-11-25): Part D Tenant 1 feature list: "Monitor hair loss" and "Monitor transplant progress" moved from Additional Features (P3) to their own P1 line, built with the clinical release, on the owner decision of 2026-11-25 (system PRD FR-037 and FR-038).
 
-**Version**: 1.1.0 | **Ratified**: 2025-10-23 | **Last Amended**: 2026-11-25
+**Version**: 1.1.1 | **Ratified**: 2025-10-23 | **Last Amended**: 2026-11-25
