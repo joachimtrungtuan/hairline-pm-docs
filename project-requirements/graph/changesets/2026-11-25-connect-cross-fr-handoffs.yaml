@@ -1,0 +1,20 @@
+# Connect the eight cross-FR handoffs that were recorded only as a note on the step.
+reason: "Each handoff note is replaced by a real connection: a next edge to the partner step where the other FR has one, or an on edge to the FR-015 Provider Profile Details screen where FR-015 has no workflow step for the surface. STP-003-085 is already reached from STP-023-008, so only its note is cleared."
+by: controller
+source_id: SRC-PRD-006
+operations:
+  - {"op": "update_node", "id": "STP-003-085", "attrs": {"handoff_from": null}}
+  - {"op": "add_edge", "from": "STP-006-604", "verb": "next", "to": "STP-004-116"}
+  - {"op": "update_node", "id": "STP-006-604", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-006-101", "verb": "next", "to": "STP-007B-001"}
+  - {"op": "update_node", "id": "STP-007B-001", "attrs": {"handoff_from": null}}
+  - {"op": "add_edge", "from": "STP-011-011", "verb": "next", "to": "STP-007-081"}
+  - {"op": "update_node", "id": "STP-011-011", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-011-024", "verb": "next", "to": "STP-007-081"}
+  - {"op": "update_node", "id": "STP-011-024", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-017-033", "verb": "on", "to": "SCR-015-03"}
+  - {"op": "update_node", "id": "STP-017-033", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-022-014", "verb": "on", "to": "SCR-015-03"}
+  - {"op": "update_node", "id": "STP-022-014", "attrs": {"handoff_to": null}}
+  - {"op": "add_edge", "from": "STP-029-056", "verb": "on", "to": "SCR-015-03"}
+  - {"op": "update_node", "id": "STP-029-056", "attrs": {"handoff_to": null}}

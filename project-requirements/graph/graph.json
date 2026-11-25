@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T05:36:06Z",
+  "generated_at": "2026-11-25T07:44:02Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -110540,10 +110540,9 @@
       "owner_fr": "FR-003",
       "title": "Admin approval of the account-deletion request cancels the open inquiry with a system reason",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "prd_ref": "Alternative Flow E3",
-        "handoff_from": "FR-001: Delete Account flow"
+        "prd_ref": "Alternative Flow E3"
       }
     },
     {
@@ -111597,7 +111596,7 @@
       "owner_fr": "FR-006",
       "title": "System determines feasible installment options from FR-029 split payment settings and the 30-day constraint",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 1"
       }
@@ -111949,10 +111948,9 @@
       "owner_fr": "FR-006",
       "title": "Admin opens Start Provider-Fault Transfer on Screen 10, selects a replacement provider and authors the replacement quote",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow B5 step 4",
-        "handoff_to": "FR-004: Workflow 7 admin replacement quote"
+        "prd_ref": "Alternative Flow B5 step 4"
       }
     },
     {
@@ -112600,10 +112598,9 @@
       "owner_fr": "FR-007B",
       "title": "Patient reviews booking summary with Pay in Installments selected",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Main Flow step 1",
-        "handoff_from": "FR-007: Payment Options step, patient chose Pay in Installments"
+        "prd_ref": "Main Flow step 1"
       }
     },
     {
@@ -115112,10 +115109,9 @@
       "owner_fr": "FR-011",
       "title": "System processes the payment through FR-007 and activates the plan",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Workflow 2 Main Flow step 4",
-        "handoff_to": "FR-007: payment processing of the aftercare order"
+        "prd_ref": "Workflow 2 Main Flow step 4"
       }
     },
     {
@@ -115256,10 +115252,9 @@
       "owner_fr": "FR-011",
       "title": "System processes the payment through FR-007 and starts automatic assignment",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Workflow 2b Main Flow step 2",
-        "handoff_to": "FR-007: payment processing of the aftercare order"
+        "prd_ref": "Workflow 2b Main Flow step 2"
       }
     },
     {
@@ -118667,10 +118662,9 @@
       "owner_fr": "FR-017",
       "title": "Admin routes a commission change to the FR-015 or FR-029 surface",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "prd_ref": "Alternative Flow B2 step 7c",
-        "handoff_to": "FR-015 (single-provider commission edit)"
+        "prd_ref": "Alternative Flow B2 step 7c"
       }
     },
     {
@@ -121554,10 +121548,9 @@
       "owner_fr": "FR-022",
       "title": "Admin selects a provider record",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Main Flow 2 step 7",
-        "handoff_to": "FR-015: provider profile view (Main Flow 2 step: system loads full provider profile)"
+        "prd_ref": "Main Flow 2 step 7"
       }
     },
     {
@@ -127008,10 +127001,9 @@
       "owner_fr": "FR-029",
       "title": "System shows the updated provider-specific commission in the FR-015 Commission and Financials tab",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Main Flow: Configure Commission Rates step 16",
-        "handoff_to": "FR-015: Commission and Financials tab (provider-specific commission)"
+        "prd_ref": "Main Flow: Configure Commission Rates step 16"
       }
     },
     {
@@ -377789,6 +377781,12 @@
     },
     {
       "from_id": "STP-006-101",
+      "verb": "next",
+      "to_id": "STP-007B-001",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-101",
       "verb": "on",
       "to_id": "SCR-006-01",
       "attrs": {}
@@ -378874,6 +378872,12 @@
       "from_id": "STP-006-604",
       "verb": "done by",
       "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-604",
+      "verb": "next",
+      "to_id": "STP-004-116",
       "attrs": {}
     },
     {
@@ -390216,6 +390220,12 @@
     {
       "from_id": "STP-011-011",
       "verb": "next",
+      "to_id": "STP-007-081",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-011",
+      "verb": "next",
       "to_id": "STP-011-014",
       "attrs": {}
     },
@@ -390651,6 +390661,12 @@
       "from_id": "STP-011-024",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-011-024",
+      "verb": "next",
+      "to_id": "STP-007-081",
       "attrs": {}
     },
     {
@@ -400866,6 +400882,12 @@
     {
       "from_id": "STP-017-033",
       "verb": "on",
+      "to_id": "SCR-015-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-033",
+      "verb": "on",
       "to_id": "SCR-017-10",
       "attrs": {}
     },
@@ -410182,6 +410204,12 @@
       "from_id": "STP-022-014",
       "verb": "on",
       "to_id": "SCR-015-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-022-014",
+      "verb": "on",
+      "to_id": "SCR-015-03",
       "attrs": {}
     },
     {
@@ -427117,6 +427145,12 @@
       "from_id": "STP-029-056",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-029-056",
+      "verb": "on",
+      "to_id": "SCR-015-03",
       "attrs": {}
     },
     {
@@ -462198,6 +462232,28 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-074246-a800a0c0",
+      "at": "2026-11-25T07:42:46.987630+00:00",
+      "changed_by": "controller",
+      "reason": "Each handoff note is replaced by a real connection: a next edge to the partner step where the other FR has one, or an on edge to the FR-015 Provider Profile Details screen where FR-015 has no workflow step for the surface. STP-003-085 is already reached from STP-023-008, so only its note is cleared.",
+      "source_id": "SRC-PRD-006",
+      "nodes_added": [],
+      "nodes_updated": [
+        "STP-003-085",
+        "STP-006-101",
+        "STP-006-604",
+        "STP-007B-001",
+        "STP-011-011",
+        "STP-011-024",
+        "STP-017-033",
+        "STP-022-014",
+        "STP-029-056"
+      ],
+      "edges_added": 7,
+      "edges_removed": 0,
+      "rows": 15
+    },
     {
       "id": "cs-20261125-053449-67d8019a",
       "at": "2026-11-25T05:34:49.517931+00:00",
