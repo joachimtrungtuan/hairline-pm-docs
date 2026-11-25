@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T09:18:01Z",
+  "generated_at": "2026-11-25T09:19:36Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -32625,9 +32625,9 @@
       "owner_fr": "FR-011",
       "title": "Aftercare plan completed",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "aftercare.completed: aftercare ends and the event carries an outcome value: completed (the end of the last milestone or the subscription term, REQ-011-096), paperwork only, cancelled by the patient (subscription cancellation once the paid period ends) or cancelled by an admin (REQ-011-101). FR-006 reads this event to move the booking on (REQ-006-060); reading the outcome is queued for FR-006. FR-011 is the producer; FR-030 owns registration."
+        "description": "aftercare.completed: aftercare ends and the event carries an outcome value: completed (the end of the last milestone or the subscription term, REQ-011-096), paperwork only, cancelled by the patient (subscription cancellation once the paid period ends) or cancelled by an admin (REQ-011-101). FR-006 reads this event to move the booking on (REQ-006-060); reading the outcome is queued for FR-006. FR-011 is the producer and owns the event; it produces no notification, so it is not in the FR-030 catalogue (FR-030 REQ-030-233)."
       }
     },
     {
@@ -48322,9 +48322,9 @@
       "owner_fr": "FR-007",
       "title": "Payout execution with commission deduction and statement generation",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST support release of the clinic's share and its payout with commission deduction and statement generation, per Fund Release & Money Routing Rules (payout execution is owned by FR-017). A handover fee for aftercare handed to the Hairline team (REQ-011-057) is paid to the provider from Hairline's own revenue and is never taken from a price",
+        "statement": "System MUST support release of the clinic's share and its payout with commission deduction and statement generation, per Fund Release & Money Routing Rules (payout execution is owned by FR-017). A handover fee for aftercare handed to the Hairline team (REQ-011-057) is paid to the provider from Hairline's own revenue and is never taken from a price (FR-017 REQ-017-203)",
         "rationale": "prd.md line 1057 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -49310,9 +49310,9 @@
       "owner_fr": "FR-007",
       "title": "A standalone aftercare payment is refunded by an admin decision and released after the confirmation window counted from the payment",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "For a standalone aftercare payment (REQ-007-088) no refund ladder applies: an admin decides any refund beyond FR-011's own refund cases with a reason on Screen 6, opened from the aftercare payment record, as a manual refund (REQ-007-015). FR-011's own cases are the automatic refund in REQ-011-037 and the pro-rata refund of the unused full months when a plan paid in full is cancelled (REQ-011-097); the system starts them, and the commission and the provider's payout (FR-017) fall in the same proportion. The provider's money is released after the same patient confirmation window as a booking, counted from the date of the payment instead of procedure completion."
+        "statement": "For a standalone aftercare payment (REQ-007-088) no refund ladder applies: an admin decides any refund beyond FR-011's own refund cases with a reason on Screen 6, opened from the aftercare payment record, as a manual refund (REQ-007-015). FR-011's own cases are the automatic refund in REQ-011-037 and the pro-rata refund of the unused full months when a plan paid in full is cancelled (REQ-011-097); the system starts them, and the commission and the provider's payout (FR-017) fall in the same proportion (FR-017 REQ-017-202). The provider's money is released after the same patient confirmation window as a booking, counted from the date of the payment instead of procedure completion."
       }
     },
     {
@@ -49335,6 +49335,17 @@
       "version": 1,
       "attrs": {
         "statement": "A standalone aftercare payment (REQ-007-088) has no booking, so System MUST record it on an aftercare payment record with its own id, the patient, the provider, the amount, the currency and the payout snapshot; Screens 5B and 6 open from that record. A failed payment can be retried with another method and the request expires after 48 hours without a successful payment (FR-011 Alternative Flow B1). FR-011's automatic refund (REQ-011-037) stays for its own failure cases; any other refund is an admin refund (REQ-007-100)."
+      }
+    },
+    {
+      "id": "REQ-007-103",
+      "type": "Rule",
+      "owner_fr": "FR-007",
+      "title": "The booking stores the balance due date and the FR-029 values locked at confirmation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "At booking confirmation (REQ-007-098) System MUST store on the booking the balance due date (the procedure date minus the FR-029 balance due days, kept as the Final Payment Due Date) and the FR-029 values that lock at confirmation: the refund ladder, the rescheduling fee, the late payment fee with its currency code, the late payment grace period, the unpaid balance cancellation point and the installment cutoff. A value that is Not set stays Not set, and a later FR-029 change MUST NOT move any of them (FR-029 REQ-029-101, REQ-029-146)."
       }
     },
     {
@@ -52334,11 +52345,11 @@
       "id": "REQ-009-057",
       "type": "Rule",
       "owner_fr": "FR-009",
-      "title": "Role change: update applies to active sessions, next page load refreshes",
+      "title": "Role change: new permissions reach active sessions within 5 seconds, the next request uses them",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System updates team member's role in database System immediately applies new permissions to any active sessions Affected team member's next page load reflects new permissions",
+        "statement": "System updates the team member's role in the database, applies the new permissions to the member's active sessions within 5 seconds without forcing logout, and the member's next request uses the new permissions (REQ-009-014; FR-031 REQ-031-006, REQ-031-026).",
         "rationale": "prd.md lines 205-206, 210 (checked against the PRD text)."
       }
     },
@@ -82910,9 +82921,9 @@
       "owner_fr": "FR-026",
       "title": "Re-verification threshold Setting",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST store a Re-Verification Threshold Setting (whole minutes from 1 to 60, default 5, the value FR-001 uses), the time after a patient's last successful sign-in beyond which FR-001 asks the patient to confirm identity again before a sensitive action. Consumer: FR-001 Screens 16 and 18.",
+        "statement": "System MUST store a Re-Verification Threshold Setting (whole minutes from 1 to 60, default 5, the value FR-001 uses), the time after a patient's last successful sign-in beyond which FR-001 asks the patient to confirm identity again before a sensitive action. Consumer: FR-001 Screens 14, 16 and 18.",
         "rationale": "FR-026 PRD, section Platform Settings Requirements."
       }
     },
@@ -114129,9 +114140,9 @@
       "id": "STP-009-020",
       "type": "Step",
       "owner_fr": "FR-009",
-      "title": "System creates the Active team member record linked to the provider with the assigned role",
+      "title": "System creates the Active team member record linked to the provider with the assigned role and an Account Name of First Name + Last Name",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow Invite step 16"
       }
@@ -181666,7 +181677,7 @@
       "verb": "active in",
       "to_id": "STG-main-05-payment",
       "attrs": {
-        "rules": 93
+        "rules": 94
       },
       "derived": true
     },
@@ -206316,6 +206327,24 @@
       "from_id": "REQ-007-102",
       "verb": "decided by",
       "to_id": "SRC-PRD-007",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007-103",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007-103",
+      "verb": "applies to",
+      "to_id": "ENT-booking.final_payment_due_at",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007-103",
+      "verb": "governed by",
+      "to_id": "SET-deposit-plan-balance-due-days",
       "attrs": {}
     },
     {
@@ -465877,6 +465906,27 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-091820-460fa3f5",
+      "at": "2026-11-25T09:18:20.338485+00:00",
+      "changed_by": "controller",
+      "reason": "Balance due date and locked FR-029 values stored on the booking; FR-017 commission and handover fee rules cited; role change timing aligned to 5 seconds and next request; step title carries the Account Name; re-verification threshold consumer Screen 14 added; aftercare completed event is not registered by FR-030.",
+      "source_id": "SRC-PRD-007",
+      "nodes_added": [
+        "REQ-007-103"
+      ],
+      "nodes_updated": [
+        "EVT-aftercare-completed",
+        "REQ-007-012",
+        "REQ-007-100",
+        "REQ-009-057",
+        "REQ-026-112",
+        "STP-009-020"
+      ],
+      "edges_added": 3,
+      "edges_removed": 0,
+      "rows": 15
+    },
     {
       "id": "cs-20261125-091631-a610bbe8",
       "at": "2026-11-25T09:16:31.408308+00:00",

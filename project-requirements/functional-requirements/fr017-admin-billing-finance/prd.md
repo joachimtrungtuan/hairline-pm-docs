@@ -1533,6 +1533,8 @@ These rules record the product owner's decisions on how a clinic's money is rele
 - FR-005: Subquote Comparison & Acceptance
 - FR-006: Booking & Scheduling
 - FR-007: Payment Processing Service
+- FR-007B: Split Payment / Installment Plans (installment schedule shown on the Patient Invoice Detail screen)
+- FR-024: Treatment & Package Management (treatment names shown on the payout and billing screens)
 - FR-010: Treatment Execution & Documentation
 - FR-015: Provider Management & Onboarding
 - FR-019: Discount & Promotion Management
@@ -1864,6 +1866,7 @@ A patient requests refund due to cancellation, admin reviews request against can
 | 2026-11-24 | 2.20 | Logic review pass 2: an interrupted-treatment payout hold ends when the FR-006 route completes and Screen 7 outcomes stay for Completed bookings (REQ-017-185, REQ-017-190); a bank charge is carried to the clinic's next payout as a clinic balance entry and never deducted from the statement being marked as paid (REQ-017-176, REQ-017-188); the clinic's share of a retained patient cancellation fee is an earning released into the next payout (REQ-017-200); Manual Review Required named by the payout flag, cleared on a statement or a Stripe Connect payout and returned to its prior state or to Failed (REQ-017-161, REQ-017-194); the one-off statement of Release Earnings is created Approved and paid with Mark as Paid (REQ-017-193); an Approved statement past its payout day may be voided (REQ-017-068); clinic balance entry fields and the Clinic Balance audit entity type; Screen 7 Pay Now for a Stripe Connect clinic (REQ-017-201). | Product Owner / Documentation |
 | 2026-11-25 | 2.21 | Cross-FR alignment: admin access named by the FR-031 permissions Process Payouts, View Transactions and Issue Refunds instead of roles (REQ-017-047, REQ-017-065, REQ-017-017); a Stripe Connect payout shows a release date instead of a period (REQ-017-187); commission reversed with every refund, including the pro-rata refund of an aftercare plan (REQ-017-202); handover fee credit on the clinic balance record (REQ-017-203); Screen 5 and Screen 6 read the FR-019 promotion program and code fields; an Inactive affiliate is paid in the next run with no minimum (REQ-017-197); a Deactivated clinic's bank details are collected by an admin (REQ-017-064). | Product Owner / Documentation |
 | 2026-11-25 | 2.22 | Backlog points settled: payout statuses of REQ-017-015 follow REQ-017-186 and REQ-017-187; affiliate payout flow (B6) and clinic share move flow (B7) added from existing rules; Pay Now and Release Earnings ask for re-authentication and are checked against the payout flag (REQ-017-047, REQ-017-194); an invalid Stripe bank account is corrected through the Stripe sign-up link (REQ-017-187); citations added to Rules 14 and 15, Privacy Rule 2, Billing Rule 1 and Currency Rule 2; diagram step ids and one broken link corrected. | Claude (AI Assistant) |
+| 2026-11-25 | 2.23 | Backlog points settled: the Dependencies section now lists FR-007B (installment schedule on the Patient Invoice Detail screen) and FR-024 (treatment names). | Claude (AI Assistant) |
 
 ---
 

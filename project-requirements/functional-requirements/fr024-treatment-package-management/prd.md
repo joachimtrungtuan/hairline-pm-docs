@@ -818,6 +818,7 @@ Related FRs:
 - FR-026 (Module A-09, App Settings & Security Policies, self-dependency): this module is part of A-09 and shares configuration infrastructure (same settings management UI patterns, audit logging, versioning mechanisms); active system configuration is the source of the system quote currency used by FR-004 for the parent quote currency
 - FR-010 (Module PR-03, Treatment Execution & Documentation) and FR-011 (Module P-05, Aftercare & Progress Monitoring): providers prescribe medication and give post-op instructions from the templates this module owns; the medication templates and post-op instruction templates (REQ-024-085) are the lists those modules use, and FR-010 and FR-011 point here for ownership
 - FR-029 (Payment System Configuration): exchange rates for the system quote currency
+- FR-015 (Provider Management): the provider name shown on Screen 7, the read-only Admin Provider Packages view
 
 ## User Scenarios & Testing
 
@@ -998,6 +999,7 @@ Provider needs to temporarily stop offering a package (seasonal hotel unavailabi
 | 2026-11-24 | 2.1 | Logic review pass 2: Draft for a treatment only while it has never been saved as Active or Inactive, and for a package only while it has no version; a draft is not counted toward the creation limit until first saved as Active or Inactive, needs a name, and can be discarded by its owner; open-warning, confirmation and notices apply on every route to Inactive for treatments; setting Inactive on the edit form is a versioned Update; quick price edit uses the package price rule and is hidden on drafts; failed uploads keep the previous media and status for any treatment, with one error text and a way out without the failed file; update notice only for Active treatments; back-to-Active notice only for a treatment that has been Active before; aftercare templates are Active or Inactive and earlier prescriptions keep their text; Export to CSV step added. | Product Owner / Documentation |
 | 2026-11-25 | 2.2 | Cross-FR alignment: the Screen 2 treatment form is the English authoring screen for the treatment library text (REQ-024-081, REQ-021-127). Admin treatment list keeps no status filter (REQ-024-054). | Product Owner / Documentation |
 | 2026-11-25 | 2.3 | Backlog points settled: Discard Draft now has workflow steps (A12 for a treatment draft, A13 for a package draft), and the provider permission bullet names its actor (provider staff). | Claude (AI Assistant) |
+| 2026-11-25 | 2.4 | Backlog points settled: the Dependencies section now lists FR-015 (provider name on Screen 7). | Claude (AI Assistant) |
 
 ---
 

@@ -1272,6 +1272,8 @@ flowchart TD
 - **FR-026**: App Settings & Security Policies (treatment-area catalog, problem-duration list, minimum inquiry lead-time configuration)
 - **FR-037**: Monitor Your Hair Loss (advice-mode monitoring conversion with an exclusive assigned provider; REQ-037-029 owns the exclusive routing and decline fallback Rule)
 - **FR-007**: Payment Processing (single payment status list shown on Screen 11)
+- **FR-013**: Reviews & Ratings (star rating and review count shown on the Screen 7a provider cards)
+- **FR-027**: Legal Content Management (Current Terms & Conditions acceptance before submission; REQ-027-033, REQ-027-035)
 - **FR-028**: Regional Configuration & Pricing (starting prices and regional ordering of destinations)
 - **Future FR**: Provider Capacity Management (provider availability)
 
@@ -1361,6 +1363,7 @@ Acceptance Scenarios:
 | 2026-11-25 | 2.20 | Cross-FR alignment: Terms checkbox shown only when the Current Terms are not accepted, with submission blocked until then (REQ-003-054); Treatment Area asked only for Get a Hair Transplant (REQ-003-027); 5-minute provider notice stated as a target for the first send attempt (REQ-003-100, REQ-003-125); admin cancel or close sends no provider notice (REQ-003-127); redistribution Confirm and Decline links and the 48-hour reminder notice named (REQ-003-128); intake side of an FR-037 conversion inquiry (REQ-003-130); duration stored as the option label (REQ-003-122); provider inquiry list gains Stage and Inquiry date filters and opens pre-filtered from FR-014 (REQ-003-124). | Claude (AI Assistant) |
 | 2026-11-25 | 2.21 | Owner ruling 2026-11-25 follow-up: a replacement quote can now be sent (FR-004 v4.6), so the admin cancel and Close inquiry cascade covers any open replacement quote, draft or sent (REQ-003-013, REQ-003-014, REQ-003-127). | Claude (AI Assistant) |
 | 2026-11-25 | 2.22 | Backlog points settled: the Alert Level field states that the highest severity among the risk tags is the overall level; Screen 12 lists the support-required marker; the Access Control, Audit Logging and Compliance lines cite the rules that own them; the replacement-provider carve-outs are removed from REQ-003-013 and REQ-003-127 because the patient cancellation path has no replacement quote. | Claude (AI Assistant) |
+| 2026-11-25 | 2.23 | Backlog points settled: the Dependencies section now lists FR-013 (provider cards on Screen 7a) and FR-027 (Terms acceptance before submission). | Claude (AI Assistant) |
 
 ## Appendix: Approvals
 

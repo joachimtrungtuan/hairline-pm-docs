@@ -788,7 +788,7 @@ The system enforces BOTH constraints simultaneously (whichever is more restricti
 
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 | --- | --- | --- | --- | --- | --- |
-| Re-Verification Threshold | number (minutes) | Yes | How long after a patient's last successful sign-in the patient must confirm identity again before a sensitive action (FR-001 Screens 16 and 18) | Whole minutes from 1 to 60; default 5, the value FR-001 uses (REQ-026-112) | no graph field (Setting) |
+| Re-Verification Threshold | number (minutes) | Yes | How long after a patient's last successful sign-in the patient must confirm identity again before a sensitive action (FR-001 Screens 14, 16 and 18) | Whole minutes from 1 to 60; default 5, the value FR-001 uses (REQ-026-112) | no graph field (Setting) |
 | Admin Concurrent Sessions | number | Yes | Number of concurrent sessions allowed for one admin user (consumer: FR-031) | Whole number from 1 to 5; default 3 (REQ-026-116) | no graph field (Setting) |
 | Admin Inactivity Timeout | number (minutes) | Yes | Standard admin inactivity timeout (consumer: FR-031). A Login as Provider session ends after its own fixed 30 minutes of inactivity (REQ-015-026) or when the admin's own session ends under this timeout, whichever comes first | Whole minutes from 5 to 240; default 30 (REQ-026-116) | no graph field (Setting) |
 | Landing Background Images | image set | No | Background images that rotate behind the patient landing screen (FR-001) | Image assets only; rotation follows the admin configuration; with no images set, none are shown (REQ-026-113) | no graph field (Setting) |
@@ -1337,7 +1337,7 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 
 ### Platform Settings Requirements
 
-- **REQ-026-112**: System MUST store a Re-Verification Threshold Setting (whole minutes from 1 to 60, default 5, the value FR-001 uses), the time after a patient's last successful sign-in beyond which FR-001 asks the patient to confirm identity again before a sensitive action. Consumer: FR-001 Screens 16 and 18.
+- **REQ-026-112**: System MUST store a Re-Verification Threshold Setting (whole minutes from 1 to 60, default 5, the value FR-001 uses), the time after a patient's last successful sign-in beyond which FR-001 asks the patient to confirm identity again before a sensitive action. Consumer: FR-001 Screens 14, 16 and 18.
 - **REQ-026-113**: System MUST let an admin manage the Landing Background Images Setting, the set of background images that rotate behind the patient landing screen; with none set, no background images are shown. Consumer: FR-001.
 - **REQ-026-114**: System MUST store Profile Photo Accepted Formats (default JPG and PNG) and Profile Photo Maximum Size (default 5 MB) as admin-changeable Settings. Consumer: FR-001 REQ-001-082.
 - **REQ-026-115**: System MUST store the Support Emergency Contact Phone and Support Emergency Contact Email Settings, with no default, for display read-only on the patient Help & Support Hub. A save that changes either value and leaves both blank is refused with a message; other Screen 8 rows can be saved while both are blank (REQ-026-143). Consumer: FR-035 Screen 1.
@@ -1381,6 +1381,7 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 | 2026-11-24 | 1.20 | Logic review pass 2: one shared failed-attempt counter with reset and lowered-limit rule (REQ-026-145); admin session limit and timeout enforcement (REQ-026-116); flag upload added to the country scenario (REQ-026-122); expiry value in the email variable and resend under the version and expiry in force (REQ-026-072, REQ-026-073, REQ-026-106); admin times in the browser timezone (REQ-026-050); emergency contact check only on a save that changes those rows (REQ-026-143); flag missing means an empty flag (REQ-026-011, REQ-026-128); stale head scan wording fixed. | Product Owner / Documentation |
 | 2026-11-25 | 1.21 | Cross-FR alignment: Screen 8 lists the search results page size and the provider search default sort owned by FR-022 (REQ-026-140); FR-031 confirmed the permission split for the App Data lists and the OTP settings. | Documentation |
 | 2026-11-25 | 1.22 | Backlog points settled: the throttling change now says new login attempts apply the policy once received (no longer "immediately", REQ-026-070), the Screen 2 preview note uses the same "impact preview" wording as Screen 3, and the slot-hold "Why needed" line sits under Quote Configuration in the seed values. | Claude (AI Assistant) |
+| 2026-11-25 | 1.23 | Backlog points settled: the Re-Verification Threshold names FR-001 Screen 14 (Edit Profile, email change) with Screens 16 and 18 as consumers, as FR-001 REQ-001-142 states, on Screen 8 and in REQ-026-112. | Claude (AI Assistant) |
 
 ---
 

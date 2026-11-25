@@ -220,11 +220,11 @@ The provider platform starts with four protected clinic-side roles that directly
 8. When the new role takes away the rights needed to work the member's open quotes, treatment records or appointments, the dialog requires a replacement clinician for those items (same list as Screen 4) before the change is saved (REQ-009-191)
 9. System validates actor has permission to assign selected role (REQ-009-015, REQ-009-004)
 10. System updates team member's role in database (REQ-009-057)
-11. System immediately applies new permissions to any active sessions (REQ-009-057)
+11. System applies the new permissions to any active sessions within 5 seconds, without forcing logout (REQ-009-014, REQ-009-057)
 12. System sends email to affected team member: "Your role has been changed to [Role]" (REQ-009-058)
 13. System logs role change in audit trail with timestamp, actor, old role, new role (REQ-009-013)
 14. System displays success confirmation
-15. Affected team member's next page load reflects new permissions (REQ-009-057)
+15. Affected team member's next request uses the new permissions (REQ-009-014, REQ-009-057)
 
 ### Alternative Flows
 
@@ -1121,6 +1121,7 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
+| 2026-11-25 | 1.16 (proposed) | Backlog points settled: the role change flow now says new permissions reach active sessions within 5 seconds and the member's next request uses them, as REQ-009-014 and FR-031 (REQ-031-006, REQ-031-026) state, instead of "immediately" and "next page load". | Claude (AI Assistant) |
 | 2026-11-25 | 1.15 (proposed) | Backlog points settled: a Manager can resend only invitations for Clinical Staff and Billing Staff; the reason entered for a Suspend is recorded in the audit entry; the audit action type field description in the graph is brought up to date. | Claude (AI Assistant) |
 | 2026-11-25 | 1.14 (proposed) | Cross-FR alignment: invitation acceptance asks for the Current Terms & Conditions and Current Privacy Policy and writes the member's first legal acceptance ledger rows (FR-027); the platform password policy is cited as REQ-SYS-007; account setup sets the default Account Name; phone number shown as required on Screen 11; a team member's email is changed through support (FR-032); removal note states the colleague name and the single clinic unread count (FR-012); Owner handover applies the FR-015 login email steps. | Documentation |
 | 2026-11-24 | 1.13 (proposed) | Logic review pass 2: a move between clinics is remove then new invitation (no admin transfer); the dead "Archive unassigned" option is gone; the Owner record is the stated exception to Rule 9; a Manager cannot promote anyone to Manager; Suspend and a role change that removes clinical rights need a replacement clinician; new admin flow for force suspend, Reactivate, force remove and account deletion; Removed filter for the Owner on Screen 1; a Removed member's email is free and a new invitation always creates a new record; no Remove on a platform suspension; Resend on a Pending invitation; Screen 7 messages for Expired and Cancelled links; Suspended login message; Owner handover blocked for a Deactivated provider; Task Transfer Wizard wired into removal. | Documentation |
@@ -1138,4 +1139,4 @@ Approved by the Product Owner as part of the requirements baseline of 2026-11-25
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B
 **Based on**: FR-009 from system-prd.md
-**Last Updated**: 2026-11-25 (proposed revision v1.15; prior approval status unchanged)
+**Last Updated**: 2026-11-25 (proposed revision v1.16; prior approval status unchanged)

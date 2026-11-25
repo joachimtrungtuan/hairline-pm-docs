@@ -691,6 +691,8 @@ Not applicable to messaging scope; no payment flows in this module.
 - S-05 Media Storage Service: secure storage and retrieval of attachments (REQ-002-024).
 - FR-021 Multi-Language & Localization: owns the machine translation of messages between patient and clinic and the platform-wide translation switch (REQ-012-108, REQ-021-119).
 - FR-023: anonymises the patient's messages and attachments in place on account deletion (REQ-023-044).
+- FR-015 Provider Management: provider name on the inbox and chat screens, and the provider suspension and deactivation cases that make a conversation read-only (REQ-012-018, FR-015 REQ-015-077).
+- FR-032 Provider Dashboard Settings & Profile Management: clinic name and logo shown beside the provider name in the inbox and chat headers.
 
 ---
 
@@ -855,6 +857,7 @@ Acceptance Scenarios:
 | 2026-11-25 | 2.18 | Cross-FR alignment: a suspended provider keeps chatting on its open In Progress and Aftercare cases, a suspended patient's conversations are read-only until the suspension is lifted (REQ-012-018). | Product Owner / Documentation |
 | 2026-11-25 | 2.19 | Out-of-scope list now names where support and aftercare-team contact happen today: the FR-035 support request form, and Contact Support on the FR-011 aftercare dashboard (REQ-011-102). No change to messaging scope. | Claude (AI Assistant) |
 | 2026-11-25 | 2.20 | Backlog points settled: the audit event list in REQ-012-010 names a flag status change, the same event REQ-012-023 logs, instead of only a flag resolved; the FR-004 dependency cites REQ-004-107. | Claude (AI Assistant) |
+| 2026-11-25 | 2.21 | Backlog points settled: the Dependencies section now lists FR-015 (provider name, suspension and deactivation cases) and FR-032 (clinic name and logo). | Claude (AI Assistant) |
 
 ---
 
