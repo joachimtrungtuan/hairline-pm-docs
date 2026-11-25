@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T00:52:46Z",
+  "generated_at": "2026-11-25T03:57:55Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -25495,9 +25495,9 @@
       "owner_fr": "FR-004",
       "title": "Expires at",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Computed at first send from the FR-026 quote expiry setting; null on drafts and always null on an admin-authored replacement quote; no per-quote extension; shown as \"set on first send\" while drafting."
+        "description": "Computed at first send from the FR-026 quote expiry setting; null on drafts, and for an admin-authored replacement quote the first send is Save and Continue on Screen 8; no per-quote extension; shown as \"set on first send\" while drafting."
       }
     },
     {
@@ -25506,9 +25506,9 @@
       "owner_fr": "FR-004",
       "title": "First sent at",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "description": "Set once on the first send; for an admin-authored replacement quote, set when the admin records the replacement acceptance and the draft moves through sent to accepted; never changed by a re-send or new version; null on drafts. FR-014 Time to First Quote reads it."
+        "description": "Set once on the first send; for an admin-authored replacement quote, set when the admin chooses Save and Continue on Screen 8 and the draft moves to sent; never changed by a re-send or new version; null on drafts. FR-014 Time to First Quote reads it."
       }
     },
     {
@@ -45290,9 +45290,9 @@
       "owner_fr": "FR-004",
       "title": "Admin-controlled expiry window captured at first send",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST enforce the admin-controlled FR-026 expiry window (default 48h), captured at first send, and compute the deadline per sent quote. The only renewal is the admin restore of an expired quote (REQ-004-105). The admin-authored replacement quote has no expiry (REQ-004-050)."
+        "statement": "System MUST enforce the admin-controlled FR-026 expiry window (default 48h), captured at first send, and compute the deadline per sent quote. The only renewal is the admin restore of an expired quote (REQ-004-105). The admin-authored replacement quote follows the same window from its first send on Screen 8 (REQ-004-082)."
       }
     },
     {
@@ -45660,9 +45660,9 @@
       "owner_fr": "FR-004",
       "title": "Expiry and currency captured at first send",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "System MUST capture the quote expiry and quote currency read-only at first send from the FR-026 quote configuration. Drafts MUST carry neither, and there MUST be no per-quote expiry extension other than the admin restore of an expired quote (REQ-004-105). The admin-authored replacement quote is the exception: it has no expiry and captures its currency at its first Screen 8 save (REQ-004-082)."
+        "statement": "System MUST capture the quote expiry and quote currency read-only at first send from the FR-026 quote configuration. Drafts MUST carry neither, and there MUST be no per-quote expiry extension other than the admin restore of an expired quote (REQ-004-105). The admin-authored replacement quote captures its expiry at its first send, which is Save and Continue on Screen 8, and its currency at its first Screen 8 save (REQ-004-082)."
       }
     },
     {
@@ -45693,9 +45693,9 @@
       "owner_fr": "FR-004",
       "title": "Quote expiring soon emitted once",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST emit `quote.expiring_soon` once per expiry window of a sent parent quote when it reaches the FR-026 quote-expiring-soon lead time, and MUST NOT emit it for draft, accepted, or terminal quotes, including the replacement quote, which has no expiry. A lead time raised after the send applies only to reminders not yet sent; a reminder whose time has already passed is skipped, not sent late (REQ-026-031)."
+        "statement": "System MUST emit `quote.expiring_soon` once per expiry window of a sent parent quote when it reaches the FR-026 quote-expiring-soon lead time, and MUST NOT emit it for draft, accepted, or terminal quotes, including the replacement quote, which the patient does not compare. A lead time raised after the send applies only to reminders not yet sent; a reminder whose time has already passed is skipped, not sent late (REQ-026-031)."
       }
     },
     {
@@ -45783,9 +45783,9 @@
       "owner_fr": "FR-004",
       "title": "Admin-authored replacement quote",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "During an FR-006 provider-fault transfer before treatment starts, System MUST let an admin author a replacement quote for the replacement provider inside the same inquiry through Screen 8, with a mandatory reason and full audit. The quote MUST be marked admin-authored for a replacement and linked to the AcceptanceEvent it replaces, MUST NOT be offered for patient comparison, MUST stay a `draft` that is hidden from the replacement provider and the patient until it is accepted, MUST be editable only on Screen 8 and be excluded from Screen 2 and Screen 7, MUST NOT emit `quote.submitted` or `quote.expired`, and MUST be the target of the FR-005 admin-authored replacement acceptance.",
+        "statement": "During an FR-006 provider-fault transfer before treatment starts, System MUST let an admin author a replacement quote for the replacement provider inside the same inquiry through Screen 8, with a mandatory reason and full audit. The quote MUST be marked admin-authored for a replacement and linked to the AcceptanceEvent it replaces, MUST NOT be offered for patient comparison, MUST stay hidden from the replacement provider and the patient until it is accepted (a `draft` until Save and Continue sends it, then `sent`), MUST be editable only on Screen 8 and be excluded from Screen 2 and Screen 7, MUST NOT emit `quote.submitted`, and MUST be the target of the FR-005 admin-authored replacement acceptance.",
         "rationale": "Business Rules: it is the only exception to the block on new quotes after acceptance."
       }
     },
@@ -45804,11 +45804,11 @@
       "id": "REQ-004-050",
       "type": "Rule",
       "owner_fr": "FR-004",
-      "title": "Replacement quote pricing, no expiry and ending the case",
+      "title": "Replacement quote pricing, expiry and ending the case",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "System MUST NOT attach an automatic FR-019 promotion to an admin-authored replacement quote or take a promotion usage reservation for it; the admin sets the replacement price directly, so the replacement quote carries no promotion, and the use held by the original acceptance's promotion, which FR-019 marks Superseded, returns to the usage limit. A replacement quote MUST have no expiry and MUST NOT emit `quote.expiring_soon`; it stays a `draft` until the admin records the replacement acceptance, and a replacement draft that is never accepted follows the 7-day draft rule. It MUST leave the inquiry flagged `supportRequired` without cancelling it automatically, and the admin MAY author another replacement quote, close the inquiry with Close inquiry on FR-006 Screen 6 when the booking is already `Cancelled` with the marker, or cancel through FR-006 Alternative Flow B2 (Screen 9) when the fault is still pending."
+        "statement": "System MUST NOT attach an automatic FR-019 promotion to an admin-authored replacement quote or take a promotion usage reservation for it; the admin sets the replacement price directly, so the replacement quote carries no promotion, and the use held by the original acceptance's promotion, which FR-019 marks Superseded, returns to the usage limit. A replacement quote MUST NOT emit `quote.expiring_soon`; Save and Continue sends it, it expires under the normal quote expiry if the admin does not record the replacement acceptance first (REQ-004-082), and a replacement draft that was never sent follows the 7-day draft rule. It MUST leave the inquiry flagged `supportRequired` without cancelling it automatically, and the admin MAY author another replacement quote, close the inquiry with Close inquiry on FR-006 Screen 6 when the booking is already `Cancelled` with the marker, or cancel through FR-006 Alternative Flow B2 (Screen 9) when the fault is still pending."
       }
     },
     {
@@ -46171,11 +46171,11 @@
       "id": "REQ-004-082",
       "type": "Rule",
       "owner_fr": "FR-004",
-      "title": "Replacement quote has no expiry, fixes its currency at first save and is accepted by the admin",
+      "title": "Replacement quote expires like any other quote, fixes its currency at first save and is accepted by the admin",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "A replacement quote MUST have no expiry. Its currency MUST be captured from the active FR-026 quote configuration at the first Screen 8 save, shown on Screen 8, and fixed after that. When the admin records the replacement acceptance, the quote moves from `draft` through `sent` to `accepted` and its first-send time is recorded. This acceptance MUST NOT run the cancel-other-quotes cascade: the original quote keeps its status, and every other open replacement draft of the inquiry is cancelled as `cancelled_other_accepted` silently, with no notice to its provider."
+        "statement": "A replacement quote MUST expire like any other quote. Its currency MUST be captured from the active FR-026 quote configuration at the first Screen 8 save, shown on Screen 8, and fixed after that. Save Draft keeps it a `draft` with no expiry; Save and Continue is its first send, which moves it to `sent`, records the first-send time, copies the FR-026 quote expiry setting (default 48 hours) onto it, and computes the expiry from that moment. If the admin does not record the replacement acceptance before the expiry, the quote moves to `expired` and `quote.expired` is emitted once, and the admin authors a new replacement quote. When the admin records the replacement acceptance, the quote moves from `sent` to `accepted`. This acceptance MUST NOT run the cancel-other-quotes cascade: the original quote keeps its status, and every other open replacement quote of the inquiry, draft or sent, is cancelled as `cancelled_other_accepted` silently, with no notice to its provider."
       }
     },
     {
@@ -46494,12 +46494,12 @@
       "id": "REQ-004-111",
       "type": "Rule",
       "owner_fr": "FR-004",
-      "title": "A replacement draft is cancelled without notice when an admin closes or cancels the inquiry",
+      "title": "An open replacement quote is cancelled without notice when an admin closes or cancels the inquiry",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "When an admin closes the inquiry (Close inquiry on FR-006 Screen 6) or cancels it (FR-006 Screen 9), System MUST move any draft replacement quote of that inquiry to `cancelled_inquiry_cancelled`, MUST NOT send `quote.cancelled_inquiry` to the replacement provider, and no `quote.expired` follows. The cascade trigger is owned by FR-003 (REQ-003-013) and FR-006.",
-        "rationale": "The replacement draft is admin-authored and never offered to the patient, so the provider is not told and nothing expires."
+        "statement": "When an admin closes the inquiry (Close inquiry on FR-006 Screen 6) or cancels it (FR-006 Screen 9), System MUST move any open replacement quote (draft or sent) of that inquiry to `cancelled_inquiry_cancelled`, MUST NOT send `quote.cancelled_inquiry` to the replacement provider, and no `quote.expired` follows. The cascade trigger is owned by FR-003 (REQ-003-013) and FR-006.",
+        "rationale": "The replacement quote is admin-authored and never offered to the patient, so the provider is not told and the cancellation, not expiry, ends it."
       }
     },
     {
@@ -83490,10 +83490,10 @@
       "owner_fr": "FR-027",
       "title": "Cancellation Policy is read-only information and never needs acceptance",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "Cancellation Policy is a read-only informational document that does NOT require user acceptance. It uses the same versioning and publishing pipeline, but Material Change is fixed to No and not editable and Requires Acceptance is always No. It is shown through the full policy link on the FR-006 booking and payment screens; the refund ladder numbers come from FR-029 and the legal text MUST NOT restate them. The Cancellation Policy acknowledgment checkbox on the FR-006 booking screen (REQ-006-038) is a separate booking-screen acknowledgment owned by FR-006: it is not a legal document acceptance under this module and creates no acceptance record here.",
-        "rationale": "Owner default 86. FR-005 does not carry cancellation terms, FR-006 shows the policy before payment, and the percentages must have one source."
+        "statement": "Cancellation Policy is a read-only informational document that has no per-version acceptance record in FR-027 acceptance tracking. It uses the same versioning and publishing pipeline, but Material Change is fixed to No and not editable and Requires Acceptance is always No. It is shown through the full policy link on the FR-006 booking and payment screens; the refund ladder numbers come from FR-029 and the legal text MUST NOT restate them. The one exception is the booking flow: the patient ticks the Cancellation Policy acknowledgment checkbox on the FR-006 booking and payment screen at every booking (REQ-006-038). That per-booking acknowledgment is owned and stored by FR-006 with the booking and records which policy version was shown; it is not a legal document acceptance under this module, creates no acceptance ledger record, and is not counted in acceptance rates, the Pending set or reminders.",
+        "rationale": "Owner default 86, refined by the owner ruling of 2026-11-25. FR-005 does not carry cancellation terms; FR-006 shows the policy before payment and owns the per-booking checkbox; the percentages must have one source."
       }
     },
     {
@@ -100453,10 +100453,10 @@
       "owner_fr": "FR-004",
       "title": "Quote List",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "platform": "provider",
-        "description": "Provider views all quotes in a single unified list with no tabs, reflecting global case statuses; actions (Edit, Soft Delete for drafts only, View Details) are state-aware; cancelled quotes are greyed out with a badge and all actions disabled; the admin-authored replacement draft is not listed."
+        "description": "Provider views all quotes in a single unified list with no tabs, reflecting global case statuses; actions (Edit, Soft Delete for drafts only, View Details) are state-aware; cancelled quotes are greyed out with a badge and all actions disabled; the admin-authored replacement quote is not listed."
       }
     },
     {
@@ -100513,10 +100513,10 @@
       "owner_fr": "FR-004",
       "title": "Admin Inline Quote Edit",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "platform": "admin",
-        "description": "Admin performs inline edits with audit on draft, sent, and accepted quotes, with a mandatory reason; price, currency, and promotion stay read-only once accepted, an edit after acceptance is stored as a new version beside the unchanged acceptance snapshot, and edits of the accepted quote are blocked while the booking carries a provider-fault marker, except admin notes; the replacement draft is not offered, because Screen 8 is its only edit surface."
+        "description": "Admin performs inline edits with audit on draft, sent, and accepted quotes, with a mandatory reason; price, currency, and promotion stay read-only once accepted, an edit after acceptance is stored as a new version beside the unchanged acceptance snapshot, and edits of the accepted quote are blocked while the booking carries a provider-fault marker, except admin notes; the replacement quote is not offered, because Screen 8 is its only edit surface."
       }
     },
     {
@@ -100525,10 +100525,10 @@
       "owner_fr": "FR-004",
       "title": "Admin Replacement Quote Authoring",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "platform": "admin",
-        "description": "Admin authors a quote for the replacement provider during an FR-006 provider-fault transfer, pending or closed, opened only from the transfer and blocked with a message that names the failed check; the quote stays a draft with no expiry, hidden from the provider and the patient, with its currency captured at the first save and fixed after, and Screen 8 is its only edit surface; Save and Continue confirms the summary and returns to FR-006 to record the acceptance."
+        "description": "Admin authors a quote for the replacement provider during an FR-006 provider-fault transfer, pending or closed, opened only from the transfer and blocked with a message that names the failed check; the quote is a draft with no expiry until Save and Continue sends it and starts the normal quote expiry, hidden from the provider and the patient throughout, with its currency captured at the first save and fixed after, and Screen 8 is its only edit surface; Save and Continue confirms the summary, sends the quote and returns to FR-006 to record the acceptance before it expires."
       }
     },
     {
@@ -110941,9 +110941,9 @@
       "id": "STP-004-117",
       "type": "Step",
       "owner_fr": "FR-004",
-      "title": "Admin builds the replacement quote; its currency is captured at the first save and fixed after; the quote is saved as a draft with no expiry, no promotion and no notice, hidden from the provider and the patient",
+      "title": "Admin builds the replacement quote; its currency is captured at the first save and fixed after; Save Draft keeps it a draft with no expiry and Save and Continue sends it and starts the normal quote expiry; no promotion and no notice; hidden from the provider and the patient",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flows bullet 13; Workflow 7"
       }
@@ -111029,9 +111029,9 @@
       "id": "STP-004-125",
       "type": "Step",
       "owner_fr": "FR-004",
-      "title": "System moves the replacement draft through sent to accepted after the FR-005 acceptance record, sets its first-send time, keeps the original quote's status, and cancels other open replacement drafts silently as cancelled_other_accepted",
+      "title": "System moves the replacement quote from sent to accepted after the FR-005 acceptance record, keeps the original quote's status, and cancels other open replacement quotes silently as cancelled_other_accepted",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flows bullet 13; Workflow 7"
       }
@@ -111040,9 +111040,9 @@
       "id": "STP-004-126",
       "type": "Step",
       "owner_fr": "FR-004",
-      "title": "Platform Admin closes or cancels the inquiry (FR-006 Screen 6 Close inquiry or Screen 9); any replacement draft is cancelled with no notice to its provider",
+      "title": "Platform Admin closes or cancels the inquiry (FR-006 Screen 6 Close inquiry or Screen 9); any open replacement quote is cancelled with no notice to its provider",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flows bullet 17; Workflow 7"
       }
@@ -282090,6 +282090,12 @@
     {
       "from_id": "REQ-027-026",
       "verb": "applies to",
+      "to_id": "ENT-booking.cancellation_policy_acknowledged_at",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-026",
+      "verb": "applies to",
       "to_id": "ENT-legal-document.document_type",
       "attrs": {}
     },
@@ -282097,6 +282103,12 @@
       "from_id": "REQ-027-026",
       "verb": "applies to",
       "to_id": "ENT-legal-document.requires_acceptance",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-027-026",
+      "verb": "applies to",
+      "to_id": "SCR-006-01",
       "attrs": {}
     },
     {
@@ -461674,6 +461686,48 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-035640-6100b020",
+      "at": "2026-11-25T03:56:40.537585+00:00",
+      "changed_by": "docs-manager",
+      "reason": "Owner ruling 2026-11-25 (final): an admin-authored replacement quote expires like any other quote under the FR-026 quote expiry setting captured at first send; FR-004 (Save and Continue is the first send) is aligned with FR-005 REQ-005-045 and FR-006 REQ-006-018 and REQ-006-082",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "ENT-quote.expires_at",
+        "ENT-quote.first_sent_at",
+        "REQ-004-002",
+        "REQ-004-036",
+        "REQ-004-039",
+        "REQ-004-048",
+        "REQ-004-050",
+        "REQ-004-082",
+        "REQ-004-111",
+        "SCR-004-02",
+        "SCR-004-07",
+        "SCR-004-08",
+        "STP-004-117",
+        "STP-004-125",
+        "STP-004-126"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 19
+    },
+    {
+      "id": "cs-20261125-035526-967873e9",
+      "at": "2026-11-25T03:55:26.346136+00:00",
+      "changed_by": "docs-manager",
+      "reason": "Owner ruling 2026-11-25: Cancellation Policy has no per-version acceptance record in FR-027, but the booking flow keeps its per-booking checkbox, stored with the booking by FR-006 together with the policy version shown, outside FR-027 acceptance rates and reminders.",
+      "source_id": "SRC-PRD-027",
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-027-026"
+      ],
+      "edges_added": 2,
+      "edges_removed": 0,
+      "rows": 4
+    },
     {
       "id": "cs-20261125-005131-52f0aeb9",
       "at": "2026-11-25T00:51:31.705731+00:00",
