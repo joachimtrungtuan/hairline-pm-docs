@@ -1,0 +1,7 @@
+# FR-023 backlog settle: retired retention rules REQ-023-001 and REQ-023-002 stated 7 years; REQ-SYS-002 sets one 10-year period.
+reason: "Retired retention rules REQ-023-001 and REQ-023-002 no longer carry the stale 7-year period; they point to the 10-year rule REQ-SYS-002."
+by: controller
+source_id: SRC-PRD-023
+operations:
+  - {"op": "update_node", "id": "REQ-023-001", "attrs": {"statement": "Retired. Retention of medical records (including head-scan media) and the ban on hard-deletion before expiry follow REQ-SYS-002: one 10-year retention period.", "rationale": "Superseded by REQ-SYS-002 (one 10-year retention period for every record type); the earlier 7-year minimum no longer applies."}}
+  - {"op": "update_node", "id": "REQ-023-002", "attrs": {"statement": "Retired. Retention of financial transaction records and the ban on hard-deletion before expiry follow REQ-SYS-002: one 10-year retention period.", "rationale": "Superseded by REQ-SYS-002 (one 10-year retention period for every record type); the earlier 7-year minimum no longer applies."}}

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T08:26:35Z",
+  "generated_at": "2026-11-25T08:28:17Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -463374,6 +463374,21 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-082704-c2d92710",
+      "at": "2026-11-25T08:27:04.268463+00:00",
+      "changed_by": "controller",
+      "reason": "Retired retention rules REQ-023-001 and REQ-023-002 no longer carry the stale 7-year period; they point to the 10-year rule REQ-SYS-002.",
+      "source_id": "SRC-PRD-023",
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-023-001",
+        "REQ-023-002"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 4
+    },
     {
       "id": "cs-20261125-082522-36779d4b",
       "at": "2026-11-25T08:25:22.948678+00:00",

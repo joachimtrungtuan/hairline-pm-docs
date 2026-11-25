@@ -99,7 +99,13 @@ Rules carried by the flows above: Main Flow steps 1 to 8 (REQ-023-030, REQ-023-0
 
 ---
 
-## User Stories
+## Screen Specifications
+
+This FR specifies no screen of its own: it is a platform-wide rule set, and the screens it relies on belong to other FRs. The patient Delete Account screen is specified in FR-001, and the Admin DSR Queue in FR-016 (SCR-016-08, Patient Deletion Requests). The Provider Data Policy and Activity Logs screens and the Admin Retention Settings, Audit Logs and Reports screens are not specified yet (see Entry Points; REQ-023-019, REQ-023-007, REQ-023-016, REQ-023-024).
+
+---
+
+## User Scenarios & Testing
 
 ### User Story 1 - Delete My Account/Data (Priority: P1)
 
@@ -139,7 +145,7 @@ As an Admin, I need a complete audit trail of access and modifications to protec
 
 ### Core Requirements
 
-- **REQ-023-001**: Retired. Retention of medical records (including head-scan media), financial transaction records and audit logs, and the ban on hard-deletion before expiry, follow the system PRD, Platform-Wide Rules: One 10-year retention period.
+- **REQ-023-001** and **REQ-023-002**: Retired. Retention of medical records (including head-scan media), financial transaction records and audit logs, and the ban on hard-deletion before expiry, follow the system PRD, Platform-Wide Rules: One 10-year retention period.
 - **REQ-023-003**: Every delete MUST be a soft delete (REQ-SYS-003): the record is archived or anonymised in place and is never physically removed before the retention period ends (REQ-SYS-002). The one named exception is the passport number and passport photo, which are physically erased at an approved deletion (FR-008 REQ-008-069); all other travel data is anonymised in place. The protected categories (Medical Records, Financial Records, Account Profile) are additionally restricted, with access limited to the legal purpose. Patient-cancelled inquiries (FR-003 Workflow 5), inquiries cancelled by the system when a deletion request is approved (REQ-023-042), and all records generated from the cancellation cascade — including auto-cancelled quotes with status "Cancelled (Inquiry Cancelled)" per FR-004 — are subject to the same retention rules as completed inquiries and quotes. AcceptanceEvents are retained and never deleted (FR-005 REQ-005-023). This applies to inquiry records, quote records, acceptance events (including superseded AcceptanceEvents per FR-005), and associated audit trail entries, which are kept unchanged (REQ-023-011).
 - **REQ-023-004**: System MUST allow patients to request data deletion (erasure). On an approved request no category is physically removed, except the passport number and passport photo named in REQ-023-003 (REQ-SYS-002, REQ-SYS-003): the personal data of the non-protected categories (Communications, Media, Analytics) is anonymised in place, or archived and made inaccessible; the protected categories (Medical Records, Financial Records, Account Profile) are retained in anonymised form, with strict access restrictions and documented legal basis.
 - **REQ-023-005**: System MUST anonymize patient data in analytics and reports (no direct identifiers, quasi-identifiers masked or aggregated).
@@ -220,7 +226,11 @@ Protected categories are Medical Records, Financial Records and Account Profile.
 - CL-1: Erasure handling for medical/financial records — see REQ-023-004. Access is fully restricted during the legal retention period.
 - CL-3: Audit log retention — see REQ-023-011. Logs are included in compliance reporting (summaries unless otherwise requested). (REQ-023-016)
 
-### Additional Business Rules (moved from dropped sections)
+---
+
+## Business Rules
+
+### General Module Rules
 
 - The retention, audit-log and anonymisation rules of this module apply to the whole platform (Patient, Provider and Admin applications), not to one module only.
 - Data Subject Request (DSR): This is the single deletion-request record of the platform: the patient Delete Account screen (FR-001) and the Admin deletion requests queue (FR-016) both use it, and this FR owns it.
@@ -243,6 +253,7 @@ Related FRs: FR-001 (Delete Account screen, account-deletion-requested event, su
 | 2026-11-24 | 1.8 | Logic review pass 1: approval cancels the open inquiry through FR-003 before anonymisation; nothing is physically removed in any category; Denied outcome added; one obligation list blocks approval while the 30-day clock keeps running; status lifecycle, verification states and flags defined; one protected list and the exclusion confirmation moved into the main flow; record-type mapping added; audit entries anonymised by unlinking; retention default and floor of 10 years with longer-only overrides; deadline-approaching threshold and merged-request date set; patient data export stated out of scope. | Product Owner / Documentation |
 | 2026-11-24 | 1.9 | Logic review pass 2: overdue display and 7-day warning reachable from every open request, open defined and Deny closed once In Progress; blocked mark cleared by the system, Admin notice and Deny from a blocked request; outcome notice sent to the contact address captured at approval; classification refresh that differs from the reviewed one returns the request to review; passport number and photo erased at approval as a named exception; record-type mapping completed; anonymisation waits for the FR-003 cancellation and a failed cancellation is retried; obligation list no longer blocks a Completed inquiry and names what each neighbour blocks at submission. | Product Owner / Documentation |
 | 2026-11-25 | 1.10 | Cross-FR alignment: record-type table names legal acceptance records and message attachments; the outcome notice is stated as email only with the failure visible in the delivery log; anonymisation waits for provider notices as defined in FR-020; the obligation-block-ended notice is named at its step; login while a request is open and the effects of Fulfilled on sessions, credentials and the email address; discarded FR-024 drafts. | Product Owner / Documentation |
+| 2026-11-25 | 1.11 | Backlog points settled: standard section headings added or renamed (Screen Specifications, User Scenarios & Testing, Business Rules) without changing any rule text, and the retired retention rules REQ-023-001 and REQ-023-002 now state the 10-year period of REQ-SYS-002. | Claude (AI Assistant) |
 
 ---
 
