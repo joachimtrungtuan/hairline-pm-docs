@@ -152,8 +152,7 @@ The Affiliate Management module enables Hairline to partner with external entiti
 - **Steps**:
   1. Affiliate logs into affiliate portal using credentials
   2. System displays affiliate dashboard with:
-     - Total referrals count (all-time and current month)
-     - Completed bookings count (bookings that generated commission)
+     - Total referrals count (completed bookings with affiliate attribution, all-time and current month; one count, REQ-018-309)
      - Total revenue generated for Hairline (from affiliate referrals)
      - Total commissions earned (all-time) and Unpaid balance (all commission earned and not yet paid)
      - Next payout amount (commission from the previous month's completed bookings due in the next run) and payout date
@@ -762,7 +761,7 @@ The Affiliate Management module enables Hairline to partner with external entiti
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 | --- | --- | --- | --- | --- | --- |
 | Payout Month | month | Yes | Month for which payouts are being processed/viewed | Format: "November 2025" (REQ-018-258) | ENT-affiliate-payout.payout_month |
-| Overall Totals | composite | N/A | Total owed this cycle, total paid, affiliate count, failed count | Read-only, system-calculated |  |
+| Overall Totals | composite | N/A | Total owed this cycle, total paid, affiliate count, failed count | Read-only, system-calculated | no graph field (calculated) |
 | Affiliate Name | text | N/A | Name of affiliate receiving payout | Read-only, from affiliate record | ENT-affiliate.name |
 | Total Completed Bookings | number | N/A | Count of completed bookings in payout period | Read-only, system-calculated | ENT-affiliate-payout.total_bookings_count |
 | Total Commissions Owed | currency | N/A | Sum of commissions for completed bookings | Read-only, system-calculated | ENT-affiliate-payout.total_commission_amount |
@@ -985,7 +984,7 @@ _Upcoming payout panel (top of tab)_:
 | Next Payout Amount | currency | N/A | Commission from the previous month's completed bookings due in the next run | Read-only, system-calculated (REQ-018-136) | no graph field (calculated) |
 | Unpaid Balance | currency | N/A | All commission earned and not yet paid | Read-only, system-calculated (REQ-018-136) | ENT-affiliate.pending_payout |
 | Included Bookings Count | number | N/A | Completed bookings contributing to the next payout amount | Read-only, system-calculated | ENT-affiliate.pending_bookings_count |
-| Minimum Threshold Note | display | N/A | Note shown when the next payout amount is below the $50 threshold (rolls over); shows "Held" while the affiliate is Suspended and "Final balance" once Inactive instead of the rollover note | Read-only, shown when applicable (REQ-018-269, REQ-018-144) |  |
+| Minimum Threshold Note | display | N/A | Note shown when the next payout amount is below the $50 threshold (rolls over); shows "Held" while the affiliate is Suspended and "Final balance" once Inactive instead of the rollover note | Read-only, shown when applicable (REQ-018-269, REQ-018-144) | no graph field (display) |
 
 _Payout history list (one row per payout)_:
 
@@ -1111,9 +1110,9 @@ _Account security (affiliate-managed)_:
 | --- | --- | --- | --- | --- | --- |
 | Activation Link Status | display | N/A | Whether the one-time link is valid or expired | Read-only, system-evaluated (REQ-018-275) | ENT-affiliate.activation_link_expires_at |
 | Account Email | display | N/A | The invited email (login username) | Read-only | ENT-affiliate.contact_email |
-| New Password | password | Yes | New account password | Min 12 chars, with uppercase, lowercase, number, special char (REQ-018-197) |  |
-| Confirm Password | password | Yes | Re-enter new password | Must match New Password (REQ-018-276) |  |
-| Password Strength Meter | display | N/A | Visual strength indicator | Read-only, reflects entered password (REQ-018-277) |  |
+| New Password | password | Yes | New account password | Min 12 chars, with uppercase, lowercase, number, special char (REQ-018-197) | no graph field (control) |
+| Confirm Password | password | Yes | Re-enter new password | Must match New Password (REQ-018-276) | no graph field (control) |
+| Password Strength Meter | display | N/A | Visual strength indicator | Read-only, reflects entered password (REQ-018-277) | no graph field (display) |
 | Set Password | button | N/A | Submit to set password and activate | Enabled only when both fields are valid (REQ-018-278) | no graph field (control) |
 
 **Business Rules**:
@@ -1142,7 +1141,7 @@ _Account security (affiliate-managed)_:
 | --- | --- | --- | --- | --- | --- |
 | Email | email | Yes | The email the admin used during account creation | Valid email format | ENT-affiliate.contact_email |
 | Resend Activation | button | N/A | Request a new one-time activation link | Subject to rate limiting (REQ-018-279) | no graph field (control) |
-| Confirmation Message | display | N/A | Generic confirmation shown after submit | Read-only |  |
+| Confirmation Message | display | N/A | Generic confirmation shown after submit | Read-only | no graph field (display) |
 
 **Business Rules**:
 
@@ -1167,7 +1166,7 @@ _Account security (affiliate-managed)_:
 
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 | --- | --- | --- | --- | --- | --- |
-| Welcome Header | display | N/A | Welcome message and platform introduction | Read-only |  |
+| Welcome Header | display | N/A | Welcome message and platform introduction | Read-only | no graph field (display) |
 | Assigned Codes Summary | list | N/A | The affiliate's discount code(s); the first code is generated at activation; if that failed, the list stays empty until the admin creates the code (REQ-018-307) | Read-only | ENT-affiliate-discount-code.code_text |
 | Commission Summary | display | N/A | The affiliate's commission structure | Read-only | ENT-affiliate.commission_type, ENT-affiliate.commission_percentage, ENT-affiliate.commission_fixed_amount |
 | Payout Schedule | display | N/A | Payout frequency and next payout date | Read-only | ENT-affiliate.payout_schedule |
@@ -1272,7 +1271,7 @@ _Account security (affiliate-managed)_:
 **Internal Dependencies (Other FRs/Modules)**
 
 - **FR-007 / Module S-02: Payment Processing Service**
-  - **Integration point**: Payout processing workflow calls Payment Service API to initiate Stripe transfers with the affiliate's stored bank account details
+  - **Integration point**: FR-017 / A-05 calls the Payment Service API to initiate Stripe transfers with the affiliate's stored bank account details; FR-018 only exposes the payout data and does not initiate transfers
 - **FR-017 / Module A-05: Admin Billing & Financial Management**
   - **Integration point**: FR-018 exposes affiliate payout-cycle totals, readiness, threshold exclusions, and reconciliation metadata; FR-017 / A-05 initiates Stripe transfers and returns payout execution status for FR-018 read-only views
 - **FR-019 / Module A-06: Discount & Promotion Management**
@@ -1287,7 +1286,7 @@ _Account security (affiliate-managed)_:
 - **External Service 1: Stripe Payment API (via FR-017 / S-02)**
   - **Purpose**: FR-017 processes affiliate commission payouts as Stripe transfers using affiliate bank account details and commission amounts from FR-018 (account configuration owned by FR-029)
   - **Integration**: FR-018 exposes calculated payout data and reads back payout execution status; FR-017 / S-02 initiates Stripe transfers and consumes `transfer.created` / `transfer.paid` / `transfer.failed` webhooks
-  - **Failure handling**: If a transfer fails, FR-017 marks the payout "Failed", alerts admin for manual retry after resolving bank details, and FR-018 displays the latest status read-only (REQ-018-167)
+  - **Failure handling**: If a transfer fails, FR-017 marks the payout "Failed", alerts admin for manual retry after resolving bank details, and FR-018 displays the latest status read-only (REQ-018-166, REQ-018-167, REQ-018-168)
 - **External Service 2: Email Service Provider (e.g., SendGrid)**
   - **Failure handling**: If email fails, system logs error and admin can manually resend via dashboard
 - **External Service 3: PDF Generation Library (e.g., wkhtmltopdf, Puppeteer)**
@@ -1343,7 +1342,6 @@ _Account security (affiliate-managed)_:
 - **Assumption 2**: Affiliate commission structure will remain stable (5-25% of net booking revenue after discounts and refunds, or a fixed amount of at least $50 per booking with no upper cap)
 - **Assumption 3**: Finance team will reconcile affiliate payouts within 48 hours of processing to detect errors
 - **Assumption 4**: Affiliate program will not exceed 10% of Hairline's total commission revenue within first 12 months (cost control); the program cost is the affiliate commissions plus the reduction in Hairline's commission caused by affiliate discounts
-- **Why needed**: Affiliate amounts are denominated in USD (platform base currency) and bookings may be transacted in other currencies; FR-029 is the single owner of the supported-currency list, base currency, conversion-rate sources, markup, and locked exchange rates
 
 **Carried from dropped sections (original wording)**:
 
@@ -1592,6 +1590,7 @@ Business negotiates new commission terms with affiliate; admin updates commissio
 | 2026-11-24 | 2.8 | Logic review pass 1: code entry moved to the sub-quote review, FR-019 usage counting and priority adopted, first code generated at activation, single lifecycle transition list, two named payout figures, attribution capture rule, held commission and reinstatement rules, offboarding type and ban flag, margin check reworded, program settings panel, completed booking defined as final payment confirmed. | Product Owner / Documentation |
 | 2026-11-24 | 2.9 | Logic review pass 2: the affiliate discount follows the shared FR-019 model (commission on the price after the promotion) and the commission ceiling is the commission percentage against the platform default Hairline commission percentage, with an audited Override and Approval reference; completed booking means the payment that leaves the booking fully paid; normal offboarding of a Suspended affiliate clears the hold; an Inactive affiliate stays in the cycle list and is paid in full with no $50 threshold; re-onboarding with the same email after a normal offboarding; first code failure handling; referral credit needs an Active affiliate at quote acceptance; no referral link without an Active Auto-apply code; settlement shown before confirmation and applied after; offboarding a Pending affiliate; Suspended and Inactive portal states. | Product Owner / Documentation |
 | 2026-11-25 | 2.10 | Owner ruling 2026-11-25: the affiliate portal is a fourth application, not a surface inside the Admin platform (REQ-018-298); constitution C-I-0a corrected to match. | Product Owner / Documentation |
+| 2026-11-25 | 2.11 | Backlog points settled: the A3 dashboard list now shows one Total Referrals count, the S-02 integration point says FR-017 initiates the Stripe transfers, the payout-failure line cites its retry and read-only display rules, the stray FR-029 currency bullet was removed, and the seven empty Graph field cells are labelled. | Claude (AI Assistant) |
 
 ---
 
