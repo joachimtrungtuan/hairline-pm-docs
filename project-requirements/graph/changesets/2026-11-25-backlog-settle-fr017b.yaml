@@ -1,0 +1,7 @@
+# FR-017 backlog settlement follow-up: the retry step after a failed affiliate transfer is an intended step back.
+reason: "Mark the retry after a failed affiliate payout transfer as an intended return to the approval stage."
+by: controller
+source_id: SRC-PRD-017
+operations:
+  - {"op": "remove_edge", "from": "STP-017-114", "verb": "next", "to": "STP-017-115"}
+  - {"op": "add_edge", "from": "STP-017-114", "verb": "next", "to": "STP-017-115", "attrs": {"label": "retry", "back": true}}

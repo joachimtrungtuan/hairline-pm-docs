@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T08:17:42Z",
+  "generated_at": "2026-11-25T08:23:02Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -37330,6 +37330,19 @@
       }
     },
     {
+      "id": "FLW-017-affiliate-payout",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "B6: Monthly Affiliate Payout",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "B6: Monthly Affiliate Payout",
+        "prd_ref": "B6"
+      }
+    },
+    {
       "id": "FLW-017-bulk-approval",
       "type": "Flow",
       "owner_fr": null,
@@ -37353,6 +37366,19 @@
         "kind": "alternative",
         "description": "B5: Clinic Balance Entry and Write-Off",
         "prd_ref": "B5"
+      }
+    },
+    {
+      "id": "FLW-017-clinic-share-move",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "B7: Clinic Share Moves to the Clinic's Locked Stripe Balance",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "B7: Clinic Share Moves to the Clinic's Locked Stripe Balance",
+        "prd_ref": "B7"
       }
     },
     {
@@ -67225,9 +67251,9 @@
       "owner_fr": "FR-017",
       "title": "Separate payout records for providers and affiliates",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST maintain separate payout records for providers and affiliates with status tracking (Pending, Processing, Paid, Failed)",
+        "statement": "System MUST maintain separate payout records for providers and affiliates with status tracking: a settlement statement and a Stripe Connect per-booking payout carry the states of REQ-017-186 and REQ-017-187, and an affiliate payout is Pending, Processing, Paid or Failed",
         "rationale": "PRD id REQ-017-015 (prd.md line 1781)."
       }
     },
@@ -69171,9 +69197,9 @@
       "owner_fr": "FR-017",
       "title": "A Stripe Connect payout has its own states and is listed on Screen 2",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "A Stripe Connect clinic is paid one payout per released booking, listed in the Stripe Connect payouts section of Screen 2. That payout has the states Waiting for clinic setup, Processing, Paid and Failed, moved by the Stripe transfer webhooks; Retry Payout and the three automatic attempts belong to it.",
+        "statement": "A Stripe Connect clinic is paid one payout per released booking, listed in the Stripe Connect payouts section of Screen 2. That payout has the states Waiting for clinic setup, Processing, Paid and Failed, moved by the Stripe transfer webhooks; Retry Payout and the three automatic attempts belong to it. When Stripe reports an invalid bank account, the clinic corrects its payout details through the Complete Stripe sign-up link in the status panel of its Billing Settings (FR-032 REQ-032-146) and the admin then retries the payout.",
         "rationale": "Alternative Flow B4; Screen 2 Stripe Connect payouts section; Release Rules 4 and 11."
       }
     },
@@ -69243,9 +69269,9 @@
       "owner_fr": "FR-017",
       "title": "Release earnings resolves a Suspended or Deactivated clinic's money",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "For a Suspended or Deactivated clinic, an admin releases earnings with a Release earnings resolution on Screen 7 that needs no target payout cycle: a manual-rail clinic gets a one-off manual statement and a Stripe Connect clinic a direct per-booking payout, with an internal note and an audit entry. It covers bookings completed normally and bookings held under General Module Rule 16 once the admin has resolved them. The one-off statement is created Approved (the admin's release is the approval), sits outside the weekly cycle and is paid with Mark as Paid like any other statement.",
+        "statement": "For a Suspended or Deactivated clinic, an admin releases earnings with a Release earnings resolution on Screen 7 that needs no target payout cycle: a manual-rail clinic gets a one-off manual statement and a Stripe Connect clinic a direct per-booking payout, with an internal note and an audit entry. It covers bookings completed normally and bookings held under General Module Rule 16 once the admin has resolved them. The one-off statement is created Approved (the admin's release is the approval), sits outside the weekly cycle and is paid with Mark as Paid like any other statement. The release asks for financial re-authentication before it is confirmed (REQ-017-047) and the payout is checked against the payout flag (REQ-017-194).",
         "rationale": "Screen 7 business rules; General Module Rule 16; Alternative Flow B4."
       }
     },
@@ -69339,9 +69365,9 @@
       "owner_fr": "FR-017",
       "title": "Pay Now replaces Add to Next Payout for a Stripe Connect clinic on Screen 7",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "On Screen 7, for a Stripe Connect clinic the Target Payout Cycle field is hidden and Pay Now replaces Add to Next Payout. Pay Now is available only when the booking was not already paid, its funds are released and the admin has provided an Internal Note; it starts a direct per-booking payout, which shows Waiting for clinic setup until the clinic's Stripe setup is Ready, and the provider notification is mandatory. Confirm Already Paid and Escalate Technical Investigation stay for both rails.",
+        "statement": "On Screen 7, for a Stripe Connect clinic the Target Payout Cycle field is hidden and Pay Now replaces Add to Next Payout. Pay Now is available only when the booking was not already paid, its funds are released and the admin has provided an Internal Note; it starts a direct per-booking payout, which shows Waiting for clinic setup until the clinic's Stripe setup is Ready, asks for financial re-authentication before it is confirmed (REQ-017-047) and is checked against the payout flag (REQ-017-194), and the provider notification is mandatory. Confirm Already Paid and Escalate Technical Investigation stay for both rails.",
         "rationale": "Screen 7 Dispute Resolution Panel and business rules; Alternative Flow B4."
       }
     },
@@ -118635,11 +118661,11 @@
       "id": "STP-017-008",
       "type": "Step",
       "owner_fr": "FR-017",
-      "title": "Invalid bank account: admin contacts the provider, who updates bank details in Billing Settings; admin retries the per-booking payout from the Stripe Connect payouts section",
+      "title": "Invalid bank account reported by Stripe: admin contacts the clinic, which corrects its payout details through the Complete Stripe sign-up link in the status panel of its Billing Settings; admin retries the per-booking payout from the Stripe Connect payouts section",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "prd_ref": "Main Flow step 16c"
+        "prd_ref": "Screen 2 Stripe Connect payouts section"
       }
     },
     {
@@ -118648,9 +118674,9 @@
       "owner_fr": "FR-017",
       "title": "Other Stripe error: admin investigates, resolves and retries the per-booking payout from the Stripe Connect payouts section",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "prd_ref": "Main Flow step 16d"
+        "prd_ref": "Screen 2 Stripe Connect payouts section"
       }
     },
     {
@@ -119251,9 +119277,9 @@
       "id": "STP-017-087",
       "type": "Step",
       "owner_fr": "FR-017",
-      "title": "System checks the booking's funds when the confirmation window ends: with no open problem case they are released; with an open problem case on a Completed booking, or a provider-status cancellation, the payout is held",
+      "title": "System checks the booking's funds when the confirmation window ends: with no open problem case they are released; with an open problem case on a Completed booking the payout is held. A provider-status cancellation has no confirmation window: its amounts are held from the cancellation until admin resolution",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "B4 steps 0 and 1"
       }
@@ -119297,7 +119323,7 @@
       "owner_fr": "FR-017",
       "title": "Release earnings for a Suspended or Deactivated clinic: a one-off manual statement created Approved and paid with Mark as Paid (manual rail) or a direct per-booking payout (Stripe Connect), with an internal note and an audit entry",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "B4 step 5"
       }
@@ -119418,7 +119444,7 @@
       "owner_fr": "FR-017",
       "title": "A patient cancellation retains a fee: the clinic's share becomes an earning with no confirmation window, released into the clinic's next payout",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "B4 step 13"
       }
@@ -119451,7 +119477,7 @@
       "owner_fr": "FR-017",
       "title": "Stripe Connect clinic: admin chooses Pay Now with an internal note; the system starts the booking's direct per-booking payout",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Screen 7 Pay Now rule"
       }
@@ -119465,6 +119491,171 @@
       "version": 1,
       "attrs": {
         "prd_ref": "Screen 2 Void Statement rule"
+      }
+    },
+    {
+      "id": "STP-017-107",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Cron runs on the affiliate payout day and generates the monthly affiliate payout summaries for the previous month",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B6 step 1"
+      }
+    },
+    {
+      "id": "STP-017-108",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System reads each affiliate's commission and payout readiness from FR-018; FR-017 recalculates neither",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B6 step 2"
+      }
+    },
+    {
+      "id": "STP-017-109",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System checks that the payout is payable: payout month closed, unpaid balance at or above USD 50 (no minimum for an Inactive affiliate), readiness Ready and no hold",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B6 step 3"
+      }
+    },
+    {
+      "id": "STP-017-110",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "A payout that is not payable stays on Screen 6 with its Held or Flagged marker or its readiness; no payout is started",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B6 step 4"
+      }
+    },
+    {
+      "id": "STP-017-111",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Admin selects Process Payout, or Process All Selected Payouts, on Screen 6, re-authenticates and confirms",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B6 step 5"
+      }
+    },
+    {
+      "id": "STP-017-112",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System starts the affiliate's Stripe transfer; status Processing",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B6 step 6"
+      }
+    },
+    {
+      "id": "STP-017-113",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "transfer.paid: the affiliate payout becomes Paid and the affiliate is notified",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B6 step 8"
+      }
+    },
+    {
+      "id": "STP-017-114",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "transfer.failed: the affiliate payout becomes Failed and the admin is notified; three automatic attempts, then manual review",
+      "status": "active",
+      "version": 2,
+      "attrs": {
+        "prd_ref": "B6 step 9"
+      }
+    },
+    {
+      "id": "STP-017-115",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Admin retries with Retry Payout once readiness is Ready, after re-authentication",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B6 step 10"
+      }
+    },
+    {
+      "id": "STP-017-116",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Hairline holds the Stripe Connect card payment as seller; system works out when the clinic's share moves: deposit share 60 days before the scheduled treatment date, balance share when the balance is paid, a fully paid instalment plan 30 days before, and at once when fewer than 60 days (30 for a fully paid instalment plan) remain at payment",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B7 step 1"
+      }
+    },
+    {
+      "id": "STP-017-117",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "System checks whether the clinic's Stripe setup is Ready when the share is due",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B7 step 2"
+      }
+    },
+    {
+      "id": "STP-017-118",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Setup not Ready: the share stays with Hairline, the clinic and the admin are told, and it moves when the clinic becomes Ready; nothing is paid out before then, even after treatment",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B7 step 3"
+      }
+    },
+    {
+      "id": "STP-017-119",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "The share moves to the clinic's locked Stripe balance and is paid out only at release",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B7 step 4"
+      }
+    },
+    {
+      "id": "STP-017-120",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Patient cancels after the share has moved: Hairline refunds the patient per the refund ladder and pulls the share back from the clinic's locked balance; a shortfall is a refund deduction on the clinic's balance",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B7 step 6"
+      }
+    },
+    {
+      "id": "STP-017-121",
+      "type": "Step",
+      "owner_fr": "FR-017",
+      "title": "Treatment rescheduled after the share has moved: the share is pulled back to Hairline and moved again 60 or 30 days before the new date",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "B7 step 7"
       }
     },
     {
@@ -178543,6 +178734,12 @@
       "attrs": {}
     },
     {
+      "from_id": "FLW-017-affiliate-payout",
+      "verb": "starts at",
+      "to_id": "STP-017-107",
+      "attrs": {}
+    },
+    {
       "from_id": "FLW-017-bulk-approval",
       "verb": "starts at",
       "to_id": "STP-017-012",
@@ -178552,6 +178749,12 @@
       "from_id": "FLW-017-clinic-balance",
       "verb": "starts at",
       "to_id": "STP-017-096",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-017-clinic-share-move",
+      "verb": "starts at",
+      "to_id": "STP-017-116",
       "attrs": {}
     },
     {
@@ -402999,6 +403202,15 @@
     },
     {
       "from_id": "STP-017-091",
+      "verb": "next",
+      "to_id": "STP-017-103",
+      "attrs": {
+        "label": "payout over 2x the clinic's average",
+        "condition": "REQ-017-194"
+      }
+    },
+    {
+      "from_id": "STP-017-091",
       "verb": "on",
       "to_id": "SCR-017-09",
       "attrs": {}
@@ -403360,6 +403572,15 @@
       }
     },
     {
+      "from_id": "STP-017-102",
+      "verb": "next",
+      "to_id": "STP-017-103",
+      "attrs": {
+        "label": "payout over 2x the clinic's average",
+        "condition": "REQ-017-194"
+      }
+    },
+    {
       "from_id": "STP-017-103",
       "verb": "applies",
       "to_id": "REQ-017-161",
@@ -403478,6 +403699,15 @@
     },
     {
       "from_id": "STP-017-105",
+      "verb": "next",
+      "to_id": "STP-017-103",
+      "attrs": {
+        "label": "payout over 2x the clinic's average",
+        "condition": "REQ-017-194"
+      }
+    },
+    {
+      "from_id": "STP-017-105",
       "verb": "on",
       "to_id": "SCR-017-09",
       "attrs": {}
@@ -403514,6 +403744,456 @@
       "verb": "on",
       "to_id": "SCR-017-02",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-017-107",
+      "verb": "applies",
+      "to_id": "REQ-017-151",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-107",
+      "verb": "at",
+      "to_id": "STG-payout-01-statement",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-107",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-107",
+      "verb": "next",
+      "to_id": "STP-017-108",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-108",
+      "verb": "applies",
+      "to_id": "REQ-017-102",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-108",
+      "verb": "applies",
+      "to_id": "REQ-017-198",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-108",
+      "verb": "at",
+      "to_id": "STG-payout-01-statement",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-108",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-108",
+      "verb": "next",
+      "to_id": "STP-017-109",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-109",
+      "verb": "applies",
+      "to_id": "REQ-017-197",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-109",
+      "verb": "at",
+      "to_id": "STG-payout-01-statement",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-109",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-109",
+      "verb": "next",
+      "to_id": "STP-017-110",
+      "attrs": {
+        "label": "not payable",
+        "condition": "REQ-017-197"
+      }
+    },
+    {
+      "from_id": "STP-017-109",
+      "verb": "next",
+      "to_id": "STP-017-111",
+      "attrs": {
+        "label": "payable",
+        "condition": "REQ-017-197"
+      }
+    },
+    {
+      "from_id": "STP-017-110",
+      "verb": "applies",
+      "to_id": "REQ-017-197",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-110",
+      "verb": "at",
+      "to_id": "STG-payout-01-statement",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-110",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-110",
+      "verb": "on",
+      "to_id": "SCR-017-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-111",
+      "verb": "applies",
+      "to_id": "REQ-017-103",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-111",
+      "verb": "applies",
+      "to_id": "REQ-017-106",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-111",
+      "verb": "at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-111",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-111",
+      "verb": "next",
+      "to_id": "STP-017-112",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-111",
+      "verb": "on",
+      "to_id": "SCR-017-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-112",
+      "verb": "applies",
+      "to_id": "REQ-017-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-112",
+      "verb": "at",
+      "to_id": "STG-payout-03-transfer",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-112",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-112",
+      "verb": "next",
+      "to_id": "STP-017-113",
+      "attrs": {
+        "label": "transfer.paid",
+        "condition": "REQ-017-039"
+      }
+    },
+    {
+      "from_id": "STP-017-112",
+      "verb": "next",
+      "to_id": "STP-017-114",
+      "attrs": {
+        "label": "transfer.failed",
+        "condition": "REQ-017-170"
+      }
+    },
+    {
+      "from_id": "STP-017-113",
+      "verb": "applies",
+      "to_id": "REQ-017-039",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-113",
+      "verb": "at",
+      "to_id": "STG-payout-03-transfer",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-113",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-114",
+      "verb": "applies",
+      "to_id": "REQ-017-170",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-114",
+      "verb": "at",
+      "to_id": "STG-payout-03-transfer",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-114",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-114",
+      "verb": "next",
+      "to_id": "STP-017-115",
+      "attrs": {
+        "label": "retry",
+        "back": true
+      }
+    },
+    {
+      "from_id": "STP-017-115",
+      "verb": "applies",
+      "to_id": "REQ-017-103",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-115",
+      "verb": "at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-115",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-115",
+      "verb": "next",
+      "to_id": "STP-017-112",
+      "attrs": {
+        "label": "retry",
+        "back": true
+      }
+    },
+    {
+      "from_id": "STP-017-115",
+      "verb": "on",
+      "to_id": "SCR-017-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-116",
+      "verb": "applies",
+      "to_id": "REQ-017-178",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-116",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-116",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-116",
+      "verb": "next",
+      "to_id": "STP-017-117",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-117",
+      "verb": "applies",
+      "to_id": "REQ-017-179",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-117",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-117",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-117",
+      "verb": "next",
+      "to_id": "STP-017-118",
+      "attrs": {
+        "label": "setup not Ready",
+        "condition": "REQ-017-179"
+      }
+    },
+    {
+      "from_id": "STP-017-117",
+      "verb": "next",
+      "to_id": "STP-017-119",
+      "attrs": {
+        "label": "setup Ready",
+        "condition": "REQ-017-179"
+      }
+    },
+    {
+      "from_id": "STP-017-118",
+      "verb": "applies",
+      "to_id": "REQ-017-179",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-118",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-118",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-118",
+      "verb": "next",
+      "to_id": "STP-017-119",
+      "attrs": {
+        "label": "clinic becomes Ready",
+        "condition": "REQ-017-179"
+      }
+    },
+    {
+      "from_id": "STP-017-119",
+      "verb": "applies",
+      "to_id": "REQ-017-178",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-119",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-119",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-119",
+      "verb": "next",
+      "to_id": "STP-017-044",
+      "attrs": {
+        "label": "released after completion",
+        "condition": "REQ-017-178"
+      }
+    },
+    {
+      "from_id": "STP-017-119",
+      "verb": "next",
+      "to_id": "STP-017-120",
+      "attrs": {
+        "label": "patient cancels",
+        "condition": "REQ-017-179"
+      }
+    },
+    {
+      "from_id": "STP-017-119",
+      "verb": "next",
+      "to_id": "STP-017-121",
+      "attrs": {
+        "label": "treatment rescheduled",
+        "condition": "REQ-017-179"
+      }
+    },
+    {
+      "from_id": "STP-017-120",
+      "verb": "applies",
+      "to_id": "REQ-017-179",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-120",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-120",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-120",
+      "verb": "next",
+      "to_id": "STP-017-096",
+      "attrs": {
+        "label": "shortfall is a refund deduction on the clinic's balance",
+        "condition": "REQ-017-191"
+      }
+    },
+    {
+      "from_id": "STP-017-121",
+      "verb": "applies",
+      "to_id": "REQ-017-179",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-121",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-121",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-017-121",
+      "verb": "next",
+      "to_id": "STP-017-117",
+      "attrs": {
+        "label": "share due again",
+        "back": true
+      }
     },
     {
       "from_id": "STP-018-001",
@@ -462750,6 +463430,61 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-082150-965ede71",
+      "at": "2026-11-25T08:21:50.101033+00:00",
+      "changed_by": "controller",
+      "reason": "Mark the retry after a failed affiliate payout transfer as an intended return to the approval stage.",
+      "source_id": "SRC-PRD-017",
+      "nodes_added": [],
+      "nodes_updated": [
+        "STP-017-114"
+      ],
+      "edges_added": 1,
+      "edges_removed": 1,
+      "rows": 2
+    },
+    {
+      "id": "cs-20261125-081856-83becb0e",
+      "at": "2026-11-25T08:18:56.141721+00:00",
+      "changed_by": "controller",
+      "reason": "FR-017 backlog settle: filing and wording fixes taken from live rules (REQ-017-047, REQ-017-178, REQ-017-179, REQ-017-186, REQ-017-187, REQ-017-194, REQ-017-197, FR-032 REQ-032-146); no business decision changed.",
+      "source_id": "SRC-PRD-017",
+      "nodes_added": [
+        "FLW-017-affiliate-payout",
+        "FLW-017-clinic-share-move",
+        "STP-017-107",
+        "STP-017-108",
+        "STP-017-109",
+        "STP-017-110",
+        "STP-017-111",
+        "STP-017-112",
+        "STP-017-113",
+        "STP-017-114",
+        "STP-017-115",
+        "STP-017-116",
+        "STP-017-117",
+        "STP-017-118",
+        "STP-017-119",
+        "STP-017-120",
+        "STP-017-121"
+      ],
+      "nodes_updated": [
+        "REQ-017-015",
+        "REQ-017-187",
+        "REQ-017-193",
+        "REQ-017-201",
+        "STP-017-008",
+        "STP-017-009",
+        "STP-017-087",
+        "STP-017-091",
+        "STP-017-102",
+        "STP-017-105"
+      ],
+      "edges_added": 73,
+      "edges_removed": 0,
+      "rows": 168
+    },
     {
       "id": "cs-20261125-081628-709e1e19",
       "at": "2026-11-25T08:16:28.361228+00:00",

@@ -191,19 +191,19 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  A2S1["1. On Upcoming Payments list, admin clicks &quot;Select All&quot; checkbox"] --> A2S2["2. System selects all providers with &quot;Pending Approval&quot; statements for the current cycle"]
-  A2S2 --> A2S3{"3. Adjust selection before confirming?"}
-  A2S3 -->|"Yes — exclude some"| A2S3A["3a. Admin unchecks specific providers to exclude from this batch"]
-  A2S3A --> A2S4
-  A2S3 -->|"No — proceed with all"| A2S4["4. Admin clicks &quot;Approve All Selected Payouts&quot;"]
-  A2S4 --> A2S5["5. System displays batch confirmation modal: total count and total amount across all selected providers"]
-  A2S5 --> A2S6{"6. Admin confirms batch?"}
-  A2S6 -->|"No — back to list"| A2S1
-  A2S6 -->|"Yes"| A2S7["7. System marks each selected statement as Approved sequentially; displays live progress: &quot;Approving X of Y statements...&quot;"]
-  A2S7 --> A2S8["8. Batch completes — system displays summary: total approved, successful count, failed count with error details"]
-  A2S8 --> A2S9{"9. Any failed payouts?"}
-  A2S9 -->|"No — all successful"| A2S10["10. All selected statements are Approved and wait for the payout day (main flow step 12)"]
-  A2S9 -->|"Yes"| A2S11["11. Admin reviews each failed payout individually and retries (returns to main flow step 9)"]
+  A1S1["1. On Upcoming Payments list, admin clicks &quot;Select All&quot; checkbox"] --> A1S2["2. System selects all providers with &quot;Pending Approval&quot; statements for the current cycle"]
+  A1S2 --> A1S3{"3. Adjust selection before confirming?"}
+  A1S3 -->|"Yes — exclude some"| A1S3A["3a. Admin unchecks specific providers to exclude from this batch"]
+  A1S3A --> A1S4
+  A1S3 -->|"No — proceed with all"| A1S4["4. Admin clicks &quot;Approve All Selected Payouts&quot;"]
+  A1S4 --> A1S5["5. System displays batch confirmation modal: total count and total amount across all selected providers"]
+  A1S5 --> A1S6{"6. Admin confirms batch?"}
+  A1S6 -->|"No — back to list"| A1S1
+  A1S6 -->|"Yes"| A1S7["7. System marks each selected statement as Approved sequentially; displays live progress: &quot;Approving X of Y statements...&quot;"]
+  A1S7 --> A1S8["8. Batch completes — system displays summary: total approved, successful count, failed count with error details"]
+  A1S8 --> A1S9{"9. Any failed payouts?"}
+  A1S9 -->|"No — all successful"| A1S10["10. All selected statements are Approved and wait for the payout day (main flow step 12)"]
+  A1S9 -->|"Yes"| A1S11["11. Admin reviews each failed payout individually and retries (returns to main flow step 9)"]
 ```
 
 **A2: Provider Payment Schedule Change** — **Retired.** Manual-rail clinics share one platform-wide settlement period (weekly by default; Sunday cutoff, Wednesday payout; admin-editable), and Stripe Connect clinics are paid at each booking's release, so no per-provider payout frequency exists to change. See Business Rules, Fund Release and Payout Rails.
@@ -216,18 +216,18 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-  B2S1["1. Provider contacts admin via support ticket — claims missing booking revenue in payout"] --> B2S2["2. Admin searches disputed Booking Reference in A-05 transaction history"]
-  B2S2 --> B2S3{"3. Booking Reference found in system?"}
-  B2S3 -->|"No"| B2S3A["3a. Admin escalates to technical investigation — booking may be missing due to system error; documents in audit trail"]
-  B2S3 -->|"Yes"| B2S4["4. System displays booking details: treatment date, amount, commission model/value, expected net payout, current status"]
-  B2S4 --> B2S5["5. Admin checks payout history for this provider during the booking's completion date range"]
-  B2S5 --> B2S6{"6. Booking already included in a prior payout?"}
-  B2S6 -->|"Yes — already paid"| B2S7A["7a. Admin confirms booking was correctly included; shares payout reference with provider as evidence"]
-  B2S6 -->|"No — missing"| B2S7B["7b. Admin confirms booking was excluded (e.g., treatment was &quot;In Progress&quot; at payout time and was missed)"]
-  B2S7B --> B2S8["8. Admin adds booking to next scheduled payout with internal note: &quot;Missed booking — added retroactively&quot;"]
-  B2S8 --> B2S9["9. Admin notifies provider: &quot;Booking included in next payout [date]&quot;"]
-  B2S7A --> B2S10["10. System logs dispute resolution in audit trail"]
-  B2S9 --> B2S10
+  B1S1["1. Provider contacts admin via support ticket — claims missing booking revenue in payout"] --> B1S2["2. Admin searches disputed Booking Reference in A-05 transaction history"]
+  B1S2 --> B1S3{"3. Booking Reference found in system?"}
+  B1S3 -->|"No"| B1S3A["3a. Admin escalates to technical investigation — booking may be missing due to system error; documents in audit trail"]
+  B1S3 -->|"Yes"| B1S4["4. System displays booking details: treatment date, amount, commission model/value, expected net payout, current status"]
+  B1S4 --> B1S5["5. Admin checks payout history for this provider during the booking's completion date range"]
+  B1S5 --> B1S6{"6. Booking already included in a prior payout?"}
+  B1S6 -->|"Yes — already paid"| B1S7A["7a. Admin confirms booking was correctly included; shares payout reference with provider as evidence"]
+  B1S6 -->|"No — missing"| B1S7B["7b. Admin confirms booking was excluded (e.g., treatment was &quot;In Progress&quot; at payout time and was missed)"]
+  B1S7B --> B1S8["8. Admin adds booking to next scheduled payout with internal note: &quot;Missed booking — added retroactively&quot;"]
+  B1S8 --> B1S9["9. Admin notifies provider: &quot;Booking included in next payout [date]&quot;"]
+  B1S7A --> B1S10["10. System logs dispute resolution in audit trail"]
+  B1S9 --> B1S10
 ```
 
 **B2: Currency Conversion Rate Protection Triggers Alert**
@@ -295,6 +295,7 @@ flowchart TD
   C11["11. Provider fault flagged on a booking In Progress (treatment interrupted): the system holds the payout; no confirmation window applies (REQ-017-185)"] --> C12["12. Admin resolves the case through the FR-006 route (FR-006 Alternative Flow B7, Screen 11); the hold ends when that route completes: the refund set in the FR-006 decision is taken from the held payout, a shortfall is a clinic balance entry (B5), and the rest is released"]
   C12 --> C4
   C13["13. Patient cancellation retains a fee: the clinic's share is an earning with no confirmation window (REQ-017-200)"] --> C6
+  C5 -->|"Payout over 2x the clinic's average"| C10
 ```
 
 **B5: Clinic Balance Entry and Write-Off**
@@ -309,6 +310,45 @@ flowchart TD
   D2 -->|"Yes"| D3["3. System applies open entries to the next payout: an adjustment row on a statement, a deduction on a per-booking payout"]
   D2 -->|"No"| D4["4. Debt stays open on the clinic's balance, shown on Screens 2, 3 and 9"]
   D4 --> D5["5. Admin writes the debt off with a mandatory reason; audit entry"]
+```
+
+**B6: Monthly Affiliate Payout**
+
+- **Trigger**: The affiliate payout day arrives (a platform setting owned by FR-018, default the 7th); FR-018 hands the monthly commission and payout readiness to this flow (FR-018 Alternative Flow B2)
+- **Outcome**: Each payable affiliate payout is paid by a Stripe transfer on Screen 6; a failed transfer is retried and stays visible until it is paid (REQ-017-101, REQ-017-102, REQ-017-103, REQ-017-170, REQ-017-197)
+- **Flow Diagram**:
+
+```mermaid
+flowchart TD
+  E1["1. Cron runs on the affiliate payout day and generates the monthly affiliate payout summaries for the previous month (REQ-017-151)"] --> E2["2. System reads each affiliate's commission and payout readiness from FR-018; FR-017 recalculates neither (REQ-017-102, REQ-017-198)"]
+  E2 --> E3{"3. Payable: payout month closed, unpaid balance at or above USD 50 (no minimum for an Inactive affiliate), readiness Ready, no hold? (REQ-017-197)"}
+  E3 -->|"No"| E4["4. Payout stays on Screen 6 with its Held or Flagged marker or its readiness; no payout is started (REQ-017-197)"]
+  E3 -->|"Yes"| E5["5. Admin selects Process Payout, or Process All Selected Payouts, on Screen 6, re-authenticates and confirms (REQ-017-103, REQ-017-106)"]
+  E5 --> E6["6. System starts the Stripe transfer; status Processing"]
+  E6 --> E7{"7. Stripe webhook"}
+  E7 -->|"transfer.paid"| E8["8. Payout Paid; the affiliate is notified (REQ-017-039)"]
+  E7 -->|"transfer.failed"| E9["9. Payout Failed; admin notified; three automatic attempts, then manual review (REQ-017-170)"]
+  E9 --> E10["10. Admin retries with Retry Payout once readiness is Ready, after re-authentication (REQ-017-103)"]
+  E10 --> E6
+```
+
+**B7: Clinic Share Moves to the Clinic's Locked Stripe Balance**
+
+- **Trigger**: A card payment is received through Stripe Connect for a booking of a Stripe Connect clinic
+- **Outcome**: The clinic's share moves to its locked Stripe balance at the time Release Rule 5 sets, is pulled back and moved again when the patient cancels or the treatment is rescheduled, and is paid out only at release (REQ-017-178, REQ-017-179)
+- **Flow Diagram**:
+
+```mermaid
+flowchart TD
+  G1["1. Hairline holds the card payment as seller; system works out when the clinic's share moves: deposit share 60 days before the scheduled treatment date, balance share when the balance is paid, a fully paid instalment plan 30 days before; at once when fewer than 60 days (30 for a fully paid instalment plan) remain at payment (REQ-017-178)"] --> G2{"2. Clinic's Stripe setup Ready when the share is due?"}
+  G2 -->|"No"| G3["3. Share stays with Hairline; the clinic and the admin are told; it moves when the clinic becomes Ready and nothing is paid out before then, even after treatment (REQ-017-179)"]
+  G3 --> G4
+  G2 -->|"Yes"| G4["4. Share moves to the clinic's locked Stripe balance; it is paid out only at release (B4) (REQ-017-178)"]
+  G4 --> G5{"5. After the share has moved: patient cancels, or treatment rescheduled?"}
+  G5 -->|"Patient cancels"| G6["6. Hairline refunds the patient per the refund ladder and pulls the share back from the clinic's locked balance; a shortfall is a refund deduction on the clinic's balance (B5, Release Rule 9) (REQ-017-179)"]
+  G5 -->|"Rescheduled"| G7["7. Share is pulled back to Hairline and moved again 60 or 30 days before the new date (REQ-017-179)"]
+  G7 --> G2
+  G5 -->|"Neither"| G8["8. At release the clinic is paid by the per-booking payout (B4)"]
 ```
 
 ---
@@ -434,7 +474,7 @@ flowchart TD
 - A Suspended clinic's Owner can still update the bank details in FR-032 (REQ-032-067); a Deactivated clinic has no portal access, so an admin collects the corrected bank details outside the platform and records them as for a manually paid clinic, after which Payout Readiness follows the stored details as usual (REQ-017-064)
 - "Approve Payout" button enabled ONLY for statements with status "Pending Approval" or "Overdue", and not while Payout Readiness is "Manual Review Required" (REQ-017-065, REQ-017-194). Approving an Overdue statement never waits for the next payout day: it is payable at once and the admin pays it and marks it as paid (REQ-017-076)
 - "Retry Payout" button is shown only in the Stripe Connect payouts section and is enabled ONLY for a Failed per-booking payout that is not in "Manual Review Required"; clicking it re-initiates the Stripe transfer; retry is logged in audit trail with admin ID, timestamp, and failure reason from prior attempt. A failed Stripe Connect payout first gets 3 automatic attempts with exponential backoff and then goes to Manual Review Required; once an admin clears it with a review note, this button is available for the manual retry. A statement has no retry: an admin marks it as paid (REQ-017-066, REQ-017-194)
-- The Stripe Connect payouts section lists each per-booking payout with the states "Waiting for clinic setup" (the clinic's Stripe setup is not Ready), "Processing", "Paid" and "Failed", and the readiness values "Not onboarded", "Restricted" and "Ready"; Stripe webhooks move these payouts and never a statement (REQ-017-187, REQ-017-196)
+- The Stripe Connect payouts section lists each per-booking payout with the states "Waiting for clinic setup" (the clinic's Stripe setup is not Ready), "Processing", "Paid" and "Failed", and the readiness values "Not onboarded", "Restricted" and "Ready"; Stripe webhooks move these payouts and never a statement; when Stripe reports an invalid bank account, the clinic corrects its payout details through the "Complete Stripe sign-up" link in the status panel of its FR-032 Billing Settings (FR-032 REQ-032-146) and the admin then retries the payout (REQ-017-187, REQ-017-196)
 - "Manual Review Required" is set on either rail by the payout flag of REQ-017-161 (a payout over 2x the clinic's average payout amount; the discount code and refund rate flags do not set it), and on a Stripe Connect payout also by three failed payout attempts; approval and retry are disabled while it is set; "Clear Manual Review" is offered on a statement and on a Stripe Connect payout, requires a review note and is recorded in the audit trail with action type "Manual Review Cleared". After clearing, a statement returns to the state it had before the flag (Pending Approval or Approved) and a Stripe Connect payout returns to Failed, so Retry Payout applies (REQ-017-066, REQ-017-194)
 - Open balance entries of a clinic are applied to its next payout on either rail; a debt with no further payout coming stays open and is listed in the Open clinic balances section, where an admin may "Write Off Balance" with a mandatory reason and an audit entry (REQ-017-191, REQ-017-192)
 - "Unapprove" button enabled ONLY for statements with status "Approved" and ONLY before the payout day (it is not offered once the payout day has passed); on click, admin must enter a mandatory reason (max 500 chars); statement reverts to "Pending Approval"; action logged in audit trail with action_type "Payout Unapproved" (REQ-017-067)
@@ -1013,9 +1053,9 @@ flowchart TD
 - Results sorted by date descending by default (REQ-017-109)
 - Clicking any row opens the relevant detail screen (Screen 3 for provider payouts, Screen 4a for invoices, etc.) (REQ-017-109)
 - "Add to Next Payout" is available ONLY when the booking was not already paid, is now eligible for payout, and the admin has provided an Internal Note and target payout cycle (REQ-017-110)
-- For a Stripe Connect clinic "Pay Now" replaces "Add to Next Payout": it is available ONLY when the booking was not already paid, its funds are released and the admin has provided an Internal Note; no target payout cycle is asked; it starts a direct per-booking payout, which shows Waiting for clinic setup until the clinic's Stripe setup is Ready. "Confirm Already Paid" and "Escalate Technical Investigation" stay for both rails (REQ-017-201)
+- For a Stripe Connect clinic "Pay Now" replaces "Add to Next Payout": it is available ONLY when the booking was not already paid, its funds are released and the admin has provided an Internal Note; no target payout cycle is asked; it starts a direct per-booking payout, which shows Waiting for clinic setup until the clinic's Stripe setup is Ready, asks for financial re-authentication before it is confirmed (REQ-017-047) and is checked against the payout flag (REQ-017-194). "Confirm Already Paid" and "Escalate Technical Investigation" stay for both rails (REQ-017-201)
 - The three outcomes of a completion problem case are carried here: "Release in Full" releases the held amount; "Refund in Full" and "Refund in Part and Release the Rest" open FR-007 Screen 6 with the admin-set refund amount, and the rest is released. Each needs an Internal Note and writes an audit entry; a release makes the booking's funds Released so they enter the next statement (manual rail) or are paid as a per-booking payout (Stripe Connect) (REQ-017-190)
-- "Release Earnings" is offered for a Suspended or Deactivated clinic and needs no target payout cycle: a manual-rail clinic gets a one-off manual statement and a Stripe Connect clinic a direct per-booking payout, with an Internal Note and an audit entry. The one-off statement is created "Approved" (the admin's release is the approval), sits outside the weekly cycle and is paid with Mark as Paid like any other statement. It covers bookings completed normally and bookings held under Rule 16 once the admin has resolved them (REQ-017-193)
+- "Release Earnings" is offered for a Suspended or Deactivated clinic and needs no target payout cycle: a manual-rail clinic gets a one-off manual statement and a Stripe Connect clinic a direct per-booking payout, with an Internal Note and an audit entry. The one-off statement is created "Approved" (the admin's release is the approval), sits outside the weekly cycle and is paid with Mark as Paid like any other statement. The release asks for financial re-authentication before it is confirmed (REQ-017-047) and the payout is checked against the payout flag (REQ-017-194). It covers bookings completed normally and bookings held under Rule 16 once the admin has resolved them (REQ-017-193)
 - Saving a dispute resolution writes an audit log entry; when Resolution Action = "Add to Next Payout" or "Pay Now", provider notification is mandatory and sent automatically. For other resolution actions, notification is sent only when selected (REQ-017-111)
 - If no results found: display "No financial records found for '[search term]'. Check the reference and try again." (REQ-017-109)
 
@@ -1237,8 +1277,8 @@ flowchart TD
 - **Rule 11**: Multi-currency bookings display amounts in patient's selected currency; providers receive payouts in their configured currency (REQ-017-135)
 - **Rule 12**: Billing reads one accepted subquote's immutable commercial base through FR-006, not a parent range, sibling option/date rows, the live quote, or live library/promotion prices. The promotion and price after promotion are frozen at acceptance; billing never adds, removes, replaces, or recalculates a promotion after acceptance. The only exception is the FR-006 provider-fault transfer, which creates a new linked acceptance record that billing reads in place of the superseded one. The FR-019 application record is linked to the AcceptanceEvent; authorized finance interventions remain separate records; attribution, refund, installment, and payout policies are unchanged. (REQ-017-136)
 - **Rule 13**: Bookings cancelled by an FR-015 provider suspension or deactivation (cause `ProviderSuspended` / `ProviderDeactivated`) are excluded from provider payout calculation like other cancelled bookings. The Rule 7 refund ladder is not applied. As when the clinic withdraws or drops out, the patient is always refunded in full everything paid and pays no cancellation fee, so no fee share arises for the clinic (REQ-017-200); the system starts the full refund through the FR-007 refund flow without waiting for an admin (REQ-017-199). A replacement booking through the FR-006 provider-fault transfer takes a new payment. The fixed clinic cancellation charge applies to a clinic withdrawal or drop-out only, not to a provider suspension or deactivation (FR-006 Alternative Flow B4). Captured patient payments on these bookings, including payments captured while the cancellation cascade was running, remain recorded against the booking invoice and are routed to admin financial resolution through the refund launcher (Screen 4b, which opens FR-007 Screen 6) and the existing adjustment controls (mandatory reason, audit trail). Provider reactivation does not restore cancelled bookings or their payout eligibility (REQ-017-137)
-- **Rule 14**: A payment captured after the booking or selected case was cancelled with cause `ProviderSuspended` / `ProviderDeactivated` (for example, a delayed processor webhook from FR-007 / S-02) MUST be recorded as a real transaction. It MUST NOT confirm a booking, revive the cancelled case, or count toward provider earnings, payout, or platform/affiliate commission recognition. The invoice is flagged "Captured after provider cancellation" with links to the case/inquiry and the FR-015 provider-status event, and admin resolves it through the existing refund/adjustment workflow (Screen 4b opens FR-007 Screen 6; mandatory reason, audit trail). No new refund percentage, fee, or payout rail is introduced
-- **Rule 15**: When a booking is cancelled by provider suspension or deactivation, all its remaining unpaid scheduled installments are cancelled; no further automatic charges or retries run (Payment Rule 3 does not apply). Already-paid installments stay recorded and go to admin financial resolution under Rule 13
+- **Rule 14** (REQ-017-028): A payment captured after the booking or selected case was cancelled with cause `ProviderSuspended` / `ProviderDeactivated` (for example, a delayed processor webhook from FR-007 / S-02) MUST be recorded as a real transaction. It MUST NOT confirm a booking, revive the cancelled case, or count toward provider earnings, payout, or platform/affiliate commission recognition. The invoice is flagged "Captured after provider cancellation" with links to the case/inquiry and the FR-015 provider-status event, and admin resolves it through the existing refund/adjustment workflow (Screen 4b opens FR-007 Screen 6; mandatory reason, audit trail). No new refund percentage, fee, or payout rail is introduced
+- **Rule 15** (REQ-017-029): When a booking is cancelled by provider suspension or deactivation, all its remaining unpaid scheduled installments are cancelled; no further automatic charges or retries run (Payment Rule 3 does not apply). Already-paid installments stay recorded and go to admin financial resolution under Rule 13
 - **Rule 16**: Amounts on bookings cancelled by provider suspension or deactivation, including any procedure already recorded as completed under FR-010 and any Rule 14 late capture, are held from provider payout statements until admin financial resolution is recorded. Release to a payout uses the existing "Add to Next Payout" resolution (Screen 7) while the clinic is active, and the "Release earnings" resolution (REQ-017-193) when the clinic is Suspended or Deactivated; payout timing is otherwise unchanged. The earnings of a removed clinic are never forfeited: an admin always settles them through this rule and the Release earnings route (REQ-017-138, REQ-017-193)
 - **Rule 17**: Hairline admins can view reconciliation dashboards, export payment and commission reports, and monitor financial reconciliation data and payment operations. FR-017 owns financial reconciliation; FR-007 points here for it (REQ-017-172)
 - **Rule 19**: When a treatment already started is interrupted by the provider's fault (FR-006 Alternative Flow B7, booking `In Progress`), the Rule 7 refund ladder is not applied. An admin reviews each case and sets the patient refund amount in the FR-006 decision (FR-006 Screen 11), from zero up to the full amount paid, with a mandatory reason and an audit entry; the refund is executed through the refund launcher (Screen 4b), which opens FR-007 Screen 6 with that amount. The provider's payout for that booking is held, and stays off the unpaid statement and the per-booking payout, from the fault until the FR-006 route the admin chose completes (FR-006 REQ-006-019); no confirmation window applies and the Screen 7 outcomes, which are for Completed bookings only, are not used. The refund is taken from the held payout, a shortfall becomes a clinic balance entry (Release Rule 9), and the rest is released (REQ-017-185, REQ-017-190)
@@ -1246,7 +1286,7 @@ flowchart TD
 ### Data & Privacy Rules
 
 - **Privacy Rule 1**: Patient full names and contact details visible in financial records ONLY after booking payment confirmation (REQ-017-139)
-- **Privacy Rule 2**: Provider bank account details masked in UI (show last 4 digits only); full details stored encrypted at rest
+- **Privacy Rule 2**: Provider bank account details masked in UI (show last 4 digits only); full details stored encrypted at rest (REQ-017-012, REQ-017-021)
 - **Privacy Rule 3**: Financial transaction logs MUST include masked payment method (e.g., "Visa ending in 1234") NOT full card numbers (REQ-017-140)
 - **Audit Rule**: All admin actions in financial module MUST be logged with admin ID, timestamp, action type, and affected records
 - **Data Retention**: retention follows the system PRD, Platform-Wide Rules: One 10-year retention period (REQ-017-020)
@@ -1290,13 +1330,13 @@ flowchart TD
 - **Payment Rule 1**: Initial payment is REQUIRED for booking confirmation: deposit (20-30% of total under existing configuration), eligible first installment per FR-007B, or the existing full-payment alternative. Existing treatment-completion fund-holding policy is unchanged. (REQ-017-147)
 - **Payment Rule 2**: Final payment due 7 days before treatment date OR last installment 30 days before treatment (whichever is configured) (REQ-017-148)
 - **Payment Rule 3**: Failed installment payments trigger 3 automatic retry attempts after waits of 1, 3 and 7 days (see FR-007B); if all fail, booking flagged for admin review (REQ-017-149)
-- **Billing Rule 1**: Initial successful payment creates the booking's patient invoice; subsequent successful installment/final payments update that same invoice and generate the corresponding payment PDF/receipt. One invoice record per booking is retained; mere subquote acceptance or unpaid options do not create additional patient invoices.
+- **Billing Rule 1**: Initial successful payment creates the booking's patient invoice; subsequent successful installment/final payments update that same invoice and generate the corresponding payment PDF/receipt. One invoice record per booking is retained; mere subquote acceptance or unpaid options do not create additional patient invoices (REQ-017-004).
 - **Billing Rule 2**: Provider payout statements (dashboard view) for manual-rail clinics are auto-generated on the platform-wide cutoff day. Provider invoice PDFs are generated separately only after the payout is confirmed (post-payout): when the admin marks a statement as paid, or on `transfer.paid` for a Stripe Connect payout. Statements and invoices are two distinct artefacts. (REQ-017-150)
 - **Billing Rule 3**: Affiliate invoices are generated on the monthly affiliate payout day (a platform setting owned by FR-018, default the 7th); no payout buffer window applies (see Billing Rule 4) (REQ-017-151)
 - **Billing Rule 4**: The platform-wide cutoff day replaces the payout buffer window; the FR-029 buffer setting no longer exists. The review time is the gap between the cutoff day and the payout day. For example, with a Sunday cutoff and a Wednesday payout, the statement is generated on Sunday and the admin has until Wednesday to review it. (REQ-017-152)
 - **Billing Rule 5**: Admin must approve payout statements during the review time between the cutoff day and the payout day. On payout day only "Approved" statements are payable: the admin pays them and marks them paid (REQ-017-188). Any statement still in "Pending Approval" at that point moves to "Overdue" and is NOT payable. An Overdue statement can be approved at any time outside the normal cycle; on approval it is payable at once, the admin pays it and marks it paid, and it never waits for the next payout day. Unapprove is not offered after the payout day. Delay is recorded in the audit trail. (REQ-017-153, REQ-017-076)
 - **Currency Rule 1**: Patients charged in their selected currency; providers paid in their configured currency; Hairline absorbs currency conversion costs (REQ-017-154)
-- **Currency Rule 2**: Exchange rates are locked at subquote acceptance (FR-005 AcceptanceEvent), recorded with the rate's timestamp in the acceptance snapshot, and never relocked; NO fluctuation risk to patient or provider during booking lifecycle
+- **Currency Rule 2**: Exchange rates are locked at subquote acceptance (FR-005 AcceptanceEvent), recorded with the rate's timestamp in the acceptance snapshot, and never relocked; NO fluctuation risk to patient or provider during booking lifecycle (REQ-017-007, REQ-017-014)
 - **Commission Rule 1**: Platform commission calculated BEFORE provider payout. Lock points: the exchange rate is locked at subquote acceptance; the commission model and value, with the deposit and installment settings, are fixed at booking confirmation; nothing is fixed at quote creation. The Percentage commission base is the accepted price after promotion, in the quote currency, read from the acceptance snapshot, for every discount type, including Hairline Only discounts; Flat Rate commission is a fixed deduction once per FR-010 completed procedure, independent of procedure price (REQ-017-155)
 - **Commission Rule 2**: Affiliate commissions deducted from Hairline's commission (does not reduce provider payout). The single Rule is owned by FR-018; FR-017 refers to it
 
@@ -1470,7 +1510,7 @@ These rules record the product owner's decisions on how a clinic's money is rele
 
 - **Entity 8 - Currency Alert**
   - **Relationships**: One alert concerns one currency pair and many bookings; one decision per alert is logged in Transaction Audit Log (Entity 5). The currency alert record moved to FR-017 from FR-029; FR-029 keeps the rate-protection alert event
-- **Source**: [FR-006 Booking](../fr006-booking-scheduling/prd.md#key-entities) carries the accepted FR-005 snapshot/provenance. Initial successful payment confirms the pending booking and creates its invoice; financial aggregation uses existing eligible booking/transaction records, not sibling subquotes.
+- **Source**: [FR-006 Booking](../fr006-booking-scheduling/prd.md#data-requirements) carries the accepted FR-005 snapshot/provenance. Initial successful payment confirms the pending booking and creates its invoice; financial aggregation uses existing eligible booking/transaction records, not sibling subquotes.
 
 **Carried from dropped sections (original wording)**:
 
@@ -1788,7 +1828,7 @@ A patient requests refund due to cancellation, admin reviews request against can
 - **REQ-017-012**: System MUST store provider bank account details encrypted at rest (AES-256) and display masked (last 4 digits only) in UI
 - **REQ-017-013**: System MUST track discount code usage with metrics: times used, total discount amount, bookings generated, ROI
 - **REQ-017-014**: System MUST keep, per booking, a read-only projection of the exchange rate and its timestamp from the FR-005 acceptance snapshot, linked to the AcceptanceEvent, for multi-currency transactions (rate never changes after subquote acceptance)
-- **REQ-017-015**: System MUST maintain separate payout records for providers and affiliates with status tracking (Pending, Processing, Paid, Failed)
+- **REQ-017-015**: System MUST maintain separate payout records for providers and affiliates with status tracking: a settlement statement and a Stripe Connect per-booking payout carry the states of REQ-017-186 and REQ-017-187, and an affiliate payout is Pending, Processing, Paid or Failed
 
 ### Security & Privacy Requirements
 
@@ -1823,6 +1863,7 @@ A patient requests refund due to cancellation, admin reviews request against can
 | 2026-11-24 | 2.19 | Logic review: a settlement statement is manual-rail only (Mark as Paid on Screen 3, Overdue payable at once), Stripe Connect per-booking payouts listed on Screen 2; funds-released gate with Pending release and Released; Screen 7 outcomes and Release earnings; Screen 4b is a launcher into FR-007 Screen 6; FR-007 Payment Status list read as defined there; one hourly job for installments; clinic balance record with write-off; no forfeiture (earlier ban rule removed); Stripe readiness and Manual Review Required; Hairline discount reimbursement row; affiliate payable condition and readiness from FR-018. | Product Owner / Documentation |
 | 2026-11-24 | 2.20 | Logic review pass 2: an interrupted-treatment payout hold ends when the FR-006 route completes and Screen 7 outcomes stay for Completed bookings (REQ-017-185, REQ-017-190); a bank charge is carried to the clinic's next payout as a clinic balance entry and never deducted from the statement being marked as paid (REQ-017-176, REQ-017-188); the clinic's share of a retained patient cancellation fee is an earning released into the next payout (REQ-017-200); Manual Review Required named by the payout flag, cleared on a statement or a Stripe Connect payout and returned to its prior state or to Failed (REQ-017-161, REQ-017-194); the one-off statement of Release Earnings is created Approved and paid with Mark as Paid (REQ-017-193); an Approved statement past its payout day may be voided (REQ-017-068); clinic balance entry fields and the Clinic Balance audit entity type; Screen 7 Pay Now for a Stripe Connect clinic (REQ-017-201). | Product Owner / Documentation |
 | 2026-11-25 | 2.21 | Cross-FR alignment: admin access named by the FR-031 permissions Process Payouts, View Transactions and Issue Refunds instead of roles (REQ-017-047, REQ-017-065, REQ-017-017); a Stripe Connect payout shows a release date instead of a period (REQ-017-187); commission reversed with every refund, including the pro-rata refund of an aftercare plan (REQ-017-202); handover fee credit on the clinic balance record (REQ-017-203); Screen 5 and Screen 6 read the FR-019 promotion program and code fields; an Inactive affiliate is paid in the next run with no minimum (REQ-017-197); a Deactivated clinic's bank details are collected by an admin (REQ-017-064). | Product Owner / Documentation |
+| 2026-11-25 | 2.22 | Backlog points settled: payout statuses of REQ-017-015 follow REQ-017-186 and REQ-017-187; affiliate payout flow (B6) and clinic share move flow (B7) added from existing rules; Pay Now and Release Earnings ask for re-authentication and are checked against the payout flag (REQ-017-047, REQ-017-194); an invalid Stripe bank account is corrected through the Stripe sign-up link (REQ-017-187); citations added to Rules 14 and 15, Privacy Rule 2, Billing Rule 1 and Currency Rule 2; diagram step ids and one broken link corrected. | Claude (AI Assistant) |
 
 ---
 
