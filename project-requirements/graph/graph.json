@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T08:59:33Z",
+  "generated_at": "2026-11-25T09:01:05Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -28729,7 +28729,7 @@
       "owner_fr": "FR-034",
       "title": "Actor type",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Who performed the action."
       }
@@ -95839,9 +95839,9 @@
       "owner_fr": "FR-034",
       "title": "Support Center permissions",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "View Support Center: open and read cases, including internal notes; Respond to Support: reply, add internal notes, create, edit, reassign, resolve, close and reopen cases (assignment is informational only and does not restrict access); assignee lists show active admins with this permission; the Support Staff pool, the recipient of every notice sent to the pool, is all active admin users who hold this permission; Super Admin only: Support Center configuration (Screen 7), receipt of escalations and audit log export (no hard delete; archive only); There is no Support Manager role and no \"Manage Support Configuration\" permission; A user without View Support Center who sees a case row in FR-016 Screen 9 gets the case reference without a link",
+        "statement": "View Support Center: open and read cases, including internal notes; Respond to Support: reply, add internal notes, create, edit, reassign, resolve, close and reopen cases (assignment is informational only and does not restrict access); assignee lists show active admins with this permission; the Support Staff pool, the recipient of every notice sent to the pool, is all active admin users who hold this permission, whatever their FR-031 role (the pool is not limited to the FR-031 role named Support Staff); Super Admin only: Support Center configuration (Screen 7), receipt of escalations and audit log export (no hard delete; archive only); There is no Support Manager role and no \"Manage Support Configuration\" permission; A user without View Support Center who sees a case row in FR-016 Screen 9 gets the case reference without a link",
         "rationale": "Data and Privacy Rules, Authorization. The two permission names are the FR-031 Communication and Support permissions (REQ-031-111); FR-031 owns the role definitions."
       }
     },
@@ -96332,9 +96332,9 @@
       "owner_fr": "FR-034",
       "title": "Resolution details logged",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Resolution Category and Root Cause captured for analytics and trend identification; System logs resolution timestamp, feedback resolution (if applicable), and admin user who marked case resolved",
+        "statement": "Resolution Category and Root Cause are captured on the case resolution record; this module has no analytics view that reads them; System logs resolution timestamp, feedback resolution (if applicable), and admin user who marked case resolved",
         "rationale": "Screen 4 business rules (prd.md lines 587, 588). REQ-034-039 lists the resolution details."
       }
     },
@@ -96476,9 +96476,9 @@
       "owner_fr": "FR-034",
       "title": "Reopen priority and assignee",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Admin can adjust priority when reopening to reflect urgency (e.g., escalate if issue was marked resolved incorrectly); Assign To: List of active admin users; optional, defaults to previous assignee if available; New Priority: Options: Low, Medium, High, Urgent; defaults to previous priority; Reopening Reason: Min 20 chars, max 1000 chars",
+        "statement": "Admin can adjust priority when reopening to reflect urgency (e.g., escalate if issue was marked resolved incorrectly); Assign To: List of active admin users with the Respond to Support permission (REQ-034-094); optional, defaults to previous assignee if available; New Priority: Options: Low, Medium, High, Urgent; defaults to previous priority; Reopening Reason: Min 20 chars, max 1000 chars",
         "rationale": "Screen 6 data fields and business rules (prd.md lines 657, 643, 644, 642)."
       }
     },
@@ -105853,9 +105853,9 @@
       "owner_fr": "FR-034",
       "title": "Support case auto-closure period",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Days a Resolved support case waits for a patient reply before it closes automatically. Options Immediately, 3, 7 or 14 days (FR-034 REQ-034-061/062; FR-035 lines 394, 412, 473).",
+        "description": "Days a Resolved support case waits for a patient reply before it closes automatically. Options Immediately, 3, 7 or 14 days (FR-034 REQ-034-061/062; FR-035 lines 394, 412, 473). The admin picks it per case in the Auto-Close After field of Screen 4 (REQ-034-140), default 7; Super Admin does not set it on Screen 7 (REQ-034-087).",
         "default": "7",
         "unit": "days"
       }
@@ -168520,6 +168520,12 @@
       "value": "provider",
       "label": "Provider",
       "sort_order": 2
+    },
+    {
+      "field_id": "ENT-support-case-timeline-event.actor_type",
+      "value": "system",
+      "label": "System",
+      "sort_order": 3
     },
     {
       "field_id": "ENT-support-case-timeline-event.event_type",
@@ -463895,6 +463901,24 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-085950-28ffd64b",
+      "at": "2026-11-25T08:59:50.292888+00:00",
+      "changed_by": "controller",
+      "reason": "Backlog points settled from requirements already written in the FR-034 PRD.",
+      "source_id": "SRC-PRD-034",
+      "nodes_added": [],
+      "nodes_updated": [
+        "ENT-support-case-timeline-event.actor_type",
+        "REQ-034-094",
+        "REQ-034-136",
+        "REQ-034-148",
+        "SET-support-case-auto-closure-period"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 5
+    },
     {
       "id": "cs-20261125-085819-bf988169",
       "at": "2026-11-25T08:58:19.912158+00:00",

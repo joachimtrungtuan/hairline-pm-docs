@@ -622,7 +622,7 @@ Each message in the thread displays:
 | Resolution Summary | textarea | Yes | Brief description of how issue was resolved | Min 20 chars, max 1000 chars | ENT-support-case-resolution.resolution_summary |
 | Resolution Category | dropdown select | Yes | Type of resolution | Options: Issue Fixed, Information Provided, Account Intervention, Escalated to Provider, User Error, Cannot Reproduce, Duplicate Case, Other | ENT-support-case-resolution.resolution_category |
 | Feedback Resolution | dropdown select | No | Resolution outcome for feedback/feature request tickets (optional) | Options: Implemented, Planned, Declined, Under Review; Only displayed and applicable for Category = Feature Request, Bug Report, or Feedback | ENT-support-case-resolution.feedback_resolution |
-| Root Cause | dropdown select | No | Underlying cause of issue (for analytics) | Options: User Confusion, Technical Bug, Account Configuration, Payment Gateway Issue, Provider Error, System Outage, Other | ENT-support-case-resolution.root_cause |
+| Root Cause | dropdown select | No | Underlying cause of issue (recorded on the resolution) | Options: User Confusion, Technical Bug, Account Configuration, Payment Gateway Issue, Provider Error, System Outage, Other | ENT-support-case-resolution.root_cause |
 | Send Resolution Email | checkbox | Yes | Send email to patient/provider with resolution summary | Default: checked; unchecked and disabled when the patient account is deleted (REQ-034-161, REQ-034-109) | no graph field (control) |
 | Auto-Close After | dropdown select | Yes | Days to wait before auto-closing case | Options: Immediately, 3 days, 7 days, 14 days (default: 7 days) (REQ-034-140) | ENT-support-case-resolution.auto_close_period_days |
 | Internal Resolution Notes | textarea | No | Admin-only notes about resolution (not sent to patient/provider) | Max 2000 chars (REQ-034-138) | ENT-support-case-timeline-event.description |
@@ -640,7 +640,7 @@ Each message in the thread displays:
 - If patient/provider replies while the case is Resolved (before the auto-close period expires), the case is reopened automatically and the system records a Reopening by System with the reason "User replied" (REQ-034-139)
 - A reply to a Closed case does not reopen it automatically; it goes to an admin, who decides whether to reopen it (Screen 6) (REQ-034-139)
 - A provider replies through FR-032 Screen 5.8 (Case Detail), and the same rules apply (REQ-034-139)
-- Resolution Category and Root Cause captured for analytics and trend identification (REQ-034-136)
+- Resolution Category and Root Cause are captured on the case resolution record; this module has no analytics view that reads them (REQ-034-136)
 - System logs resolution timestamp, feedback resolution (if applicable), and admin user who marked case resolved (REQ-034-136)
 - Case cannot be marked Resolved without entering Resolution Summary
 
@@ -754,7 +754,7 @@ Each message in the thread displays:
 | Resolution Category Name (in modal) | text input | Yes | Name of resolution category | Max 50 chars; must be unique; Examples: Issue Fixed, Information Provided, Account Intervention, Escalated to Provider, User Error, Cannot Reproduce, Duplicate Case, Other (REQ-034-154) | ENT-support-resolution-category.name |
 | Resolution Category Display Order (in modal) | number input | Yes | Sort order for dropdown display (1-100) | Must be positive integer | ENT-support-resolution-category.display_order |
 | Resolution Category Status (in modal) | toggle | Yes | Active or Inactive | Inactive categories hidden from resolution modal | ENT-support-resolution-category.status |
-| **Section 4: Root Cause Options** | section header | N/A | Manage root cause options for analytics | N/A | no graph field (section header) |
+| **Section 4: Root Cause Options** | section header | N/A | Manage root cause options offered on the Resolve Case modal | N/A | no graph field (section header) |
 | Root Cause List Table | data table | N/A | Displays all root cause options with columns: Root Cause Name, Display Order, Status (Active/Inactive), Used Count, Actions (Edit, Deactivate/Activate, Delete) | Sortable by display order; cannot be deleted while in use (Deactivate is offered instead) | ENT-support-root-cause.name, ENT-support-root-cause.display_order, ENT-support-root-cause.status, ENT-support-root-cause.used_count |
 | Add Root Cause Button | button | N/A | Opens modal to add new root cause option | Click action | no graph field (control) |
 | Root Cause Name (in modal) | text input | Yes | Name of root cause | Max 50 chars; must be unique; Examples: User Confusion, Technical Bug, Account Configuration, Payment Gateway Issue, Provider Error, System Outage, Other (REQ-034-154) | ENT-support-root-cause.name |
@@ -829,7 +829,7 @@ Each message in the thread displays:
 - **Rule 9**: **Assignment is Informational Only**: All admin staff can view and work on all cases regardless of assignment; assignment field is for informational/organizational purposes only and does not restrict access (REQ-034-007)
 - **Rule 10**: **Two-Way Communication Support**: Patients and providers can reply to admin messages from their apps (FR-035, FR-032), creating threaded conversation within case (REQ-034-014)
 - **Rule 11**: **Comprehensive Timeline with Full Context**: Case timeline shows all events with complete details and context (not just milestones), including full message content, intervention details, status change reasons, etc. (REQ-034-008)
-- **Rule 12**: Maximum case resolution time target (a target only, with no system behaviour when it passes; separate from the success-criteria goals): 48 hours for Urgent, 5 business days for High, 10 business days for Medium/Low priority (REQ-034-077)
+- **Rule 12**: Maximum case resolution time target (a target only, with no system behaviour when it passes): 48 hours for Urgent, 5 business days for High, 10 business days for Medium/Low priority (REQ-034-077)
 - **Rule 13**: Open and In Progress cases with no activity for longer than the Case Inactivity Threshold (Screen 7, default 14 days) flagged for admin review and potential closure; the same threshold drives the warning shown in the case list and case detail view; activity means any reply, note, status change or reassignment (REQ-034-078)
 - **Rule 14**: Support cases distinct from aftercare communications (FR-011) and provider-patient messaging (FR-012) (REQ-034-076)
 - **Rule 15**: Admin staff can link multiple cases to same patient/provider for trend analysis (REQ-034-079)
@@ -857,7 +857,7 @@ Each message in the thread displays:
 - **Authentication**: Admin staff authenticate via FR-031 (Admin Access Control). MFA is enforced once the shared MFA stack (FR-026 / FR-031) is delivered; until then, implement strong password policies, throttling, and re-authentication flows per Constitution.
 - **Authorization**: Role-Based Access Control (RBAC) enforces granular permissions on the FR-031 permission names (REQ-034-094, REQ-034-042, REQ-031-111):
   - View Support Center: open and read cases, including internal notes
-  - Respond to Support: reply, add internal notes, create, edit, reassign, resolve, close and reopen cases (assignment is informational only and does not restrict access); assignee lists show active admins with this permission; the Support Staff pool, the recipient of every notice sent to the pool, is all active admin users who hold this permission (REQ-034-094)
+  - Respond to Support: reply, add internal notes, create, edit, reassign, resolve, close and reopen cases (assignment is informational only and does not restrict access); assignee lists show active admins with this permission; the Support Staff pool, the recipient of every notice sent to the pool, is all active admin users who hold this permission, whatever their FR-031 role (the pool is not limited to the FR-031 role named Support Staff) (REQ-034-094)
   - Super Admin only: Support Center configuration (Screen 7), receipt of escalations, and audit log export (no hard delete; archive only)
   - A user without View Support Center who sees a case row in FR-016 Screen 9 gets the case reference without a link
   - There is no Support Manager role and no "Manage Support Configuration" permission
@@ -1148,6 +1148,8 @@ Support staff member encounters complex technical issue requiring more senior at
 
 - **REQ-034-030**: System MUST support case categories: Technical Issue, Account Access, Payment Question, Booking Issue, General Inquiry, Provider Support, Patient Support, Feature Request, Bug Report, Feedback
 - **REQ-034-031**: System MUST support priority levels: Low, Medium, High, Urgent
+- **REQ-034-171**: The ten built-in case categories are fixed: Super Admin MUST NOT be able to add, delete or switch off a category, and only the category label and display order can be edited
+- **REQ-034-172**: The four built-in priorities (Low, Medium, High, Urgent) MUST NOT be renamed, switched off or deleted; Super Admin may add other priorities, which carry no escalation or resolution-time rule unless one is defined
 - **REQ-034-032**: System MUST support Ticket Source options: Patient App, Provider Portal, Manual Admin Entry
 - **REQ-034-033**: System MUST support Submitter Type options: Patient, Provider, Admin
 - **REQ-034-034**: System MUST support Feedback Resolution options: Implemented, Planned, Declined, Under Review (optional field for feedback/feature request tickets)
@@ -1235,6 +1237,7 @@ Support staff member encounters complex technical issue requiring more senior at
 | 2026-11-24 | 2.9 | Logic review pass 1: escalation always goes to a Super Admin, with one system escalation flow (A7, REQ-034-173); status changes only through Update Status (Open to In Progress), Resolve Case, Close Case and Reopen Case (REQ-034-102); booking request flow A8 and Open-request block (REQ-034-174); Support Center permissions on the FR-031 names (REQ-034-094, REQ-034-042, REQ-034-180); first response target 24 hours on business days (REQ-034-175); provider reopening request B3a (REQ-034-178); problem report details and provider submission limit (REQ-034-164, REQ-034-176); category Visible To (REQ-034-101); deleted-patient email rule (REQ-034-109); No Patient Link contact email (REQ-034-179); scanner-unavailable flow B4a (REQ-034-044); inactivity warning for Open and In Progress cases (REQ-034-058, REQ-034-078); Help Hub and email-reopen wording (A5, B3, REQ-034-177). | AI Assistant |
 | 2026-11-24 | 3.0 | Logic review pass 2: system escalation flow A7 written out and the Case Escalated timeline entry split into manual and system cases (REQ-034-173); escalation clocks run only while a case is Open or In Progress, start on Urgent and unassigned or on High, and escalate once per start (REQ-034-155, REQ-034-173); a manual escalation never lowers the priority (REQ-034-103); the three admin notices named as plain system emails and the Support Staff pool defined (REQ-034-092, REQ-034-094, REQ-034-108, REQ-034-113); status removed from Admin Editability (REQ-034-086); default date range 90 days with the Request Type and Request Status filters (REQ-034-116); Bulk Assign through one Screen 5 modal with one reason (REQ-034-119); Reopen Case also on Resolved cases (REQ-034-181, REQ-034-102); every patient notice goes to the contact email when No Patient Link is ticked (REQ-034-179); Contact Support on blocked booking screens creates a plain case with the booking reference (REQ-034-182). | AI Assistant |
 | 2026-11-25 | 3.1 | Cross-FR alignment: system notices for unassigned urgent cases, orphaned cases and failed notice delivery cite the FR-030 catalogue (REQ-030-258 to REQ-030-260); reopened case cites what the patient app shows (REQ-035-071). | Product Owner / Documentation |
+| 2026-11-25 | 3.2 | Backlog points settled: REQ-034-171 and REQ-034-172 added to the requirements summary; the stale success-criteria and analytics wording removed (Rule 12, Root Cause, REQ-034-136); the Support Staff pool stated as defined by permission, not by the FR-031 role; REQ-034-148 graph wording gets the Respond to Support filter; timeline actor System added; auto-close period described as a per-case choice. | Claude (AI Assistant) |
 
 ---
 
