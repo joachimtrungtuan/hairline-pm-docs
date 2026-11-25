@@ -153,13 +153,13 @@ flowchart TD
 
 ### Workflow 3: Admin Template Management (Management)
 
-Template creation, editing, publishing and deprecation are owned by FR-025 (Medical Questionnaire Management); FR-002 defines no admin template Steps of its own.
+Template creation, editing, publishing and archiving (FR-025 REQ-025-045) are owned by FR-025 (Medical Questionnaire Management); FR-002 defines no admin template Steps of its own.
 
 **Outcome**: Engine consumes the version of the set currently designated Active for Inquiry and applies it to new submissions only; prior versions are kept for existing inquiries.
 
 ### Alternative Flows
 
-**C1: Admin deprecates a template**:
+**C1: Admin archives a set**:
 
 - Owned by FR-025. FR-002 only consumes the result: prior versions are kept for existing inquiries and new inquiries use the version of the set currently designated Active for Inquiry.
 
@@ -288,7 +288,7 @@ headVideo is a future form and is not part of the V1 contract (REQ-002-035). FR-
 ### Admin Editability
 
 1. Admin can manage templates, guidance copy, and severity flags. (REQ-002-019)
-2. Admin cannot alter fixed security constraints (e.g., password policy, OTP length). (REQ-002-021)
+2. Admin cannot alter fixed security constraints (encryption, retention policies). (REQ-002-021)
 3. Admin edits are versioned; prior versions remain accessible for existing inquiries. (REQ-002-040)
 
 **Carried from dropped sections (original wording)**:
@@ -395,6 +395,7 @@ Acceptance Scenarios:
 | 2026-11-24 | 1.6 | Logic review pass 1 (14 findings, 13 applied here). The engine persists the processing result by processingId and offers derive-only, read and media-only calls; it is the only producer of risk tags. One version stamp (ruleset stamp removed); the Active-for-Inquiry set replaces "latest published". Head scan count, size, formats and views are fixed by the product. Per-photo results, staging and idempotency, wider error-code list, provider copy and signed link (owner defaults 74 and 75). New REQ-002-043 to REQ-002-050. | AI |
 | 2026-11-24 | 1.7 | Logic review pass 2 (15 findings, 14 applied here). Audit scope stated (submit attempts and media-only calls; derive-only and read write none). alertTier added; risk tag code and label sourced from the question; severity flags replace risk-tag rules. Version check first, then validation also on a prior version; any version once designated Active is accepted. processingId for every attempt, error item shape, set id in the audit entry. Idempotency key is the draft id with a changed retry superseding (archived) and an identical retry returning the first result. Staging rule with scheduled removal (REQ-002-051), provider copy made at promotion with providerCopyUri, provider link lifetime of 15 minutes with access-end rules (owner default 76), landing per error code, stored scan reusable in a submit. New REQ-002-051 to REQ-002-053; new Workflows 5 and 6. Quality score definition left to the backlog. | AI Follow-up the same day: a scanRef item is accepted only for a scan stored under the same patient (MEDIA_REF_NOT_OWNED otherwise). |
 | 2026-11-25 | 1.8 | Cross-FR alignment: head scan quality check states the two FR-026 minimums (brightness and blur) and that the returned qualityScore is the lower of the two scores. | AI |
+| 2026-11-25 | 1.9 | Backlog points settled: template archiving named as in FR-025 (was "deprecation"), and the fixed security constraints example list in Admin Editability made the same as REQ-002-021 (encryption, retention policies). | Claude (AI Assistant) |
 
 ## Appendix: Approvals
 
