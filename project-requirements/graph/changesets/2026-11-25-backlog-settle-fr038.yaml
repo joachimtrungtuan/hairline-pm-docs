@@ -1,0 +1,6 @@
+# Backlog points settled for FR-038: REQ-038-070 widened so the FR-007 invocation sentence the PRD cites it for is in the rule.
+reason: "FR-038 PRD cites REQ-038-070 for the FR-007 invocation sentence; the rule statement now says it."
+by: controller
+source_id: SRC-PRD-038
+operations:
+  - {"op": "update_node", "id": "REQ-038-070", "attrs": {"statement": "If the patient converts, FR-011 and FR-007 exclusively own package pricing, checkout, payment status, invoice, subscription, and refund behavior, and FR-007 is invoked only after FR-011 package selection and checkout."}}

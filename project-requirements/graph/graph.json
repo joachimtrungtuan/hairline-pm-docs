@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T09:02:22Z",
+  "generated_at": "2026-11-25T09:04:18Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -99683,9 +99683,9 @@
       "owner_fr": "FR-038",
       "title": "FR-011 and FR-007 own pricing, checkout, payment, invoice, subscription, refund",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "If the patient converts, FR-011 and FR-007 exclusively own package pricing, checkout, payment status, invoice, subscription, and refund behavior.",
+        "statement": "If the patient converts, FR-011 and FR-007 exclusively own package pricing, checkout, payment status, invoice, subscription, and refund behavior, and FR-007 is invoked only after FR-011 package selection and checkout.",
         "rationale": "prd.md line 399 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -463901,6 +463901,20 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-090304-494e1889",
+      "at": "2026-11-25T09:03:04.106079+00:00",
+      "changed_by": "controller",
+      "reason": "FR-038 PRD cites REQ-038-070 for the FR-007 invocation sentence; the rule statement now says it.",
+      "source_id": "SRC-PRD-038",
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-038-070"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 1
+    },
     {
       "id": "cs-20261125-090107-9412340e",
       "at": "2026-11-25T09:01:07.161979+00:00",

@@ -387,12 +387,12 @@ No Provider Dashboard screens are defined in FR-038. This monitoring case is sel
 
 ### Data & Privacy Rules
 
-- Intake, logs, severity ratings, scans, documentation, exports, and conversion links are medical data. See system PRD, Platform-Wide Rules: Encryption in transit and at rest.
+- Intake, logs, severity ratings, scans, documentation, exports, and conversion links are medical data. See system PRD, Platform-Wide Rules: Encryption in transit and at rest (REQ-SYS-004).
 - Access is restricted to the patient and authorized Admin users while data belongs to FR-038. (REQ-038-012)
 - Providers have no FR-038 access. Provider access to copied information begins when the Admin assigns the provider to the FR-011 request, under FR-011 rules and before payment. (REQ-038-050)
-- Case records, entries, conversion provenance, PDF exports, and raw monitoring scan media are retained as set by the system PRD, Platform-Wide Rules: One 10-year retention period. FR-038 sets no separate period.
+- Case records, entries, conversion provenance, PDF exports, and raw monitoring scan media are retained as set by the system PRD, Platform-Wide Rules: One 10-year retention period (REQ-SYS-002). FR-038 sets no separate period.
 - See REQ-038-013.
-- PDF and media download links expire and check the requester's permission each time they are used. See system PRD, Platform-Wide Rules: Download links expire and check permission.
+- PDF and media download links expire and check the requester's permission each time they are used. See system PRD, Platform-Wide Rules: Download links expire and check permission (REQ-SYS-014).
 
 ### Admin Editability Rules
 
@@ -413,8 +413,7 @@ No Provider Dashboard screens are defined in FR-038. This monitoring case is sel
 ### Payment & Billing Rules
 
 - FR-038 is free and creates no invoice, charge, subscription, or refund. (REQ-038-071)
-- If the patient converts, FR-011 and FR-007 exclusively own package pricing, checkout, payment status, invoice, subscription, and refund behavior. (REQ-038-070)
-- FR-007 is invoked only after FR-011 package selection and checkout. (REQ-038-070)
+- If the patient converts, FR-011 and FR-007 exclusively own package pricing, checkout, payment status, invoice, subscription, and refund behavior, and FR-007 is invoked only after FR-011 package selection and checkout. (REQ-038-070)
 - An incomplete or failed checkout must not create an FR-038 payment record. (REQ-038-073)
 
 ### Notification Events
@@ -536,6 +535,7 @@ No Provider Dashboard screens are defined in FR-038. This monitoring case is sel
 | 1.5 | 2026-11-24 | Logic review pass 1: FR-011 hand-off lands on FR-011 Screen 6 and package choice stays in FR-011 (FR-038 Screen 6 ends at the review); conversion contract and commit order; provider access to copied data from FR-011 assignment; Screen 5 confirmation by choice; PDF status, retry, regeneration and repeat rules on Screens 6 and 7; completed or converted case reachable from the home card; only Admin corrects the treatment date; Initial Severity as first data point, monitoring period and zero-log summary; reminders on by default with a Screen 2 control and stop rule; Screen 4 and Screen 8 entry points; quality-failed scans are not saved; conversion draft set and cleared; Screen 8 filter values and audit Action column. | Product Owner / Documentation |
 | 1.6 | 2026-11-24 | Logic review pass 2: monitoring period and first severity point in date order with logs dated before the case; zero-log summary shows the Initial Severity; failed request returns to Screen 6; Retry PDF on Screen 6; export-ready notice target by draft state; idempotency key lifetime; End Monitoring with an open draft discards it; previous cases listed on the home card; Screen 6 retake and Screen 1 capture entry; case status not Admin-editable; malware-scan outcome; default reminders run 12 months from the case creation date; stale Screen 6 pointer removed; main flow check folded into the entry branch. | Product Owner / Documentation |
 | 1.7 | 2026-11-25 | Cross-FR alignment: Reminder Preference tied to ENT-monitoring-case.reminder_preference; a Rejected or Expired converted request leaves the monitoring case read-only and a new standalone request uses a new idempotency key (REQ-038-082, REQ-011-093, REQ-011-094). | Product Owner / Documentation |
+| 1.8 | 2026-11-25 | Backlog points settled: platform-wide encryption, retention and download-link rules cited by REQ-SYS id, and the FR-007 invocation sentence folded into REQ-038-070 so the citation is exact. | Claude (AI Assistant) |
 
 ---
 
@@ -545,7 +545,7 @@ Approved by the Product Owner as part of the requirements baseline of 2026-11-25
 
 ---
 
-**Document Version**: 1.7
+**Document Version**: 1.8
 **Template Version**: 2.0.0
 **Last Updated**: 2026-11-25
 **Next Review**: Before implementation planning
