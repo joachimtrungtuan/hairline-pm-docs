@@ -1469,6 +1469,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 | Filter | Type | Options | Default | Logic | Graph field |
 |--------|------|---------|---------|-------|---------------|
 | Treatment Type | Dropdown | All; admin-defined treatment types | All | Exact match | no graph field (control) |
+| Status | Dropdown | All, Active, Pending Media Upload, Draft, Inactive | All | Exact match | no graph field (control) |
 
 ---
 
@@ -1825,7 +1826,8 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 | Quote ID | text (optional) | "Filter by quote ID…" | — | Optional exact match | no graph field (control) |
 | Inquiry ID | text (optional) | "Filter by inquiry ID…" | — | Optional exact match | no graph field (control) |
 | Date Range | Date range picker + presets | Custom; Today, Last 7 days, Last 30 days, All | All | Filters by message date | no graph field (control) |
-| Flag Type | Multi-select | Keyword Flagged, Manually Flagged, Intervened, No Flags | All | OR (within field) | no graph field (control) |
+| Flag Type | Multi-select | Keyword Flagged, Manually Flagged, System Flagged, Intervened, No Flags | All | OR (within field) | no graph field (control) |
+| Flag Category | Multi-select | Off-Platform Risk, Potential Dispute, Quality Concern, Follow-Up Needed, Other | All | OR (within field) | no graph field (control) |
 | Conversation Status | Multi-select | Active, Resolved, Escalated | All | OR (within field) | no graph field (control) |
 
 Active filters combine, and the filters are remembered.
@@ -1882,7 +1884,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 ### Data & Privacy Rules
 
 - **Privacy Rule 1**: At every stage until the patient has confirmed payment (inquiry, quote, acceptance and booking), provider-facing results show the Patient ID plus a masked patient name, never the full name, and patient names MUST be excluded from provider-facing search fields. Provider search for inquiries and quotes is restricted to Patient ID as the only patient identifier before payment confirmation (see FR-003/Screen 9 and FR-004/Screen 2); on the Provider Messages list the search also covers inquiry or quote ID and message content, and the patient name becomes searchable only after payment is confirmed (REQ-022-026)
-- **Privacy Rule 2**: The search audit log MUST be kept for audit purposes (who searched for whom, when) for the same period as the FR-031 admin audit trail (REQ-031-015), and is read on that audit trail (REQ-022-140)
+- **Privacy Rule 2**: The search audit log MUST be kept for audit purposes (who searched for whom, when) for the same period as the FR-031 admin audit trail (REQ-031-015). No screen reads this log in this release; it is stored for audit only (REQ-022-140)
 - **Privacy Rule 3**: Patient contact information MUST NOT be indexed for public search (admin only) (REQ-022-128)
 - **Privacy Rule 4**: Provider financial data MUST NOT be searchable by other providers (admin only) (REQ-022-129)
 - **Audit Rule**: All admin searches for patient and provider records MUST be logged with admin user ID, timestamp, search terms and result count; the log is written for admin searches only, not for patient or provider searches (REQ-022-023)
@@ -2177,6 +2179,7 @@ A patient has received two parent quotes from two providers. Each parent quote o
 | 2026-11-23 | 2.24 | Owner ruling 2026-11-23: the aftercare specialist is clinic staff on the provider side; the Hairline admin role is renamed Aftercare Coordinator with unchanged permissions. Admin Users List role filter option renamed; the clinic team role option Aftercare Specialist is unchanged. | AI Assistant |
 | 2026-11-24 | 2.25 | Logic review pass 1: filters and search fields now mirror the owning FRs (FR-003 provider selection with OR country logic, no Active Status or capacity control, sort and destination autocomplete; FR-005 price sort wording; FR-007 payment status list and FR-003 inquiry stages; FR-013 reviews list and Treatment filter; FR-016 account status, action type and request status; FR-024 package status; FR-027 document and acceptance filters; FR-031 roles, permission matrix and audit trail; FR-035 help search; provider Messages search by Patient ID). One page-size statement; search audit log written for admin searches only, read on the FR-031 audit trail and kept as long as it; rate-limit and timeout paths added to Alternative Flow B2; deselect step added to Main Flow 3; provider name protection applies at every stage until payment; both settings edited on FR-026 app settings screens; FR-013 Screen 5 and FR-032 Screen 5.7 moved under the provider platform headings. | AI Assistant |
 | 2026-11-24 | 2.26 | Logic review pass 2: more filter lists now mirror the owning FRs (FR-034 support dashboard filters and search scope with Priority Urgent, Ticket Source and Submitter Type multi-select, Assigned To, Request Type and Request Status, 90-day default; FR-019 status without Pending Approval; FR-011 case status Pending Activation, Active, Completed, Cancelled with Overdue only and Urgent only toggles; FR-033 Unpublished status, Policy Information, resource categories and file types, video source types; FR-014 Country filter and no benchmarks toggle). FR-009 Screen 10 is now an admin screen with the owner's search and filters, and the clinic team list (FR-009 Screen 1) has its own entry; FR-029 provider search on deposit rates, currency pair list filters and the Screen 5 eligibility rule added. Search audit log wording is the same in every statement (admin searches for patient and provider records); support, message and conversation searches use the 500ms server-query debounce. | AI Assistant |
+| 2026-11-25 | 2.27 | Cross-FR alignment: the conversation monitoring filters add System Flagged to Flag Type and a Flag Category filter; the admin treatment catalog gains a Status filter; the search audit log is stated as stored for audit with no reading screen in this release. | Product Owner / Documentation |
 
 ---
 
@@ -2196,4 +2199,4 @@ A patient has received two parent quotes from two providers. Each parent quote o
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-022 from system-prd.md
-**Last Updated**: 2026-11-24
+**Last Updated**: 2026-11-25

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-24T21:19:38Z",
+  "generated_at": "2026-11-25T00:42:02Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -15670,6 +15670,17 @@
       "version": 1,
       "attrs": {
         "description": "The notification record this attempt belongs to (ENT-notification-record.notification_id). One record per recipient and event; one attempt row per channel attempt under it (REQ-020-041)."
+      }
+    },
+    {
+      "id": "ENT-notification-attempt.opened_at",
+      "type": "Field",
+      "owner_fr": "FR-020",
+      "title": "Opened at",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Email attempts only: the time the recipient opened the email. Opened applies to email only, and the FR-030 escalation condition Not opened reads it (REQ-020-041)."
       }
     },
     {
@@ -33218,6 +33229,17 @@
       }
     },
     {
+      "id": "EVT-dsr-obligation-block-ended",
+      "type": "Event",
+      "owner_fr": "FR-023",
+      "title": "dsr.obligation_block_ended",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "dsr.obligation_block_ended: the obligation that blocked a deletion request has ended; the patient is told the request resumes (REQ-023-029, REQ-020-163)."
+      }
+    },
+    {
       "id": "EVT-dsr-verification-required",
       "type": "Event",
       "owner_fr": "FR-023",
@@ -40700,7 +40722,7 @@
       "owner_fr": null,
       "title": "Multi-Language & Localization",
       "status": "active",
-      "version": 7,
+      "version": 8,
       "attrs": {
         "module": "fr021-i18n-localization",
         "prd_path": "project-requirements/functional-requirements/fr021-i18n-localization/prd.md",
@@ -72978,9 +73000,9 @@
       "owner_fr": "FR-019",
       "title": "Exactly one discount affects the price; audit records applied and superseded programs; affiliate attribution is preserved",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Outcome: Exactly one discount affects the patient's final price; audit records which program was applied and which was superseded. If a valid affiliate-bound code/link was already captured as the patient acquisition source, FR-019 preserves that affiliate attribution metadata for FR-018 even when a provider-side promotion wins the price-discount priority.",
+        "statement": "Exactly one discount affects the patient's final price; audit records which program was applied and which was superseded. If a valid affiliate-bound code/link was already captured as the patient acquisition source, FR-019 preserves that affiliate attribution metadata for FR-018 even when a provider-side promotion wins the price-discount priority. The capture is stored with the patient's inquiry journey (FR-018 REQ-018-308) and FR-019 reads it at quote acceptance; it is honoured only when the affiliate is Active at that moment, otherwise it earns no credit, no commission and no attribution.",
         "rationale": "Alternative Flow B3 outcome. PRD line 133."
       }
     },
@@ -73947,6 +73969,17 @@
       }
     },
     {
+      "id": "REQ-019-119",
+      "type": "Rule",
+      "owner_fr": "FR-019",
+      "title": "A generated affiliate code is rejected with a named reason when its text already exists or its program is not Affiliate-bound",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "When FR-018 registers a generated code, FR-019 rejects the registration with a named reason when the code text already exists on the platform (REQ-019-076) or the chosen program is not an Affiliate-bound program; FR-018 shows the returned reason on that row and the admin retries."
+      }
+    },
+    {
       "id": "REQ-020-001",
       "type": "Rule",
       "owner_fr": "FR-020",
@@ -74290,9 +74323,9 @@
       "owner_fr": "FR-020",
       "title": "FR-030 catalog is the source of truth; FR-030 prevails",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "**Source of truth**: `FR-030: Notification Rules & Configuration` (Admin-Configurable Notification Event Catalog). The table below mirrors FR-030 for completeness; **if any mismatch exists, FR-030 prevails**.",
+        "statement": "Source of truth: FR-030: Notification Rules & Configuration (Admin-Configurable Notification Event Catalog). The table below mirrors FR-030 for completeness; if any mismatch exists, FR-030 prevails. The table does not repeat every catalogue row: an FR-030 catalogue event with no row here (for example the monitoring assignment-ended, chat, travel, provider team, aftercare, promotion, support-alert and recurring-export notices) is still a notice of this service, and its FR-030 Rule applies. Each row is a pointer to the FR-030 catalogue entry of the same event, and FR-030 owns that row's recipients, channels, content and whether the notice can be switched off. Events that produce a notification are owned by the FR-030 catalogue (see Event Ownership in Business Rules).",
         "rationale": "prd.md line 37. Also line 38 and line 306."
       }
     },
@@ -74434,9 +74467,9 @@
       "owner_fr": "FR-020",
       "title": "One notification record per recipient and event, one attempt row per channel attempt",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "One notification record per recipient and event, with one attempt row per channel attempt under it; each attempt row carries channel, provider, status, timestamp and, on failure, the cause. Attempt status is one of queued, sent, delivered, failed, suppressed, deferred, coalesced.",
+        "statement": "One notification record per recipient and event, with one attempt row per channel attempt under it; each attempt row carries channel, provider, status, timestamp and, on failure, the cause. Attempt status is one of queued, sent, delivered, failed, suppressed, deferred, coalesced. The in-app record is the notification record itself and has no attempt row, so an attempt's channel is email, push or sms. An email attempt row also carries an opened marker, the time the recipient opened the email; opened applies to email only, and the FR-030 escalation condition Not opened reads it.",
         "rationale": "Business Rules, Delivery Audit. FR-030 delivery log is a view of the same rows (queued)."
       }
     },
@@ -74879,9 +74912,9 @@
       "owner_fr": "FR-020",
       "title": "Catalog: Booking Cancelled (booking.cancelled)",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Notification catalog event booking.cancelled (Booking Cancelled), category Booking/Schedule. Primary recipients: Patient, Provider, Admin (optional). Notes: Fires for an Admin cancellation, a provider drop-out at the FR-006 Screen 10 submit, and a system cancellation for an unpaid balance (including an FR-007B installment plan default). A closure for provider suspension or deactivation sends booking.provider_fault_replacement to the patient and not booking.cancelled. The reason text each recipient sees is the one FR-006 defines (REQ-006-011).",
+        "statement": "Notification catalog event booking.cancelled (Booking Cancelled), category Booking/Schedule. Primary recipients: Patient, Provider, Admin (optional). Notes: Fires for an Admin cancellation, a provider drop-out at the FR-006 Screen 10 submit, and a system cancellation for an unpaid balance (including an FR-007B installment plan default). A closure for provider suspension or deactivation sends booking.provider_fault_replacement to the patient and not booking.cancelled. The reason text each recipient sees is the one FR-006 defines (REQ-006-011). Mandatory — admin cannot disable this event",
         "rationale": "Event Catalog table. The table mirrors FR-030; FR-030 prevails on any mismatch. EVT-booking-cancelled is FR-030-owned; the emits edge at STG-main-05-payment is queued for FR-030."
       }
     },
@@ -74891,9 +74924,9 @@
       "owner_fr": "FR-020",
       "title": "Catalog: Appointment Reminder (booking.appointment_reminder)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Notification catalog event booking.appointment_reminder (Appointment Reminder), category Booking/Schedule. Primary recipients: Patient, Provider. Notes: Scheduled reminders; policy-driven",
+        "statement": "Notification catalog event booking.appointment_reminder (Appointment Reminder), category Booking/Schedule. Primary recipients: Patient, Provider. Notes: Two reminders by default, 7 days and 1 day before the appointment (REQ-030-048); admin-switchable, not a locked notice",
         "rationale": "Event Catalog table, prd.md line 63. The table mirrors FR-030; FR-030 prevails on any mismatch."
       }
     },
@@ -74939,9 +74972,9 @@
       "owner_fr": "FR-020",
       "title": "Catalog: Payment Received / Receipt (payment.received)",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Notification catalog event payment.received (Payment Received / Receipt), category Payment. Primary recipients: Patient, Provider, Admin (optional). Notes: Critical",
+        "statement": "Notification catalog event payment.received (Payment Received / Receipt), category Payment. Primary recipients: Patient, Provider, Admin (optional). Notes: Mandatory — admin cannot disable this event; critical",
         "rationale": "Event Catalog table, prd.md line 70. The table mirrors FR-030; FR-030 prevails on any mismatch.",
         "distinct_from": "REQ-020-101"
       }
@@ -74952,9 +74985,9 @@
       "owner_fr": "FR-020",
       "title": "Catalog: Payment Failed (payment.failed)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Notification catalog event payment.failed (Payment Failed), category Payment. Primary recipients: Patient, Admin (optional). Notes: Critical",
+        "statement": "Notification catalog event payment.failed (Payment Failed), category Payment. Primary recipients: Patient, Admin (optional). Notes: Mandatory — admin cannot disable this event; critical",
         "rationale": "Event Catalog table, prd.md line 71. The table mirrors FR-030; FR-030 prevails on any mismatch."
       }
     },
@@ -75158,9 +75191,9 @@
       "owner_fr": "FR-020",
       "title": "Catalog: Monitoring Case Pending Assignment (monitoring.assignment_pending)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Notification catalog event monitoring.assignment_pending (Monitoring Case Pending Assignment), category Monitoring. Primary recipients: Admin. Notes: Advice-mode hair-loss/transplant-progress monitoring case activated and awaiting provider assignment (FR-037/FR-038)",
+        "statement": "Notification catalog event monitoring.assignment_pending (Monitoring Case Pending Assignment), category Monitoring. Primary recipients: Admin. Notes: Advice-mode hair-loss monitoring case activated and awaiting provider assignment (FR-037 only)",
         "rationale": "Event Catalog table, prd.md line 93. The table mirrors FR-030; FR-030 prevails on any mismatch."
       }
     },
@@ -75170,9 +75203,9 @@
       "owner_fr": "FR-020",
       "title": "Catalog: Monitoring Provider Assigned (monitoring.provider_assigned)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Notification catalog event monitoring.provider_assigned (Monitoring Provider Assigned), category Monitoring. Primary recipients: Patient, Provider. Notes: Initial assignment or reassignment; assignment type distinguished in payload (FR-037/FR-038)",
+        "statement": "Notification catalog event monitoring.provider_assigned (Monitoring Provider Assigned), category Monitoring. Primary recipients: Patient, Provider. Notes: Initial assignment only; a reassignment uses monitoring.provider_reassigned (FR-037 only)",
         "rationale": "Event Catalog table, prd.md line 94. The table mirrors FR-030; FR-030 prevails on any mismatch."
       }
     },
@@ -75182,9 +75215,9 @@
       "owner_fr": "FR-020",
       "title": "Catalog: Monitoring Provider Withdrawn (monitoring.provider_withdrawn)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Notification catalog event monitoring.provider_withdrawn (Monitoring Provider Withdrawn), category Monitoring. Primary recipients: Admin, Patient. Notes: Provider withdraws with reason; case returns to Admin as Pending Reassignment (FR-037/FR-038)",
+        "statement": "Notification catalog event monitoring.provider_withdrawn (Monitoring Provider Withdrawn), category Monitoring. Primary recipients: Admin, Patient. Notes: Provider withdraws with reason; case returns to Admin as Pending Reassignment (FR-037 only)",
         "rationale": "Event Catalog table, prd.md line 95. The table mirrors FR-030; FR-030 prevails on any mismatch."
       }
     },
@@ -75194,9 +75227,9 @@
       "owner_fr": "FR-020",
       "title": "Catalog: Monitoring Advice Posted (monitoring.advice_posted)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Notification catalog event monitoring.advice_posted (Monitoring Advice Posted), category Monitoring. Primary recipients: Patient. Notes: Provider submits or edits the one advice-window paragraph for the current window (FR-037/FR-038)",
+        "statement": "Notification catalog event monitoring.advice_posted (Monitoring Advice Posted), category Monitoring. Primary recipients: Patient. Notes: Provider submits or edits the one advice-window paragraph for the current window (FR-037 only)",
         "rationale": "Event Catalog table, prd.md line 97. The table mirrors FR-030; FR-030 prevails on any mismatch."
       }
     },
@@ -75230,9 +75263,9 @@
       "owner_fr": "FR-020",
       "title": "Catalog: Monitoring Converted to Inquiry (monitoring.converted_to_inquiry)",
       "status": "active",
-      "version": 4,
+      "version": 6,
       "attrs": {
-        "statement": "Notification catalog event monitoring.converted_to_inquiry (Monitoring Converted to Inquiry), category Monitoring. Primary recipients: Patient. Notes: Monitoring case successfully converts into a distinct FR-003 inquiry (FR-037/FR-038)",
+        "statement": "Notification catalog event monitoring.converted_to_inquiry, category Monitoring, goes to the Patient. Notes: Sent when a hair-loss monitoring case under FR-037 becomes a new inquiry; never sent for an FR-038 case",
         "rationale": "Event Catalog table, prd.md line 100. The table mirrors FR-030; FR-030 prevails on any mismatch."
       }
     },
@@ -75386,9 +75419,9 @@
       "owner_fr": "FR-020",
       "title": "Catalog: Provider Account-Closure Request Rejected (provider.closure_rejected)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Notification catalog event provider.closure_rejected (Provider Account-Closure Request Rejected), category Provider/Compliance. Primary recipients: Provider. Notes: FR-015 A7 step 6 / FR-032 step 16. Sent when an admin rejects a closure request. Email states that the account stays Active, gives the admin review notes, and the admin support contact. Mandatory; cannot be disabled in FR-030 rules. Unaffected by FR-032 category preferences (account notice). Email only",
+        "statement": "Notification catalog event provider.closure_rejected (Provider Account-Closure Request Rejected), category Provider/Compliance. Primary recipients: Provider. Notes: FR-015 A7 step 6 / FR-032 step 16. Sent when an admin rejects a closure request. Email states that the account keeps its current status, gives the admin review notes, and the admin support contact. Mandatory; cannot be disabled in FR-030 rules. Unaffected by FR-032 category preferences (account notice). Email only",
         "rationale": "Event Catalog table, prd.md line 116. The table mirrors FR-030; FR-030 prevails on any mismatch."
       }
     },
@@ -75410,9 +75443,9 @@
       "owner_fr": "FR-020",
       "title": "Catalog: System Escalation (system.escalation)",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Notification catalog event system.escalation (System Escalation), category System/Operations. Primary recipients: Admin. Notes: Operational escalation events requiring admin action",
+        "statement": "Notification catalog event system.escalation (System Escalation), category System/Operations. Primary recipients: Admin. Notes: Operational escalation events requiring admin action. Mandatory — admin cannot disable this event",
         "rationale": "Event Catalog table, prd.md line 118. The table mirrors FR-030; FR-030 prevails on any mismatch."
       }
     },
@@ -75422,9 +75455,9 @@
       "owner_fr": "FR-020",
       "title": "Catalog: System Alert (system.alert)",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Notification catalog event system.alert (System Alert), category System/Operations. Primary recipients: Admin. Notes: System health/monitoring alerts surfaced via notifications",
+        "statement": "Notification catalog event system.alert (System Alert), category System/Operations. Primary recipients: Admin. Notes: System health/monitoring alerts surfaced via notifications. Mandatory — admin cannot disable this event",
         "rationale": "Event Catalog table, prd.md line 119. The table mirrors FR-030; FR-030 prevails on any mismatch."
       }
     },
@@ -75566,7 +75599,7 @@
       "owner_fr": "FR-020",
       "title": "Catalog: Data Request Obligation Block Ended (dsr.obligation_block_ended)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "Notification catalog event dsr.obligation_block_ended (Data Request Obligation Block Ended), category Account/Auth. Primary recipients: Admin. Notes: FR-023 REQ-023-029 and Main Flow step 3. Sent when the obligation that blocked approval ends, saying the request can be approved. FR-023 owns the emitting step.",
         "rationale": "Event Catalog table. The table mirrors FR-030; FR-030 prevails on any mismatch. No Event node yet; FR-023 is queued to add the event and its emitting step."
@@ -77116,9 +77149,9 @@
       "owner_fr": "FR-021",
       "title": "Provider and admin screens format dates and numbers by the selected locale",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Provider and admin screens MUST format dates and numbers by the selected locale. Provider screens MUST use the provider timezone set in FR-032 (a value from the FR-026 GMT list); admin screens MUST use the admin's local timezone (REQ-026-050).",
+        "statement": "Provider and admin screens MUST format dates and numbers by the selected locale. Provider screens MUST use the provider timezone set in FR-032 (a value from the FR-026 GMT list); admin screens MUST use the admin's browser timezone with the zone named beside the time (FR-026 General Module Rule 5).",
         "rationale": "Pass 1 logic review. Stated in the PRD Functional Requirements Summary and restated at the screen or rule that applies it."
       }
     },
@@ -78316,9 +78349,9 @@
       "owner_fr": "FR-022",
       "title": "Search and filter criteria: Admin Treatment Catalog (FR-024 / Screen 1)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "FR-024 / Screen 1: Admin Treatment Catalog [P1 — MVP]. Admin searches for and filters the global treatment catalog. Search: Treatment name (Type: text; Placeholder: \"Search treatments…\"; Debounce: 300ms; Notes: Real-time filter; case-insensitive). Filters: Treatment Type (Type: Dropdown; Options: All; admin-defined treatment types; Default: All; Logic: Exact match).",
+        "statement": "FR-024 / Screen 1: Admin Treatment Catalog [P1 — MVP]. Admin searches for and filters the global treatment catalog. Search: Treatment name (Type: text; Placeholder: \"Search treatments…\"; Debounce: 300ms; Notes: Real-time filter; case-insensitive). Filters: Treatment Type (Type: Dropdown; Options: All; admin-defined treatment types; Default: All; Logic: Exact match) / Status (Type: Dropdown; Options: All, Active, Pending Media Upload, Draft, Inactive; Default: All; Logic: Exact match).",
         "rationale": "Screen Specifications (prd.md lines 1418-1437). Screen owned by FR-024 (Admin tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319). No lifecycle stage fits this screen; applied at the FR-022 default stage (Batch A Inquiry) provisionally."
       }
     },
@@ -78485,9 +78518,9 @@
       "owner_fr": "FR-022",
       "title": "Search and filter criteria: Communication Monitoring Center (FR-012 / Screen 5)",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "FR-012 / Screen 5: Communication Monitoring Center [P1 — MVP]. Admin searches for and filters all platform conversations for oversight and support. Search: Patient / provider / keyword / inquiry ID (Type: text; Placeholder: \"Search conversations…\"; Min Length: 2 chars; Debounce: 500ms; Notes: Searches across all four fields simultaneously). Filters: Patient (Type: Autocomplete; Options: Matching patient names; Default: None; Logic: Exact selection) / Provider (Type: Autocomplete; Options: Matching provider names; Default: None; Logic: Exact selection) / Service Type (Type: Multi-select; Options: All; platform-defined service types; Default: All; Logic: OR (within field)) / Quote ID (text (optional); \"Filter by quote ID…\"; —; Optional exact match) / Inquiry ID (text (optional); \"Filter by inquiry ID…\"; —; Optional exact match) / Date Range (Type: Date range picker + presets; Options: Custom; Today, Last 7 days, Last 30 days, All; Default: All; Logic: Filters by message date) / Flag Type (Type: Multi-select; Options: Keyword Flagged, Manually Flagged, Intervened, No Flags; Default: All; Logic: OR (within field)) / Conversation Status (Type: Multi-select; Options: Active, Resolved, Escalated; Default: All; Logic: OR (within field)). Active filters combine, and the filters are remembered.",
+        "statement": "FR-012 / Screen 5: Communication Monitoring Center [P1 — MVP]. Admin searches for and filters all platform conversations for oversight and support. Search: Patient / provider / keyword / inquiry ID (Type: text; Placeholder: \"Search conversations…\"; Min Length: 2 chars; Debounce: 500ms; Notes: Searches across all four fields simultaneously). Filters: Patient (Type: Autocomplete; Options: Matching patient names; Default: None; Logic: Exact selection) / Provider (Type: Autocomplete; Options: Matching provider names; Default: None; Logic: Exact selection) / Service Type (Type: Multi-select; Options: All; platform-defined service types; Default: All; Logic: OR (within field)) / Quote ID (text (optional); \"Filter by quote ID…\"; —; Optional exact match) / Inquiry ID (text (optional); \"Filter by inquiry ID…\"; —; Optional exact match) / Date Range (Type: Date range picker + presets; Options: Custom; Today, Last 7 days, Last 30 days, All; Default: All; Logic: Filters by message date) / Flag Type (Type: Multi-select; Options: Keyword Flagged, Manually Flagged, System Flagged, Intervened, No Flags; Default: All; Logic: OR (within field)) / Flag Category (Type: Multi-select; Options: Off-Platform Risk, Potential Dispute, Quality Concern, Follow-Up Needed, Other; Default: All; Logic: OR (within field)) / Conversation Status (Type: Multi-select; Options: Active, Resolved, Escalated; Default: All; Logic: OR (within field)). Active filters combine, and the filters are remembered.",
         "rationale": "Screen Specifications (prd.md lines 1735-1761). Screen owned by FR-012 (Admin tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319)."
       }
     },
@@ -78695,9 +78728,9 @@
       "owner_fr": "FR-022",
       "title": "Admin search logs retained for audit",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "The search audit log MUST be kept for audit purposes (who searched for whom, when) for the same period as the FR-031 admin audit trail (REQ-031-015), and is read on that audit trail",
+        "statement": "The search audit log MUST be kept for audit purposes (who searched for whom, when) for the same period as the FR-031 admin audit trail (REQ-031-015). No screen reads this log in this release; it is stored for audit only.",
         "rationale": "Privacy Rule 2 (line 1809). REQ-022-023 requires the entry to be written; this rule requires it to be kept."
       }
     },
@@ -78959,7 +78992,7 @@
       "owner_fr": "FR-023",
       "title": "DSR lifecycle events notified to internal communication channels",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "statement": "Provide event notifications for DSR lifecycle events to internal communication channels.",
         "rationale": "prd.md line 156 (found by matching the rule statement to the PRD text)."
@@ -79082,7 +79115,7 @@
       "owner_fr": "FR-023",
       "title": "Admins notified of new DSRs, of an approaching deadline 7 calendar days before it, and when an obligation block ends",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
         "statement": "Admins are notified of new DSRs, of an approaching deadline 7 calendar days before it on a request that is still open, and, when an obligation block ends, that the request can be approved (FR-016 REQ-016-067).",
         "rationale": "A fixed threshold of 7 calendar days (a default; no setting is added)."
@@ -79130,9 +79163,9 @@
       "owner_fr": "FR-023",
       "title": "Deletion actions audit-logged; outcome notice lists actions and legal basis",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System records the anonymisation actions in the audit log and notifies the patient of the outcome once, listing the actions taken and the legal basis and scope of the retained categories. The notice goes to the contact address the system captured when the request was approved, before any anonymisation; that copy is kept only until the notice is delivered and is then anonymised with the rest.",
+        "statement": "System records the anonymisation actions in the audit log and notifies the patient of the outcome once, listing the actions taken and the legal basis and scope of the retained categories. The notice goes to the contact address the system captured when the request was approved, before any anonymisation; that copy is kept only until the notice is delivered, or until its last retry has failed, and is then anonymised with the rest. The notice goes by email only (the critical dsr.fulfilled notice of the FR-020 catalogue) and creates no in-app record; when the email still fails after the last retry, the Admin sees the failure in the delivery log (FR-020 REQ-020-161).",
         "rationale": "The outcome notice is sent once, at the end of the main flow; the old second notice step is removed."
       }
     },
@@ -79226,9 +79259,9 @@
       "owner_fr": "FR-023",
       "title": "Approval cancels the patient's open inquiry through FR-003 before anything is anonymised",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "When an Admin approves a deletion request, the system MUST cancel the patient's open inquiry through FR-003 (REQ-003-103) before any data is anonymised, so the cancellation and its provider notices run on the identifiable record. The cancellation happens at approval, never at submission; a denied request and a request blocked by an obligation cancel nothing. The cancelled inquiry and quotes are retained under REQ-023-003 and REQ-023-040. Anonymisation starts only after the FR-003 cancellation and its provider notices complete. If the cancellation fails, the request stays In Progress, the queue shows that it needs attention and the system retries; nothing is anonymised until the cancellation succeeds.",
+        "statement": "When an Admin approves a deletion request, the system MUST cancel the patient's open inquiry through FR-003 (REQ-003-103) before any data is anonymised, so the cancellation and its provider notices run on the identifiable record. The cancellation happens at approval, never at submission; a denied request and a request blocked by an obligation cancel nothing. The cancelled inquiry and quotes are retained under REQ-023-003 and REQ-023-040. Anonymisation starts only after the FR-003 cancellation and its provider notices complete (a notice is complete when its first attempt has been handed to a channel or it has ended failed after the last retry, FR-020 REQ-020-040). If the cancellation fails, the request stays In Progress, the queue shows that it needs attention and the system retries; nothing is anonymised until the cancellation succeeds.",
         "rationale": "Owner default 63: cancel at admin approval, not at submission; a refused or blocked request cancels nothing. The cancellation runs first because it notifies providers and flips quotes on the identifiable record. FR-003 owns the cancellation (REQ-003-103)."
       }
     },
@@ -79250,9 +79283,9 @@
       "owner_fr": "FR-023",
       "title": "Every record type belongs to exactly one category by the record-type mapping",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST assign every record type to exactly one data category by the record-type mapping below. Reviews, messages and support cases are Communications and are anonymised in place. Inquiries are Medical Records, and quotes, acceptance events and bookings are Financial Records; they are retained records under REQ-023-003 and REQ-023-040. Scan media are Medical Records.",
+        "statement": "System MUST assign every record type to exactly one data category by the record-type mapping below. Reviews, messages and support cases are Communications and are anonymised in place. Inquiries are Medical Records, and quotes, acceptance events and bookings are Financial Records; they are retained records under REQ-023-003 and REQ-023-040. Scan media are Medical Records. Message attachments belong to their message and are anonymised in place with it. Legal acceptance records (acceptances, legal audit entries and reminders) are Account Profile.",
         "rationale": "Owner default 70: reviews, messages and support cases are Communications (anonymised); inquiry is Medical Records; quote, acceptance event and booking are Financial Records; scans are Medical Records. The mapping table lives in the PRD."
       }
     },
@@ -79279,6 +79312,28 @@
       "attrs": {
         "statement": "The status of a deletion request is set only as follows: Pending Admin Review at submission and when an Admin validates the verification; Verification Required when an Admin finds the proof insufficient; In Progress when an Admin approves and the obligation check passes; Fulfilled when the system sends the outcome notice after anonymisation; Denied when an Admin denies. The request also carries two flags: blocked by obligation (set when an obligation blocks approval, cleared by the system when the obligation ends or an approval check passes; the status stays Pending Admin Review) and jurisdiction review required (REQ-023-039). FR-016 shows the status and owns the deletion certificate (REQ-016-062); it does not set Fulfilled.",
         "rationale": "Closes the lifecycle gaps: every status has a step that sets it. Fulfilment is set by the system at the outcome notice (a default); FR-016 shows it and generates the certificate (REQ-016-062)."
+      }
+    },
+    {
+      "id": "REQ-023-047",
+      "type": "Rule",
+      "owner_fr": "FR-023",
+      "title": "A patient can log in while a deletion request is open; at Fulfilled every session ends and the email address is free",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "While a deletion request is open (any status before Fulfilled or Denied) the patient can still log in (FR-001 REQ-001-068). When the request becomes Fulfilled, every session of the patient ends, login with the old credentials gets the standard \"Invalid email or password\" result (FR-001 REQ-001-065), and the email address is free for a new registration, which creates a new account with no link to the old data (FR-001 REQ-001-182)."
+      }
+    },
+    {
+      "id": "REQ-023-048",
+      "type": "Rule",
+      "owner_fr": "FR-023",
+      "title": "FR-024 drafts are not patient records; a discarded draft is soft-deleted and the discard is audited",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Treatment and package drafts of FR-024 hold no patient data and are not patient records, so a deletion request never touches them. A discarded draft follows the platform soft-delete rule (REQ-SYS-003): it is removed from every list and archived, and the discard is kept in the audit log (FR-024 REQ-024-022, REQ-023-011)."
       }
     },
     {
@@ -108226,7 +108281,7 @@
       "owner_fr": null,
       "title": "Deletion requested",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "timeline": "patient-account",
         "sequence": 5,
@@ -121760,7 +121815,7 @@
       "owner_fr": "FR-023",
       "title": "System records the actions in the audit log, sets the request to Fulfilled and sends the patient one outcome notice, to the contact address captured at approval, with the actions taken and the legal basis",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow step 8"
       }
@@ -149596,6 +149651,14 @@
       "name": "notification_id",
       "data_type": "id",
       "required": true,
+      "calculated_by": null
+    },
+    {
+      "id": "ENT-notification-attempt.opened_at",
+      "entity_id": "ENT-notification-attempt",
+      "name": "opened_at",
+      "data_type": "datetime",
+      "required": false,
       "calculated_by": null
     },
     {
@@ -182852,7 +182915,7 @@
       "verb": "active in",
       "to_id": "STG-admin-02-operations",
       "attrs": {
-        "rules": 39
+        "rules": 40
       },
       "derived": true
     },
@@ -183222,12 +183285,6 @@
     {
       "from_id": "FR-021",
       "verb": "references",
-      "to_id": "REQ-026-050",
-      "attrs": {}
-    },
-    {
-      "from_id": "FR-021",
-      "verb": "references",
       "to_id": "REQ-026-121",
       "attrs": {}
     },
@@ -183504,6 +183561,15 @@
     {
       "from_id": "FR-023",
       "verb": "active in",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {
+        "rules": 1
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-023",
+      "verb": "active in",
       "to_id": "STG-main-01-inquiry",
       "attrs": {
         "rules": 2
@@ -183542,7 +183608,7 @@
       "verb": "active in",
       "to_id": "STG-patient-05-deleted",
       "attrs": {
-        "rules": 10
+        "rules": 11
       },
       "derived": true
     },
@@ -183551,7 +183617,7 @@
       "verb": "active in",
       "to_id": "STG-patient-06-deletion-requested",
       "attrs": {
-        "rules": 19
+        "rules": 20
       },
       "derived": true
     },
@@ -183560,7 +183626,7 @@
       "verb": "active in",
       "to_id": "STG-provider-03-active",
       "attrs": {
-        "rules": 4
+        "rules": 5
       },
       "derived": true
     },
@@ -260308,6 +260374,30 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-019-119",
+      "verb": "applies at",
+      "to_id": "STG-admin-02-operations",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-119",
+      "verb": "applies to",
+      "to_id": "ENT-promotion-code",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-119",
+      "verb": "applies to",
+      "to_id": "SCR-019-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-019-119",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-019",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-020-001",
       "verb": "applies at",
       "to_id": "STG-main-01-inquiry",
@@ -261343,6 +261433,12 @@
       "from_id": "REQ-020-041",
       "verb": "applies to",
       "to_id": "ENT-notification-attempt",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-041",
+      "verb": "applies to",
+      "to_id": "ENT-notification-attempt.opened_at",
       "attrs": {}
     },
     {
@@ -264037,6 +264133,12 @@
       "from_id": "REQ-020-163",
       "verb": "applies to",
       "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-020-163",
+      "verb": "applies to",
+      "to_id": "EVT-dsr-obligation-block-ended",
       "attrs": {}
     },
     {
@@ -270972,6 +271074,12 @@
     {
       "from_id": "REQ-023-018",
       "verb": "applies to",
+      "to_id": "EVT-dsr-obligation-block-ended",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-023-018",
+      "verb": "applies to",
       "to_id": "EVT-dsr-verification-required",
       "attrs": {}
     },
@@ -271273,6 +271381,12 @@
       "from_id": "REQ-023-029",
       "verb": "applies to",
       "to_id": "EVT-dsr-deadline-approaching",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-023-029",
+      "verb": "applies to",
+      "to_id": "EVT-dsr-obligation-block-ended",
       "attrs": {}
     },
     {
@@ -271757,6 +271871,66 @@
     },
     {
       "from_id": "REQ-023-046",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-023",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-023-047",
+      "verb": "applies at",
+      "to_id": "STG-patient-05-deleted",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-023-047",
+      "verb": "applies at",
+      "to_id": "STG-patient-06-deletion-requested",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-023-047",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-023-047",
+      "verb": "applies to",
+      "to_id": "ENT-deletion-request",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-023-047",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-023",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-023-048",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-023-048",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-023-048",
+      "verb": "applies to",
+      "to_id": "ENT-package",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-023-048",
+      "verb": "applies to",
+      "to_id": "ENT-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-023-048",
       "verb": "decided by",
       "to_id": "SRC-PRD-023",
       "attrs": {}
@@ -364192,6 +364366,12 @@
     {
       "from_id": "STG-patient-06-deletion-requested",
       "verb": "emits",
+      "to_id": "EVT-dsr-obligation-block-ended",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-patient-06-deletion-requested",
+      "verb": "emits",
       "to_id": "EVT-dsr-verification-required",
       "attrs": {}
     },
@@ -410733,6 +410913,12 @@
       "from_id": "STP-023-005",
       "verb": "applies",
       "to_id": "REQ-023-046",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-023-005",
+      "verb": "applies",
+      "to_id": "REQ-023-047",
       "attrs": {}
     },
     {
@@ -460803,6 +460989,68 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-004048-dc23124b",
+      "at": "2026-11-25T00:40:48.099456+00:00",
+      "changed_by": "controller",
+      "reason": "Clear a near-duplicate statement between the FR-020 catalogue row and the FR-030 event rule for monitoring.converted_to_inquiry",
+      "source_id": null,
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-020-130"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 1
+    },
+    {
+      "id": "cs-20261125-003914-54a97246",
+      "at": "2026-11-25T00:39:14.368300+00:00",
+      "changed_by": "docs-manager",
+      "reason": "Cross-FR alignment of FR-019 to FR-023: the affiliate code registration rejection, the FR-020 catalogue mirror (mandatory flags, reminder offsets, monitoring scope, closure and escalation rows), the admin timezone wording, the FR-022 System Flagged, Flag Category and treatment Status filters, the search audit log with no reading screen, and the FR-023 login, attachment, legal record, draft and notice rules.",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-notification-attempt.opened_at",
+        "EVT-dsr-obligation-block-ended",
+        "REQ-019-119",
+        "REQ-023-047",
+        "REQ-023-048"
+      ],
+      "nodes_updated": [
+        "FR-021",
+        "REQ-019-036",
+        "REQ-020-029",
+        "REQ-020-041",
+        "REQ-020-092",
+        "REQ-020-093",
+        "REQ-020-100",
+        "REQ-020-101",
+        "REQ-020-123",
+        "REQ-020-124",
+        "REQ-020-125",
+        "REQ-020-127",
+        "REQ-020-130",
+        "REQ-020-138",
+        "REQ-020-146",
+        "REQ-020-148",
+        "REQ-020-149",
+        "REQ-020-163",
+        "REQ-021-126",
+        "REQ-022-108",
+        "REQ-022-122",
+        "REQ-022-140",
+        "REQ-023-018",
+        "REQ-023-029",
+        "REQ-023-033",
+        "REQ-023-042",
+        "REQ-023-044",
+        "STG-patient-06-deletion-requested",
+        "STP-023-005"
+      ],
+      "edges_added": 20,
+      "edges_removed": 1,
+      "rows": 73
+    },
     {
       "id": "cs-20261124-211827-4d0f6064",
       "at": "2026-11-24T21:18:27.441506+00:00",

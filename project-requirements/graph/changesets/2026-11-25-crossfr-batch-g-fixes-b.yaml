@@ -1,0 +1,5 @@
+# Reword one FR-020 catalogue rule so it no longer near-duplicates the FR-030 event rule
+reason: "Clear a near-duplicate statement between the FR-020 catalogue row and the FR-030 event rule for monitoring.converted_to_inquiry"
+by: controller
+operations:
+  - {"op": "update_node", "id": "REQ-020-130", "attrs": {"statement": "Notification catalog event monitoring.converted_to_inquiry, category Monitoring, goes to the Patient. Notes: Sent when a hair-loss monitoring case under FR-037 becomes a new inquiry; never sent for an FR-038 case"}}

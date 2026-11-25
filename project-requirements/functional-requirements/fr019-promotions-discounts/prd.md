@@ -129,7 +129,7 @@ Steps:
 - Trigger: When a quote is sent, more than one automatic promotion is eligible for the quote, or an automatic promotion is eligible for an option/date-price row that already carries another discount.
 - Steps: A quote carries at most one automatic promotion. System silently resolves the conflict using the priority order: patient-entered code > provider discount (provider-selected or provider auto-applied) > Hairline-funded discount > affiliate discount. The usage limit is checked before ranking: an automatic program whose limit is fully reserved or consumed, or whose per-patient limit is reached for a known patient, is skipped, and the next-ranked qualifying program may attach. When several automatic programs qualify, only the highest-ranked remaining one attaches, to every row it is eligible for; the others attach to no row of that quote and reserve no use. On a row that already carries a higher-ranked discount, the automatic promotion is not applied to that row; a provider-selected promotion wins over a provider auto-applied one on the same row. No user prompt is shown.
 - Example: A Hairline-funded automatic program and a provider's automatic program are both eligible when a quote is sent. The provider's program ranks higher, so it attaches to every row it is eligible for and one use is reserved for it; the Hairline-funded program attaches to no row of that quote and no use is reserved for it.
-- Outcome: Exactly one discount affects the patient's final price; audit records which program was applied and which was superseded. If a valid affiliate-bound code/link was already captured as the patient acquisition source, FR-019 preserves that affiliate attribution metadata for FR-018 even when a provider-side promotion wins the price-discount priority.
+- Outcome: Exactly one discount affects the patient's final price; audit records which program was applied and which was superseded. If a valid affiliate-bound code/link was already captured as the patient acquisition source, FR-019 preserves that affiliate attribution metadata for FR-018 even when a provider-side promotion wins the price-discount priority. The capture is stored with the patient's inquiry journey (FR-018 REQ-018-308) and FR-019 reads it at quote acceptance; it is honoured only when the affiliate is Active at that moment, otherwise it earns no credit, no commission and no attribution.
 
 **C1: Hairline-Funded / Direct-Issued Code Redemption**: (REQ-019-037)
 
@@ -440,6 +440,7 @@ All three program types share a single `PromotionProgram` entity (ENT-promotion-
 - Affiliate-bound codes integrate with FR-018; FR-018 owns generation and one-affiliate-per-code assignment, while FR-019 owns validation and redemption state. Redemptions accrue incentive to the linked affiliate. Affiliate codes follow the same usage rule as every code: one use is reserved at acceptance and consumed at the first payment, and there is no code entry at checkout.
 - Segment-bound codes validate the patient against the segment definition at entry time. (REQ-019-064)
 - Individually-issued codes are single-use and bound to a specific patient identifier. (REQ-019-065)
+- When FR-018 registers a generated code, FR-019 rejects the registration with a named reason when the code text already exists on the platform (REQ-019-076) or the chosen program is not an Affiliate-bound program; FR-018 shows the returned reason on that row and the admin retries. (REQ-019-119)
 - Revoking a code stops it from validating on any subquote not yet accepted. A use already reserved by an accepted subquote (`In-Progress`) stays frozen with the acceptance and is not cancelled by the revoke. (REQ-019-066)
 
 **Acceptance Criteria**:
@@ -902,6 +903,7 @@ Acceptance Scenarios:
 | 2026-11-23 | 2.9 | Independent compression review: 1 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 | 2026-11-24 | 3.0 | Logic review fixes: archived release reason and restore re-check; send-time and acceptance-time handling of a provider-selected promotion that cannot be used; patient code replaces the row's promotion and the fallback price; a failed code at confirm follows FR-005; tie-break and limit-before-ranking for automatic programs; provider-fault transfer replacement carries no promotion and the original use returns; no program-level Pending Approval, activation, pause and resume ownership; admin overrides limited to Force-Revoke and Re-invite, with Re-invite from revoked states; auto-decline window default of 3 business days; provider code entry removed (select from the list); package-upgrade type and treatment or travel scope removed; affiliate codes follow the same usage rule and Applied means reserved at acceptance; admin edit of a sent quote counts as a re-send; code status on release or void; pre-acceptance code storage and funnel source; audit panel old and new values. | Product Owner / Documentation |
 | 2026-11-24 | 3.1 | Logic review fixes, second pass: a use also returns on a provider-fault transfer; an admin revive returns the Application from Voided to Active; per-patient usage limit basis and check points; a fixed amount at or above the row price is not attached; fixed-amount conversion for a patient code; auto-applied eligibility named by Screen 2 fields; Hairline-Funded programs limited to Auto-applied or Code-only; notice to adopting providers when Value or Hairline Share % changes; provider and admin notices listed. | Product Owner / Documentation |
+| 2026-11-25 | 3.2 | Cross-FR alignment: the affiliate capture is stated as stored with the inquiry journey, read at acceptance and honoured only for an Active affiliate; code registration from FR-018 is rejected with a named reason for a duplicate code text or a non-affiliate program. | Product Owner / Documentation |
 
 ---
 
@@ -918,4 +920,4 @@ Acceptance Scenarios:
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
-**Last Updated**: 2026-11-24
+**Last Updated**: 2026-11-25
