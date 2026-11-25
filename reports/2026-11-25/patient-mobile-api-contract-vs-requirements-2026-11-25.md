@@ -40,7 +40,7 @@ These cannot be corrected by adding alone. Until each is agreed, the mobile team
 | 3 | `quote/compare-quotes` | Takes the inquiry only and returns quotes | The patient picks two or three subquotes, from the same or different providers, and compares those (REQ-005-013, REQ-005-047, REQ-005-014) | Add an optional list of selected subquote rows to the request; return one entry per subquote. |
 | 4 | `booking/pay-deposit-with-saved-card` | `payment_plan_type: "full"` | Three payment options: pay in full now, deposit now and balance later, installments 2 to 9 (REQ-007-098) | Publish the full value list now. Requirement names are `full_payment`, `deposit_and_final`, `installments`, plus an installment count. |
 | 5 | `passport-details/get-passport-details`, `after-care/create-aftercare-milestone-scan` | The app sends `patient_id` | A patient reaches only their own records (REQ-011-021) | Keep the field in the request, ignore its value, and use the signed-in patient. This is a security correction on the server. |
-| 6 | `chat/start-support-conversation` | Opens a chat with Hairline support | Chat with support is not in scope; the patient uses the support request form (FR-012 Module Scope, REQ-012-030; FR-035) | Awaiting the product owner: keep the chat or remove the request. Do not change it yet. |
+| 6 | `chat/start-support-conversation` | Opens a chat with Hairline support | Chat with support is not in scope; the patient uses the support request form (FR-012 Module Scope, REQ-012-030; FR-035) | Decided by the product owner on 2026-11-25: the support request form is the only route. The mobile app will not call this request. Leave it in place and unused, or retire it; do not extend it. |
 | 7 | `aftercare/medications/{id}/taken` | Marks a medication as taken | The patient marks each dose, not the medication (FR-011 Screen 4) | Add a dose identifier to the request before the aftercare screens are built. |
 
 ## 4. Corrections that do not break the app
@@ -49,7 +49,7 @@ These cannot be corrected by adding alone. Until each is agreed, the mobile team
 
 - `inquiry/get-patient-inquiries`: the test script checks the stage value `quote`; the requirement value is `quoted`. The full stage list is inquiry, quoted, accepted, confirmed, in_progress, aftercare, completed, cancelled. Confirm which value the server returns and correct the collection.
 - `responses_count`: the collection describes it as each provider quote counted once. The requirement counts the providers who have quoted or declined (REQ-003-129). Same field, corrected number.
-- `total_offers`: no requirement defines this number. The patient dashboard shows `responses_count`. Keep the field; the app should not present it as a requirement-backed figure.
+- `total_offers`: no requirement defines this number. Product owner decision of 2026-11-25: the app does not show it and shows `responses_count` only. Keep the field so nothing breaks.
 - Subquote state `superseded` exists in the requirements and is missing from the collection's list. Add it to the documented values.
 - `patient/destinations`: the app sends country and currency. The requirement reads the country from the patient's profile (FR-028). Keep the parameters as optional; the server uses the profile.
 
@@ -69,39 +69,74 @@ These cannot be corrected by adding alone. Until each is agreed, the mobile team
 | `after-care/submit-questionnaire-answers` | Answer types checked per question; save as draft | REQ-011-060 |
 | `after-care/create-aftercare-milestone-scan` | A photo set per scan, not one file | REQ-011-059, REQ-011-095 |
 
-**Requests with no requirement behind them.** Keep them unchanged until the product owner decides: `DELETE /notifications/{id}`, `patient/account/active-sessions`, `patient/head-photos/summary-by-month`, and the price and rating filters on `inquiry/get-all-offers`.
+**Requests with no requirement behind them.** Product owner decision of 2026-11-25: none of these is required, and the mobile app will not use them: `DELETE /notifications/{id}`, `patient/account/active-sessions`, `patient/head-photos/summary-by-month`, and the price and rating filters on `inquiry/get-all-offers`. Leave them in place so nothing breaks; do not extend them.
+
+**Push platforms.** The patient app registers for push on iOS and Android only (REQ-020-002). The device registration request needs no other platform value.
 
 ## 5. Patient actions the requirements need that the collection does not list
 
-Some may already exist on the server and simply be missing from the collection. Please mark each one "exists" (and add it to the collection) or "to build".
+Each action was checked against the backend route file (`routes/api.php`, read only, 2026-11-25). Result for 69 single actions: 42 already have a route, 21 have none, 6 need your confirmation. Paths are relative to the API base.
 
-| Area | Actions | Requirement |
+### 5.1 Already in the backend: add these to the collection
+
+They then fall under the same freeze as the 96.
+
+| Area | Action | Existing request |
 |---|---|---|
-| Legal documents | Accept the current Terms, Privacy Policy and consent at registration, at sign-in when a new version is published, and before accepting a quote or paying; public Cancellation Policy page | FR-027 (REQ-027-033, REQ-027-062) |
-| Registration and sign-in | Complete profile, discovery answer, service choice; re-authentication send, resend and verify | FR-001 |
-| Password | Verify the reset code, set the new password, change password while signed in | FR-001 |
-| Profile and settings | Edit profile and photo; change email with a code (confirm, resend, cancel); update the email and push switches; update language | FR-001, FR-020, FR-021 |
-| Account deletion | Submit the request, read its status, extra verification | FR-001, FR-023 |
-| Inquiry | Save draft, create and submit, upload photos and head scan, choose providers, cancel with a reason, confirm or decline redistribution | FR-003, FR-002 |
-| Payment | Choose the payment option and list the installment choices; installment schedule and pay now; pay the final balance; bank transfer; receipts and payment history | FR-007, FR-007B (REQ-007-002, REQ-007-029) |
+| Legal documents | Accept a newly published Terms or Privacy Policy at sign-in | `POST /settings/legal-documents/{id}/accept` |
+| Registration | Complete profile; discovery answer | `POST /onboarding/patient-onboarding`, `POST /onboarding/patient-discovery` |
+| Registration | Re-authentication verify | `POST /patient/reauth` |
+| Password | Verify the reset code; set the new password; change password while signed in | `POST /auth/verify-otp`, `POST /auth/reset-password`, `POST /auth/change-password` |
+| Profile and settings | Edit profile and photo | `POST /settings/update-patient-profile` |
+| Profile and settings | Change email: request the code, confirm | `POST /patient/email/request`, `POST /patient/email/verify` |
+| Profile and settings | Update the email and push switches; update language | `POST /settings/patient/notifications`, `PUT /patient/me/locale-preference` |
+| Account deletion | Submit the request; extra verification send and resend | `POST /patient/account/delete-request`, `POST /patient/account/deletion/request-otp`, `POST /patient/account/deletion/resend-otp` |
+| Inquiry | Create and submit, with photos, head scan and provider choice in the same request | `POST /inquiry/create-inquiry` |
+| Inquiry | Cancel with a reason; confirm or decline redistribution | `POST /inquiry/cancel`, `GET /inquiry/cancellation-reasons`, `POST /inquiry/redistribution/confirm`, `POST /inquiry/redistribution/decline` |
+| Payment | Choose the payment option | `POST /booking/create` (see section 3 row 4 for the value names) |
+| Travel | Patient enters or edits a flight or a hotel | `POST /quote/flight-book`, `POST /quote/flight-update`, `POST /quote/hotel-book`, `POST /quote/hotel-update` |
+| Aftercare | Standalone aftercare and add-on purchase, with checkout | `POST /patient/aftercare/check-eligibility`, `GET /patient/aftercare/services/{template_id}`, `GET /patient/aftercare/calculate-total`, `POST /patient/aftercare/create-payment-intent`, `POST /patient/aftercare/confirm-payment`, `POST /patient/aftercare/purchase-with-saved-card`, `GET /patient/aftercare/purchase/{request_id}/status` |
+| Reviews | Submit, edit, request takedown | `POST /review/submit`, `POST /review/{review_id}`, `POST /patient/reviews/{review_id}/request-takedown` |
+| Support | Support request detail; replies with attachments; helpful feedback | `GET /patients/support-tickets/{id}`, `POST /patients/support-tickets/{id}/reply`, `POST /patients/support-tickets/content-feedback` |
+| Help | Search, resources, videos | `POST /help-centre/patient-articles/search`, `POST /help-centre/faqs/search`, `GET /help-centre/resource-library`, `GET /help-centre/video-tutorials` |
+
+### 5.2 No route found: to build
+
+| Area | Action | Requirement |
+|---|---|---|
+| Legal documents | Record acceptance of the Privacy Policy and consent at registration (today only the Terms are recorded, by the server, with no field from the app) | REQ-001-043, REQ-027-062 |
+| Legal documents | Acceptance check before accepting a quote and before paying | REQ-005-066, REQ-027-033 |
+| Legal documents | Public Cancellation Policy page | FR-027 |
+| Registration | Service choice; re-authentication send and resend of the code | FR-001 |
+| Profile and settings | Change email: resend and cancel | FR-001 |
+| Account deletion | Read the status of the deletion request | FR-001, FR-023 |
+| Inquiry | Save a draft (today the inquiry is created in one request, with no draft) | FR-003 |
+| Payment | List the installment choices; pay a later installment; pay the final balance; receipts; payment history | FR-007, FR-007B (REQ-007-029) |
 | Booking | Add to calendar | REQ-006-041 |
-| Travel | Patient-entered flights and hotel; mark one item Not needed | FR-008 (REQ-008-083) |
-| Aftercare | Standalone aftercare request; add-on purchase; checkout; cancel a subscription; educational resources; medication history; send a message to the aftercare team | FR-011 (REQ-011-097, REQ-011-102) |
-| Reviews | Submit, edit, request takedown, check eligibility | FR-013 |
-| Support | Support request detail and replies with attachments; help search, resources, videos, helpful feedback | FR-035, FR-033 |
-| Monitoring | All of FR-037 (monitor hair loss) and FR-038 (monitor transplant progress) | FR-037, FR-038 |
+| Travel | Mark one flight or the hotel Not needed (today only the whole trip can be marked) | REQ-008-083 |
+| Aftercare | Cancel a subscription | REQ-011-097 |
+| Aftercare | Educational resources (today only a count is returned) | FR-011 Screen 5 |
+| Aftercare | Send a text message to the aftercare team from the dashboard, and list the messages with the team's replies; the reply also raises the `aftercare.team_message` push and email notification | REQ-011-102, REQ-011-103 |
+| Reviews | Check eligibility before the review form opens (today the check runs only on submit) | FR-013 |
+
+### 5.3 Please confirm
+
+| Item | What we saw | Question |
+|---|---|---|
+| Bank transfer | `POST /booking/pay-deposit` accepts a bank transfer value, and marks the first installment as paid without a real payment | Is bank transfer finished? The requirement needs transfer details and a confirmation step before anything is marked paid (REQ-007-002). |
+| Medication history | Medications come inside `GET /after-care/get-patient-aftercare-detail` | Does it include past doses taken and missed? |
+| Monitoring, FR-037 and FR-038 | Only head-photo requests exist (`/patient/head-photos`, day summary and day detail) | Do these carry the monitoring features, or is monitoring still to build? |
+| Terms at registration | The server records Terms acceptance by itself when the account is activated | The requirement needs the patient's own tick, sent by the app, for each document. |
 
 ## 6. What we ask of the backend team
 
 1. Confirm the freeze in section 1 for the 96 requests in the Appendix.
 2. Add example responses to the collection and remove the stored secrets.
-3. Answer section 3, rows 1 to 5 and 7, with the proposed or an alternative way that keeps the contract.
+3. Answer section 3, rows 1 to 5 and 7, with the proposed or an alternative way that keeps the contract. Row 6 is decided.
 4. Apply section 4 as additions.
-5. Mark each line of section 5 "exists" or "to build" and publish the new requests in the order the mobile team needs them.
+5. Add the section 5.1 requests to the collection, build section 5.2 in the order the mobile team needs the screens, and answer section 5.3.
 
-Open with the product owner: section 3 row 6, and the requests with no requirement in section 4.
-
-Limits of this comparison: the backend source code was not read, and response contents were not visible. Statements about what a response lacks are to be confirmed by you.
+Limits of this comparison: of the backend source, only the route file was read (for section 5), and a few handlers where a route name was unclear. Response contents were not visible. Statements about what a response lacks are to be confirmed by you.
 
 ## Appendix: the 96 requests under the freeze
 
