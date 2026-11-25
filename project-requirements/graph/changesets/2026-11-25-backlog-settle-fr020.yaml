@@ -1,0 +1,7 @@
+# FR-020 backlog points settled: template management stated once (REQ-020-047, REQ-020-048).
+reason: "Backlog points settled: notification content and email template management were stated more than once in FR-020; each is now stated once."
+by: controller
+source_id: SRC-PRD-020
+operations:
+  - {"op": "update_node", "id": "REQ-020-047", "attrs": {"statement": "All notification content (titles, messages and templates for email, push and SMS) is managed in FR-030: Notification Rules & Configuration through the Notification Template Editor, which supports dynamic variables, multi-language content, rich text formatting (email) and preview."}}
+  - {"op": "update_node", "id": "REQ-020-048", "attrs": {"statement": "General notification email templates are managed in FR-030 as REQ-020-047 states; OTP email templates (verification, password reset) are managed in FR-026 (App Settings & Security Policies) as part of authentication settings."}}

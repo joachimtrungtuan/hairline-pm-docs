@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T08:23:02Z",
+  "generated_at": "2026-11-25T08:25:03Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -74781,9 +74781,9 @@
       "owner_fr": "FR-020",
       "title": "Notification content managed in FR-030 template editor",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Notification Content Management: Notification content (titles, messages, templates) is managed in FR-030: Notification Rules & Configuration via the Notification Template Editor. Notification Content Management: Notification templates (email, push, SMS) are managed in FR-030: Notification Rules & Configuration via the Notification Template Editor, which supports dynamic variables, multi-language content, rich text formatting (email), and preview capabilities.",
+        "statement": "All notification content (titles, messages and templates for email, push and SMS) is managed in FR-030: Notification Rules & Configuration through the Notification Template Editor, which supports dynamic variables, multi-language content, rich text formatting (email) and preview.",
         "rationale": "prd.md line 390. Repeated at line 384 (Implementation Notes)."
       }
     },
@@ -74793,9 +74793,9 @@
       "owner_fr": "FR-020",
       "title": "General email templates in FR-030, OTP templates in FR-026",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "General notification email templates: Managed in FR-030 (Notification Rules & Configuration) with support for dynamic variables, multi-language content, rich text formatting, and preview capabilities. OTP email templates (verification, password reset): Managed in FR-026 (App Settings & Security Policies) as part of authentication settings.",
+        "statement": "General notification email templates are managed in FR-030 as REQ-020-047 states; OTP email templates (verification, password reset) are managed in FR-026 (App Settings & Security Policies) as part of authentication settings.",
         "rationale": "prd.md line 340. Repeated at lines 386 and 387. The FR-026 template setting is cited, not linked, because it is created by the FR-026 change-set."
       }
     },
@@ -463430,6 +463430,21 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-082347-7b5e83a1",
+      "at": "2026-11-25T08:23:47.938192+00:00",
+      "changed_by": "controller",
+      "reason": "Backlog points settled: notification content and email template management were stated more than once in FR-020; each is now stated once.",
+      "source_id": "SRC-PRD-020",
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-020-047",
+        "REQ-020-048"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 2
+    },
     {
       "id": "cs-20261125-082150-965ede71",
       "at": "2026-11-25T08:21:50.101033+00:00",
