@@ -1,0 +1,13 @@
+# Document consistency fixes found while comparing the patient mobile API collection with the requirements (2026-11-25).
+reason: "Aftercare-team contact stated once in FR-011 and cited by FR-012."
+by: controller
+source_id: SRC-PRD-011
+operations:
+  - {"op": "update_node", "id": "REQ-012-030", "attrs": {"statement": "SMS channel management (handled by S-03 Notification Service configuration; SMS as a transport for secure messaging is not part of MVP and will only be available if/when S-03 adds SMS support in a later phase); Routine admin participation in conversations (admin intervention is emergency-only, not standard practice); Patient ↔ Hairline Support general help (a chat may be added in a future release; today the patient uses the support request form and its replies, FR-035 and FR-034, outside the messaging module); Patient ↔ Aftercare Team specialized support (a chat may be added in a future release; today the patient writes to the aftercare team through Contact Support on the FR-011 aftercare dashboard, which is recorded in the FR-011 aftercare communication log and is not an FR-012 conversation, REQ-011-102)."}}
+  - {"op": "add_node", "id": "REQ-011-102", "type": "Rule", "owner_fr": "FR-011", "title": "Contact Support sends a message to the aftercare team", "attrs": {"statement": "Contact Support on the patient Aftercare Dashboard (Screen 1) MUST let the patient send a text message to the aftercare team at any time while the aftercare plan is open. System MUST record it as an aftercare communication entry (entry type message, sender role patient) on the plan and show it in the aftercare team's communication log for that patient. It is not an FR-012 conversation, and FR-012 chat with the provider stays separate (REQ-011-080)."}}
+  - {"op": "add_edge", "from": "REQ-011-102", "verb": "applies at", "to": "STG-aftercare-02-follow-up"}
+  - {"op": "add_edge", "from": "REQ-011-102", "verb": "applies to", "to": "SCR-011-01"}
+  - {"op": "add_edge", "from": "REQ-011-102", "verb": "applies to", "to": "ENT-aftercare-communication-entry"}
+  - {"op": "add_edge", "from": "REQ-011-102", "verb": "applies to", "to": "ACT-patient"}
+  - {"op": "add_edge", "from": "REQ-011-102", "verb": "decided by", "to": "SRC-PRD-011"}
+  - {"op": "add_edge", "from": "FR-012", "verb": "references", "to": "REQ-011-102"}

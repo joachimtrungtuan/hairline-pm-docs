@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T04:13:05Z",
+  "generated_at": "2026-11-25T04:59:21Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -40638,7 +40638,7 @@
       "owner_fr": null,
       "title": "Messaging & Communication",
       "status": "active",
-      "version": 8,
+      "version": 9,
       "attrs": {
         "module": "fr012-secure-messaging",
         "prd_path": "project-requirements/functional-requirements/fr012-secure-messaging/prd.md",
@@ -56570,6 +56570,17 @@
       }
     },
     {
+      "id": "REQ-011-102",
+      "type": "Rule",
+      "owner_fr": "FR-011",
+      "title": "Contact Support sends a message to the aftercare team",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Contact Support on the patient Aftercare Dashboard (Screen 1) MUST let the patient send a text message to the aftercare team at any time while the aftercare plan is open. System MUST record it as an aftercare communication entry (entry type message, sender role patient) on the plan and show it in the aftercare team's communication log for that patient. It is not an FR-012 conversation, and FR-012 chat with the provider stays separate (REQ-011-080)."
+      }
+    },
+    {
       "id": "REQ-012-001",
       "type": "Rule",
       "owner_fr": "FR-012",
@@ -56911,9 +56922,9 @@
       "owner_fr": "FR-012",
       "title": "Out of scope for messaging",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "SMS channel management (handled by S-03 Notification Service configuration; SMS as a transport for secure messaging is not part of MVP and will only be available if/when S-03 adds SMS support in a later phase); Routine admin participation in conversations (admin intervention is emergency-only, not standard practice); Patient ↔ Hairline Support general help (may be added in future release; currently handled outside messaging module); Patient ↔ Aftercare Team specialized support (may be added in future release; currently handled outside messaging module).",
+        "statement": "SMS channel management (handled by S-03 Notification Service configuration; SMS as a transport for secure messaging is not part of MVP and will only be available if/when S-03 adds SMS support in a later phase); Routine admin participation in conversations (admin intervention is emergency-only, not standard practice); Patient ↔ Hairline Support general help (a chat may be added in a future release; today the patient uses the support request form and its replies, FR-035 and FR-034, outside the messaging module); Patient ↔ Aftercare Team specialized support (a chat may be added in a future release; today the patient writes to the aftercare team through Contact Support on the FR-011 aftercare dashboard, which is recorded in the FR-011 aftercare communication log and is not an FR-012 conversation, REQ-011-102).",
         "rationale": "prd.md lines 87, 88, 89, 90. Communication Structure, Out of Scope. Change Log 2.12 (2026-04-13, line 1017): \"Removed Communication Monitoring Center export behavior from Screen 5 to keep admin conversation export deferred until a dedicated export requirement is re-specified in the search/filter catalog.\" See the open question on conversation export."
       }
     },
@@ -181423,7 +181434,7 @@
       "verb": "active in",
       "to_id": "STG-aftercare-02-follow-up",
       "attrs": {
-        "rules": 55
+        "rules": 56
       },
       "derived": true
     },
@@ -181755,6 +181766,12 @@
       "from_id": "FR-012",
       "verb": "references",
       "to_id": "REQ-009-002",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-012",
+      "verb": "references",
+      "to_id": "REQ-011-102",
       "attrs": {}
     },
     {
@@ -220009,6 +220026,36 @@
     },
     {
       "from_id": "REQ-011-101",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-011",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-011-102",
+      "verb": "applies at",
+      "to_id": "STG-aftercare-02-follow-up",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-011-102",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-011-102",
+      "verb": "applies to",
+      "to_id": "ENT-aftercare-communication-entry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-011-102",
+      "verb": "applies to",
+      "to_id": "SCR-011-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-011-102",
       "verb": "decided by",
       "to_id": "SRC-PRD-011",
       "attrs": {}
@@ -462038,6 +462085,23 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-045803-eab7b2d8",
+      "at": "2026-11-25T04:58:03.572030+00:00",
+      "changed_by": "controller",
+      "reason": "Aftercare-team contact stated once in FR-011 and cited by FR-012.",
+      "source_id": "SRC-PRD-011",
+      "nodes_added": [
+        "REQ-011-102"
+      ],
+      "nodes_updated": [
+        "FR-012",
+        "REQ-012-030"
+      ],
+      "edges_added": 6,
+      "edges_removed": 0,
+      "rows": 12
+    },
     {
       "id": "cs-20261125-041149-cb9ea98c",
       "at": "2026-11-25T04:11:49.845184+00:00",

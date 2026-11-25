@@ -264,7 +264,7 @@ Enable patients to convert one accepted subquote into a confirmed procedure book
 | Deposit Amount | number | Yes | Deposit from the FR-029 calculation | Read-only; within the bounds set in FR-029 | ENT-booking.deposit_amount |
 | Deposit Percentage | text | Yes | Display deposit percentage used | Read-only; for transparency | ENT-booking.deposit_percentage |
 | Remaining Balance | number | Yes | Total - Deposit | Calculated automatically (REQ-006-070) | ENT-booking.remaining_balance |
-| Payment Option | select | Yes | Full payment or Installments (2–9) | Feasible installment options based on FR-029 split payment settings and FR-007B schedule rules (completion ≥30 days before procedure) | ENT-booking.payment_option |
+| Payment Option | select | Yes | Pay in full now, deposit now and balance later, or installments (2–9); one of three options (REQ-007-098) | Feasible installment options based on FR-029 split payment settings and FR-007B schedule rules (completion ≥30 days before procedure) | ENT-booking.payment_option |
 | Installment Plan | select | Conditional | Number of installments if selected | Only shown if installment option selected (REQ-006-075) | ENT-booking.installment_count |
 | Currency | text | Yes | Payment currency and locked exchange-rate context | Read-only; from acceptance snapshot | ENT-quote.currency_snapshot, ENT-quote.locked_exchange_rate_snapshot |
 | Travel | link | Conditional | Entry to the FR-008 Travel Itinerary View (FR-008 Screen 5); it also leads to the passport, flight and hotel submission screens while an item is pending. FR-006 hosts the entry and FR-008 owns what it opens | Shown when travel is available for the booking (REQ-006-042) | no graph field (control) |
@@ -1167,6 +1167,7 @@ A late cancellation performed by an admin at the patient's request applies the r
 | 2026-11-25 | 2.22 | Owner ruling of 2026-11-25: a treatment closed early with no fault (FR-010 Rule 17) shows the patient a read-only status note "Treatment closed early" with the decision date and the refund amount when one was set, on the Screen 2 booking detail (new row Early Close Note, REQ-006-085). No new action, no new status, no flow change. | Claude (AI Assistant) |
 | 2026-11-25 | 2.23 | Follow-up filing fixes: Screen 11 is now "Resolve In-Progress Case" and carries the early close with no fault as a third route (Alternative Flow B9, REQ-006-086, closure cause `NoFaultEarlyClose`, new Screen 6 action Close Case Early, No Fault), matching FR-010 Rule 17; Screen 2 Booking Status and Notes now list the statuses in which the screen is reachable (`Confirmed`, `In Progress`, `Aftercare`, `Completed`); the Early Close Note shows the refund amount only when a refund greater than zero was issued (REQ-006-085); the Cancellation Policy version shown at the tick is stored with the acknowledgment (REQ-006-038, new field `cancellation_policy_version_shown`). | Claude (AI Assistant) |
 | 2026-11-25 | 2.24 | Owner ruling 2026-11-25 follow-up: Close inquiry cancels any open replacement quote, draft or sent (REQ-006-082), matching FR-004 REQ-004-111. | Claude (AI Assistant) |
+| 2026-11-25 | 2.25 | Screen 1 Payment Option row now lists the three options FR-007 defines (pay in full, deposit and balance, installments; REQ-007-098); it listed two. | Claude (AI Assistant) |
 
 ---
 

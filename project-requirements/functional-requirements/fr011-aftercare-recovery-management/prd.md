@@ -51,7 +51,7 @@ The Aftercare & Recovery Management module provides comprehensive post-procedure
 
 **In Scope**:
 
-- Patient ↔ Aftercare Team: Structured messaging, questionnaires, and scan/photo set submissions
+- Patient ↔ Aftercare Team: Structured messaging, questionnaires, and scan/photo set submissions. The patient's message goes through Contact Support on the Aftercare Dashboard and is recorded in the aftercare communication log, not in an FR-012 conversation (REQ-011-102)
 - Provider ↔ Aftercare Team: Case updates and escalations
 - Admin ↔ All Parties: Oversight and interventions
 - System-generated updates: Milestone reminders, progress updates, urgent flags
@@ -444,7 +444,7 @@ Admin assignment is not a separate entry route. It is a step inside these routes
 | Upload Scan | action | Cond. | Action to capture/upload scan/photo set | Enabled if due | no graph field (control) |
 | Complete Questionnaire | action | Cond. | Action to complete due questionnaire | Enabled if due | no graph field (control) |
 | View Instructions | action | No | Open instructions content | Always available | no graph field (control) |
-| Contact Support | action | No | Contact aftercare support | Always available | no graph field (control) |
+| Contact Support | action | No | Send a text message to the aftercare team; recorded as an aftercare communication entry (message, from the patient) and shown in the team's communication log; not an FR-012 conversation (REQ-011-102) | Always available while the plan is open | no graph field (control) |
 
 **Business Rules**:
 
@@ -1591,6 +1591,8 @@ Admin assignment is not a separate entry route. It is a step inside these routes
 - **AftercareAuditEntry**: immutable audit record
 - **SC-008**: Admin can assign standalone aftercare request within 24 hours
 
+- **REQ-011-102**: Contact Support on the patient Aftercare Dashboard (Screen 1) MUST let the patient send a text message to the aftercare team at any time while the aftercare plan is open. System MUST record it as an aftercare communication entry (entry type message, sender role patient) on the plan and show it in the aftercare team's communication log for that patient. It is not an FR-012 conversation, and FR-012 chat with the provider stays separate (REQ-011-080).
+
 ## Dependencies
 
 Related FRs:
@@ -1710,6 +1712,7 @@ Acceptance Scenarios:
 | 2026-11-24 | 1.13 | Logic review: plan activation by provider confirmation or admin activation with a stalled-setup reminder and escalation; three entry sources including the FR-038 conversion; milestone closing on scan, questionnaire and education with medication outside the percentage; payment-due and expiry handling with the paused 7-day timer; final-template price acceptance; who is paid by who delivers; subscription cancellation, plan completion, extension approval and the urgent flag clock; Coordinator on admin Screens 13 to 19; wording alignment with FR-002, FR-006, FR-025 and FR-038. | Product Owner / Documentation |
 | 2026-11-25 | 1.15 | Cross-FR alignment: the medication pick offers only Active templates and the plan keeps its own copy of the text (FR-024); the out-of-scope patient and provider chat states its lifecycle (FR-012). The conversion hand-off rows were already stated and are unchanged. | Documentation |
 | 2026-11-24 | 1.14 | Logic review pass 2: one closing rule for every ending of aftercare with an admin Cancel Aftercare control; time ends a milestone and a task not done becomes Missed; reminder and escalation clock for a paid add-on and an assigned standalone request in place of the add-on unassigned expiry; Pending activation plan status; Hairline-team actions on Screen 14 and a confirm-and-activate step after a handover; reassignment has no automatic refund and the handover fee in the treatment-linked flow is paid from Hairline revenue; add-on alternative template only at the price already paid; aftercare participation as a provider profile setting owned by FR-015; a new standalone request after a rejected or expired FR-038 conversion; discount codes removed from templates; Screen 15 availability marks. | Product Owner / Documentation |
+| 2026-11-25 | 1.15 | New rule REQ-011-102: Contact Support on the patient Aftercare Dashboard sends a text message to the aftercare team, recorded in the aftercare communication log, not in FR-012 messaging. Closes the gap between this FR (contact the aftercare team) and FR-012 (aftercare-team chat out of scope). | Claude (AI Assistant) |
 
 ## Appendix: Approvals
 
