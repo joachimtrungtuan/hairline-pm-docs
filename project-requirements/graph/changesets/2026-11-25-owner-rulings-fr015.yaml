@@ -1,0 +1,21 @@
+# Owner ruling of 2026-11-25 (final): providers get the same email delivery problem indicator as patients. FR-015 PRD v1.33.
+# New: field ENT-provider.email_delivery_issue (mirrors ENT-patient.email_delivery_issue) and rule REQ-015-141, with stage, actor, entity, screen, field and source edges; SCR-015-03 shows the field; FR-015 references the FR-030 rule that sets it (REQ-030-156).
+# Not in this change-set: REQ-030-156 is owned by FR-030 and is left untouched. Its "applies to" edge reaches only ENT-patient.email_delivery_issue; the FR-030 owner change that is pending should add REQ-030-156 applies to ENT-provider.email_delivery_issue. No node owned by another FR is updated.
+# Not stated anywhere for either account type: when the flag clears. FR-030 sets the flag (B1 step 7) and defines no clear condition, so FR-015 does not invent one.
+reason: "Owner ruling 2026-11-25: when a provider's email hard-bounces, the FR-030 bounce handling sets an Email delivery issue flag on the provider record, and admins see it read-only on the provider detail screen, exactly as the patient record already works."
+by: docs-manager
+source_id: SRC-PRD-015
+operations:
+  - {"op": "add_field", "id": "ENT-provider.email_delivery_issue", "entity_id": "ENT-provider", "name": "email_delivery_issue", "data_type": "bool", "title": "Email delivery issue", "owner_fr": "FR-015", "attrs": {"description": "Flag on the provider record set when an email to the provider bounces; the notification feature (FR-030) sets it. Admins see it read-only on the provider detail screen (Tab 1)."}}
+  - {"op": "add_node", "id": "REQ-015-141", "type": "Rule", "owner_fr": "FR-015", "title": "Provider record carries an Email delivery issue flag shown read-only to admins", "attrs": {"statement": "System MUST keep an \"Email delivery issue\" flag on the Provider record, set by the FR-030 bounce handling (Workflow B1 step 7, REQ-030-156) exactly as for the patient account, and MUST show it read-only to admins on Screen 3 Tab 1 beside Email Address. No admin action on Screen 3 sets or clears it, and the provider does not see it.", "rationale": "Screen 3 Tab 1 row Email Delivery Issue; Data Requirements. FR-030 REQ-030-156 owns the setting of the flag for every account type; the patient equivalent is ENT-patient.email_delivery_issue."}}
+  - {"op": "add_edge", "from": "REQ-015-141", "verb": "applies at", "to": "STG-provider-01-invited"}
+  - {"op": "add_edge", "from": "REQ-015-141", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-015-141", "verb": "applies at", "to": "STG-provider-04-suspended"}
+  - {"op": "add_edge", "from": "REQ-015-141", "verb": "applies at", "to": "STG-provider-05-offboarded"}
+  - {"op": "add_edge", "from": "REQ-015-141", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-015-141", "verb": "applies to", "to": "ENT-provider"}
+  - {"op": "add_edge", "from": "REQ-015-141", "verb": "applies to", "to": "SCR-015-03"}
+  - {"op": "add_edge", "from": "REQ-015-141", "verb": "applies to", "to": "ENT-provider.email_delivery_issue"}
+  - {"op": "add_edge", "from": "REQ-015-141", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "add_edge", "from": "SCR-015-03", "verb": "shows", "to": "ENT-provider.email_delivery_issue", "attrs": {"provenance": "inherited from another FR", "label": "Email Delivery Issue", "editable": false}}
+  - {"op": "add_edge", "from": "FR-015", "verb": "references", "to": "REQ-030-156"}

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T04:02:24Z",
+  "generated_at": "2026-11-25T04:04:11Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -23638,6 +23638,17 @@
       }
     },
     {
+      "id": "ENT-provider.email_delivery_issue",
+      "type": "Field",
+      "owner_fr": "FR-015",
+      "title": "Email delivery issue",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Flag on the provider record set when an email to the provider bounces; the notification feature (FR-030) sets it. Admins see it read-only on the provider detail screen (Tab 1)."
+      }
+    },
+    {
       "id": "ENT-provider.featured",
       "type": "Field",
       "owner_fr": "FR-015",
@@ -40666,7 +40677,7 @@
       "owner_fr": null,
       "title": "Provider Management (Admin-Initiated)",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
         "module": "fr015-provider-management",
         "prd_path": "project-requirements/functional-requirements/fr015-provider-management/prd.md",
@@ -64286,6 +64297,18 @@
       "attrs": {
         "statement": "Aftercare Participation is a yes or no setting on the provider profile, default On, that an admin sets when creating the provider (Screen 2 Step 5) and can change later in Tab 1 while the provider is Active or Suspended. When On, FR-011 assigns a patient's aftercare to this clinic while it is Active; when Off, to the Hairline aftercare team (FR-011 REQ-011-054). A change applies to aftercare assigned afterwards.",
         "rationale": "Screen 2 Step 5 and Screen 3 Tab 1; the assignment rule is owned by FR-011 REQ-011-054."
+      }
+    },
+    {
+      "id": "REQ-015-141",
+      "type": "Rule",
+      "owner_fr": "FR-015",
+      "title": "Provider record carries an Email delivery issue flag shown read-only to admins",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST keep an \"Email delivery issue\" flag on the Provider record, set by the FR-030 bounce handling (Workflow B1 step 7, REQ-030-156) exactly as for the patient account, and MUST show it read-only to admins on Screen 3 Tab 1 beside Email Address. No admin action on Screen 3 sets or clears it, and the provider does not see it.",
+        "rationale": "Screen 3 Tab 1 row Email Delivery Issue; Data Requirements. FR-030 REQ-030-156 owns the setting of the flag for every account type; the patient equivalent is ENT-patient.email_delivery_issue."
       }
     },
     {
@@ -101940,7 +101963,7 @@
       "owner_fr": "FR-015",
       "title": "Provider Profile Details",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "platform": "admin",
         "description": "Tabbed provider view: Basic Information, Languages, Staff List, Awards, Reviews, Documents, Commission and Financials, Activity Log; header quick actions including Login as Provider, and a Closure request notice with Deactivate Provider and Reject Request while a closure request is pending (Screen 3). Edit Profile is hidden and all tabs are read-only for a Deactivated provider."
@@ -155635,6 +155658,14 @@
       "calculated_by": null
     },
     {
+      "id": "ENT-provider.email_delivery_issue",
+      "entity_id": "ENT-provider",
+      "name": "email_delivery_issue",
+      "data_type": "bool",
+      "required": false,
+      "calculated_by": null
+    },
+    {
       "id": "ENT-provider.featured",
       "entity_id": "ENT-provider",
       "name": "featured",
@@ -182346,7 +182377,7 @@
       "verb": "active in",
       "to_id": "STG-provider-01-invited",
       "attrs": {
-        "rules": 33
+        "rules": 34
       },
       "derived": true
     },
@@ -182364,7 +182395,7 @@
       "verb": "active in",
       "to_id": "STG-provider-03-active",
       "attrs": {
-        "rules": 92
+        "rules": 93
       },
       "derived": true
     },
@@ -182373,7 +182404,7 @@
       "verb": "active in",
       "to_id": "STG-provider-04-suspended",
       "attrs": {
-        "rules": 47
+        "rules": 48
       },
       "derived": true
     },
@@ -182382,7 +182413,7 @@
       "verb": "active in",
       "to_id": "STG-provider-05-offboarded",
       "attrs": {
-        "rules": 39
+        "rules": 40
       },
       "derived": true
     },
@@ -182492,6 +182523,12 @@
       "from_id": "FR-015",
       "verb": "references",
       "to_id": "REQ-029-043",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-015",
+      "verb": "references",
+      "to_id": "REQ-030-156",
       "attrs": {}
     },
     {
@@ -240990,6 +241027,60 @@
     },
     {
       "from_id": "REQ-015-140",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-141",
+      "verb": "applies at",
+      "to_id": "STG-provider-01-invited",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-141",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-141",
+      "verb": "applies at",
+      "to_id": "STG-provider-04-suspended",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-141",
+      "verb": "applies at",
+      "to_id": "STG-provider-05-offboarded",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-141",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-141",
+      "verb": "applies to",
+      "to_id": "ENT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-141",
+      "verb": "applies to",
+      "to_id": "ENT-provider.email_delivery_issue",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-141",
+      "verb": "applies to",
+      "to_id": "SCR-015-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-141",
       "verb": "decided by",
       "to_id": "SRC-PRD-015",
       "attrs": {}
@@ -337539,6 +337630,16 @@
         "provenance": "retrieved",
         "label": "Email Address",
         "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-015-03",
+      "verb": "shows",
+      "to_id": "ENT-provider.email_delivery_issue",
+      "attrs": {
+        "provenance": "inherited from another FR",
+        "label": "Email Delivery Issue",
+        "editable": false
       }
     },
     {
@@ -461879,6 +461980,24 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-040255-56f330e1",
+      "at": "2026-11-25T04:02:55.073145+00:00",
+      "changed_by": "docs-manager",
+      "reason": "Owner ruling 2026-11-25: when a provider's email hard-bounces, the FR-030 bounce handling sets an Email delivery issue flag on the provider record, and admins see it read-only on the provider detail screen, exactly as the patient record already works.",
+      "source_id": "SRC-PRD-015",
+      "nodes_added": [
+        "ENT-provider.email_delivery_issue",
+        "REQ-015-141"
+      ],
+      "nodes_updated": [
+        "FR-015",
+        "SCR-015-03"
+      ],
+      "edges_added": 11,
+      "edges_removed": 0,
+      "rows": 26
+    },
     {
       "id": "cs-20261125-040105-820195af",
       "at": "2026-11-25T04:01:05.954902+00:00",

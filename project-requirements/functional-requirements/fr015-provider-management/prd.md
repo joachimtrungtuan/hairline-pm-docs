@@ -3,7 +3,7 @@
 **Module**: A-02: Provider Management & Onboarding
 **Feature Branch**: `fr015-provider-management`
 **Created**: 2025-11-11
-**Version**: 1.32
+**Version**: 1.33
 **Status**: Revised 2026-11-22 (owner ruling: provider-status cancellation payment terms); previously revised 2026-11-20 (requirements graph programme baseline: owner rulings applied); previously revised 2026-10-28 (backend confirmations: seat usage member statuses, changed-fields-only saves, Owner login email change notice); previously revised 2026-10-27 (dev-team follow-up question resolution: save conflicts, data encryption, seat usage, impersonation, notification timing and recipients, cascade timing), pending consolidated verification; implementation reconciliation pending
 **Source**: FR-015 from system-prd.md (§ FR-015: Provider Management (Admin-Initiated))
 
@@ -403,6 +403,7 @@ The English text is the source copy; other languages follow the normal translati
 | First Name | text | Yes | Provider's legal first name | Max 50 chars | Admin only | ENT-provider.first_name |
 | Last Name | text | Yes | Provider's legal last name | Max 50 chars | Admin only | ENT-provider.last_name |
 | Email Address | email | Yes | Primary email (login ID) | Valid email; must satisfy the FR-009 global provider email identity rule (Rule 3, REQ-009-008) (re-checked whenever changed); Deactivated providers' emails are freed for reuse | Admin only | ENT-provider.email |
+| Email Delivery Issue | badge/display | No | Admin-only indicator that email to this provider has bounced; shows "Email delivery issue" beside Email Address while the flag is set and is hidden otherwise. Set by the FR-030 bounce handling (Workflow B1 step 7), the same flag the patient account carries (REQ-015-141) | Read-only; no admin action on this screen sets or clears it | Read-only | ENT-provider.email_delivery_issue |
 | Phone Number | phone | Yes | Primary contact phone | Valid format with country code | Admin only | ENT-provider.phone |
 | Bio / Description | textarea | Yes | Public-facing provider biography | Max 500 chars, min 50 chars | Both (Provider via FR-032) | ENT-provider.bio |
 | Specialty | select | Yes | Primary medical specialty | Values from the centrally managed Provider Specialties list (FR-026 Screen 5f); a stored value later deactivated in FR-026 still displays but cannot be newly selected | Admin only | ENT-provider.specialty |
@@ -1013,6 +1014,7 @@ Admin configures a provider account with a fixed commission fee (e.g., £200 per
 - **REQ-015-022**: Effective commission configuration MUST be snapshotted at booking confirmation under FR-029 and retained for later transactions; edits in FR-015/FR-029 MUST stay synchronized without replacing existing booking snapshots. Percentage/Flat Rate models and the once-per-completed-procedure flat-fee rule remain unchanged.
 - **REQ-015-023**: Provider-profile Completed Procedures MUST count distinct FR-010 treatment completions, not quotes, options, accepted selections, payments, or final aftercare status. Later cancellation MUST NOT erase a recorded completion.
 - **REQ-015-024**: System MUST retain provider-status event/effective-time references, affected record identifiers and prior stages, cancellation cause, support marker/resolution audit, slot-release outcome, and notification outcome for lifecycle impact and admin follow-up; storage remains with the existing owning entities rather than duplicating accepted data in Provider.
+- **REQ-015-141**: System MUST keep an "Email delivery issue" flag on the Provider record, set by the FR-030 bounce handling (Workflow B1 step 7, REQ-030-156) exactly as for the patient account, and MUST show it read-only to admins on Screen 3 Tab 1 beside Email Address. No admin action on Screen 3 sets or clears it, and the provider does not see it.
 
 ### Security & Privacy Requirements
 
@@ -1035,6 +1037,7 @@ Admin configures a provider account with a fixed commission fee (e.g., £200 per
 | 2026-11-24 | 1.30 | Logic review pass 2: a Suspended clinic that sets its password stays read-only and is not eligible for distribution until reactivated; closure request notice with Deactivate Provider and Reject Request on Screen 3 (Reject Request needs Suspend Providers); closure rejection keeps the current status in the edge case; the cascade also ends FR-037 monitoring assignments and acts only on records that existed at the effective time; a Deactivated provider has Edit Profile hidden and all tabs read-only; earnings on normally completed bookings are released by an admin through FR-017 and the Payout Method of a Deactivated clinic stays editable while unpaid shares remain (owner default applied). | Product Owner / Documentation |
 | 2026-11-25 | 1.31 | Cross-FR alignment: suspension and deactivation make the provider's conversations read-only with the open In Progress and Aftercare chat carve-out (REQ-015-139); commission on refunded money is reversed with the refund (REQ-015-041); the provider creation rate limit is a fixed setting, not admin-editable (REQ-015-066); new yes or no Aftercare Participation setting, default On, on Screen 2 Step 5 and Screen 3 Tab 1 (REQ-015-140). | Product Owner / Documentation |
 | 2026-11-25 | 1.32 | Pointer corrected: the data schema document is archived; the reference now names its archive path. No rule changes. | Product Owner / Documentation |
+| 2026-11-25 | 1.33 | Owner ruling 2026-11-25: providers get the same email delivery problem indicator as patients. A hard bounce sets a flag on the Provider record through the FR-030 bounce handling, and admins see it read-only on Screen 3 Tab 1 (REQ-015-141). | Product Owner / Documentation |
 
 ---
 
