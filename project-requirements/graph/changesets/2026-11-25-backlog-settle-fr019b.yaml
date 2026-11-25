@@ -1,0 +1,21 @@
+# FR-019 backlog settlement follow-up: the fields of the retired discount-code entity are retired with it.
+reason: "ENT-discount-code was merged into the promotion program and retired; its field nodes are retired too."
+by: controller
+source_id: SRC-PRD-019
+operations:
+  - {"op": "retire_node", "id": "ENT-discount-code.discount_code_id"}
+  - {"op": "retire_node", "id": "ENT-discount-code.discount_code"}
+  - {"op": "retire_node", "id": "ENT-discount-code.discount_name"}
+  - {"op": "retire_node", "id": "ENT-discount-code.discount_type"}
+  - {"op": "retire_node", "id": "ENT-discount-code.affected_fees"}
+  - {"op": "retire_node", "id": "ENT-discount-code.hairline_share_percent"}
+  - {"op": "retire_node", "id": "ENT-discount-code.discount_value_type"}
+  - {"op": "retire_node", "id": "ENT-discount-code.discount_value"}
+  - {"op": "retire_node", "id": "ENT-discount-code.currency"}
+  - {"op": "retire_node", "id": "ENT-discount-code.valid_from"}
+  - {"op": "retire_node", "id": "ENT-discount-code.valid_until"}
+  - {"op": "retire_node", "id": "ENT-discount-code.max_uses"}
+  - {"op": "retire_node", "id": "ENT-discount-code.current_uses"}
+  - {"op": "retire_node", "id": "ENT-discount-code.status"}
+  - {"op": "retire_node", "id": "ENT-discount-code.approval_required"}
+  - {"op": "retire_node", "id": "ENT-discount-code.approval_status"}

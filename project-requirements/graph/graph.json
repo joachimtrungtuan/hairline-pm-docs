@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T08:28:17Z",
+  "generated_at": "2026-11-25T08:29:32Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -8808,156 +8808,6 @@
       "attrs": {
         "description": "Global Default or Provider-Specific; one option must be selected."
       }
-    },
-    {
-      "id": "ENT-discount-code.affected_fees",
-      "type": "Field",
-      "owner_fr": "FR-019",
-      "title": "Affected fees",
-      "status": "active",
-      "version": 1,
-      "attrs": {}
-    },
-    {
-      "id": "ENT-discount-code.approval_required",
-      "type": "Field",
-      "owner_fr": "FR-019",
-      "title": "Approval required",
-      "status": "active",
-      "version": 1,
-      "attrs": {}
-    },
-    {
-      "id": "ENT-discount-code.approval_status",
-      "type": "Field",
-      "owner_fr": "FR-019",
-      "title": "Approval status",
-      "status": "active",
-      "version": 1,
-      "attrs": {
-        "description": "The PRD lists no values."
-      }
-    },
-    {
-      "id": "ENT-discount-code.currency",
-      "type": "Field",
-      "owner_fr": "FR-019",
-      "title": "Currency",
-      "status": "active",
-      "version": 1,
-      "attrs": {
-        "description": "If fixed amount."
-      }
-    },
-    {
-      "id": "ENT-discount-code.current_uses",
-      "type": "Field",
-      "owner_fr": "FR-019",
-      "title": "Current uses",
-      "status": "active",
-      "version": 1,
-      "attrs": {}
-    },
-    {
-      "id": "ENT-discount-code.discount_code",
-      "type": "Field",
-      "owner_fr": "FR-019",
-      "title": "Discount code",
-      "status": "active",
-      "version": 1,
-      "attrs": {}
-    },
-    {
-      "id": "ENT-discount-code.discount_code_id",
-      "type": "Field",
-      "owner_fr": "FR-019",
-      "title": "Discount code ID",
-      "status": "active",
-      "version": 1,
-      "attrs": {}
-    },
-    {
-      "id": "ENT-discount-code.discount_name",
-      "type": "Field",
-      "owner_fr": "FR-019",
-      "title": "Discount name",
-      "status": "active",
-      "version": 1,
-      "attrs": {}
-    },
-    {
-      "id": "ENT-discount-code.discount_type",
-      "type": "Field",
-      "owner_fr": "FR-019",
-      "title": "Discount type",
-      "status": "active",
-      "version": 1,
-      "attrs": {}
-    },
-    {
-      "id": "ENT-discount-code.discount_value",
-      "type": "Field",
-      "owner_fr": "FR-019",
-      "title": "Discount value",
-      "status": "active",
-      "version": 1,
-      "attrs": {}
-    },
-    {
-      "id": "ENT-discount-code.discount_value_type",
-      "type": "Field",
-      "owner_fr": "FR-019",
-      "title": "Discount value type",
-      "status": "active",
-      "version": 1,
-      "attrs": {}
-    },
-    {
-      "id": "ENT-discount-code.hairline_share_percent",
-      "type": "Field",
-      "owner_fr": "FR-019",
-      "title": "Hairline share percent",
-      "status": "active",
-      "version": 1,
-      "attrs": {
-        "description": "Both Fees only; read from FR-019."
-      }
-    },
-    {
-      "id": "ENT-discount-code.max_uses",
-      "type": "Field",
-      "owner_fr": "FR-019",
-      "title": "Maximum uses",
-      "status": "active",
-      "version": 1,
-      "attrs": {}
-    },
-    {
-      "id": "ENT-discount-code.status",
-      "type": "Field",
-      "owner_fr": "FR-019",
-      "title": "Status",
-      "status": "active",
-      "version": 1,
-      "attrs": {}
-    },
-    {
-      "id": "ENT-discount-code.valid_from",
-      "type": "Field",
-      "owner_fr": "FR-019",
-      "title": "Valid from",
-      "status": "active",
-      "version": 1,
-      "attrs": {}
-    },
-    {
-      "id": "ENT-discount-code.valid_until",
-      "type": "Field",
-      "owner_fr": "FR-019",
-      "title": "Valid until",
-      "status": "active",
-      "version": 1,
-      "attrs": {}
     },
     {
       "id": "ENT-discount-usage-summary",
@@ -463374,6 +463224,35 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-082819-400c346b",
+      "at": "2026-11-25T08:28:19.243226+00:00",
+      "changed_by": "controller",
+      "reason": "ENT-discount-code was merged into the promotion program and retired; its field nodes are retired too.",
+      "source_id": "SRC-PRD-019",
+      "nodes_added": [],
+      "nodes_updated": [
+        "ENT-discount-code.affected_fees",
+        "ENT-discount-code.approval_required",
+        "ENT-discount-code.approval_status",
+        "ENT-discount-code.currency",
+        "ENT-discount-code.current_uses",
+        "ENT-discount-code.discount_code",
+        "ENT-discount-code.discount_code_id",
+        "ENT-discount-code.discount_name",
+        "ENT-discount-code.discount_type",
+        "ENT-discount-code.discount_value",
+        "ENT-discount-code.discount_value_type",
+        "ENT-discount-code.hairline_share_percent",
+        "ENT-discount-code.max_uses",
+        "ENT-discount-code.status",
+        "ENT-discount-code.valid_from",
+        "ENT-discount-code.valid_until"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 16
+    },
     {
       "id": "cs-20261125-082704-c2d92710",
       "at": "2026-11-25T08:27:04.268463+00:00",
