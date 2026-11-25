@@ -126,11 +126,11 @@ The provider platform starts with four protected clinic-side roles that directly
 
 **A2: Resend a Pending or Expired invitation**:
 
-- **Trigger**: The invitation is Pending or Expired (7 days passed) and the team member hasn't signed up
+- **Trigger**: The invitation is Pending or Expired (7 days passed) and the team member hasn't signed up. The Owner can resend any invitation; a Manager only invitations for Clinical Staff and Billing Staff, the same limit as for inviting and cancelling (REQ-009-048, REQ-009-001)
 - **Steps**:
-  1. Provider Owner views pending invitations list
+  1. Provider Owner or Manager views pending invitations list
   2. System shows invitation status as "Pending" or "Expired"
-  3. Provider Owner clicks "Resend Invitation" button
+  3. Provider Owner or Manager clicks "Resend Invitation" button; for a Manager it is not offered on an invitation for the Manager role (REQ-009-048)
   4. For an Expired invitation, system checks that a seat is free. When none is free, the resend is blocked with the Screen 2 seat limit message and the invitation stays Expired. A Pending invitation already holds its seat, so it has no seat check and no seat change (REQ-009-048)
   5. System generates new invitation token and sends new email (REQ-009-048)
   6. Old invitation token invalidated; the old link stops working (REQ-009-048)
@@ -309,7 +309,7 @@ The provider platform starts with four protected clinic-side roles that directly
   1. Provider Owner or Manager clicks "Suspend" or "Reactivate". Suspend opens the Screen 4 modal with the final state Suspended (REQ-009-082, REQ-009-192)
   2. For Suspend, system lists the open items and asks for a replacement clinician, the same as Remove flow steps 3 to 5 (and the Task Transfer Wizard above 10 items); with no open items it goes straight to step 4 (REQ-009-191)
   3. System replaces the member with the replacement clinician as responsible clinician on the open items before the Suspended state is set (REQ-009-191)
-  4. System sets the member to Suspended (recording that the clinic set it, revoking all active sessions) or back to Active, emails the member, and logs the change in the audit trail (REQ-009-082, REQ-009-192)
+  4. System sets the member to Suspended (recording that the clinic set it, revoking all active sessions) or back to Active, emails the member, and logs the change in the audit trail; for Suspend the audit entry carries the reason entered in the modal (REQ-009-082, REQ-009-192)
   5. A Suspended member's next login attempt is refused with "Your access to [Provider] is suspended. Contact your clinic owner." for a clinic suspension, or "Your access to [Provider] is suspended. Contact Hairline support." for a platform suspension (REQ-009-197)
 - **Outcome**: The member is suspended or reactivated. Reactivate does not give the items back. A suspension set by Hairline can be lifted or removed only by a Hairline admin, so the clinic sees no "Reactivate" or "Remove" on it (REQ-009-192)
 
@@ -463,7 +463,7 @@ The provider platform starts with four protected clinic-side roles that directly
 - Modal unavailable for Owners; no provider-facing workflow can remove or suspend the primary Owner. (REQ-009-079)
 - A replacement clinician is required when open items exist. (REQ-009-080)
 - Removal triggers notifications to removed member and provider owner, plus audit event. (REQ-009-081)
-- Suspensions use same modal with different final state. (REQ-009-082)
+- Suspensions use same modal with different final state. The reason entered for a suspension is recorded in the audit entry; the removal reason fields on the member record hold removal reasons only. (REQ-009-082)
 - Remove and Suspend are offered to a Manager only for Clinical Staff and Billing Staff members; the Owner can use them on any non-Owner member. (REQ-009-192)
 
 **Notes**:
@@ -1121,6 +1121,7 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
+| 2026-11-25 | 1.15 (proposed) | Backlog points settled: a Manager can resend only invitations for Clinical Staff and Billing Staff; the reason entered for a Suspend is recorded in the audit entry; the audit action type field description in the graph is brought up to date. | Claude (AI Assistant) |
 | 2026-11-25 | 1.14 (proposed) | Cross-FR alignment: invitation acceptance asks for the Current Terms & Conditions and Current Privacy Policy and writes the member's first legal acceptance ledger rows (FR-027); the platform password policy is cited as REQ-SYS-007; account setup sets the default Account Name; phone number shown as required on Screen 11; a team member's email is changed through support (FR-032); removal note states the colleague name and the single clinic unread count (FR-012); Owner handover applies the FR-015 login email steps. | Documentation |
 | 2026-11-24 | 1.13 (proposed) | Logic review pass 2: a move between clinics is remove then new invitation (no admin transfer); the dead "Archive unassigned" option is gone; the Owner record is the stated exception to Rule 9; a Manager cannot promote anyone to Manager; Suspend and a role change that removes clinical rights need a replacement clinician; new admin flow for force suspend, Reactivate, force remove and account deletion; Removed filter for the Owner on Screen 1; a Removed member's email is free and a new invitation always creates a new record; no Remove on a platform suspension; Resend on a Pending invitation; Screen 7 messages for Expired and Cancelled links; Suspended login message; Owner handover blocked for a Deactivated provider; Task Transfer Wizard wired into removal. | Documentation |
 | 2026-11-24 | 1.12 (proposed) | Logic review pass 1: a Manager may remove or suspend only Clinical Staff and Billing Staff; work belongs to the clinic and a person is named only as responsible clinician; Suspend and Reactivate flow with who set a suspension; Owner handover action on Screen 12 with the login email following the new Owner; seat check on resend; Cancel Invitation flow; Deactivated provider cancels Pending invitations; Screen 7 provider-status checks; invitation expiry fixed at 7 days; account deletion by admin with anonymization; B6 no longer reroutes messages. | Documentation |
@@ -1137,4 +1138,4 @@ Approved by the Product Owner as part of the requirements baseline of 2026-11-25
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B
 **Based on**: FR-009 from system-prd.md
-**Last Updated**: 2026-11-25 (proposed revision v1.14; prior approval status unchanged)
+**Last Updated**: 2026-11-25 (proposed revision v1.15; prior approval status unchanged)
