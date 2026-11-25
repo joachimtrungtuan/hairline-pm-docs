@@ -882,7 +882,14 @@ Batch H applied in commit `be60070`.
 
 **Batch F, leftovers**
 
-- Ledger line 1188 (FR-015): provider email-delivery-issue indicator needs a new feature; REQ-030-156 still points at the patient field.
+- Ledger line 1188 (FR-015): provider email-delivery-issue indicator. Closed 2026-11-25 by owner ruling 6: FR-015 and FR-030 now carry the flag for provider accounts.
 - Ledger line 2524 (FR-012): a note that the review did not check FR-012 backlog status; nothing to edit.
 
 Batch F applied in commit `23b83ce`.
+
+## Added 2026-11-25 after the owner rulings
+
+- Constitution: the priority list still shows "monitor hair loss" and "monitor transplant progress" as P3, while the system PRD lists FR-037 and FR-038 as P1 (Next Phase). Align the constitution to the system PRD, or confirm the lower priority with the owner.
+- `templates/prd-template.md` still has the older section layout; bring it in line with constitution Part C (rules C-PRD-25 to C-PRD-28).
+- FR-023 and FR-025 have no User Scenarios section, and FR-025 has no Summary section, which Part C requires.
+
