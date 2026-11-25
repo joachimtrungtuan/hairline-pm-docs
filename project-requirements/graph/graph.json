@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T03:57:55Z",
+  "generated_at": "2026-11-25T04:00:11Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -27104,9 +27104,9 @@
       "owner_fr": "FR-022",
       "title": "Search audit log",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "One entry per admin search for patient or provider records. Links to the admin user who performed the search (Key Entities, Entity 3)."
+        "description": "One entry per admin search for patient or provider records. Links to the admin user who performed the search (Key Entities, Entity 2). A back-office record with no screen in any application; the technical team retrieves entries on request (owner ruling of 2026-11-25)."
       }
     },
     {
@@ -77502,10 +77502,10 @@
       "owner_fr": "FR-022",
       "title": "Admin searches for patient and provider records logged with user, time, terms and result count",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "statement": "System MUST log all admin searches for patient and provider records with user ID, timestamp, search terms, and result count; the log is written for admin searches only, not for patient or provider searches",
-        "rationale": "Restated by the Data & Privacy Audit Rule (admin user ID, timestamp, search terms), Privacy Rule 2 (admin search logs MUST be retained for audit purposes: who searched for whom, when), Security Considerations Audit trail (adds result count) and Edge Case 6 (audit logs capture each admin's search independently). Stored as ENT-search-audit-log."
+        "rationale": "Restated by the Data & Privacy Audit Rule (admin user ID, timestamp, search terms, result count) and Privacy Rule 2 (retained for audit purposes: who searched for whom, when). Stored as ENT-search-audit-log, a back-office record with no screen in any application (owner ruling of 2026-11-25; see REQ-022-140)."
       }
     },
     {
@@ -78664,10 +78664,10 @@
       "owner_fr": "FR-022",
       "title": "Search history not stored",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "No user-facing search history is offered (no recent-searches list or saved searches); the admin audit log of admin searches stays (see Audit Rule)",
-        "rationale": "General Module Rule 8 (line 1803). See needs-decision item on admin search audit logging (REQ-022-023, REQ-022-027)."
+        "rationale": "General Module Rule 8. The admin audit log of admin searches is a back-office record with no screen in any application, read by the technical team on request (owner ruling of 2026-11-25; see REQ-022-023 and REQ-022-140)."
       }
     },
     {
@@ -78811,10 +78811,10 @@
       "owner_fr": "FR-022",
       "title": "Admin search logs retained for audit",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The search audit log MUST be kept for audit purposes (who searched for whom, when) for the same period as the FR-031 admin audit trail (REQ-031-015). No screen reads this log in this release; it is stored for audit only.",
-        "rationale": "Privacy Rule 2 (line 1809). REQ-022-023 requires the entry to be written; this rule requires it to be kept."
+        "statement": "The search audit log MUST be kept for audit purposes (who searched for whom, when) for the same period as the FR-031 admin audit trail (REQ-031-015). It is a back-office record only: it has no screen in the patient app, provider dashboard, admin dashboard or affiliate portal, and the technical team retrieves entries on request.",
+        "rationale": "Privacy Rule 2. REQ-022-023 requires the entry to be written; this rule requires it to be kept. Owner ruling of 2026-11-25: back-office record only, no screen in any application, read by the technical team on request."
       }
     },
     {
@@ -87008,9 +87008,9 @@
       "owner_fr": "FR-030",
       "title": "Respect opt-out for non-critical notifications",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST respect recipient opt-out preferences for notifications that are not locked (marketing, general updates); locked notices override opt-out with in-app explanation",
+        "statement": "System MUST respect recipient opt-out preferences for notifications that are not locked (marketing, general updates); locked notices are always sent by email despite opt-out, with in-app explanation, while push follows the recipient's own setting",
         "rationale": "prd.md line 954 (REQ-030-019, verbatim). Restating bullets merged here: Privacy Rule 4 (511)."
       }
     },
@@ -87934,9 +87934,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Provider-Caused Cancellation / Offer Unavailable",
       "status": "active",
-      "version": 7,
+      "version": 8,
       "attrs": {
-        "statement": "Provider-Caused Cancellation / Offer Unavailable (provider.status_cancellation_patient) is an admin-configurable notification event. Primary recipients: Patient. FR-015 Alternative Flow A5 / Screen 4 (FR-020 REQ-020-013). One per affected inquiry/case when provider suspension (`ProviderSuspended`) or deactivation (`ProviderDeactivated`) cancels the patient's case or the provider's offer before acceptance. For a case already accepted, the patient instead receives `booking.provider_fault_replacement`. Before acceptance, three variants apply, checked in this order (FR-003 Workflow 2 Alternative Flow B4, REQ-003-021): (1) when other live offers remain open, the notice says \"[Clinic] is no longer available. Your other offers are still open.\"; (2) when no live offer remains and the patient had explicitly selected the affected provider, the notice asks the patient to confirm the redistribution first, with Confirm and Decline deep links to FR-003 Screen 8 (REQ-003-128); (3) when no live offer remains and the patient had not selected the provider, the inquiry is redistributed automatically and the notice says \"[Clinic] is no longer available. We are finding new offers for you.\" An unanswered confirm variant is followed by `provider.status_redistribution_reminder`. Includes inquiry/case reference and a Contact Admin/Support action. MUST NOT say the patient cancelled, instruct payment against the cancelled selection, or expose confidential suspension/deactivation reasons. Mandatory — admin cannot disable this event (see Non-Disableable by Default section); sent regardless of FR-015's \"Notify Provider\" checkbox. MVP default channels: Email + Push + in-app (a locked notice overrides the patient's channel toggles, see Non-Disableable by Default; in-app record always created). Retries de-duplicated per provider-status event + affected record + recipient",
+        "statement": "Provider-Caused Cancellation / Offer Unavailable (provider.status_cancellation_patient) is an admin-configurable notification event. Primary recipients: Patient. FR-015 Alternative Flow A5 / Screen 4 (FR-020 REQ-020-013). One per affected inquiry/case when provider suspension (`ProviderSuspended`) or deactivation (`ProviderDeactivated`) cancels the patient's case or the provider's offer before acceptance. For a case already accepted, the patient instead receives `booking.provider_fault_replacement`. Before acceptance, three variants apply, checked in this order (FR-003 Workflow 2 Alternative Flow B4, REQ-003-021): (1) when other live offers remain open, the notice says \"[Clinic] is no longer available. Your other offers are still open.\"; (2) when no live offer remains and the patient had explicitly selected the affected provider, the notice asks the patient to confirm the redistribution first, with Confirm and Decline deep links to FR-003 Screen 8 (REQ-003-128); (3) when no live offer remains and the patient had not selected the provider, the inquiry is redistributed automatically and the notice says \"[Clinic] is no longer available. We are finding new offers for you.\" An unanswered confirm variant is followed by `provider.status_redistribution_reminder`. Includes inquiry/case reference and a Contact Admin/Support action. MUST NOT say the patient cancelled, instruct payment against the cancelled selection, or expose confidential suspension/deactivation reasons. Mandatory — admin cannot disable this event (see Non-Disableable by Default section); sent regardless of FR-015's \"Notify Provider\" checkbox. MVP default channels: Email + Push + in-app (a locked notice is always sent by email whatever the patient's channel toggles, and push follows the patient's own setting, see Non-Disableable by Default; in-app record always created). Retries de-duplicated per provider-status event + affected record + recipient",
         "rationale": "prd.md line 197. Category: Provider/Compliance. Event nodes: EVT-provider-status-cancellation-patient (existing node). Lock rule (prd.md line 551): Provider-Caused Cancellation (`provider.status_cancellation_patient`) and Admin Support Required (`provider.status_cancellation_admin_support`) are mandatory notifications for each inquiry/case affected by an FR-015 provider suspension or deactivation. Affected patients and admins MUST be informed regardless of FR-015's \"Notify Provider\" checkbox; toggles are locked for both events. Failed deliveries retry per FR-020 without duplicates (de-duplicated per provider-status event + affected record + recipient) and never restore cancelled records. Before acceptance, the patient notice uses the FR-003 variants (Workflow 2 Alternative Flow B4, REQ-003-021): \"[Clinic] is no longer available. Your other offers are still open.\" when other offers remain open; \"[Clinic] is no longer available. We are finding new offers for you.\" when the inquiry is redistributed automatically, or a request to confirm redistribution first when the patient had explicitly selected the affected provider. The admin-support alert goes to admins with the FR-031 Respond to Support permission.",
         "aliases": "REQ-020-138"
       }
@@ -89232,11 +89232,11 @@
       "id": "REQ-030-208",
       "type": "Rule",
       "owner_fr": "FR-030",
-      "title": "Locked notices override recipient opt-out and show an in-app banner",
+      "title": "Locked notices are always sent by email despite opt-out and show an in-app banner",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System respects recipient opt-out for notifications that are not locked (marketing, general updates) and does not deliver. A locked notice is critical: it is sent at once, is exempt from quiet hours, the hourly rate limit and coalescing, and overrides the recipient's opt-out, delivering via at least one channel (the app displays a banner explaining why the notice was delivered despite opt-out). The one exception is legal.acceptance_reminder, which is locked but not critical: it respects quiet hours and the rate limit, and, like every locked notice, still reaches the user through at least one channel despite opt-out. The locked list is fixed in the codebase: an admin cannot mark any other notice as critical",
+        "statement": "System respects recipient opt-out for notifications that are not locked (marketing, general updates) and does not deliver. A locked notice is critical: it is sent at once, is exempt from quiet hours, the hourly rate limit and coalescing, and is always sent by email whatever the recipient's opt-out, while push (and any other optional channel) follows the recipient's own setting (the app displays a banner explaining why the email was sent despite opt-out). The one exception is legal.acceptance_reminder, which is locked but not critical: it respects quiet hours and the rate limit, and, like every locked notice, is still sent by email despite opt-out. The locked list is fixed in the codebase: an admin cannot mark any other notice as critical",
         "rationale": "prd.md lines 884, 885, 886, 887. Field critical_cannot_opt_out records the per-rule designation."
       }
     },
@@ -89438,9 +89438,9 @@
       "owner_fr": "FR-030",
       "title": "Rule Editor shows Critical - Cannot Opt Out as a read-only indicator",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Critical - Cannot Opt Out is a read-only indicator that shows Yes for every event on the locked list: a locked notice is delivered through at least one channel even when the recipient has opted out. Critical notices (all locked notices except legal.acceptance_reminder) are also exempt from quiet hours and the rate limit (REQ-030-208). An admin cannot mark an event critical; the indicator follows the locked list.",
+        "statement": "Critical - Cannot Opt Out is a read-only indicator that shows Yes for every event on the locked list: a locked notice is always sent by email even when the recipient has opted out, while push follows the recipient's own setting. Critical notices (all locked notices except legal.acceptance_reminder) are also exempt from quiet hours and the rate limit (REQ-030-208). An admin cannot mark an event critical; the indicator follows the locked list.",
         "rationale": "Screen 2 field table."
       }
     },
@@ -89606,9 +89606,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Legal Acceptance Reminder",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Legal Acceptance Reminder (legal.acceptance_reminder) is an admin-configurable notification event. Primary recipients: Patient, Provider (team members in the Pending set). One reminder to each user in the Pending set; FR-027 owns the cadence (REQ-027-063). Locked: the toggle cannot be switched off. It is the one locked notice that is not critical: it respects quiet hours and the rate limit, but it still reaches the user through at least one channel despite opt-out",
+        "statement": "Legal Acceptance Reminder (legal.acceptance_reminder) is an admin-configurable notification event. Primary recipients: Patient, Provider (team members in the Pending set). One reminder to each user in the Pending set; FR-027 owns the cadence (REQ-027-063). Locked: the toggle cannot be switched off. It is the one locked notice that is not critical: it respects quiet hours and the rate limit, but, like every locked notice, it is still sent by email despite opt-out, while push follows the user's own setting",
         "rationale": "Event Catalog table, row legal.acceptance_reminder. Category: System/Operations. Event nodes: EVT-legal-acceptance-reminder."
       }
     },
@@ -461686,6 +461686,41 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-035853-976a7209",
+      "at": "2026-11-25T03:58:53.876885+00:00",
+      "changed_by": "docs-manager",
+      "reason": "Owner ruling 2026-11-25: the search audit log of admin searches is a back-office record only, with no screen in the patient app, provider dashboard, admin dashboard or affiliate portal; the technical team retrieves entries on request.",
+      "source_id": "SRC-PRD-022",
+      "nodes_added": [],
+      "nodes_updated": [
+        "ENT-search-audit-log",
+        "REQ-022-023",
+        "REQ-022-127",
+        "REQ-022-140"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 5
+    },
+    {
+      "id": "cs-20261125-035853-6fc8354c",
+      "at": "2026-11-25T03:58:53.760917+00:00",
+      "changed_by": "docs-manager",
+      "reason": "Owner ruling 2026-11-25: a locked notice guarantees email only; it is always sent by email despite the recipient's opt-out, and push (and any other optional channel) follows the recipient's own setting, matching FR-020 REQ-020-038.",
+      "source_id": "SRC-PRD-030",
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-030-019",
+        "REQ-030-094",
+        "REQ-030-208",
+        "REQ-030-227",
+        "REQ-030-241"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 6
+    },
     {
       "id": "cs-20261125-035640-6100b020",
       "at": "2026-11-25T03:56:40.537585+00:00",
