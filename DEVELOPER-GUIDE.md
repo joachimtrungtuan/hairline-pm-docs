@@ -51,7 +51,7 @@ Read in this order. Large files are read by section: list the headings with `rg 
 | Cross-cutting | FR-012 messaging · FR-020 notifications · FR-021 localisation · FR-022 search · FR-023 data retention |
 | Help and support | FR-033 help centre content · FR-034 support tickets · FR-035 patient help and support |
 
-FR-036 exists only as a summary in `system-prd.md`; it has no PRD. Folder names are `frNNN-kebab-slug`; the document is always `prd.md`.
+FR-036 has a Draft PRD written from its summary in `system-prd.md`; it waits for Product Owner approval and has open questions, so do not build it until it is approved. Folder names are `frNNN-kebab-slug`; the document is always `prd.md`.
 
 ## 4. Read one FR in detail
 
@@ -177,7 +177,7 @@ Tables: `nodes(id, type, owner_fr, title, status, version, attrs)`, `fields`, `e
 7. Cite `REQ-…` ids in pull requests and tests so a reviewer can trace code to a rule.
 8. If the PRD is silent, contradicts itself, or disagrees with the graph, do not guess. Raise it with the product team; the fix lands in the PRD and graph first.
 
-Known gaps: the graph linter reports 28 open findings (`/usr/bin/python3 scripts/lint.py`), none of which changes a rule's wording. `project-requirements/constitution-open-items.md` lists constitution points still awaiting an owner decision.
+Known gaps: the graph linter reports 24 open findings (`/usr/bin/python3 scripts/lint.py`), none of which changes a rule's wording. `project-requirements/constitution-open-items.md` lists constitution points left open; they are technical choices for the development team, not owner decisions.
 
 ## 7. For AI agents
 
@@ -197,7 +197,7 @@ Known gaps: the graph linter reports 28 open findings (`/usr/bin/python3 scripts
 | `testing/` | Test strategy, manual test guides, automated suites (start at `testing/README.md`) |
 | `product-plans/v<N>/` | Versioned delivery plans and phase readiness reports |
 | `deferred-backlog/` | Issues the team chose to defer, with reason and revisit trigger |
-| `project-requirements/implementation-backlog.md` | Open points per FR left for the implementation phase: read the section of your FR before you build it |
+| `project-requirements/implementation-backlog.md` | What is still open per FR after the 2026-11-25 clean-up: developer matters (yours to decide) and points waiting for a Product Owner decision (ask before building them). Read the lines of your FR before you build it |
 | `project-requirements/templates/` | PRD and change-request templates |
 
 ## 9. Patient mobile API: endpoints to keep stable

@@ -56,3 +56,7 @@ The Product Owner approved every requirement document in `project-requirements/`
 | Date | Document | Approved by |
 |---|---|---|
 | | | |
+
+Awaiting approval (Draft, not covered by the sign-off):
+
+- `functional-requirements/fr036-admin-profile-settings/prd.md`, drafted 2026-11-25 with nine open questions for the Product Owner.
