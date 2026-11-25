@@ -6,8 +6,9 @@ This folder contains documentation update reports and verification logs for the 
 
 ## Organization by Date
 
-### 2026-11-25/ (5 files)
+### 2026-11-25/ (6 files)
 
+- [BACKLOG_SETTLE_AND_HANDOVER_GAPS_2026-11-25.md](2026-11-25/BACKLOG_SETTLE_AND_HANDOVER_GAPS_2026-11-25.md) - Open-points backlog settled (507 points: 264 already closed, 125 filing fixes applied across the FR PRDs and the graph, 131 left open), handover gaps closed (one sign-off record, build order, FR-037 and FR-038 in the clinical release), FR-036 Draft PRD added
 - [PATIENT_MOBILE_API_CONTRACT_REVIEW_2026-11-25.md](2026-11-25/PATIENT_MOBILE_API_CONTRACT_REVIEW_2026-11-25.md) - Patient mobile Postman collection compared with the requirements: report for the backend team, developer guide section 9, three PRD inconsistencies settled (FR-006, FR-011 REQ-011-102, FR-012)
 - [OWNER_RULINGS_APPLIED_2026-11-25.md](2026-11-25/OWNER_RULINGS_APPLIED_2026-11-25.md) - Owner rulings applied: replacement quote expiry, booking policy checkbox, no-fault early close, email-only locked notices, email delivery issue flag, billing settings view and edit split, constitution 1.1.0
 - [DEVELOPER_GUIDE_AND_TECH_DOCS_ARCHIVE_2026-11-25.md](2026-11-25/DEVELOPER_GUIDE_AND_TECH_DOCS_ARCHIVE_2026-11-25.md) - New `DEVELOPER-GUIDE.md` for developers and AI agents; technical spec and data schema archived to `archived/technical-docs/`; pointers repaired
@@ -1192,6 +1193,7 @@ This folder contains documentation update reports and verification logs for the 
 
 ### Requirements Graph
 
+- **2026-11-25**: [BACKLOG_SETTLE_AND_HANDOVER_GAPS_2026-11-25.md](2026-11-25/BACKLOG_SETTLE_AND_HANDOVER_GAPS_2026-11-25.md) - Open-points backlog settled (507 points: 264 already closed, 125 filing fixes applied across the FR PRDs and the graph, 131 left open), handover gaps closed (one sign-off record, build order, FR-037 and FR-038 in the clinical release), FR-036 Draft PRD added
 - **2026-11-25**: [OWNER_RULINGS_APPLIED_2026-11-25.md](2026-11-25/OWNER_RULINGS_APPLIED_2026-11-25.md) - Owner rulings applied: replacement quote expiry, booking policy checkbox, no-fault early close, email-only locked notices, email delivery issue flag, billing settings view and edit split, constitution 1.1.0
 - **2026-11-25**: [CROSS_FR_PASS_2026-11-25.md](2026-11-25/CROSS_FR_PASS_2026-11-25.md) - Cross-FR pass of the logic review: 453 queued neighbour rows settled across 34 FR PRDs and the graph (eight batches)
 - **2026-11-24**: [FR022_LOGIC_REVIEW_PASS_2_2026-11-24.md](2026-11-24/FR022_LOGIC_REVIEW_PASS_2_2026-11-24.md) - FR-022 logic review pass 2 (PRD v2.26 and graph change-set)
@@ -1645,4 +1647,4 @@ Example: `DOCUMENTATION_UPDATES_2025-10-23.md`
 
 ---
 
-**Last Updated**: 2026-11-25 (patient mobile API contract review: report, developer guide section 9, FR-006/FR-011/FR-012 alignment)
+**Last Updated**: 2026-11-25 (open-points backlog settled, handover gaps closed, FR-036 Draft PRD added)
