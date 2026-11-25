@@ -1,0 +1,7 @@
+# FR-012 backlog points settled: audit event wording and a retired step's leftover link.
+reason: "REQ-012-010 names a flag status change (the audit event type flag_status_change that REQ-012-023 already logs) instead of only a flag resolved; the retired attachment-check step STP-012-033 no longer links on to an active step."
+by: controller
+source_id: SRC-PRD-012
+operations:
+  - {"op": "update_node", "id": "REQ-012-010", "attrs": {"statement": "System MUST log message lifecycle events (sent, delivered, read) and these audit events: attachment sent, keyword flag raised, manual flag raised, system flag raised, flag status changed, emergency intervention enabled, the emergency intervention message, call entry, and moderation setting changed."}}
+  - {"op": "remove_edge", "from": "STP-012-033", "verb": "next", "to": "STP-012-034"}

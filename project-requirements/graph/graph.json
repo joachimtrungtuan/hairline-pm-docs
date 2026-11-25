@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T08:05:49Z",
+  "generated_at": "2026-11-25T08:07:19Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -56746,9 +56746,9 @@
       "owner_fr": "FR-012",
       "title": "Message lifecycle events, flags, emergency interventions, calls and moderation setting changes logged for audit",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST log message lifecycle events (sent, delivered, read) and these audit events: attachment sent, keyword flag raised, manual flag raised, system flag raised, flag resolved, emergency intervention enabled, the emergency intervention message, call entry, and moderation setting changed.",
+        "statement": "System MUST log message lifecycle events (sent, delivered, read) and these audit events: attachment sent, keyword flag raised, manual flag raised, system flag raised, flag status changed, emergency intervention enabled, the emergency intervention message, call entry, and moderation setting changed.",
         "rationale": "Functional Requirements Summary, prd.md line 942."
       }
     },
@@ -462678,6 +462678,21 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-080606-47e1d181",
+      "at": "2026-11-25T08:06:06.059556+00:00",
+      "changed_by": "controller",
+      "reason": "REQ-012-010 names a flag status change (the audit event type flag_status_change that REQ-012-023 already logs) instead of only a flag resolved; the retired attachment-check step STP-012-033 no longer links on to an active step.",
+      "source_id": "SRC-PRD-012",
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-012-010",
+        "STP-012-033"
+      ],
+      "edges_added": 0,
+      "edges_removed": 1,
+      "rows": 2
+    },
     {
       "id": "cs-20261125-080359-535d3410",
       "at": "2026-11-25T08:03:59.826413+00:00",
