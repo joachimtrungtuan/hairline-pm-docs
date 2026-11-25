@@ -6,6 +6,11 @@
 **Status**: Draft | ✅ Pending Approval | ✅ Verified & Approved
 **Source**: [Source reference - e.g., FR-011 from system-prd.md, User request, Client transcription]
 
+<!--
+  A new PRD starts as Draft. Status moves to Verified & Approved only after the Product Owner approves it
+  (see Appendix: Approvals).
+-->
+
 ---
 
 ## Executive Summary
@@ -15,9 +20,15 @@
   - What is the primary purpose of this feature/module?
   - What problem does it solve for users?
   - What value does it deliver to the business?
+  - Which platforms (tenants) does it involve, and what does it mean for each?
+  - How is it reached, and what activates it (entry points and activation triggers)?
 -->
 
 [Clear description of module purpose and scope]
+
+**Multi-tenant implications**: [Which platforms are involved and what changes for each]
+
+**Entry points and activation**: [How users or systems reach this feature and what triggers it]
 
 ---
 
@@ -185,11 +196,18 @@ flowchart TD
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| [field1] | text/number/date/select/checkbox | Yes/No | [Purpose and usage] | [e.g., "Max 500 chars"] |
-| [field2] | [type] | Yes/No | [Purpose] | [Validation] |
-| [field3] | [type] | Yes/No | [Purpose] | [Validation] |
+<!--
+  ACTION REQUIRED: Every row carries its graph field id in the last column (C-PRD-6, C-PRD-14).
+  - Use the id of the field in the requirements graph (see local-docs/project-requirements/graph/).
+  - A row with no graph field (a static label, a control, an app setting) says so and gives the reason,
+    for example: no graph field (control).
+-->
+
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| [field1] | text/number/date/select/checkbox | Yes/No | [Purpose and usage] | [e.g., "Max 500 chars"] | [graph field id - e.g., ENT-quote-request.status] |
+| [field2] | [type] | Yes/No | [Purpose] | [Validation] | [graph field id, or no graph field (reason)] |
+| [field3] | [type] | Yes/No | [Purpose] | [Validation] | [graph field id, or no graph field (reason)] |
 
 **Business Rules**:
 
@@ -212,9 +230,9 @@ flowchart TD
 
 **Data Fields**:
 
-| Field Name | Type | Required | Description | Validation Rules |
-|------------|------|----------|-------------|------------------|
-| [field] | [type] | Yes/No | [Purpose] | [Validation] |
+| Field Name | Type | Required | Description | Validation Rules | Graph field |
+|------------|------|----------|-------------|------------------|-------------|
+| [field] | [type] | Yes/No | [Purpose] | [Validation] | [graph field id, or no graph field (reason)] |
 
 **Business Rules**:
 
@@ -237,6 +255,8 @@ flowchart TD
 
 <!--
   ACTION REQUIRED: Define overarching rules that apply to the entire module
+  - State each rule once, here or in the one screen it governs, and cite it elsewhere by its REQ id (C-PRD-7).
+  - Business rules only. A rule that is really a technical note is not a PRD section; keep the business rule and drop the note.
 -->
 
 - **Rule 1**: [General rule applicable to entire module - e.g., "All quote requests expire after 30 days if no provider response"]
@@ -259,8 +279,8 @@ flowchart TD
 ### Admin Editability Rules
 
 <!--
-  ACTION REQUIRED: Explicitly state what admins CAN and CANNOT edit
-  Reference Principle VIII from constitution: Admin-Editable Content
+  ACTION REQUIRED: Explicitly state what admins CAN and CANNOT edit (C-PRD-17)
+  Keep this subsection only where admin override or configuration applies
 -->
 
 **Editable by Admin**:
@@ -293,186 +313,18 @@ flowchart TD
 
 ---
 
-## Success Criteria
-
-<!--
-  ACTION REQUIRED: Define measurable, technology-agnostic success metrics
-  These should be testable without knowing implementation details
--->
-
-### Patient Experience Metrics
-
-- **SC-001**: [Measurable patient-facing outcome - e.g., "Patients can submit a complete quote request in under 3 minutes"]
-- **SC-002**: [User satisfaction metric - e.g., "90% of patients successfully complete quote request on first attempt without errors"]
-- **SC-003**: [Engagement metric - e.g., "Patients receive initial provider response within 24 hours for 80% of requests"]
-
-### Provider Efficiency Metrics
-
-- **SC-004**: [Provider workflow improvement - e.g., "Providers can review and respond to quote requests in under 2 minutes per request"]
-- **SC-005**: [Time savings metric - e.g., "Average time to quote generation reduced by 50% compared to manual process"]
-- **SC-006**: [Productivity metric - e.g., "Providers handle 30% more quote requests per day"]
-
-### Admin Management Metrics
-
-- **SC-007**: [Administrative efficiency gain - e.g., "Admins can monitor all active quote requests across all providers in real-time"]
-- **SC-008**: [Support reduction - e.g., "Support tickets related to quote request issues reduced by 60%"]
-- **SC-009**: [Oversight metric - e.g., "100% of quote request lifecycle events logged for audit purposes"]
-
-### System Performance Metrics
-
-- **SC-010**: [Response time target - e.g., "Quote request submission completes within 2 seconds for 95% of requests"]
-- **SC-011**: [Scalability target - e.g., "System supports 1000 concurrent quote request submissions without degradation"]
-- **SC-012**: [Reliability target - e.g., "99.9% uptime for quote request functionality"]
-- **SC-013**: [Data integrity - e.g., "Zero data loss for submitted quote requests"]
-
-### Business Impact Metrics
-
-- **SC-014**: [Revenue impact - e.g., "Quote request conversion rate to booked procedures increases by 25%"]
-- **SC-015**: [User engagement - e.g., "70% of patients who request quotes proceed to booking within 7 days"]
-- **SC-016**: [Market expansion - e.g., "Quote request feature enables entry into 5 new geographic markets"]
-
----
-
 ## Dependencies
 
-### Internal Dependencies (Other FRs/Modules)
-
 <!--
-  ACTION REQUIRED: List all dependencies on other modules in this system
-  Use module codes from constitution (P-01, PR-02, A-03, etc.)
+  ACTION REQUIRED: One short list of related FRs (C-PRD-9).
+  - One bullet per related FR: the FR id, then one line on what this module takes from it or gives to it.
+  - Name the FR that owns each shared rule or screen; do not restate the rule here.
+  - No separate lists for external services, data prerequisites, assumptions or technical notes.
+    A business rule that used to sit in one of those lists belongs in Business Rules.
 -->
 
-- **FR-XXX / Module P-01**: [Dependency description - e.g., "Requires patient authentication from P-01: Auth & Profile Management"]
-  - **Why needed**: [Reason - e.g., "Cannot submit quote request without verified patient account"]
-  - **Integration point**: [How they connect - e.g., "Uses patient profile data to pre-fill form fields"]
-
-- **FR-YYY / Module S-03**: [Another dependency - e.g., "Requires S-03: Notification Service for provider alerts"]
-  - **Why needed**: [Reason]
-  - **Integration point**: [Connection]
-
-### External Dependencies (APIs, Services)
-
-<!--
-  ACTION REQUIRED: List all third-party services, APIs, or external systems
--->
-
-- **External Service 1**: [Service name - e.g., "Stripe Payment API"]
-  - **Purpose**: [What it does - e.g., "Processes quote request payment transactions"]
-  - **Integration**: [How integrated - e.g., "RESTful API calls for payment processing"]
-  - **Failure handling**: [What happens if unavailable - e.g., "Queue payment for retry, notify user of delay"]
-
-- **External Service 2**: [Another service - e.g., "Google Maps API"]
-  - **Purpose**: [Usage]
-  - **Integration**: [Method]
-  - **Failure handling**: [Fallback]
-
-### Data Dependencies
-
-<!--
-  ACTION REQUIRED: List data that must exist for this feature to function
--->
-
-- **Entity 1**: [Required data - e.g., "Active provider profiles with accepted service areas"]
-  - **Why needed**: [Reason - e.g., "Cannot route quote requests without knowing provider service coverage"]
-  - **Source**: [Where it comes from - e.g., "Provider onboarding module (PR-01)"]
-
-- **State 2**: [System state prerequisite - e.g., "Procedure catalog with pricing information"]
-  - **Why needed**: [Reason]
-  - **Source**: [Origin]
-
----
-
-## Assumptions
-
-### User Behavior Assumptions
-
-<!--
-  ACTION REQUIRED: Document assumptions about how users will interact with the system
--->
-
-- **Assumption 1**: [User behavior - e.g., "Patients have access to photos of their current hair condition"]
-- **Assumption 2**: [User pattern - e.g., "Patients will upload photos immediately rather than saving draft requests"]
-- **Assumption 3**: [Usage context - e.g., "Majority of patients will submit quote requests from mobile devices"]
-
-### Technology Assumptions
-
-<!--
-  ACTION REQUIRED: Document platform, browser, device, connectivity assumptions
--->
-
-- **Assumption 1**: [Platform/device - e.g., "Patients use smartphones with camera capabilities"]
-- **Assumption 2**: [Browser/OS - e.g., "Provider web app accessed via modern browsers (Chrome, Safari, Firefox - last 2 versions)"]
-- **Assumption 3**: [Connectivity - e.g., "Patients have intermittent internet connectivity (support offline mode)"]
-- **Assumption 4**: [Infrastructure - e.g., "Cloud storage available for uploaded medical images"]
-
-### Business Process Assumptions
-
-<!--
-  ACTION REQUIRED: Document workflow and organizational assumptions
--->
-
-- **Assumption 1**: [Workflow - e.g., "Providers check quote requests at least twice daily during business hours"]
-- **Assumption 2**: [Organizational - e.g., "Providers have dedicated staff to handle quote request responses"]
-- **Assumption 3**: [Business rule - e.g., "Quote prices provided by providers are binding for 30 days"]
-- **Assumption 4**: [Process - e.g., "Admin approval not required for standard quote requests under $10,000"]
-
----
-
-## Implementation Notes
-
-### Technical Considerations
-
-<!--
-  ACTION REQUIRED: Provide technical guidance (but NOT technology prescriptions)
-  Avoid specifying frameworks/languages - focus on architectural needs
--->
-
-- **Architecture**: [High-level structure - e.g., "Requires asynchronous processing for image uploads to prevent blocking"]
-- **Technology**: [Considerations - e.g., "Image processing should support HEIC/JPEG formats common on smartphones"]
-- **Performance**: [Requirements - e.g., "Image uploads should support resumable transfers for unreliable connections"]
-- **Storage**: [Needs - e.g., "Medical images require long-term archival storage with retrieval SLA of <5 seconds"]
-
-### Integration Points
-
-<!--
-  ACTION REQUIRED: Describe how this module integrates with other systems
--->
-
-- **Integration 1**: [Connection - e.g., "Patient app sends quote requests to Provider API via REST"]
-  - **Data format**: [e.g., "JSON payload with patient ID, procedure codes, image URLs"]
-  - **Authentication**: [e.g., "OAuth 2.0 bearer tokens"]
-  - **Error handling**: [e.g., "Retry with exponential backoff on 5xx errors"]
-
-- **Integration 2**: [Another connection - e.g., "Admin dashboard polls quote request status from shared database"]
-  - **Data format**: [Format]
-  - **Authentication**: [Method]
-  - **Error handling**: [Approach]
-
-### Scalability Considerations
-
-<!--
-  ACTION REQUIRED: Address expected load and growth
--->
-
-- **Current scale**: [Baseline - e.g., "Expected 500 quote requests per day at launch"]
-- **Growth projection**: [Future - e.g., "Plan for 5,000 requests per day within 12 months"]
-- **Peak load**: [Spikes - e.g., "Handle 10x normal load during promotional campaigns"]
-- **Data volume**: [Storage - e.g., "Expect 50GB of medical images per month"]
-- **Scaling strategy**: [Approach - e.g., "Horizontal scaling of API servers, CDN for image delivery"]
-
-### Security Considerations
-
-<!--
-  ACTION REQUIRED: Document security requirements and threat mitigations
-  Reference Principle II: Medical Data Privacy & Security
--->
-
-- **Authentication**: [Requirements - e.g., "Multi-factor authentication required for provider access to patient medical images"]
-- **Authorization**: [Access control - e.g., "Role-based access: patients view own data, providers view paid requests only, admins view all"]
-- **Encryption**: [Data protection - e.g., "All patient data encrypted in transit (TLS 1.3) and at rest (AES-256)"]
-- **Audit trail**: [Logging - e.g., "Log all access to patient medical images with timestamp, user, and IP address"]
-- **Threat mitigation**: [Security measures - e.g., "Rate limiting on API endpoints to prevent abuse (max 100 requests/hour/user)"]
-- **Compliance**: [Standards - e.g., "HIPAA-compliant data handling for U.S. patients, GDPR for EU patients"]
+- **FR-XXX**: [Related FR name; what this module takes from it or gives to it - e.g., "FR-001 Patient Authentication & Profile; the authenticated session provides the patient ID"]
+- **FR-YYY**: [Related FR name; the shared rule, screen or event it owns - e.g., "FR-020 Notifications & Alerts; owns the push and email notices this module raises"]
 
 ---
 
@@ -590,23 +442,6 @@ flowchart TD
 
 ---
 
-## Key Entities
-
-<!--
-  ACTION REQUIRED: Define main data entities (high-level, not database schema)
-  This helps understand what data this feature manages
--->
-
-- **Entity 1 - [Name]**: [What it represents - e.g., "Quote Request"]
-  - **Key attributes** (conceptual, not database fields): [e.g., "patient ID, requested procedures, status, submitted date"]
-  - **Relationships**: [e.g., "One patient can have many quote requests; one quote request relates to one or more procedures"]
-
-- **Entity 2 - [Name]**: [What it represents]
-  - **Key attributes**: [Attributes]
-  - **Relationships**: [Relationships to other entities]
-
----
-
 ## Appendix: Change Log
 
 | Date | Version | Changes | Author |
@@ -618,15 +453,19 @@ flowchart TD
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-|------|------|------|--------------------|
-| Product Owner | [Name] | [Date] | [Status] |
-| Technical Lead | [Name] | [Date] | [Status] |
-| Stakeholder | [Name] | [Date] | [Status] |
+<!--
+  Keep this section short (C-PRD-28). A new PRD is a Draft and carries no approval.
+  Do not copy the approval wording of the requirements baseline sign-off from an existing PRD:
+  that approval covers only the PRDs that existed on the baseline date, not this one.
+  When the Product Owner approves this PRD (C-PRD-23), replace the line below with one approval statement
+  that names the approval record, and move Status in the header to Verified & Approved (C-PRD-24).
+-->
+
+Draft. Awaiting Product Owner approval; no approval is recorded yet.
 
 ---
 
-**Template Version**: 2.0.0 (Constitution-Compliant)
-**Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
-**Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2025-11-03
+**Template Version**: 3.0.0 (compressed PRD structure)
+**Constitution Reference**: Hairline Platform Constitution v1.1.1, Part C (C-PRD-1 to C-PRD-28)
+**Based on**: FR-035 Patient Help Center & Support Submission and FR-027 Legal Content Management (compressed PRDs)
+**Last Updated**: 2026-11-25

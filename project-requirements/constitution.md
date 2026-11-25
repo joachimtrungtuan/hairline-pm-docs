@@ -508,7 +508,7 @@ Key Entities is also no longer a PRD section: entities and fields live in the re
 4. C-PRD-23 **Stakeholder Approval**: PRD MUST be confirmed as OK by project stakeholders
 5. C-PRD-24 **Status Update**: PRD status MUST be updated to "✅ Verified & Approved" upon confirmation
 
-**Template Reference**: The canonical templates are in `local-docs/project-requirements/templates/` (change control in the project instructions). `prd-template.md` there still carries the pre-compression section list; until it is updated, the section list in this Part and in `local-docs/INDEX.md` section C.1 governs, and a new PRD omits the retired sections.
+**Template Reference**: The canonical templates are in `local-docs/project-requirements/templates/` (change control in the project instructions). `prd-template.md` there follows the section list in this Part and in `local-docs/INDEX.md` section C.1 (brought in line on 2026-11-25); a new PRD starts from it as a Draft.
 
 ### Documentation placement rules
 

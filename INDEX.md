@@ -211,7 +211,7 @@ Implementation Notes and Key Entities are no longer PRD sections: entities and f
 requirements graph, and the pre-compression PRDs and all change-request files are kept in the
 workspace-root archive `archived/prd-baseline-2026-11-08/` (one folder per FR).
 
-`project-requirements/templates/prd-template.md` still carries the pre-compression section list (canonical; also available through the
+`project-requirements/templates/prd-template.md` carries this section list since 2026-11-25 (canonical; also available through the
 `.specify/templates/prd-template.md` compatibility path). Confirm live anchors with
 `rg -n "^## " <prd.md>` — a few early FRs may omit the trailing appendices.
 
