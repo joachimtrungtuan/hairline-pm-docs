@@ -3,7 +3,7 @@
 **Module**: PR-05: Financial Management & Reporting | A-08: Analytics & Reporting
 **Feature Branch**: `fr014-provider-analytics-reporting`
 **Created**: 2025-11-11
-**Version**: 3.23
+**Version**: 3.24
 **Status**: 🟡 Revised — Documentation Approved; Pending Consolidated Verification
 **Source**: FR-014 from system-prd.md; SRC-MTG-002 (MTG-002-D03–D06 and O01 as refined by the Product Owner); FR-004, FR-005, and FR-006 approved quote/acceptance/booking contracts; Product Owner approvals dated 2026-10-07, 2026-10-13, and 2026-10-14
 
@@ -1575,7 +1575,7 @@ Values are owned by the FR-026 Analytics Configuration Manager (Screen 5e); FR-0
 - **S-05**: Media Storage Service — stores generated export artifacts for 7-day re-download retention and secure-link access. See FR-002 REQ-002-024
 - **Provider Banking Details**: Provider display currency is derived from `banking_details.currency` via provider default-currency resolution; if absent, the current implementation falls back to USD. See FR-004 REQ-004-025, REQ-004-084 and REQ-004-086, and FR-029 REQ-029-044 (locked exchange rate)
   - This is reporting-currency resolution only; it MUST NOT overwrite FR-004 system-configured quote currency or the immutable FR-005 accepted currency/locked rate. Reconcile any legacy fallback against the accepted snapshot before presenting historical amount metrics. (REQ-014-171)
-- **Provider Team / Auth Data**: Engagement views rely on `provider_activity_logs.action_at` as the canonical activity timestamp source (documented in system-data-schema.md). Last active = `MAX(action_at)` per provider. The previously referenced `provider_users.last_login_at` field does not exist in the schema and must not be used. (REQ-014-172)
+- **Provider Team / Auth Data**: Engagement views rely on `provider_activity_logs.action_at` as the canonical activity timestamp source (recorded in the archived data schema, `archived/technical-docs/system-data-schema.md`). Last active = `MAX(action_at)` per provider. The previously referenced `provider_users.last_login_at` field does not exist in the schema and must not be used. (REQ-014-172)
 - **Assumption 2**: Admin analytics must remain responsive across desktop, tablet, and mobile viewports in accordance with the platform constitution; lower-width layouts may reduce density but must preserve the core workflows (REQ-014-175)
 - **Assumption 3**: Provider analytics screens are desktop-first (≥1024px), responsive single-column on ≤1024px (REQ-014-176)
 - **Assumption 5**: There is no per-clinic payout frequency. Payout cadence, wherever shown in this FR, means how the payout is released: automatic release on the Stripe Connect rail, or on the manual rail the single settlement-period setting owned by FR-029 (default weekly, Sunday cutoff, Wednesday payout) that applies to all manually paid clinics (REQ-014-177)
@@ -1846,6 +1846,7 @@ These are required implementation/reconciliation cases, not a claim that the dep
 | 2026-11-23 | 3.21 | Independent compression review: 1 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 | 2026-11-24 | 3.22 | Logic review: "Scheduled bookings" split from the Confirmed booking milestone (first successful initial charge); time-range scope of fixed and snapshot tiles; live-record versus aggregate reads; payment option donut counted per booking; analytics entry points and empty state per role; admin screen permissions and no admin export; drill-downs by provider only; export limited to Screens 2 to 5 with recurring-export ownership and notices; cockpit and report-history steps in the workflows; "No data" TTFQ tier; "New" growth label; revived bookings in cash-at-risk; commission reversed on refunds; payout widgets bound to the FR-017 statement; cancellation and no-show on the confirmation cohort; FR-005 citations corrected. | Product Owner / Documentation |
 | 2026-11-24 | 3.23 | Logic review pass 2: cash-at-risk is a snapshot on every screen; recurring-export owner recorded and resume blocked until an eligible user saves an edit; payouts waiting for clinic setup shown as Upcoming; fixed-window list extended to the Screen 8 engagement widgets and the Tile 5 Dormant count; "No data" TTFQ tier filter on Screen 8; inquiry drill-downs open the FR-003 provider inquiry list with stage, country and period; admin Screen 7 shows only what the admin's permissions cover; provider financial permissions named; role-aware entry steps wired; export generation times aligned with Rule 18. | Product Owner / Documentation |
+| 2026-11-25 | 3.24 | Pointer corrected: the data schema document is archived; the reference now names its archive path. No rule changes. | Product Owner / Documentation |
 
 ---
 
@@ -1869,4 +1870,4 @@ These are required implementation/reconciliation cases, not a claim that the dep
 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B
-**Last Updated**: 2026-11-24
+**Last Updated**: 2026-11-25

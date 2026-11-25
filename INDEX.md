@@ -4,7 +4,7 @@
 any file, use this index to map **task → area → file → section**, then read **only the
 section you need**. Do not scan the tree. Do not read long files whole.
 
-**Last Updated**: 2026-09-09
+**Last Updated**: 2026-11-25
 
 > Behavior rules (locator-first, phase budgets, no full-file reads) live in
 > `CLAUDE.md` / `AGENTS.md` → *Navigation & Token Governance*. This file is **where to
@@ -20,8 +20,9 @@ Find your task, go to the listed area, then jump via the Section Maps in §C.
 |---|---|---|
 | A specific feature / requirement | `project-requirements/functional-requirements/frNNN-*/prd.md` | PRD Section Map (§C.1) |
 | System-wide requirements, personas, core workflows | `project-requirements/system-prd.md` | §C.2 |
-| Database tables, fields, relationships | `project-requirements/system-data-schema.md` | §C.3 |
-| Architecture, APIs, integrations, deployment | `project-requirements/system-technical-spec.md` | §C.4 |
+| Implementing code from the requirements; reading order for PRDs and the graph; the code repositories | `DEVELOPER-GUIDE.md` | read whole (short) |
+| Entities, fields, enum values, and how rules, screens, flows and FRs connect | `project-requirements/graph/` | §C.3; commands in `DEVELOPER-GUIDE.md` §5 |
+| Former technical spec and data schema (history only) | `archived/technical-docs/` | §C.4 |
 | Project principles / scope / vision | `project-requirements/constitution.md` | ⚠️ >1000 lines: read "How to use this document" first, then only the Part you need (the old summary is merged in as the Appendix) |
 | Original client requirements (verbatim) | `project-requirements/transcriptions/` | locate file first |
 | Subsequent stakeholder meetings, files, and extracted decisions | `project-requirements/sources/source-register.md` | read the register, then one normalized source record; raw files are evidence only |
@@ -93,11 +94,12 @@ invoked, the skill's `SKILL.md` is authoritative; follow it step-by-step.
 local-docs/
 ├── README.md                     Human onboarding (people, not routing)
 ├── INDEX.md                      ← THIS FILE (agent routing)
+├── DEVELOPER-GUIDE.md            For developers and their agents: repositories, reading order, graph use
+├── archived/technical-docs/      Former technical spec and data schema (history only)
 ├── project-requirements/
 │   ├── constitution.md           Project constitution (principles, rules, PRD standards; summary merged in)
-│   ├── system-prd.md             System PRD — 38 FRs, personas, workflows  ⚠️ ~2000 lines
-│   ├── system-technical-spec.md  Architecture, APIs, deploy               ⚠️ ~2070 lines
-│   ├── system-data-schema.md     97 tables, relationships                 ⚠️ ~2027 lines
+│   ├── system-prd.md             System PRD — 38 FRs, personas, workflows  ⚠️ ~2250 lines
+│   ├── constitution-open-items.md  Constitution points awaiting an owner decision
 │   ├── functional-requirements/  frNNN-slug/prd.md  (38 FRs; many ⚠️ >1000 lines)
 │   ├── graph/                    Requirements graph: graph.db is the requirements author; README.md
 │   │                             documents scripts; changesets/ for every change; checklists/ review checklists
@@ -166,8 +168,7 @@ For each doc type: where its structure is **defined** (template/source) and the 
 | Major FR Change Request (`frNNN/change-request-*.md`) | `project-requirements/templates/change-request-template.md` | `project-requirements/templates/change-request-template.md` | Template headings |
 | Spec Kit plan, task, checklist, and agent files | `project-requirements/templates/` | `project-requirements/templates/{plan-template,tasks-template,checklist-template,agent-file-template}.md` | Template headings |
 | System PRD | `system-prd.md` itself | — | §C.2 |
-| Data schema | `system-data-schema.md` itself | — | §C.3 |
-| Technical spec | `system-technical-spec.md` itself | — | §C.4 |
+| Data model | `project-requirements/graph/schema.yaml` | — | §C.3 |
 | Sprint client review report | `sprint-readiness-reporting/SKILL.md` | `product-plans/template/client-sprint-review-report-template.md` | §C.5 |
 | Sprint readiness / fix backlog | `sprint-readiness-reporting/SKILL.md` (+ `references/reporting-rules.md`) | `product-plans/template/sprint-readiness-fix-backlog-template.md` | §C.5 |
 | Implementation task doc | `create-implementation-tasks/references/task-format.md` | (format spec, not a fill-in) | run skill |
@@ -223,27 +224,17 @@ workspace-root archive `archived/prd-baseline-2026-11-08/` (one folder per FR).
 ## Success Criteria · ## Out of Scope · ## Assumptions & Dependencies · ## Appendix
 ```
 
-### C.3 — system-data-schema.md
+### C.3 — Data model (requirements graph)
 
-```md
-## Executive Summary · ## Entity Relationship Overview
-## Core Entities          ← largest (~line 79–1200); grep the table name you need
-## Supporting Entities · ## Permission & Role Management (Spatie)
-## OAuth & Authentication (Laravel Passport)
-## Database Constraints & Relationships Summary · ## Data Types & Conventions
-## Data Security & Privacy · ## Migration Strategy · ## Database Seeding
-## Performance Optimization · ## Appendix
-```
+There is no data schema document. Entities, fields, data types and enum values are in
+`project-requirements/graph/graph.db`; query one entity at a time (commands in
+`DEVELOPER-GUIDE.md` §5.3). Never load `graph.json` or dump a whole table.
 
-### C.4 — system-technical-spec.md
+### C.4 — Archived technical documents
 
-```md
-## Executive Summary · ## System Architecture · ## Core Workflow Implementation
-## Backend Architecture   ← largest (~line 213–945)
-## Frontend Architecture (Web) · ## Mobile Architecture · ## Third-Party Integrations
-## Security Implementation · ## Performance Optimization · ## Testing Strategy
-## Deployment · ## Monitoring & Logging · ## Appendix
-```
+`archived/technical-docs/` holds the former `system-technical-spec.md` and
+`system-data-schema.md` (frozen 2026-10-28, archived 2026-11-25). History only: do not edit
+them and do not cite them as a requirement. Read `archived/technical-docs/README.md` first.
 
 ### C.5 — Sprint / phase report scaffolds (`product-plans/template/`)
 

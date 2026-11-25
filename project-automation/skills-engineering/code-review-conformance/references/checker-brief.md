@@ -26,8 +26,7 @@ gaps with evidence. Then give the unit one verdict from the rubric appended belo
   API clients and hooks, fixtures/mock files.
 - **Never open or search `main/hairline-app/`.** Patient behavior is judged by the backend
   endpoints only. **Never modify any file.**
-- Supporting docs you may read by section: the PRD path given below,
-  `local-docs/project-requirements/system-technical-spec.md` (API sections),
+- Supporting docs you may read by section: the PRD path given below and
   `local-docs/testing/automated/api/endpoints/collection-map.md`.
 
 ## Code is the truth; code maps are a locator

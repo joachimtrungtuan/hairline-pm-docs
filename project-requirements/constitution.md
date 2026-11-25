@@ -19,7 +19,7 @@ The system PRD (`system-prd.md`, section "Platform-Wide Rules") and this documen
 | Review code or a plan | Part A, Part B, Part D (Development Standards) | Lines labelled `C-DEV` carry the code-review, commit, coverage and test-data rules. |
 | Write or review a PRD | Part C | Section structure of a compressed PRD is also governed by `graph/checklists/prd-structure.md`; see Part C. |
 | Place a new document | Part C (Documentation Organization) | Layout trees are in Part D and are historical; `local-docs/INDEX.md` is the current wayfinder. |
-| Understand tenants, modules, platform stack | Part D, then Appendix | Product scope is owned by `system-prd.md`; technical design by `system-technical-spec.md`. |
+| Understand tenants, modules, platform stack | Part D, then Appendix | Product scope is owned by `system-prd.md`. The former technical spec is archived in `local-docs/archived/technical-docs/` and is history only. |
 | Amend the constitution or justify a deviation | Part E | |
 
 ## Part A. Principles (checkable rules)
@@ -510,8 +510,9 @@ These rules are the "Rules" list that closed the original Governance documentati
 
 **Rules**:
 
-- C-DOC-2 **System-Level Documentation**: Core system documents (`system-prd.md`, `system-data-schema.md`,
-  `system-technical-spec.md`, `constitution-summary.md`) remain at the root of `project-requirements/`.
+- C-DOC-2 **System-Level Documentation**: Core system documents (`system-prd.md`, `constitution.md`) remain at the root of
+  `project-requirements/`. (`system-data-schema.md` and `system-technical-spec.md` were archived to
+  `local-docs/archived/technical-docs/` on 2026-11-25; `constitution-summary.md` was merged into this file.)
 - C-DOC-3 **Update Logs**: All documentation update reports and verification logs MUST be placed in
   `update-logs/` to maintain an audit trail of changes.
 - C-DOC-4 **Transcriptions**: Original requirement transcriptions remain in `transcriptions/` as source material.
@@ -531,7 +532,7 @@ Editorial note: `constitution-summary.md`, named in the first rule above, has be
 
 ## Part D. Reference and development standards
 
-Description of the three tenants, development standards and the original documentation layout. This part is reference: product scope is owned by `system-prd.md` (Functional Requirements and Platform-Wide Rules) and technical design by `system-technical-spec.md`. Lines in Development Standards that carry MUST wording or numeric thresholds are labelled `C-DEV-<n>` and are checked in code review.
+Description of the three tenants, development standards and the original documentation layout. This part is reference: product scope is owned by `system-prd.md` (Functional Requirements and Platform-Wide Rules). The former technical spec and data schema named in this part are archived in `local-docs/archived/technical-docs/`. Lines in Development Standards that carry MUST wording or numeric thresholds are labelled `C-DEV-<n>` and are checked in code review.
 
 The per-tenant module lists are kept in full because no single section of `system-prd.md` reproduces them: that document is organised by Functional Requirement, not by these per-tenant module lists with priority labels. Replacing them with pointers is an owner decision (see `constitution-open-items.md`).
 
@@ -1163,6 +1164,7 @@ FR-035 (Patient Help Center and Support Submission) was listed here as planned. 
 
 - 1.0.0 (2025-10-23): initial ratification (ten principles; System Architecture & Tenants; Security & Compliance Requirements; Development Standards; Governance). The original file carried a Spec Kit sync report (templates plan, PRD and tasks reviewed as compatible); that comment is not kept.
 - 1.0.0 restructure (2026-11-25): original constitution and executive summary merged into this file in Parts A to E plus an Appendix. Rule wording unchanged; rule ids added; original headings kept. Replaced by pointers or dropped from the summary: overview, core-principles digest, security and development digests, governance digest, "Key Gaps Addressed", "Next Steps", "Success Metrics", the repeated PRD standards and layout trees, "Planned Functional Requirements" detail and the document-status footer.
+- File placement update (2026-11-25): C-DOC-2 and two pointer lines updated after `system-technical-spec.md` and `system-data-schema.md` were archived to `local-docs/archived/technical-docs/` and the `constitution-summary.md` stub was removed. No principle changed.
 
 
 **Version**: 1.0.0 | **Ratified**: 2025-10-23 | **Last Amended**: 2025-10-23

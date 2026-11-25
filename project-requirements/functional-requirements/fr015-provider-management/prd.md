@@ -3,7 +3,7 @@
 **Module**: A-02: Provider Management & Onboarding
 **Feature Branch**: `fr015-provider-management`
 **Created**: 2025-11-11
-**Version**: 1.31
+**Version**: 1.32
 **Status**: Revised 2026-11-22 (owner ruling: provider-status cancellation payment terms); previously revised 2026-11-20 (requirements graph programme baseline: owner rulings applied); previously revised 2026-10-28 (backend confirmations: seat usage member statuses, changed-fields-only saves, Owner login email change notice); previously revised 2026-10-27 (dev-team follow-up question resolution: save conflicts, data encryption, seat usage, impersonation, notification timing and recipients, cascade timing), pending consolidated verification; implementation reconciliation pending
 **Source**: FR-015 from system-prd.md (§ FR-015: Provider Management (Admin-Initiated))
 
@@ -869,7 +869,7 @@ On save, Document Name, File Size, Upload Date, and Uploaded By ("Admin - [admin
 **Carried from dropped sections (original wording)**:
 
 - **SC-003**: Patients see only active providers in search results (no suspended/deactivated providers visible), ensuring trust and booking reliability
-- **Relationships**: One provider has many status events (append-only; never updated after creation). This is the "provider status event" referenced by REQ-015-024 and by the `provider_status_event_id` / `deactivation_event_id` columns on the owning inquiry, booking, aftercare, payment, and closure-request records (`provider_status_events` in system-data-schema.md). Tab 8 displays it but the Tab 8 activity log is not the event record.
+- **Relationships**: One provider has many status events (append-only; never updated after creation). This is the "provider status event" referenced by REQ-015-024 and by the `provider_status_event_id` / `deactivation_event_id` columns on the owning inquiry, booking, aftercare, payment, and closure-request records (`provider_status_events` in the archived data schema, `archived/technical-docs/system-data-schema.md`). Tab 8 displays it but the Tab 8 activity log is not the event record.
 
 ---
 
@@ -1034,6 +1034,7 @@ Admin configures a provider account with a fixed commission fee (e.g., £200 per
 | 2026-11-24 | 1.29 | Logic review pass 1: creation also makes the Owner's team-member and org-role records; an admin Owner handover applies the Owner login email change steps (Owner may be handed over while the provider is Active or Suspended, not Deactivated); deactivation cancels Pending team invitations and Tab 1 is read-only when Deactivated; Resend Activation Email and the activation email on an email change work for Active and Suspended providers; Starting Price is shown in the package's own currency; suspension cascade hands the last-live-offer case to FR-003 and cancels unsent draft quotes silently; Tab 3 admin actions follow provider status; default admin role name Billing Admin; closure rejection keeps the current status. Two owner defaults applied (handover login email steps, activation email for Suspended providers). | Product Owner / Documentation |
 | 2026-11-24 | 1.30 | Logic review pass 2: a Suspended clinic that sets its password stays read-only and is not eligible for distribution until reactivated; closure request notice with Deactivate Provider and Reject Request on Screen 3 (Reject Request needs Suspend Providers); closure rejection keeps the current status in the edge case; the cascade also ends FR-037 monitoring assignments and acts only on records that existed at the effective time; a Deactivated provider has Edit Profile hidden and all tabs read-only; earnings on normally completed bookings are released by an admin through FR-017 and the Payout Method of a Deactivated clinic stays editable while unpaid shares remain (owner default applied). | Product Owner / Documentation |
 | 2026-11-25 | 1.31 | Cross-FR alignment: suspension and deactivation make the provider's conversations read-only with the open In Progress and Aftercare chat carve-out (REQ-015-139); commission on refunded money is reversed with the refund (REQ-015-041); the provider creation rate limit is a fixed setting, not admin-editable (REQ-015-066); new yes or no Aftercare Participation setting, default On, on Screen 2 Step 5 and Screen 3 Tab 1 (REQ-015-140). | Product Owner / Documentation |
+| 2026-11-25 | 1.32 | Pointer corrected: the data schema document is archived; the reference now names its archive path. No rule changes. | Product Owner / Documentation |
 
 ---
 

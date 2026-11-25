@@ -1,10 +1,12 @@
 # Hairline Platform Documentation
 
 **Version**: 1.1.0
-**Last Updated**: 2026-08-20
+**Last Updated**: 2026-11-25
 **Status**: ✅ Active Development
 
 > **🤖 AI agents:** start at **[`INDEX.md`](INDEX.md)** — the wayfinder that maps task → area → file → section, lists the skill directory, and carries every doc's scaffold. Locate there first; do not scan the tree or read long files whole. This README is human onboarding.
+>
+> **🧑‍💻 Developers (and their agents):** read **[`DEVELOPER-GUIDE.md`](DEVELOPER-GUIDE.md)** — code repositories, reading order for the requirements, and how to use the requirements graph.
 
 ## Overview
 
@@ -16,11 +18,12 @@ This repository contains comprehensive documentation for the **Hairline Platform
 
 1. **Start Here**: Read [`project-requirements/constitution.md`](project-requirements/constitution.md) for project overview
 2. **Core Requirements**: Review [`project-requirements/system-prd.md`](project-requirements/system-prd.md) for functional requirements
-3. **Technical Details**: Check [`project-requirements/system-technical-spec.md`](project-requirements/system-technical-spec.md) for implementation guidance
+3. **Feature Detail**: Open the FR's PRD under [`project-requirements/functional-requirements/`](project-requirements/functional-requirements/)
 
 ### For Developers
 
-- **Database Design**: [`project-requirements/system-data-schema.md`](project-requirements/system-data-schema.md)
+- **Start Here**: [`DEVELOPER-GUIDE.md`](DEVELOPER-GUIDE.md)
+- **Data Model and System Topology**: the requirements graph in [`project-requirements/graph/`](project-requirements/graph/)
 - **Module Mapping**: Each FR in `system-prd.md` includes module codes (P-01, PR-01, A-01, S-01)
 - **Functional Requirements**: Individual PRDs in `functional-requirements/` folder
 - **Templates**: Canonical project and Spec Kit-compatible templates in [`project-requirements/templates/`](project-requirements/templates/)
@@ -34,8 +37,7 @@ This repository contains comprehensive documentation for the **Hairline Platform
 project-requirements/
 ├── constitution.md      # 🎯 START HERE - Project overview & principles
 ├── system-prd.md                # 📋 Functional requirements with module mapping
-├── system-technical-spec.md     # ⚙️ Technical architecture & implementation
-├── system-data-schema.md        # 🗄️ Database design and relationships
+├── graph/                       # 🕸️ Requirements graph: data model, rules, screens, flows
 ├── functional-requirements/     # 🧩 Individual FR PRDs and major-event Change Requests
 ├── templates/                   # 📝 Canonical project and Spec Kit-compatible templates
 ├── transcriptions/              # 📝 Original requirement sources
@@ -45,6 +47,9 @@ project-requirements/
 The project owns all templates in `project-requirements/templates/`. The workspace-root
 `.specify/templates` path is only a compatibility symlink so existing Spec Kit scripts can
 continue resolving their expected paths; do not maintain independent template copies there.
+
+The former technical spec and data schema are kept as history in
+[`archived/technical-docs/`](archived/technical-docs/); they are not a current source.
 
 ### Supporting Documentation
 
@@ -67,8 +72,8 @@ project-automation/task-prompt/  # 📝 Task generation templates
 
 ### Developers
 
-- **Primary**: [`system-technical-spec.md`](project-requirements/system-technical-spec.md) - Implementation guide
-- **Secondary**: [`system-data-schema.md`](project-requirements/system-data-schema.md) - Database design
+- **Primary**: [`DEVELOPER-GUIDE.md`](DEVELOPER-GUIDE.md) - Where everything is and how to read it
+- **Secondary**: [`project-requirements/graph/`](project-requirements/graph/) - Data model and how the parts connect
 
 ### QA Engineers
 

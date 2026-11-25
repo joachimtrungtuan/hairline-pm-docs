@@ -13,7 +13,7 @@ all three clients. Boundary is by URL prefix in `routes/api.php` (`/auth`, `/pat
 `/provider*`, `/admin*`, plus shared `/help-centre`, `/chat`, `/calls`, `/quote`,
 `/inquiry`). Controllers, Requests, Resources and Services mirror those domains.
 Module codes: Patient P-01..P-08, Provider PR-01..PR-07, Admin A-01..A-10, Shared
-S-01..S-06. Models map to entities in `system-data-schema.md`.
+S-01..S-06. Models map to Entity nodes in the requirements graph (`project-requirements/graph/`).
 
 ## routes/ (api.php, channels.php, console.php, web.php)
 - **Purpose:** The authoritative module map. `api.php` (~2.3k lines) declares every endpoint grouped by prefix; the prefix tree is the source of truth for which controller serves which platform/module. `channels.php` = broadcast auth (chat/calls); `console.php` = scheduled commands; `web.php` minimal.
@@ -130,9 +130,9 @@ S-01..S-06. Models map to entities in `system-data-schema.md`.
 - **Entry points / key files:** `Resources/Admin/AdminReviewDetailResource.php`, `Resources/SupportCaseResource.php`.
 
 ## app/Models/ (incl. Models/Support/, Models/Traits/)
-- **Purpose:** ~240 Eloquent models — the persistence layer. Each maps to a table/entity in `system-data-schema.md`. Covers every domain: patients/providers/quotes/inquiries/bookings/payments/aftercare/reviews/promotions/affiliates/translations/support/notifications/currency/questionnaires. `Traits/` = shared model behavior (HasUuid, HasImageUrl, HasScheduledRoles); `Support/` = support-center config models.
+- **Purpose:** ~240 Eloquent models — the persistence layer. Each maps to an Entity in the requirements graph (`project-requirements/graph/`). Covers every domain: patients/providers/quotes/inquiries/bookings/payments/aftercare/reviews/promotions/affiliates/translations/support/notifications/currency/questionnaires. `Traits/` = shared model behavior (HasUuid, HasImageUrl, HasScheduledRoles); `Support/` = support-center config models.
 - **Modules:** all.
-- **FRs:** all (data layer). Conceptually maps to schema entities in `system-data-schema.md`.
+- **FRs:** all (data layer). Conceptually maps to Entity nodes in the requirements graph.
 - **Entry points / key files:** `Patient.php`, `Provider.php`, `Quote.php`, `Inquiry.php`, `Payment.php`, `AfterCare.php`.
 
 ## app/Services/ (incl. Admin/, Analytics/, Finance/, Push/, RBAC/, Travel/)
@@ -178,7 +178,7 @@ S-01..S-06. Models map to entities in `system-data-schema.md`.
 - **Entry points / key files:** `EventServiceProvider.php`, `AuthServiceProvider.php`, `RouteServiceProvider.php`.
 
 ## database/migrations/
-- **Purpose:** ~180 schema migrations, the chronological record of the physical DB. Together they realize the entities in `system-data-schema.md`. Read newest dates for recent schema additions.
+- **Purpose:** ~180 schema migrations, the chronological record of the physical DB. Together they realize the Entity and Field nodes of the requirements graph. Read newest dates for recent schema additions.
 - **Modules:** all.
 - **FRs:** all (schema).
 - **Entry points / key files:** browse by date prefix; latest = `2025_11_26_*_create_registration_drafts_table.php`.

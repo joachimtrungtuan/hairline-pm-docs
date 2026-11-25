@@ -48,13 +48,11 @@ with a one-line reason each.>
    `/inquiry` `/quote` `/chat` …) is the authoritative map of which controller serves which platform.
 3. The **FR → module table** in `local-docs/project-requirements/system-prd.md` (`## Functional
    Requirements`) and the module list in `local-docs/README.md` (read the README list first — cheap).
-4. Architecture prose in `local-docs/project-requirements/system-technical-spec.md` — read only the
-   `Backend Architecture` / `Frontend Architecture (Web)` / `Mobile Architecture` sections
-   (find ranges with `rg -n "^## "`).
-5. Targeted entry-file reads only to resolve a specific binding question (open the top, not the whole file).
+4. Targeted entry-file reads only to resolve a specific binding question (open the top, not the whole file).
 
-Models: cross-reference `system-data-schema.md` entities conceptually — note "maps to schema
-entities"; do **not** read the whole schema.
+Models: cross-reference the Entity nodes of the requirements graph
+(`local-docs/project-requirements/graph/`) conceptually — note "maps to graph entities"; do
+**not** dump the graph.
 
 ## Module-code legend
 

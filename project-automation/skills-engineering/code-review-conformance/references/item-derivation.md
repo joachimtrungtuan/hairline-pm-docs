@@ -103,8 +103,8 @@ checker can cite it.
 `main/hairline-app/` is never read. For patient-facing flows, the unit's check points are
 written as backend obligations only: the endpoint exists, enforces auth and ownership, validates
 input per PRD, returns the PRD-required data and states, and triggers the right side effects.
-Patient endpoints are located through `main/hairline-backend/routes/api.php`, the
-`system-technical-spec.md` API sections, and the Postman collection map.
+Patient endpoints are located through `main/hairline-backend/routes/api.php` and the Postman
+collection map.
 
 ## 8. Exit-gate units
 
