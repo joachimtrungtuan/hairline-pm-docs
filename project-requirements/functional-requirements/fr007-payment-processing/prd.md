@@ -70,6 +70,7 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 - Payment confirmations (deposit, final) to patient (REQ-007-027)
 - Payment reminders for upcoming final payment (REQ-007-027)
 - Refund confirmations to patient and provider (REQ-007-027)
+- Payment failed notice to the patient when a payment fails; the notice is mandatory and cannot be disabled, and its recipients and delivery are set by the notification catalogue event `payment.failed` (FR-030 REQ-030-056) (REQ-007-027)
 - Payout notifications to provider after execution (the payout-executed event is owned by FR-017) (REQ-007-027)
 
 **Out of Scope**:
@@ -105,7 +106,7 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 1. Patient reviews the accepted subquote summary (selected package/services, date range, appointment/timezone, offered price, accepted promotion and discounted price, locked currency), payable booking total, deposit amount, and remaining balance. (REQ-007-031)
 2. System displays supported payment methods and any applicable fees/requirements (REQ-007-032)
 3. Patient selects payment method and confirms deposit payment
-4. System processes payment and returns success or actionable challenge (e.g., additional authentication)
+4. System processes payment and returns success or actionable challenge (e.g., additional authentication); any processor fee is recorded on the payment's own record (REQ-007-087)
 5. On success, System confirms the same FR-006 booking, creates its appointment record from the hold (until this point only the temporary hold exists), and, for a provider-selected promotion or patient-entered code, consumes the promotion use reserved at acceptance (FR-019 REQ-019-014; an automatic promotion's use was already consumed at acceptance under FR-019 REQ-019-015); generates receipt and invoice from that booking's recorded terms; sends confirmation to patient and provider. A retry or duplicate callback cannot create a second booking or change the accepted selection.
 6. By the due date, Patient initiates final payment from booking details or from a reminder
 7. System processes final payment and updates booking to fully paid; issues final receipt/invoice; sends confirmations (REQ-007-083)
@@ -132,14 +133,15 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
 - **Trigger**: A booking closes with a cause FR-006 records (the system starts that refund), or an admin enters an exception or manual refund
 - **Steps**:
   1. System reads the booking's recorded closure cause and the cancellation timing and works out the refund the case sets: a full refund with no fee for a provider withdrawal, drop-out, suspension or deactivation; the FR-029 refund ladder (launch default: >30 days = 90%, 15-30 days = 50%, <15 days = no refund) on the amount paid toward the booking total, late payment fees excluded, for a patient-request cancellation; the admin-set amount for an in-treatment provider fault, set in FR-006 (REQ-006-053, REQ-007-063, REQ-007-097)
-  2. System starts the refund for that case. A closure-case refund is always started by the system, needs no second approval, and no admin starts a duplicate.
-  3. System updates booking/payment status and sends confirmation notices
+  2. System starts the refund for that case. A closure-case refund is always started by the system, needs no second approval, and no admin starts a duplicate. The refund goes to the original payment method by default; an admin can select another method on Screen 6 (REQ-007-065).
+  3. System updates booking/payment status and sends confirmation notices; any processor fee is recorded on the refund's own record (REQ-007-087)
   4. Exception or manual refund: the admin opens Screen 6 and picks exception or manual; these are the only cases offered when no closure cause is recorded or the recorded cause is not one the cases list. The admin sets the amount, from 0 up to the amount still refundable (the amount paid less refunds already made), with the ladder amount shown beside it, enters the reason (10 to 500 characters) and, for an exception, the documentation, and submits; the refund is awaiting approval (REQ-007-064, REQ-007-066, REQ-007-097)
   5. Another admin who holds the Issue Refunds permission (FR-031) finds the request in the Awaiting approval view on Screen 6 and approves or denies within 2 business days; the requester can never approve or deny their own request; the requester, approver and decision go in the audit entry (REQ-007-015, REQ-007-067). Approval starts the refund as in step 2.
   6. On denial, System records the denial with its reason, keeps the booking and payment status and notifies the patient (REQ-007-086)
   7. When 2 business days pass with no decision, System sends an escalation notice to a super-admin; the refund stays awaiting approval and is never approved or denied automatically (REQ-007-015)
   8. The super-admin approves or denies in the same Awaiting approval view, never as the requester; approval starts the refund as in step 2 and denial ends as in step 6 (REQ-007-015)
   9. Where the clinic's share has already moved, System pulls it back, deducts any shortfall from the clinic's next payout and splits any cancellation fee, the amount paid less the amount refunded, by the admin-set percentage (REQ-007-091, REQ-007-092)
+  10. When a booking is rescheduled after the clinic's share has moved, System pulls the share back and moves it again 60 or 30 days before the new date (REQ-007-091)
 - **Outcome**: Refund processed for the closure case, or approved or denied for an exception or manual refund; the sum of refunds on a booking never exceeds the amount paid; provider payout eligibility updated
 
 **A3: Standalone Aftercare Payment**:
@@ -169,6 +171,7 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
   2. For transient errors, Payment Service performs up to 3 automatic retries using exponential backoff (per Constitution) with idempotency safeguards; surface progress and final failure to patient if retries exhaust.
   3. For hard declines, System displays clear error and suggested next steps (retry, use different method).
   4. Patient retries or selects another method against the same accepted snapshot while the original FR-006 hold remains valid.
+  5. When a payment fails, System sends the patient the Payment Failed notice (`payment.failed`, mandatory; FR-030 REQ-030-056) (REQ-007-027)
 - **Outcome**: Booking remains unconfirmed until successful initial payment; failure/retry does not change the accepted selection. Payment failure never extends or restarts the slot hold. The slot stays held only until the single hold that started at subquote acceptance expires (FR-026 slot-hold duration, default 48 hours).
 
 **B3: Invalid Accepted Handoff / Payment Window Expired**:
@@ -190,6 +193,7 @@ Payment consumes one accepted subquote through the [FR-006 Booking](../fr006-boo
   1. FR-006 Alternative Flow B5 closes the booking with the provider-fault cause, or with the provider-status cause for a suspension or deactivation (FR-006 B4), and releases the hold. An admin authors a replacement quote in the same inquiry; when the replacement is accepted, a new linked acceptance record and a single supersession record are created.
   2. Payment against the closed booking is blocked. The patient is refunded in full everything paid, with no cancellation fee and no second approval, whether the provider withdraws, drops out, or is suspended or deactivated (FR-006 B4); the replacement booking takes a new payment.
   3. The replacement booking takes its payable amount and currency from the replacement quote's acceptance snapshot, takes a new payment, and follows the main flow. (REQ-007-046)
+  4. When the clinic withdrew or dropped out (not for a suspension or deactivation), System deducts the fixed charge set in admin settings from the clinic's next payout; the setting has no starting value and an admin sets it (REQ-007-092)
 - **Outcome**: The patient is not charged for the provider fault. Exact refund, fund-release, and payment-allocation mechanics are defined in FR-007, FR-007B, and FR-017.
 
 ---
@@ -1038,6 +1042,7 @@ Admin processes a refund request according to cancellation policy; patient and p
 | 2026-11-23 | 1.16 | Second logic review of the payment rules. A missed balance never cancels a booking on its own: REQ-007-021 and User Story 2 now state the FR-029 cancellation point only. A booking confirmed with fewer days left than the balance due days pays in full at confirmation. One stored Final Payment Status (Not Due, Due, Overdue) is moved by the scheduled job on calendar days in the clinic's timezone and the Overdue flag reads from it; the hard-coded 3 days is gone and the patient gets one overdue notice. Exception and manual refunds are admin-set from zero to the amount still refundable, with the ladder amount shown beside it. Closure-case refunds are started by the system and bound to the recorded closure cause. Other billing admins get an Awaiting approval view, a stalled request escalates to a super-admin, self-approval is never allowed, and all refunds on a booking together cannot exceed the amount paid. A partial deposit is refunded in full automatically when the hold expires. Full payment and installment completion now lead to the clinic share movement, and a late capture leads to the automatic refund. The payment option is chosen on FR-006 and changes only before the first payment; Screen 1 shows the amount due now. Standalone aftercare payments get an aftercare payment record, retry and 48-hour expiry as in FR-011, and a refund route; two rules cover them. | Product Owner / Documentation |
 | 2026-11-25 | 1.16 | Reference only, no version change: the Source line now names the canonical constitution file `local-docs/project-requirements/constitution.md`. | Product Owner |
 | 2026-11-25 | 1.17 | Cross-FR alignment. A patient who has not accepted the Current Terms and Privacy Policy cannot start a payment (REQ-027-033). Refund approval names the Issue Refunds permission (FR-031) instead of billing permission, and a refund stays awaiting approval while only one admin holds it. The two notification events carry their catalogue keys. The moment a booking becomes Full paid is named as the fully-paid event FR-018 reads. FR-011's own refund cases (including the pro-rata refund of a cancelled plan paid in full) are separated from admin manual refunds. The handover fee is paid from Hairline's own revenue. Screen 6 also opens from the FR-017 refund launcher and completion problem outcomes. | Product Owner / Documentation |
+| 2026-11-25 | 1.18 | Backlog points settled: the payment failed notice (FR-030 `payment.failed`) is now in the communication scope and Alternative Flow B2, and steps now cover the refund method (REQ-007-065), the processor fee record (REQ-007-087), the reschedule share movement (REQ-007-091) and the clinic withdrawal charge (REQ-007-092). | Claude (AI Assistant) |
 
 ---
 

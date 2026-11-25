@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T07:49:12Z",
+  "generated_at": "2026-11-25T07:53:27Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -48516,9 +48516,9 @@
       "owner_fr": "FR-007",
       "title": "Payment notices in scope: confirmations, reminders, refund and payout notices",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Payment confirmations (deposit, final) to patient; Payment reminders for upcoming final payment; Refund confirmations to patient and provider; Payout notifications to provider after execution",
+        "statement": "Payment confirmations (deposit, final) to patient; Payment reminders for upcoming final payment; Refund confirmations to patient and provider; Payout notifications to provider after execution; Payment failed notice to the patient when a payment fails, mandatory and set by the notification catalogue event payment.failed (FR-030 REQ-030-056)",
         "rationale": "sends confirmation to patient and provider Triggers on payment lifecycle events"
       }
     },
@@ -112171,9 +112171,9 @@
       "id": "STP-007-004",
       "type": "Step",
       "owner_fr": "FR-007",
-      "title": "System processes the payment and returns success or an actionable challenge",
+      "title": "System processes the payment and returns success or an actionable challenge, and records any processor fee on the payment's own record",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow step 4"
       }
@@ -112292,9 +112292,9 @@
       "id": "STP-007-022",
       "type": "Step",
       "owner_fr": "FR-007",
-      "title": "System starts the refund for the case; a closure-case refund is always started by the system, needs no second approval and is never started by an admin as well",
+      "title": "System starts the refund for the case, to the original payment method by default; a closure-case refund is always started by the system, needs no second approval and is never started by an admin as well",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow A2 step 2"
       }
@@ -112303,9 +112303,9 @@
       "id": "STP-007-023",
       "type": "Step",
       "owner_fr": "FR-007",
-      "title": "System updates booking and payment status and sends confirmation notices",
+      "title": "System updates booking and payment status, sends confirmation notices and records any processor fee on the refund's own record",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A2 step 3"
       }
@@ -112360,7 +112360,7 @@
       "owner_fr": "FR-007",
       "title": "System pulls the clinic's share back where it has already moved, deducts any shortfall from the clinic's next payout and splits any cancellation fee by the admin-set percentage",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A2 step 9"
       }
@@ -112393,7 +112393,7 @@
       "owner_fr": "FR-007",
       "title": "System classifies the failure as hard decline or transient error",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step 1"
       }
@@ -112492,7 +112492,7 @@
       "owner_fr": "FR-007",
       "title": "Payment against the closed booking is blocked; on a provider withdrawal, drop-out, suspension, or deactivation the patient is refunded in full and pays no cancellation fee",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Alternative Flow B4 step 2"
       }
@@ -112594,6 +112594,39 @@
       "version": 1,
       "attrs": {
         "prd_ref": "Alternative Flow A3 step 3"
+      }
+    },
+    {
+      "id": "STP-007-086",
+      "type": "Step",
+      "owner_fr": "FR-007",
+      "title": "When a booking is rescheduled after the clinic's share has moved, System pulls the share back and moves it again 60 or 30 days before the new date",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A2 step 10"
+      }
+    },
+    {
+      "id": "STP-007-087",
+      "type": "Step",
+      "owner_fr": "FR-007",
+      "title": "When the clinic withdrew or dropped out, System deducts the fixed charge set in admin settings from the clinic's next payout",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B4 step 4"
+      }
+    },
+    {
+      "id": "STP-007-088",
+      "type": "Step",
+      "owner_fr": "FR-007",
+      "title": "When a payment fails, System sends the patient the Payment Failed notice (mandatory, FR-030)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B2 step 5"
       }
     },
     {
@@ -203313,6 +203346,12 @@
       "from_id": "REQ-007-027",
       "verb": "applies to",
       "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007-027",
+      "verb": "applies to",
+      "to_id": "EVT-billing-payment-failed",
       "attrs": {}
     },
     {
@@ -379646,6 +379685,12 @@
     },
     {
       "from_id": "STP-007-004",
+      "verb": "applies",
+      "to_id": "REQ-007-087",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-004",
       "verb": "at",
       "to_id": "STG-main-05-payment",
       "attrs": {}
@@ -380170,6 +380215,12 @@
     {
       "from_id": "STP-007-022",
       "verb": "applies",
+      "to_id": "REQ-007-065",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-022",
+      "verb": "applies",
       "to_id": "REQ-007-066",
       "attrs": {}
     },
@@ -380217,6 +380268,12 @@
       "from_id": "STP-007-023",
       "verb": "applies",
       "to_id": "REQ-007-069",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-023",
+      "verb": "applies",
+      "to_id": "REQ-007-087",
       "attrs": {}
     },
     {
@@ -380422,6 +380479,14 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-007-028",
+      "verb": "next",
+      "to_id": "STP-007-086",
+      "attrs": {
+        "label": "booking rescheduled instead of cancelled, after the share has moved"
+      }
+    },
+    {
       "from_id": "STP-007-031",
       "verb": "applies",
       "to_id": "REQ-007-043",
@@ -380512,6 +380577,14 @@
       "to_id": "STP-007-042",
       "attrs": {
         "label": "transient error"
+      }
+    },
+    {
+      "from_id": "STP-007-041",
+      "verb": "next",
+      "to_id": "STP-007-088",
+      "attrs": {
+        "label": "the payment failed"
       }
     },
     {
@@ -380782,6 +380855,14 @@
       "to_id": "STP-007-063",
       "attrs": {
         "label": "replacement accepted"
+      }
+    },
+    {
+      "from_id": "STP-007-062",
+      "verb": "next",
+      "to_id": "STP-007-087",
+      "attrs": {
+        "label": "clinic withdrew or dropped out"
       }
     },
     {
@@ -381066,6 +381147,60 @@
       "attrs": {
         "label": "retry and the 48-hour expiry follow FR-011 Alternative Flow B1"
       }
+    },
+    {
+      "from_id": "STP-007-086",
+      "verb": "applies",
+      "to_id": "REQ-007-091",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-086",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-086",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-087",
+      "verb": "applies",
+      "to_id": "REQ-007-092",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-087",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-087",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-088",
+      "verb": "applies",
+      "to_id": "REQ-007-027",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-088",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-007-088",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
     },
     {
       "from_id": "STP-007B-001",
@@ -462236,6 +462371,30 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-075211-4be36118",
+      "at": "2026-11-25T07:52:11.066713+00:00",
+      "changed_by": "controller",
+      "reason": "Backlog points settled from rules already written (FR-030 REQ-030-056 and FR-007 REQ-007-065, 087, 091, 092); no rule gains new meaning.",
+      "source_id": "SRC-PRD-007",
+      "nodes_added": [
+        "STP-007-086",
+        "STP-007-087",
+        "STP-007-088"
+      ],
+      "nodes_updated": [
+        "REQ-007-027",
+        "STP-007-004",
+        "STP-007-022",
+        "STP-007-023",
+        "STP-007-028",
+        "STP-007-041",
+        "STP-007-062"
+      ],
+      "edges_added": 16,
+      "edges_removed": 0,
+      "rows": 35
+    },
     {
       "id": "cs-20261125-074752-47c4de9a",
       "at": "2026-11-25T07:47:52.319873+00:00",

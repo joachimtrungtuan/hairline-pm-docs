@@ -1,0 +1,28 @@
+# FR-007 backlog points settled: payment failed notice, refund method, processor fee, reschedule share movement and clinic withdrawal charge now have steps.
+reason: "Backlog points settled from rules already written (FR-030 REQ-030-056 and FR-007 REQ-007-065, 087, 091, 092); no rule gains new meaning."
+by: controller
+source_id: SRC-PRD-007
+operations:
+  - {"op": "update_node", "id": "REQ-007-027", "attrs": {"statement": "Payment confirmations (deposit, final) to patient; Payment reminders for upcoming final payment; Refund confirmations to patient and provider; Payout notifications to provider after execution; Payment failed notice to the patient when a payment fails, mandatory and set by the notification catalogue event payment.failed (FR-030 REQ-030-056)"}}
+  - {"op": "add_edge", "from": "REQ-007-027", "verb": "applies to", "to": "EVT-billing-payment-failed", "attrs": {}}
+  - {"op": "add_node", "id": "STP-007-088", "type": "Step", "owner_fr": "FR-007", "title": "When a payment fails, System sends the patient the Payment Failed notice (mandatory, FR-030)", "attrs": {"prd_ref": "Alternative Flow B2 step 5"}}
+  - {"op": "add_edge", "from": "STP-007-088", "verb": "applies", "to": "REQ-007-027", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007-088", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007-088", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007-041", "verb": "next", "to": "STP-007-088", "attrs": {"label": "the payment failed"}}
+  - {"op": "update_node", "id": "STP-007-004", "title": "System processes the payment and returns success or an actionable challenge, and records any processor fee on the payment's own record"}
+  - {"op": "add_edge", "from": "STP-007-004", "verb": "applies", "to": "REQ-007-087", "attrs": {}}
+  - {"op": "update_node", "id": "STP-007-022", "title": "System starts the refund for the case, to the original payment method by default; a closure-case refund is always started by the system, needs no second approval and is never started by an admin as well"}
+  - {"op": "add_edge", "from": "STP-007-022", "verb": "applies", "to": "REQ-007-065", "attrs": {}}
+  - {"op": "update_node", "id": "STP-007-023", "title": "System updates booking and payment status, sends confirmation notices and records any processor fee on the refund's own record"}
+  - {"op": "add_edge", "from": "STP-007-023", "verb": "applies", "to": "REQ-007-087", "attrs": {}}
+  - {"op": "add_node", "id": "STP-007-086", "type": "Step", "owner_fr": "FR-007", "title": "When a booking is rescheduled after the clinic's share has moved, System pulls the share back and moves it again 60 or 30 days before the new date", "attrs": {"prd_ref": "Alternative Flow A2 step 10"}}
+  - {"op": "add_edge", "from": "STP-007-086", "verb": "applies", "to": "REQ-007-091", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007-086", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007-086", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007-028", "verb": "next", "to": "STP-007-086", "attrs": {"label": "booking rescheduled instead of cancelled, after the share has moved"}}
+  - {"op": "add_node", "id": "STP-007-087", "type": "Step", "owner_fr": "FR-007", "title": "When the clinic withdrew or dropped out, System deducts the fixed charge set in admin settings from the clinic's next payout", "attrs": {"prd_ref": "Alternative Flow B4 step 4"}}
+  - {"op": "add_edge", "from": "STP-007-087", "verb": "applies", "to": "REQ-007-092", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007-087", "verb": "at", "to": "STG-main-05-payment", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007-087", "verb": "done by", "to": "ACT-system", "attrs": {}}
+  - {"op": "add_edge", "from": "STP-007-062", "verb": "next", "to": "STP-007-087", "attrs": {"label": "clinic withdrew or dropped out"}}
