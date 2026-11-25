@@ -784,7 +784,7 @@ The emergency edit never changes the price, the package, the provider, or the cl
 | New Appointment Time | time | Yes | New appointment start time | Required; in the provider's time zone | ENT-audit-entry.after |
 | Reason | textarea | Yes | Why the appointment changes | Mandatory; 10 to 500 characters (REQ-006-050) | ENT-audit-entry.reason |
 | Travel Review Notice | indicator | Conditional | Shown when travel records are linked; states that an FR-008 travel-date review will be raised | Read-only (REQ-006-079) | no graph field |
-| Installment Plan Outcome | indicator | Conditional | Shown when the booking has an installment plan; states the FR-007B recalculation outcome for the new date | Read-only; the change is blocked when no plan is feasible for the new date (REQ-006-017) | no graph field |
+| Installment Plan Outcome | indicator | Conditional | Shown when the booking has an installment plan; states the FR-007B recalculation outcome for the new date | Read-only; the change is blocked when no plan is feasible for the new date (REQ-006-017) | ENT-booking.payment_schedule |
 | Confirm | checkbox | Yes | Admin confirms the change | Must be checked before submit (REQ-006-078) | no graph field (control) |
 
 **Business Rules**:
@@ -1168,6 +1168,7 @@ A late cancellation performed by an admin at the patient's request applies the r
 | 2026-11-25 | 2.23 | Follow-up filing fixes: Screen 11 is now "Resolve In-Progress Case" and carries the early close with no fault as a third route (Alternative Flow B9, REQ-006-086, closure cause `NoFaultEarlyClose`, new Screen 6 action Close Case Early, No Fault), matching FR-010 Rule 17; Screen 2 Booking Status and Notes now list the statuses in which the screen is reachable (`Confirmed`, `In Progress`, `Aftercare`, `Completed`); the Early Close Note shows the refund amount only when a refund greater than zero was issued (REQ-006-085); the Cancellation Policy version shown at the tick is stored with the acknowledgment (REQ-006-038, new field `cancellation_policy_version_shown`). | Claude (AI Assistant) |
 | 2026-11-25 | 2.24 | Owner ruling 2026-11-25 follow-up: Close inquiry cancels any open replacement quote, draft or sent (REQ-006-082), matching FR-004 REQ-004-111. | Claude (AI Assistant) |
 | 2026-11-25 | 2.25 | Screen 1 Payment Option row now lists the three options FR-007 defines (pay in full, deposit and balance, installments; REQ-007-098); it listed two. | Claude (AI Assistant) |
+| 2026-11-25 | 2.26 | Backlog points settled: the Screen 8 Installment Plan Outcome row now carries its graph field tag, and the graph gains the steps of Alternative Flow B9 and the missing step-to-rule links. No rule changes. | Claude (AI Assistant) |
 
 ---
 
