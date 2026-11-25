@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T08:41:15Z",
+  "generated_at": "2026-11-25T08:43:33Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -84382,9 +84382,9 @@
       "owner_fr": "FR-028",
       "title": "Starting price lookup follows the chain of REQ-028-040",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "For each displayed location System looks up the starting price by the chain of REQ-028-040.",
+        "statement": "For each destination the patient sees, including destinations revealed behind Show all destinations, System looks up the starting price by the chain of REQ-028-040.",
         "rationale": "Main Flow: Patient Views Personalized Location Recommendations step 8. The chain is stated once in REQ-028-040."
       }
     },
@@ -84658,10 +84658,10 @@
       "owner_fr": "FR-028",
       "title": "Price without expiry stays active indefinitely",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "When an effective date is set without an expiry date, the pricing remains active indefinitely until the admin updates it or sets an expiry; System shows the info note \"No expiry set - pricing active indefinitely.\" in the pricing table and enforces no automatic expiration.",
-        "rationale": "Seventh edge case (758). What happens when a set expiry date passes is not stated; question raised."
+        "rationale": "Seventh edge case. When a set expiry date has passed, the price stops showing and the next step of the lookup chain applies (REQ-028-087)."
       }
     },
     {
@@ -84839,9 +84839,9 @@
       "owner_fr": "FR-028",
       "title": "Grouping screen bulk actions: duplicate, export, import from template",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "The regional grouping screen provides bulk actions: duplicate grouping, export configuration, and import from template.",
+        "statement": "The regional grouping screen provides bulk actions: duplicate grouping, export configuration, and import from template. A duplicated or imported grouping is a new grouping and MUST be saved only through the checks of a newly created grouping: one active grouping per country (REQ-028-021), unique name (REQ-028-025), the 51st-active-grouping warning (REQ-028-030) and a change reason (REQ-028-024).",
         "rationale": "Screen 1 notes (363)."
       }
     },
@@ -84887,9 +84887,9 @@
       "owner_fr": "FR-028",
       "title": "Concurrent edits: a stale-edit warning before overwriting",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "When another admin saved the same regional grouping, price row or bulk-updated price since this admin opened it (or since the bulk update preview), System warns \"This [grouping or price] was modified by [Admin Name] at [Time]. Your changes will overwrite theirs. Continue?\" and saves only when the admin confirms.",
+        "statement": "When another admin saved the same regional grouping (including a status change or archive), price row (including a fallback price row), destination default currency or system-wide default starting price since this admin opened it (or since the bulk update preview), System warns \"This [grouping, price or default] was modified by [Admin Name] at [Time]. Your changes will overwrite theirs. Continue?\" and saves only when the admin confirms.",
         "rationale": "Fourth edge case, A1 step 5, Main Flow: Starting Prices step 9 and A4 step 7."
       }
     },
@@ -85011,6 +85011,17 @@
       "attrs": {
         "statement": "A country deactivated in FR-026 MUST keep applying in regional groupings and starting prices (destination rows and fallback rows) until an admin edits them; the active check runs only when a country is newly selected, so an existing grouping or row of a deactivated country can still be saved, for example to set an expiry date; FR-026 warns before the deactivation and lists the regional groupings and fallback price rows that use the country (REQ-026-129)",
         "rationale": "General Module Rule 9 and Dependencies FR-026."
+      }
+    },
+    {
+      "id": "REQ-028-093",
+      "type": "Rule",
+      "owner_fr": "FR-028",
+      "title": "A currency disabled in FR-029 leaves existing prices and defaults as stored",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A currency disabled in FR-029 MUST NOT change existing configuration: starting price rows (destination and fallback rows), a destination default currency and the system-wide default starting price keep their stored currency and keep applying in the lookup chain of REQ-028-040 until an admin edits them (REQ-029-125); the supported-currency check of REQ-028-053 applies when a currency is newly selected; FR-029 warns before the disable when location starting prices use the currency (REQ-029-124)"
       }
     },
     {
@@ -125746,7 +125757,7 @@
       "owner_fr": "FR-028",
       "title": "System archives the grouping and clears the cache",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow A2: Admin Deletes Regional Grouping step 4"
       }
@@ -125900,7 +125911,7 @@
       "owner_fr": "FR-028",
       "title": "System saves the status, clears the cache and logs the change in the audit trail",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A7: Admin Sets a Regional Grouping Inactive or Back to Active step 4"
       }
@@ -126109,7 +126120,7 @@
       "owner_fr": "FR-028",
       "title": "System saves the fallback configuration",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "prd_ref": "Alternative Flow A3: Admin Sets Fallback Pricing for Region step 7"
       }
@@ -126382,9 +126393,9 @@
       "id": "STP-028-407",
       "type": "Step",
       "owner_fr": "FR-028",
-      "title": "System fetches the starting price for each displayed location",
+      "title": "System fetches the starting price for each destination the patient sees, including those behind Show all destinations",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow: Patient Views Personalized Location Recommendations step 7"
       }
@@ -126437,9 +126448,9 @@
       "id": "STP-028-413",
       "type": "Step",
       "owner_fr": "FR-028",
-      "title": "System displays all available destinations in the default order",
+      "title": "System displays all destinations in the default order, the first 10 first and the rest behind Show all destinations",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A5: Patient's Location Not in Any Regional Grouping step 3"
       }
@@ -126448,9 +126459,9 @@
       "id": "STP-028-414",
       "type": "Step",
       "owner_fr": "FR-028",
-      "title": "System shows starting prices by the price lookup chain",
+      "title": "System shows starting prices by the price lookup chain for every destination shown, including those behind Show all destinations",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A5: Patient's Location Not in Any Regional Grouping step 4"
       }
@@ -126593,7 +126604,7 @@
       "owner_fr": "FR-028",
       "title": "System saves the default currency, clears the cache, logs the change and shows the success message",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A8: Admin Sets the Default Currency of a Destination Location step 4"
       }
@@ -126637,7 +126648,7 @@
       "owner_fr": "FR-028",
       "title": "System checks the price, saves it, clears the cache, logs the change and shows the success message",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A9: Admin Sets the System-Wide Default Starting Price step 4"
       }
@@ -184618,7 +184629,7 @@
       "verb": "active in",
       "to_id": "STG-admin-01-configuration",
       "attrs": {
-        "rules": 67
+        "rules": 68
       },
       "derived": true
     },
@@ -285824,6 +285835,12 @@
     {
       "from_id": "REQ-028-082",
       "verb": "applies to",
+      "to_id": "ENT-pricing-default",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-028-082",
+      "verb": "applies to",
       "to_id": "ENT-regional-grouping",
       "attrs": {}
     },
@@ -286081,6 +286098,30 @@
     },
     {
       "from_id": "REQ-028-092",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-028",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-028-093",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-028-093",
+      "verb": "applies to",
+      "to_id": "ENT-location-starting-price",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-028-093",
+      "verb": "applies to",
+      "to_id": "ENT-pricing-default",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-028-093",
       "verb": "decided by",
       "to_id": "SRC-PRD-028",
       "attrs": {}
@@ -423885,6 +423926,12 @@
     },
     {
       "from_id": "STP-028-114",
+      "verb": "applies",
+      "to_id": "REQ-028-082",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-114",
       "verb": "at",
       "to_id": "STG-admin-01-configuration",
       "attrs": {}
@@ -424301,6 +424348,12 @@
       "from_id": "STP-028-154",
       "verb": "applies",
       "to_id": "REQ-028-029",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-154",
+      "verb": "applies",
+      "to_id": "REQ-028-082",
       "attrs": {}
     },
     {
@@ -425015,6 +425068,12 @@
       "from_id": "STP-028-306",
       "verb": "applies",
       "to_id": "REQ-028-056",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-306",
+      "verb": "applies",
+      "to_id": "REQ-028-082",
       "attrs": {}
     },
     {
@@ -426004,6 +426063,12 @@
     {
       "from_id": "STP-028-413",
       "verb": "applies",
+      "to_id": "REQ-028-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-413",
+      "verb": "applies",
       "to_id": "REQ-028-035",
       "attrs": {}
     },
@@ -426474,6 +426539,12 @@
     {
       "from_id": "STP-028-504",
       "verb": "applies",
+      "to_id": "REQ-028-082",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-504",
+      "verb": "applies",
       "to_id": "REQ-028-089",
       "attrs": {}
     },
@@ -426613,6 +426684,12 @@
       "from_id": "STP-028-514",
       "verb": "applies",
       "to_id": "REQ-028-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-028-514",
+      "verb": "applies",
+      "to_id": "REQ-028-082",
       "attrs": {}
     },
     {
@@ -463498,6 +463575,33 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-084220-c190f714",
+      "at": "2026-11-25T08:42:20.120609+00:00",
+      "changed_by": "controller",
+      "reason": "Backlog points settled: stale-edit warning scope, Show all destinations prices and cap, bulk-action checks, currency disabled in FR-029, price-lookup step titles, stale rationale of REQ-028-062.",
+      "source_id": "SRC-PRD-028",
+      "nodes_added": [
+        "REQ-028-093"
+      ],
+      "nodes_updated": [
+        "REQ-028-039",
+        "REQ-028-062",
+        "REQ-028-077",
+        "REQ-028-082",
+        "STP-028-114",
+        "STP-028-154",
+        "STP-028-306",
+        "STP-028-407",
+        "STP-028-413",
+        "STP-028-414",
+        "STP-028-504",
+        "STP-028-514"
+      ],
+      "edges_added": 11,
+      "edges_removed": 0,
+      "rows": 23
+    },
     {
       "id": "cs-20261125-084002-0841231f",
       "at": "2026-11-25T08:40:02.492914+00:00",

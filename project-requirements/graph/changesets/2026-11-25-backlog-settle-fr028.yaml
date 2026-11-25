@@ -1,0 +1,24 @@
+# Backlog points settled for FR-028: filing fixes from the logic review leftovers.
+reason: "Backlog points settled: stale-edit warning scope, Show all destinations prices and cap, bulk-action checks, currency disabled in FR-029, price-lookup step titles, stale rationale of REQ-028-062."
+by: controller
+source_id: SRC-PRD-028
+operations:
+  - {"op": "update_node", "id": "STP-028-413", "title": "System displays all destinations in the default order, the first 10 first and the rest behind Show all destinations"}
+  - {"op": "add_edge", "from": "STP-028-413", "verb": "applies", "to": "REQ-028-033"}
+  - {"op": "update_node", "id": "STP-028-414", "title": "System shows starting prices by the price lookup chain for every destination shown, including those behind Show all destinations"}
+  - {"op": "update_node", "id": "STP-028-407", "title": "System fetches the starting price for each destination the patient sees, including those behind Show all destinations"}
+  - {"op": "update_node", "id": "REQ-028-039", "attrs": {"statement": "For each destination the patient sees, including destinations revealed behind Show all destinations, System looks up the starting price by the chain of REQ-028-040."}}
+  - {"op": "update_node", "id": "REQ-028-082", "attrs": {"statement": "When another admin saved the same regional grouping (including a status change or archive), price row (including a fallback price row), destination default currency or system-wide default starting price since this admin opened it (or since the bulk update preview), System warns \"This [grouping, price or default] was modified by [Admin Name] at [Time]. Your changes will overwrite theirs. Continue?\" and saves only when the admin confirms."}}
+  - {"op": "add_edge", "from": "STP-028-306", "verb": "applies", "to": "REQ-028-082"}
+  - {"op": "add_edge", "from": "STP-028-504", "verb": "applies", "to": "REQ-028-082"}
+  - {"op": "add_edge", "from": "STP-028-514", "verb": "applies", "to": "REQ-028-082"}
+  - {"op": "add_edge", "from": "STP-028-154", "verb": "applies", "to": "REQ-028-082"}
+  - {"op": "add_edge", "from": "STP-028-114", "verb": "applies", "to": "REQ-028-082"}
+  - {"op": "add_edge", "from": "REQ-028-082", "verb": "applies to", "to": "ENT-pricing-default"}
+  - {"op": "update_node", "id": "REQ-028-077", "attrs": {"statement": "The regional grouping screen provides bulk actions: duplicate grouping, export configuration, and import from template. A duplicated or imported grouping is a new grouping and MUST be saved only through the checks of a newly created grouping: one active grouping per country (REQ-028-021), unique name (REQ-028-025), the 51st-active-grouping warning (REQ-028-030) and a change reason (REQ-028-024)."}}
+  - {"op": "add_node", "id": "REQ-028-093", "type": "Rule", "owner_fr": "FR-028", "title": "A currency disabled in FR-029 leaves existing prices and defaults as stored", "attrs": {"statement": "A currency disabled in FR-029 MUST NOT change existing configuration: starting price rows (destination and fallback rows), a destination default currency and the system-wide default starting price keep their stored currency and keep applying in the lookup chain of REQ-028-040 until an admin edits them (REQ-029-125); the supported-currency check of REQ-028-053 applies when a currency is newly selected; FR-029 warns before the disable when location starting prices use the currency (REQ-029-124)"}}
+  - {"op": "add_edge", "from": "REQ-028-093", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-028-093", "verb": "applies to", "to": "ENT-location-starting-price"}
+  - {"op": "add_edge", "from": "REQ-028-093", "verb": "applies to", "to": "ENT-pricing-default"}
+  - {"op": "add_edge", "from": "REQ-028-093", "verb": "decided by", "to": "SRC-PRD-028"}
+  - {"op": "update_node", "id": "REQ-028-062", "attrs": {"rationale": "Seventh edge case. When a set expiry date has passed, the price stops showing and the next step of the lookup chain applies (REQ-028-087)."}}
