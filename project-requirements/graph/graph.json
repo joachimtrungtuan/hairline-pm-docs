@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T04:09:16Z",
+  "generated_at": "2026-11-25T04:13:05Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -40690,7 +40690,7 @@
       "owner_fr": null,
       "title": "Admin Patient Management",
       "status": "active",
-      "version": 10,
+      "version": 11,
       "attrs": {
         "module": "fr016-admin-patient-mgmt",
         "prd_path": "project-requirements/functional-requirements/fr016-admin-patient-mgmt/prd.md",
@@ -42215,9 +42215,9 @@
       "owner_fr": "FR-001",
       "title": "Mandatory notices cannot be disabled",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Mandatory notices as FR-020 defines them (REQ-020-038) are always sent and are not affected by global toggles",
+        "statement": "Mandatory notices as FR-020 defines them (REQ-020-038) are always sent and are not affected by global toggles by email; push for these notices follows the patient's push setting (owner ruling 2026-11-25)",
         "rationale": "prd.md line 730. Also stated in the PRD at line 682: \"\"Security notifications (password reset, account changes) are always sent and cannot be disabled.\"\"."
       }
     },
@@ -43957,9 +43957,9 @@
       "owner_fr": "FR-003",
       "title": "Inquiry cancellation cascade to draft, sent and expired quotes",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST auto-cancel only the draft, sent, and expired quotes when an inquiry is cancelled by the patient or by an approved account deletion, with distinct cancellation status \"Cancelled (Inquiry Cancelled)\"; quotes in any other status MUST keep their status and cause, and `quote.cancelled_inquiry` (FR-020) MUST go only to providers whose quotes were cancelled by this cascade, never to the provider of a replacement draft (REQ-003-127).",
+        "statement": "System MUST auto-cancel only the draft, sent, and expired quotes when an inquiry is cancelled by the patient or by an approved account deletion, with distinct cancellation status \"Cancelled (Inquiry Cancelled)\"; quotes in any other status MUST keep their status and cause, and `quote.cancelled_inquiry` (FR-020) MUST go only to providers whose quotes were cancelled by this cascade, never to the provider of a replacement quote (REQ-003-127).",
         "rationale": "Restated by Alternative Flow A4, Workflow 5 outcome, Alternative Flow E3 and Cancellation Rules 4 (all associated draft, sent and expired quotes auto-cancelled with status Cancelled (Inquiry Cancelled)).",
         "aliases": "REQ-004-013"
       }
@@ -43970,9 +43970,9 @@
       "owner_fr": "FR-003",
       "title": "Admin booking cancellation or Close inquiry cancels the inquiry as admin and releases hold",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "When an admin cancels a booking through FR-006, or closes the inquiry through Close inquiry on FR-006 Screen 6, System MUST set the inquiry to `Cancelled` with `cancelled_by = admin`, leave `cancellation_reason` empty (the admin's reason is the booking's cancellation reason in FR-006, shown to the patient and the provider as FR-006 defines), release any active appointment slot hold (FR-006 hold of the FR-026 configured duration) immediately, and leave the accepted quote with the status `accepted`. Any draft replacement quote follows REQ-003-127."
+        "statement": "When an admin cancels a booking through FR-006, or closes the inquiry through Close inquiry on FR-006 Screen 6, System MUST set the inquiry to `Cancelled` with `cancelled_by = admin`, leave `cancellation_reason` empty (the admin's reason is the booking's cancellation reason in FR-006, shown to the patient and the provider as FR-006 defines), release any active appointment slot hold (FR-006 hold of the FR-026 configured duration) immediately, and leave the accepted quote with the status `accepted`. Any open replacement quote (draft or sent) follows REQ-003-127."
       }
     },
     {
@@ -45252,9 +45252,9 @@
       "owner_fr": "FR-003",
       "title": "Admin cancellation or Close inquiry also cancels a replacement draft, with no provider notice",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "When an admin cancels the booking through FR-006 Screen 9 or closes the inquiry through Close inquiry on FR-006 Screen 6, System MUST move any draft replacement quote of that inquiry to `Cancelled (Inquiry Cancelled)`, MUST NOT send `quote.cancelled_inquiry` to any provider (an admin cancellation or close sends no provider notice, REQ-020-020; the replacement provider is not told), and no `quote.expired` follows. The quote-side behaviour is owned by FR-004 (REQ-004-111). The patient cancellation path has no replacement draft, because a replacement exists only after acceptance.",
+        "statement": "When an admin cancels the booking through FR-006 Screen 9 or closes the inquiry through Close inquiry on FR-006 Screen 6, System MUST move any open replacement quote (draft or sent) of that inquiry to `Cancelled (Inquiry Cancelled)`, MUST NOT send `quote.cancelled_inquiry` to any provider (an admin cancellation or close sends no provider notice, REQ-020-020; the replacement provider is not told), and no `quote.expired` follows. The quote-side behaviour is owned by FR-004 (REQ-004-111). The patient cancellation path has no replacement quote, because a replacement exists only after acceptance.",
         "rationale": "The rule that owns the cascade trigger (REQ-003-013) covers the patient and account-deletion paths only, so the admin paths needed their own trigger in this FR.",
         "distinct_from": "REQ-004-111"
       }
@@ -48154,9 +48154,9 @@
       "owner_fr": "FR-006",
       "title": "Close inquiry ends the inquiry of a Cancelled booking that still carries supportRequired",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "An admin MAY close the inquiry of a `Cancelled` booking that still carries the `supportRequired` marker, through the Close inquiry action on Screen 6 with a mandatory reason; System MUST set the inquiry to `Cancelled`, clear the marker with an audited resolution, and send the patient the admin-close variant of `inquiry.cancelled` (REQ-020-076) saying that no replacement will follow. System MUST NOT notify any provider of the close (REQ-020-020) and MUST cancel any draft replacement quote of the inquiry without notice (REQ-004-111, REQ-003-127).",
+        "statement": "An admin MAY close the inquiry of a `Cancelled` booking that still carries the `supportRequired` marker, through the Close inquiry action on Screen 6 with a mandatory reason; System MUST set the inquiry to `Cancelled`, clear the marker with an audited resolution, and send the patient the admin-close variant of `inquiry.cancelled` (REQ-020-076) saying that no replacement will follow. System MUST NOT notify any provider of the close (REQ-020-020) and MUST cancel any open replacement quote (draft or sent) of the inquiry without notice (REQ-004-111, REQ-003-127).",
         "rationale": "prd.md Alternative Flow B5 (Replacement quote not accepted); Screen 6 Close inquiry"
       }
     },
@@ -60921,9 +60921,9 @@
       "owner_fr": "FR-014",
       "title": "Screen 1 Tile 2 TTFQ colour tiers",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Value: p50 and p90 vs SLA (compact dual-bullet); Color: Green (p50 ≤ SLA and p90 ≤ 2×SLA) · Amber (p50 ≤ SLA and p90 > 2×SLA) · Red (p50 > SLA); Tap → the FR-003 provider inquiry list filtered to the inquiries in the period; response time is per provider, not per team member",
+        "statement": "Value: p50 and p90 vs SLA (compact dual-bullet); Color: Green (p50 ≤ SLA and p90 ≤ 2×SLA) · Amber (p50 ≤ SLA and p90 > 2×SLA) · Red (p50 > SLA); Tap → the FR-003 provider inquiry list filtered to the inquiries in the period; response time is per provider, not per team member; admin-authored replacement quotes (FR-004 Workflow 7) are not counted",
         "rationale": "PRD lines 154-156."
       }
     },
@@ -72465,9 +72465,9 @@
       "owner_fr": "FR-018",
       "title": "Affiliate portal is a scoped surface inside the Admin tenant",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "The affiliate portal (Screens 9 and 10) is an external self-service surface scoped within the Admin Platform tenant boundary, not a separate tenant; it has its own authentication and authorization scope and affiliate-only data access",
+        "statement": "The affiliate portal (Screens 9 and 10) is a fourth application, separate from the Patient, Provider and Admin platforms (owner ruling 2026-11-25; constitution C-I-0a); it has its own authentication and authorization scope and affiliate-only data access",
         "rationale": "prd.md lines 30 (Module Scope, Affiliate Portal scoped surface of A-07 / Admin tenant)"
       }
     },
@@ -74356,9 +74356,9 @@
       "owner_fr": "FR-020",
       "title": "quote.cancelled_inquiry goes only to quote-holding providers and is critical",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST always send quote.cancelled_inquiry, and only that notice, to each provider holding a quote for the inquiry in draft, sent or expired state when a patient cancels the inquiry or the system cancels it at the approval of an account deletion (FR-023 REQ-023-042) (never to the provider of a replacement draft quote, REQ-003-127); a provider that never quoted is told nothing; an admin Close inquiry sends no provider notice; neither FR-030 toggles nor FR-032 provider notification preferences may suppress it. The reason is patient-private: a patient cancellation says only Inquiry cancelled by patient; the deletion cancellation shows no reason. The notice is critical (REQ-020-158): its target is a first send attempt within 5 minutes, and a failed first attempt is retried under the FR-030 retry rule (up to 3 retries, 1 hour apart by default), so 5 minutes is a target, not a guarantee.",
+        "statement": "System MUST always send quote.cancelled_inquiry, and only that notice, to each provider holding a quote for the inquiry in draft, sent or expired state when a patient cancels the inquiry or the system cancels it at the approval of an account deletion (FR-023 REQ-023-042) (never to the provider of a replacement quote (draft or sent), REQ-003-127); a provider that never quoted is told nothing; an admin Close inquiry sends no provider notice; neither FR-030 toggles nor FR-032 provider notification preferences may suppress it. The reason is patient-private: a patient cancellation says only Inquiry cancelled by patient; the deletion cancellation shows no reason. The notice is critical (REQ-020-158): its target is a first send attempt within 5 minutes, and a failed first attempt is retried under the FR-030 retry rule (up to 3 retries, 1 hour apart by default), so 5 minutes is a target, not a guarantee.",
         "rationale": "Functional Requirements Summary and the quote.cancelled_inquiry catalogue row (a pointer to REQ-030-039). FR-030 and FR-003 are queued to align REQ-030-039, REQ-030-219 and REQ-003-100."
       }
     },
@@ -87314,9 +87314,9 @@
       "owner_fr": "FR-030",
       "title": "Catalog event: Quote Cancelled (Inquiry Cancelled)",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "Quote Cancelled (Inquiry Cancelled) (quote.cancelled_inquiry) is an admin-configurable notification event. Primary recipients: Provider. Sent to each provider that holds a draft, sent or expired quote when the patient cancels the inquiry (FR-003 Workflow 5) and when an approved account deletion cancels it; never to the provider of a replacement draft quote, and no provider notice is sent for an admin Close inquiry. A provider that never quoted is told nothing, and a provider that receives this notice never also receives `inquiry.cancelled`. Provider receipt is mandatory — admin cannot disable this event (see Non-Disableable by Default section); it is sent at once as a locked notice (FR-020 sets the 5-minute first-send target). The reason shows only as \"Inquiry cancelled by patient\"; the deletion cancellation shows none. MVP default channels: Email + Push. Not subject to FR-032 provider notification preferences; FR-032 offers no toggle for this event. Available template variables: `quote.id`, `quote.provider_id`, `inquiry.id`, `inquiry.cancelled_at`; `inquiry.cancellation_reason` is excluded per privacy rule.",
+        "statement": "Quote Cancelled (Inquiry Cancelled) (quote.cancelled_inquiry) is an admin-configurable notification event. Primary recipients: Provider. Sent to each provider that holds a draft, sent or expired quote when the patient cancels the inquiry (FR-003 Workflow 5) and when an approved account deletion cancels it; never to the provider of a replacement quote (draft or sent), and no provider notice is sent for an admin Close inquiry. A provider that never quoted is told nothing, and a provider that receives this notice never also receives `inquiry.cancelled`. Provider receipt is mandatory — admin cannot disable this event (see Non-Disableable by Default section); it is sent at once as a locked notice (FR-020 sets the 5-minute first-send target). The reason shows only as \"Inquiry cancelled by patient\"; the deletion cancellation shows none. MVP default channels: Email + Push. Not subject to FR-032 provider notification preferences; FR-032 offers no toggle for this event. Available template variables: `quote.id`, `quote.provider_id`, `inquiry.id`, `inquiry.cancelled_at`; `inquiry.cancellation_reason` is excluded per privacy rule.",
         "rationale": "prd.md line 135. Category: Quote. Event nodes: EVT-quote-cancelled-inquiry (existing node). Lock rule (prd.md line 542): Quote Cancelled — Inquiry Cancelled (`quote.cancelled_inquiry`) is a mandatory provider notification. Provider MUST be notified when their quote is auto-cancelled due to inquiry cancellation. Admin cannot disable this event because the provider needs to know the slot is released and the quote is no longer active. Toggle is locked for this event, and FR-032 provider notification preferences cannot suppress it. Lock rule (prd.md line 543): Preference exemption for mandatory provider events: every event that is mandatory for providers (`quote.cancelled_inquiry`, the selected-provider and not-selected-provider outcomes of `quote.accepted`, `booking.payment_window_expired`, `booking.revived` and `booking.rescheduled`) is delivered regardless of FR-032 provider notification preferences. A provider's category toggles in FR-032 never suppress these events.",
         "aliases": "REQ-020-084"
       }
@@ -102011,7 +102011,7 @@
       "owner_fr": "FR-016",
       "title": "Patient Detail View - Overview Tab",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "platform": "admin",
         "description": "Patient profile summary and current status. Controls: Edit Patient, Reset Password, Suspend Account, Lift Suspension (only while Suspended), Unlock Account (only while Locked), Send Notification, Resolve Support, flags View All, copy and mail actions."
@@ -182799,6 +182799,12 @@
       "from_id": "FR-016",
       "verb": "references",
       "to_id": "REQ-030-046",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-016",
+      "verb": "references",
+      "to_id": "REQ-030-156",
       "attrs": {}
     },
     {
@@ -338232,6 +338238,16 @@
     {
       "from_id": "SCR-016-02",
       "verb": "shows",
+      "to_id": "ENT-patient.email_delivery_issue",
+      "attrs": {
+        "provenance": "inherited from another FR",
+        "label": "Email Delivery Issue",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-016-02",
+      "verb": "shows",
       "to_id": "ENT-patient.email_verified",
       "attrs": {
         "provenance": "inherited from another FR",
@@ -462022,6 +462038,30 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-041149-cb9ea98c",
+      "at": "2026-11-25T04:11:49.845184+00:00",
+      "changed_by": "controller",
+      "reason": "Owner rulings 2026-11-25: neighbour FR wording aligned to the applied rulings.",
+      "source_id": "SRC-PRD-004",
+      "nodes_added": [],
+      "nodes_updated": [
+        "FR-016",
+        "REQ-001-105",
+        "REQ-003-013",
+        "REQ-003-014",
+        "REQ-003-127",
+        "REQ-006-082",
+        "REQ-014-183",
+        "REQ-018-298",
+        "REQ-020-020",
+        "REQ-030-039",
+        "SCR-016-02"
+      ],
+      "edges_added": 2,
+      "edges_removed": 0,
+      "rows": 11
+    },
     {
       "id": "cs-20261125-040758-b323576f",
       "at": "2026-11-25T04:07:58.884925+00:00",

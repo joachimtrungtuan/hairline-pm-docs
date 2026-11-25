@@ -1894,7 +1894,7 @@ All Hairline engines and platform APIs MUST return structured errors complying w
 
 - Encryption in transit and at rest, role-based audited access, and GDPR and HIPAA-equivalent compliance are Platform-Wide Rules (see **Platform-Wide Rules**)
 - System MUST log all security events (login attempts, permission changes, data access)
-- System MUST support multi-factor authentication for providers and admins
+- System MUST support multi-factor authentication for providers and admins (future enhancement, not enforced at launch; owner ruling 2026-11-25)
 - System MUST pass quarterly penetration testing
 
 ### NFR-004: Availability
