@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T08:08:57Z",
+  "generated_at": "2026-11-25T08:11:55Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -61020,9 +61020,9 @@
       "owner_fr": "FR-014",
       "title": "Screen 1 B1 four-stage booking funnel",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Chart: Funnel chart; Stages: Inquiries → Quoted → Accepted → Confirmed booking; Each stage: Count + Step % (stage ÷ previous stage); Footer: Overall booking conversion = Confirmed bookings ÷ Inquiries; Confirmed booking = successful deposit or first installment charge confirms the FR-006 Booking. `In Progress` means procedure started via FR-010 and is not the payment-confirmation label. Count distinct inquiry/provider pairs in a single inquiry cohort cumulatively through each reached stage, per Analytics Counting & Time Basis; multiple parent quotes and subquotes do not multiply the funnel. Drill-down: click stage → the FR-003 provider inquiry list with that stage, the period and the country filter (when set) pre-applied",
+        "statement": "Chart: Funnel chart; Stages: Inquiries → Quoted → Accepted → Confirmed booking; Each stage: Count + Step % (stage ÷ previous stage); Footer: Overall booking conversion = Confirmed bookings ÷ Inquiries; Confirmed booking = the first successful initial charge of the option the patient chose (full payment, deposit, or first installment) confirms the FR-006 Booking. `In Progress` means procedure started via FR-010 and is not the payment-confirmation label. Count distinct inquiry/provider pairs in a single inquiry cohort cumulatively through each reached stage, per Analytics Counting & Time Basis; multiple parent quotes and subquotes do not multiply the funnel. Drill-down: click stage → the FR-003 provider inquiry list with that stage, the period and the country filter (when set) pre-applied",
         "rationale": "PRD lines 179-185."
       }
     },
@@ -61237,9 +61237,9 @@
       "owner_fr": "FR-014",
       "title": "Screen 3 Widget 1 Full Patient Location Breakdown",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Chart type: Ranked table + donut chart (linked); Table columns: Country · Inquiries · Confirmed bookings · Confirmed booking rate · Avg rating (Confirmed bookings and rate follow the inquiry cohort and Confirmed booking stage in Analytics Counting & Time Basis); Table: All countries (not capped at 8); sortable by any column; Donut: Top 10 countries by inquiry volume + Other; Drill-down: Click row/slice → Inquiries list filtered to that country; Avg rating: average `overall_rating` of this provider's Published FR-013 reviews published within the selected range, grouped by the reviewing patient's country (review → patient → `patients.location_id → countries.name`, with the same legacy `patients.location` fallback). Shows \"—\" when the country has no reviews in range; the review count appears in the tooltip.",
+        "statement": "Chart type: Ranked table + donut chart (linked); Table columns: Country · Inquiries · Confirmed bookings · Confirmed booking rate · Avg rating (Confirmed bookings and rate follow the inquiry cohort and Confirmed booking stage in Analytics Counting & Time Basis); Table: All countries (not capped at 8); sortable by any column; Donut: Top 10 countries by inquiry volume + Other; Drill-down: Click row/slice → Inquiries list filtered to that country; Avg rating: average `overall_rating` of this provider's Published or Flagged FR-013 reviews (FR-013 REQ-013-079) published within the selected range, grouped by the reviewing patient's country (review → patient → `patients.location_id → countries.name`, with the same legacy `patients.location` fallback). Shows \"—\" when the country has no reviews in range; the review count appears in the tooltip.",
         "rationale": "PRD lines 379-385."
       }
     },
@@ -61273,9 +61273,9 @@
       "owner_fr": "FR-014",
       "title": "Screen 3 Widget 4 Review Sub-Scores by Treatment",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Chart type: Grouped bar chart; X axis: Treatment type; Y axis: Score (1–5); Groups per bar: Overall · Results · Staff · Facility · Value; Data source: FR-013 per-treatment sub-scores endpoint (REQ-013-023), keyed by `treatment_id`, Published reviews only; not joined through quote status; Drill-down: Click bar → Reviews list filtered to that treatment",
+        "statement": "Chart type: Grouped bar chart; X axis: Treatment type; Y axis: Score (1–5); Groups per bar: Overall · Results · Staff · Facility · Value; Data source: FR-013 per-treatment sub-scores endpoint (REQ-013-023), keyed by `treatment_id`, Published or Flagged reviews only (REQ-013-023); not joined through quote status; Drill-down: Click bar → Reviews list filtered to that treatment",
         "rationale": "PRD lines 420-425."
       }
     },
@@ -62197,9 +62197,9 @@
       "owner_fr": "FR-014",
       "title": "Screen 11 Widget 4 Average Review Scores by Treatment",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Chart type: Grouped bar chart; X axis: Treatment type; Y axis: Score (1–5); Groups: Overall · Results · Staff · Facility · Value; Data source: FR-013 per-treatment sub-scores endpoint (REQ-013-023), keyed by `treatment_id`, Published reviews only; Provider filter: Required. The endpoint returns one provider's sub-scores, so the widget renders only when a single provider is selected; with \"All providers\" it shows \"Select a provider to view review scores by treatment\"; Drill-down: Click bar → Reviews list filtered to that provider and treatment",
+        "statement": "Chart type: Grouped bar chart; X axis: Treatment type; Y axis: Score (1–5); Groups: Overall · Results · Staff · Facility · Value; Data source: FR-013 per-treatment sub-scores endpoint (REQ-013-023), keyed by `treatment_id`, Published or Flagged reviews only (REQ-013-023); Provider filter: Required. The endpoint returns one provider's sub-scores, so the widget renders only when a single provider is selected; with \"All providers\" it shows \"Select a provider to view review scores by treatment\"; Drill-down: Click bar → Reviews list filtered to that provider and treatment",
         "rationale": "PRD lines 1163-1169. FR-013 dependency (line 1569: the sub-scores endpoint is per provider)."
       }
     },
@@ -462684,6 +462684,23 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-081041-8cd283f5",
+      "at": "2026-11-25T08:10:41.550050+00:00",
+      "changed_by": "controller",
+      "reason": "Review-based figures count Published or Flagged reviews as FR-013 REQ-013-008, REQ-013-023 and REQ-013-079 state; the B1 funnel statement carries the PRD wording for the Confirmed booking milestone (REQ-014-135).",
+      "source_id": "SRC-PRD-014",
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-014-186",
+        "REQ-014-204",
+        "REQ-014-207",
+        "REQ-014-284"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 4
+    },
     {
       "id": "cs-20261125-080742-e0fb89f9",
       "at": "2026-11-25T08:07:42.269828+00:00",

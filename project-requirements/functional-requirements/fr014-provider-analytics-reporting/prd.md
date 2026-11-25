@@ -3,7 +3,7 @@
 **Module**: PR-05: Financial Management & Reporting | A-08: Analytics & Reporting
 **Feature Branch**: `fr014-provider-analytics-reporting`
 **Created**: 2025-11-11
-**Version**: 3.24
+**Version**: 3.26
 **Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-014 from system-prd.md; SRC-MTG-002 (MTG-002-D03–D06 and O01 as refined by the Product Owner); FR-004, FR-005, and FR-006 approved quote/acceptance/booking contracts; Product Owner approvals dated 2026-10-07, 2026-10-13, and 2026-10-14
 
@@ -388,7 +388,7 @@ Row badge: `New` = inquiry distributed to this provider (FR-003 `inquiry_provide
 | Donut | Top 10 countries by inquiry volume + Other | no graph field (display) |
 | Drill-down | Click row/slice → Inquiries list filtered to that country | no graph field (control) |
 
-**Avg rating**: average `overall_rating` of this provider's Published FR-013 reviews published within the selected range, grouped by the reviewing patient's country (review → patient → `patients.location_id → countries.name`, with the same legacy `patients.location` fallback). Shows "—" when the country has no reviews in range; the review count appears in the tooltip.
+**Avg rating**: average `overall_rating` of this provider's Published or Flagged FR-013 reviews (FR-013 REQ-013-079) published within the selected range, grouped by the reviewing patient's country (review → patient → `patients.location_id → countries.name`, with the same legacy `patients.location` fallback). Shows "—" when the country has no reviews in range; the review count appears in the tooltip.
 
 ---
 
@@ -427,7 +427,7 @@ Row badge: `New` = inquiry distributed to this provider (FR-003 `inquiry_provide
 | X axis | Treatment type | no graph field (display) |
 | Y axis | Score (1–5) | no graph field (display) |
 | Groups per bar | Overall · Results · Staff · Facility · Value | ENT-analytics-metrics-aggregate.review_subscores_by_treatment |
-| Data source | FR-013 per-treatment sub-scores endpoint (REQ-013-023), keyed by `treatment_id`, Published reviews only; not joined through quote status | no graph field (display) |
+| Data source | FR-013 per-treatment sub-scores endpoint (REQ-013-023), keyed by `treatment_id`, Published or Flagged reviews only (REQ-013-023); not joined through quote status | no graph field (display) |
 | Drill-down | Click bar → Reviews list filtered to that treatment | no graph field (control) |
 
 ---
@@ -1192,7 +1192,7 @@ Added by [CR-FR014-20261013-02](../../../../archived/prd-baseline-2026-11-08/fr0
 | X axis | Treatment type | no graph field (display) |
 | Y axis | Score (1–5) | no graph field (display) |
 | Groups | Overall · Results · Staff · Facility · Value | ENT-platform-analytics-aggregate.review_subscores_by_treatment |
-| Data source | FR-013 per-treatment sub-scores endpoint (REQ-013-023), keyed by `treatment_id`, Published reviews only | no graph field (display) |
+| Data source | FR-013 per-treatment sub-scores endpoint (REQ-013-023), keyed by `treatment_id`, Published or Flagged reviews only (REQ-013-023) | no graph field (display) |
 | Provider filter | Required. The endpoint returns one provider's sub-scores, so the widget renders only when a single provider is selected; with "All providers" it shows "Select a provider to view review scores by treatment" | no graph field (display) |
 | Drill-down | Click bar → Reviews list filtered to that provider and treatment | no graph field (control) |
 
@@ -1606,7 +1606,9 @@ Do not backfill an accepted amount by choosing a current alternative or consulti
 - **Payout statement (FR-017)**: FR-014 defines no payout entity of its own. Payout widgets read the FR-017 payout statement (`ENT-provider-payout`), whose net payout is what the clinic receives after commission, not the gross booking value.
 - **Entity 8 — Export Report Configuration**: Generated reports additionally retain the metric definitions/cohorts, reporting cutoff/data-as-of, sample sizes, currency/FX provenance, and authorized accepted-selection IDs/versions for detailed rows. Configuration and scheduling do not change screen metric semantics. The configuration records its owner (`owner_user_id`, the user who last saved an edit) and each generated report records the user it was generated for (`generated_by_user_id`).
 
-### Task-Time Limits
+### Task-Time Targets
+
+These are success criteria (usability targets for design and review), not system rules: they carry no REQ id and no graph Rule. The system's own performance rules are Rules 16 to 19 (Performance Rules).
 
 - **SC-001**: Provider can identify TTFQ health status (Green/Amber/Red) within 3 seconds of opening Screen 1
 - **SC-002**: Provider can answer "What is my conversion rate for FUE this month?" from Screen 2 in under 30 seconds
@@ -1617,12 +1619,14 @@ Do not backfill an accepted amount by choosing a current alternative or consulti
 - **SC-007**: Admin can identify the top 3 countries with demand/supply gaps from Screen 10 in under 1 minute
 - **SC-008**: Admin can verify total upcoming payout obligations from Screen 12 in under 30 seconds
 - **SC-009**: Admin can identify pricing outlier providers for a given treatment from Screen 13 in under 2 minutes
+### Dependency, Assumption and Pipeline Notes
+
 - **FR-004**: Parent Quote identities, provider/inquiry/treatment context, first submission, aggregate versions, and Quote Option/Option-Date-Price hierarchy — feeds parent response volume, TTFQ, and first-submission cohorts; unaccepted price ranges are not amount observations. See FR-004 REQ-004-030, which also carries the parent response grain and unaccepted-parent counting rules formerly restated in FR-014.
 - **FR-005**: AcceptanceEvent and immutable accepted Subquote snapshot, including parent/option/date-price/subquote IDs, equal accepted aggregate versions, acceptedAt, accepted total price/promotion/currency, locked exchange rate, appointment, and cancellation/supersession provenance — feeds patient selection, parent acceptance rate, and accepted-price statistics. See FR-005 REQ-005-018 through REQ-005-020; REQ-005-020 also carries the parent-versus-subquote counting boundary formerly restated in FR-014. Parent Quote Responses is the parent response volume and Subquote Selections is the accepted-selection count; Subquote Comparisons is recorded by FR-005 but not shown in FR-014 in this version (REQ-014-319).
 - **FR-013**: Reviews (`overall_rating`, `results_rating`, `staff_rating`, `facility_rating`, `value_rating`) — feeds satisfaction widgets. The per-treatment sub-scores endpoint (REQ-013-023) is per provider, so Screen 11 Widget 4 requires a single-provider filter
 - **FR-015**: Provider master/profile data — provider location and timezone (`providers.country_id`, `providers.city_id`, `providers.timezone`) drive localization; payout timing follows FR-017 and the single FR-029 settlement period (see Assumption 5). Commission analytics use the booking confirmation-time commission snapshot (REQ-015-022), not current `provider_commissions` values
 - **Assumption 6**: Patient-country analytics resolve from `patients.location_id` referencing `countries.id`; during transition, legacy rows may still fall back to `patients.location` for display/grouping compatibility until data cleanup is complete
-- **Pipeline and pre-aggregation**: Metrics are computed by a scheduled aggregation job on a 15-minute cycle (Rule 6) into the provider-level and platform-level aggregates (Key Entities 1 and 4), each stamped with its reporting cutoff and FR-026 configuration version. Charts and tiles read these aggregates, not live transactional tables, so the 3-second load target (Rule 16) does not depend on raw query volume; the Inquiry Queue and the Accepted Quotes drill-down read live records instead (REQ-014-318). Late-arriving source events (refunds, closures, re-generated payout statements) are picked up on the next cycle and recalculate the affected periods.
+- **Pipeline and pre-aggregation**: Metrics are computed by a scheduled aggregation job on a 15-minute cycle (Rule 6) into the provider-level and platform-level aggregates (Entity 1, the Analytics Metrics Aggregate, and Entity 4, the Platform Analytics Aggregate), each stamped with its reporting cutoff and FR-026 configuration version. Charts and tiles read these aggregates, not live transactional tables, so the 3-second load target (Rule 16) does not depend on raw query volume; the Inquiry Queue and the Accepted Quotes drill-down read live records instead (REQ-014-318). Late-arriving source events (refunds, closures, re-generated payout statements) are picked up on the next cycle and recalculate the affected periods.
 
 **Carried from dropped sections (original wording)**:
 
@@ -1848,6 +1852,7 @@ These are required implementation/reconciliation cases, not a claim that the dep
 | 2026-11-24 | 3.23 | Logic review pass 2: cash-at-risk is a snapshot on every screen; recurring-export owner recorded and resume blocked until an eligible user saves an edit; payouts waiting for clinic setup shown as Upcoming; fixed-window list extended to the Screen 8 engagement widgets and the Tile 5 Dormant count; "No data" TTFQ tier filter on Screen 8; inquiry drill-downs open the FR-003 provider inquiry list with stage, country and period; admin Screen 7 shows only what the admin's permissions cover; provider financial permissions named; role-aware entry steps wired; export generation times aligned with Rule 18. | Product Owner / Documentation |
 | 2026-11-25 | 3.24 | Pointer corrected: the data schema document is archived; the reference now names its archive path. No rule changes. | Product Owner / Documentation |
 | 2026-11-25 | 3.25 | Owner ruling 2026-11-25 follow-up: Time to First Quote leaves out admin-authored replacement quotes, which can now carry a sent time (REQ-014-183). | Product Owner / Documentation |
+| 2026-11-25 | 3.26 | Backlog points settled: review-based figures count Published or Flagged reviews as FR-013 states (Screen 3 Widget 1 and Widget 4, Screen 11 Widget 4); the Task-Time Targets are labelled success criteria, not rules, and the dependency and pipeline notes get their own heading; the pipeline note names its two aggregates instead of the dropped Key Entities section; the graph statement of REQ-014-186 now matches the PRD wording. The other FR-014 backlog points were already settled by the live PRD and graph or are owner questions. | Claude (AI Assistant) |
 
 ---
 
