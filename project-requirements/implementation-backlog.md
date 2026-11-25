@@ -706,7 +706,7 @@ Source: `plans/reports/tester-261124-fr020-logic-p2.md` finding P2-13; PRD `loca
 
 - FR-009: account setup must write the default Account Name; ENT-team-member.phone_number description still says "optional on Screen 6" although the phone is required.
 - ENT-provider-account-settings.last_updated_at and ENT-team-member.password_changed_at have no writer step (STP-032-093 should set the second).
-- SCR-032-08 title still says "(Owner only)"; access is the permission View and Edit Billing Settings.
+- SCR-032-08 title still says "(Owner only)"; the new title is "Billing Settings (Owner edits, Billing Staff views)", and access is the permissions View Billing Settings (grantable, default Owner and Billing Staff) and Edit Billing Settings (Owner only).
 - The phone-only and timezone-only alternative flows (STP-032-099, STP-032-102) do not reach the audit steps STP-032-337 and STP-032-338.
 - STP-032-307 and STP-032-321 share a title.
 

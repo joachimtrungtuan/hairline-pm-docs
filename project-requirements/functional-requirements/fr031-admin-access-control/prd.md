@@ -3,7 +3,7 @@
 **Module**: A-09: System Settings & Configuration
 **Feature Branch**: `fr031-admin-access-control`
 **Created**: 2025-11-14
-**Status**: Revision v1.7 (requirements graph programme baseline with logic review pass 2 and cross-FR alignment applied); v1.0.2 baseline verified and approved
+**Status**: Revision v1.8 (requirements graph programme baseline with logic review pass 2 and cross-FR alignment and the billing settings view ruling applied); v1.0.2 baseline verified and approved
 **Source**: FR-031 from system-prd.md
 
 ---
@@ -800,7 +800,8 @@ FR-026 refers to these permission names for its screens: View Settings, Edit Set
 |------------|-------------|--------------|---------------|
 | View Financial Dashboard | View revenue and earnings | ☐ Read | ENT-permission |
 | View Payouts | View payment history and upcoming payouts | ☐ Read | ENT-permission |
-| View and Edit Billing Settings | View and edit the provider billing settings tab, including bank account details | ☐ Write (Owner only; viewing the tab needs the same permission) | ENT-permission |
+| View Billing Settings | View the provider billing settings tab read-only, including bank account details (the account number stays masked) | ☐ Read (grantable; default holders Owner and Billing Staff) | ENT-permission |
+| Edit Billing Settings | Edit the provider billing settings, including bank account details | ☐ Write (Owner only; not grantable to any other role; the Owner always has View Billing Settings too) | ENT-permission |
 | View Financial Reports | Access financial analytics | ☐ Read | ENT-permission |
 
 **Category: Team Management (PR-01)**: (REQ-031-119)
@@ -911,7 +912,8 @@ FR-026 refers to these permission names for its screens: View Settings, Edit Set
 | Document Treatment | PR-03 | ☑ | ☐ | ☑ | ☐ | ENT-permission, ENT-role-permission-definition |
 | View Financial Dashboard | PR-05 | ☑ | ☑ | ☐ | ☑ | ENT-permission, ENT-role-permission-definition |
 | View Payouts | PR-05 | ☑ | ☑ | ☐ | ☑ | ENT-permission, ENT-role-permission-definition |
-| View and Edit Billing Settings | PR-05 | ☑ | ☐ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
+| View Billing Settings | PR-05 | ☑ | ☐ | ☐ | ☑ | ENT-permission, ENT-role-permission-definition |
+| Edit Billing Settings | PR-05 | ☑ | ☐ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
 | View Team Members | PR-01 | ☑ | ☑ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
 | Invite Team Members | PR-01 | ☑ | ☑ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
 | View Profile | PR-06 | ☑ | ☑ | ☐ | ☐ | ENT-permission, ENT-role-permission-definition |
@@ -1343,6 +1345,7 @@ As a platform administrator, I need the system to prevent any Super Admin accoun
 | 2026-11-24 | 1.5 | Logic review pass 1 applied. Invitation creates the account as Invited (steps and labels aligned); pending role with Effective From; Super Admin accounts cannot be demoted, suspended or deleted in the product; suspend, reactivate and delete flows; sensitive permission list widened; provider team-removal and refund-approval rules corrected; audit trail limited to access-control events with a 30-day default; new flows for editing admin role permissions, cancelling invitations, requesting a new invitation, deleting and cloning roles and sync failure; permission rows added or reworded for messaging, localization, reviews, treatments and packages, patients, retry charge and affiliates; default tables made full and renamed; settings ownership pointers to FR-021, FR-027 and FR-034. See the update log of the same date. | Documentation |
 | 2026-11-24 | 1.6 | Logic review pass 2 applied. Sensitive-permission warning added to the invitation and role-change flows; the role-change acknowledgement is shown to the affected admin on the admin dashboard; new Deleted account status and the status each account action is offered on; Super Admin invitations can be cancelled or resent until accepted and only Active Super Admins count for the single-Super-Admin banner; Pending Send starts at the first failed delivery; provider role sync can be retried by a Super Admin; new permissions Resolve Installments (admin), Edit Notification Settings (provider) and View and Edit Billing Settings (renamed from Manage Bank Details); provider default table gains View Profile and Edit Profile for Manager; refunds raised by the only holder of Issue Refunds wait for a second holder; small wording fixes. See the update log of the same date. | Documentation |
 | 2026-11-25 | 1.7 | Cross-FR alignment. Permission descriptions now name what neighbouring modules gate on them: Edit Patients covers password reset, unlock, lifting a suspension and action on a flagged conversation (FR-016); Process Payouts covers the FR-017 payout actions under financial re-authentication; Manage App Data names the FR-026 App Data lists; Manage Treatment Catalog adds the medication and post-op instruction templates; Manage Authentication Policies names the admin session settings; Export Reports noted as gating nothing in FR-014. Send Payment Reminders added to the Billing Admin defaults, mirroring Retry Charge. Aftercare Coordinator screens named. Session limit and timeout changes apply from each open session's next request. | Documentation |
+| 2026-11-25 | 1.8 | Owner ruling 2026-11-25: the permission View and Edit Billing Settings is split into View Billing Settings (grantable) and Edit Billing Settings (Owner only). Defaults: Owner holds both, Billing Staff holds View Billing Settings only, Manager and Clinical Staff hold neither. View Billing Settings is grantable to any provider role; Edit Billing Settings stays Owner only and cannot be granted to any other role (REQ-031-068), and the Owner always holds both. | Documentation |
 
 ---
 
@@ -1359,4 +1362,4 @@ As a platform administrator, I need the system to prevent any Super Admin accoun
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-11-25 (cross-FR alignment; prior approval dated 2026-01-04)
+**Last Updated**: 2026-11-25 (billing settings view ruling; prior approval dated 2026-01-04)

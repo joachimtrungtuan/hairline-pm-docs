@@ -44,7 +44,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - Providers update basic clinic information (name, description, contact)
 - Providers manage account settings (phone, timezone, password)
 - Providers configure unified notification preferences (individual toggles + global channel preferences)
-- Providers (Owner role only) manage billing settings (bank account details)
+- Providers manage billing settings (bank account details): only the Owner edits them; Billing Staff can view them read-only by default
 - Providers access Help Centre with read-only content
 - Providers submit support requests via Contact Support form (Screen 5.5) and feedback via Feedback & Suggestions form (Screen 5.6)
 - Providers view all their submitted support cases and feedback via My Support Cases screen (Screen 5.7) with complete case details, communication thread, and status tracking
@@ -84,7 +84,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - Provider navigates to "Settings & Support > Settings" from main dashboard navigation (REQ-032-032)
 - Provider clicks on notification icon to configure preferences (REQ-032-032)
 - Provider accesses Help Centre from footer or help icon (REQ-032-032)
-- Provider Owner role accesses billing settings from financial dashboard (REQ-032-032)
+- Provider Owner role (edit) and Billing Staff role (view only by default) access billing settings from financial dashboard (REQ-032-032)
 
 **System-Initiated**:
 
@@ -219,11 +219,11 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
    - ☐ Aftercare Notifications (patient milestone completed, urgent aftercare alert) — DISABLED
    - ☑ Review Notifications (new review posted, review requires response)
    - ☑ Promotion/Discount Notifications (new platform discounts created by admin that require provider acceptance/opt-in)
-   - Support case notices (admin reply, status change, resolved) have no toggle and are always sent (REQ-032-143)
+   - Support case notices (admin reply, status change, resolved) have no toggle and are always sent by email (REQ-032-143)
 5. Provider configures global channel preferences:
    - Email: ☑ Enabled (default email address from profile)
    - Push/In-App: ☑ Enabled (web portal notifications)
-   - Email and Push may both be off for a type; mandatory notices ignore the setting and are still sent (REQ-032-143)
+   - Email and Push may both be off for a type; a mandatory notice is still always sent by email whatever these settings, while Push follows the provider's own Push setting (REQ-032-143; FR-020 REQ-020-038)
 6. Provider clicks "Save Preferences" on the Notifications tab
 7. System validates settings
 8. System saves notification preferences to database
@@ -402,7 +402,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 ---
 
-### Main Flow: Manage Billing Settings (Owner Role Only)
+### Main Flow: Manage Billing Settings (Owner Edits)
 
 **Actors**: Provider (Owner role), System
 **Trigger**: Provider Owner navigates to "Settings" → "Billing" or "Billing Settings"
@@ -411,7 +411,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 **Steps**:
 
 1. Provider Owner navigates to Settings → Billing
-2. System validates the user holds the "View and Edit Billing Settings" permission (FR-031, default Owner only, REQ-032-141)
+2. System validates the user holds the "View Billing Settings" permission (FR-031, default Owner and Billing Staff) and offers the edit controls ("Edit Bank Account Details", save, cancel) only when the user also holds "Edit Billing Settings" (FR-031, held by the Owner only, not grantable to any other role); a user with View only sees the read-only view of Alternative Flow A8 (REQ-032-141)
 3. System shows the form for the clinic's Payout Method (REQ-032-146). For Manual bank transfer it displays the bank account details (if previously saved); for Stripe Connect it displays a status panel with a "Complete Stripe sign-up" link instead of the bank form:
    - Account Holder Name: [text field]
    - Bank Name: [text field]
@@ -442,15 +442,15 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 ### Alternative Flows
 
-**A8: Provider Owner Views Billing Settings (Read-Only)**:
+**A8: Provider Views Billing Settings (Read-Only)**:
 
-- **Trigger**: Provider Owner wants to review current bank account details
+- **Trigger**: A provider user wants to review current bank account details: the Owner who does not edit, or a user who holds "View Billing Settings" but not "Edit Billing Settings" (by default Billing Staff, and any role other than the Owner)
 - **Steps**:
-  1. Provider Owner navigates to Settings → Billing
-  2. System displays current bank account details (masked account number)
-  3. Provider Owner reviews information
-  4. Provider Owner does not make changes
-- **Outcome**: Provider confirms bank account details are correct
+  1. Provider user navigates to Settings → Billing
+  2. System displays current bank account details (masked account number) and the Commission & Payout panel; for a user without "Edit Billing Settings" it shows no "Edit Bank Account Details" button, no save or cancel buttons and no "Complete Stripe sign-up" link, and the account number is never unmasked (REQ-032-086)
+  3. Provider user reviews information
+  4. Provider user does not make changes
+- **Outcome**: Provider confirms bank account details are correct (REQ-032-141)
 
 **A9: Provider Owner Adds Bank Account for First Time**:
 
@@ -463,15 +463,15 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
   5. System displays success message "Bank account added successfully. You will now receive payouts to this account."
 - **Outcome**: Bank account details saved, provider can receive payouts
 
-**B9: Non-Owner Role Attempts to Access Billing Settings**:
+**B9: Role Without View Billing Settings Permission Attempts to Access Billing Settings**:
 
-- **Trigger**: Any non-Owner provider role (Manager, Clinical Staff, Billing Staff) tries to access billing settings
+- **Trigger**: A provider user whose role does not hold "View Billing Settings" (by default Manager and Clinical Staff) tries to access billing settings
 - **Steps**:
-  1. Provider (non-Owner role) navigates to Settings & Support > Settings > Billing tab
-  2. System validates user role
-  3. System detects user role ≠ Owner
-  4. System hides the Billing tab from navigation (non-owner cannot see or access billing settings)
-- **Outcome**: Non-owner cannot see or access billing settings (permission "View and Edit Billing Settings", FR-031, default Owner only, REQ-032-141)
+  1. Provider user navigates to Settings & Support > Settings > Billing tab
+  2. System validates the user's permissions
+  3. System detects the user does not hold "View Billing Settings"
+  4. System hides the Billing tab from navigation (the user cannot see or access billing settings)
+- **Outcome**: A role without "View Billing Settings" cannot see or access billing settings (FR-031, default holders Owner and Billing Staff, REQ-032-141)
 
 **B10: Invalid Bank Account Format**:
 
@@ -1025,7 +1025,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 | Notification preferences (REQ-032-142) | Owner and Manager by default; other roles see them read-only | Edit Notification Settings |
 | Account closure request | Owner only | Owner only (no permission) |
 | Personal account settings (Screen 2) | Every role, for their own account only | None (own account) |
-| Billing settings | Owner only by default (FR-031, REQ-031-005) | View and Edit Billing Settings |
+| Billing settings | Edit: Owner only, not grantable; view read-only: grantable, default Owner and Billing Staff (FR-031, REQ-031-005) | Edit Billing Settings (edit), View Billing Settings (view) |
 
 - Inline editing: clicking editable fields activates edit mode with save/cancel buttons; changes persist immediately on save
 - **Tab Editability**:
@@ -1123,15 +1123,15 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 **Business Rules**:
 
 - Notification preferences are profile-specific (apply to entire provider organization, not individual team members) (REQ-032-078); only holders of the FR-031 permission "Edit Notification Settings" (by default the Owner and a Manager) can change them, other roles see them read-only (REQ-032-142)
-- If all notification types disabled, show confirmation dialog warning provider may miss important updates (REQ-032-079); Email and Push may both be off for a type, and mandatory notices ignore the setting (REQ-032-143)
+- If all notification types disabled, show confirmation dialog warning provider may miss important updates (REQ-032-079); Email and Push may both be off for a type, and a mandatory notice is still sent by email while Push follows the provider's own setting (REQ-032-143)
 - Notification preferences saved and enforced by S-03 Notification Service (FR-020) (REQ-032-009)
-- Global channel preferences override individual notification types (e.g., if Email disabled, no notifications sent via email regardless of individual toggles) (REQ-032-080)
+- Global channel preferences override individual notification types (e.g., if Email disabled, no notifications sent via email regardless of individual toggles); mandatory notices are the exception for email (REQ-032-080, REQ-032-143)
 - Each tab (Profile, Account Information, Notification Preferences, Billing) can be saved independently; system displays unsaved changes indicator (e.g., dot or asterisk) on tabs with unsaved edits (REQ-032-040)
 - See REQ-032-040.
-- Critical system alerts (e.g., payment failure, security breach) bypass preferences and always sent via all available channels (REQ-032-081)
-- Mandatory provider notices (defined in FR-030 Non-Disableable by Default; for the inquiry-cancelled quote notice, FR-020 REQ-020-020) are exempt from these preferences. This screen offers no toggle for them, and neither the Quote or Schedule Notifications toggles, "Disable All" nor the channel preferences can suppress them (REQ-032-031)
+- Critical system alerts (e.g., payment failure, security breach) are mandatory notices: always sent by email whatever the provider's preferences, while Push and any other optional channel follow the provider's own setting (REQ-032-081; FR-020 REQ-020-038, FR-030 REQ-030-208)
+- Mandatory provider notices (defined in FR-030 Non-Disableable by Default; for the inquiry-cancelled quote notice, FR-020 REQ-020-020) are exempt from the type toggles and from the Email setting. This screen offers no toggle for them, and neither the Quote or Schedule Notifications toggles, "Disable All" nor the Email channel preference can suppress their email; a mandatory notice is always sent by email, while Push follows the provider's own Push setting, and the in-app record in notification history is always created (REQ-032-031; FR-020 REQ-020-038)
 - Every preference change is logged in audit trail with the user who made it (REQ-032-082, REQ-032-142)
-- Support case notices (admin reply, status change, resolved) have no toggle on this screen and are always sent (REQ-032-143)
+- Support case notices (admin reply, status change, resolved) have no toggle on this screen and are always sent by email (REQ-032-143)
 - Preference updates propagate to S-03 within 1 minute (REQ-032-016)
 - All notification type and channel toggles are editable by the holders of "Edit Notification Settings" (by default the Owner and a Manager) from the `Settings → Notification Preferences` tab in the provider dashboard (REQ-032-041, REQ-032-142)
 
@@ -1147,9 +1147,9 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 ---
 
-### Screen 4: Billing Settings (Owner Role Only)
+### Screen 4: Billing Settings (Owner Edits, Billing Staff Views)
 
-**Purpose**: Allow provider Owner to manage bank account details for receiving payouts from Hairline platform. This screen is organized as a tab within the Settings page (Settings & Support > Settings > Billing tab). Non-owner roles cannot see or access this tab. The bank form below is shown and required only when the Payout Method is Manual bank transfer; for Stripe Connect the tab shows a status panel and a "Complete Stripe sign-up" link instead (REQ-032-146).
+**Purpose**: Allow provider Owner to manage bank account details for receiving payouts from Hairline platform. This screen is organized as a tab within the Settings page (Settings & Support > Settings > Billing tab). Roles without the "View Billing Settings" permission cannot see or access this tab; a user with View only (by default Billing Staff) sees the screen read-only, with the fields shown, the account number masked and no edit, save or cancel controls. The bank form below is shown and required only when the Payout Method is Manual bank transfer; for Stripe Connect the tab shows a status panel and a "Complete Stripe sign-up" link instead (REQ-032-146).
 
 **Data Fields**:
 
@@ -1175,7 +1175,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 
 **Business Rules**:
 
-- Billing settings accessible ONLY to the Owner by default: the permission "View and Edit Billing Settings" is held by FR-031 with the default Owner only (REQ-031-005); the Billing tab is hidden from roles without it (REQ-032-011, REQ-032-141)
+- Billing settings are viewed under the FR-031 permission "View Billing Settings" (default Owner and Billing Staff) and edited under "Edit Billing Settings" (held by the Owner only, not grantable to any other role) (REQ-031-005); the Billing tab is hidden from roles without View, and a View-only user gets the read-only screen without edit controls (REQ-032-011, REQ-032-141)
 - See REQ-032-022.
 - Account number masked in read-only view (e.g., ●●●●●●1234), unmasked in edit mode (REQ-032-086)
 - See REQ-032-017.
@@ -1641,9 +1641,9 @@ Each message in the thread displays:
 ### General Module Rules
 
 - **Rule 1**: All provider profile changes (logo, name, description, languages, awards) propagate to patient-facing quote comparison view within 1 minute (REQ-032-014)
-- **Rule 2**: Provider notification preferences enforced by S-03 Notification Service for all platform notifications, except critical system alerts and mandatory provider notices, which bypass preferences. Which notices are mandatory, their recipients and their content are defined by the notification Rules (FR-020 REQ-020-020 and FR-030 Non-Disableable by Default) (REQ-032-009; REQ-032-031)
+- **Rule 2**: Provider notification preferences enforced by S-03 Notification Service for all platform notifications, except critical system alerts and mandatory provider notices, which bypass the type toggles and the Email setting and are always sent by email, while Push follows the provider's own setting (FR-020 REQ-020-038). Which notices are mandatory, their recipients and their content are defined by the notification Rules (FR-020 REQ-020-020 and FR-030 Non-Disableable by Default) (REQ-032-009; REQ-032-031)
 - **Rule 3**: All account settings changes (phone, timezone, password) logged in audit trail with timestamp, user ID, and IP address (REQ-032-020)
-- **Rule 4**: Billing settings are accessible only to the holder of the "View and Edit Billing Settings" permission, which FR-031 grants to the Owner by default (REQ-031-005); roles without it cannot see or access billing settings (tab hidden from navigation) (REQ-032-022, REQ-032-141)
+- **Rule 4**: Billing settings are viewed under the FR-031 permission "View Billing Settings" (default Owner and Billing Staff) and edited under "Edit Billing Settings" (held by the Owner only, not grantable to any other role) (REQ-031-005); roles without View cannot see or access billing settings (tab hidden from navigation) and a View-only user sees them read-only (REQ-032-022, REQ-032-141)
 - **Rule 5**: All profile, language, awards, account, and notification fields documented in this FR are provider-editable within the Provider Dashboard (subject to role restrictions noted); reviews content and Help Centre articles are read-only views fed by their respective modules (staff roster managed by FR-009); providers may post responses to reviews via FR-013 Screen 6 response composer but cannot edit or delete review records (REQ-032-041)
 - **Rule 6 — Provider account-status banner**: Provider account status is owned by FR-015. (REQ-032-030)
   - **Suspended**: The Owner and every FR-009 team member can still log in and see a persistent, non-dismissible banner on every Provider Platform page: "Your account is temporarily suspended. Reason: [admin-provided reason]. Contact support@hairlineapp.com for assistance." The reason is the Screen 4 reason recorded in FR-015. While suspended, the provider cannot receive new inquiries, submit quotes, or accept new work (FR-015 Rule 9); profile, documents, reviews, billing, and team management (FR-009 Rule 10) are view-only, except that the Owner can still update the bank details (audit-logged, REQ-032-067). Account security (password change), notification preferences, Help Centre, and support cases (Screens 5.5–5.9) remain available so the provider can contact admins, and the Owner can still submit the account closure request (REQ-032-067). A Suspended Owner who has not yet set a password can still use the activation link; the status stays Suspended afterwards (FR-015, REQ-032-067). Chat with patients on the provider's open `In Progress` and `Aftercare` cases also stays available. Clinical notes, photos, and aftercare answers and actions are blocked until the admin reassigns or decides the case (FR-015 Screen 4). (REQ-032-067)
@@ -1674,7 +1674,7 @@ Each message in the thread displays:
 
 - Password complexity requirements: minimum 12 characters with an uppercase letter, a lowercase letter, a digit and a special character, fixed by the platform password policy (REQ-SYS-007; REQ-032-066)
 - Encryption algorithms: AES-256 for data at rest, TLS 1.3 for data in transit
-- Role-based access control rules: billing settings need the permission "View and Edit Billing Settings", held by FR-031 with the default Owner only (REQ-032-141)
+- Role-based access control rules: billing settings are viewed under "View Billing Settings" (default Owner and Billing Staff) and edited under "Edit Billing Settings" (held by the Owner only, not grantable to any other role), both held by FR-031 (REQ-032-141)
 - Password hash algorithm: bcrypt with cost factor 12+
 - Account closure workflow: admin deactivation through FR-015 only (no "Deleted" status), data retained (retention follows the system PRD, Platform-Wide Rules: One 10-year retention period)
 
@@ -1687,7 +1687,7 @@ Each message in the thread displays:
 
 - **Billing Rule 1**: Bank account details validated by S-02 Payment Service before saving (format validation only, no funds verification) (REQ-032-025)
 - **Billing Rule 2**: Bank account details used by FR-017 billing workflow for provider payouts (admin-triggered after treatment completion)
-- **Billing Rule 3**: Bank account changes need the permission "View and Edit Billing Settings" (FR-031, default Owner only); roles without it cannot see or access billing settings (tab hidden from navigation) (REQ-032-022, REQ-032-141)
+- **Billing Rule 3**: Bank account changes need the permission "Edit Billing Settings" (FR-031, held by the Owner only, not grantable to any other role); roles without "View Billing Settings" cannot see or access billing settings (tab hidden from navigation) and View-only users see them read-only (REQ-032-022, REQ-032-141)
 - **Billing Rule 4**: Bank account details encrypted at rest and masked in UI (only last 4 digits visible in read-only view) (REQ-032-017)
 
 ### Integration, Security and Operating Rules
@@ -1720,7 +1720,7 @@ Each message in the thread displays:
   - **Authentication**: Internal API (user authentication required, RBAC enforced per FR-009 as this is an authenticated provider area)
   - **Error handling**: If content unavailable, display cached version with "Content may be outdated" warning; retry after 1 minute
 - **Authentication**: Multi-factor authentication (MFA) required for Owner role when accessing billing settings (future enhancement)
-- **Authorization**: Role-based access control (RBAC) enforced for billing settings (permission "View and Edit Billing Settings", FR-031, default Owner only); API endpoints validate user role before allowing access
+- **Authorization**: Role-based access control (RBAC) enforced for billing settings (permissions "View Billing Settings", default Owner and Billing Staff, and "Edit Billing Settings", held by the Owner only, not grantable to any other role, FR-031); API endpoints validate the permission before allowing view or edit
 - **Encryption**: All provider data encrypted in transit (TLS 1.3) and at rest (AES-256); bank account details use field-level encryption with separate encryption keys
 - **Audit trail**: Log all settings changes (profile, account, notifications, billing) with timestamp, user ID, IP address, action, old value, new value (REQ-032-020)
 - **Threat mitigation**: Rate limiting on password change endpoint (max 5 attempts/hour/user) to prevent brute force attacks; rate limiting on image upload endpoint (max 10 uploads/hour/user) to prevent abuse (REQ-032-049)
@@ -1735,7 +1735,7 @@ Each message in the thread displays:
 - FR-020 / S-03: Notification preferences integration
 - FR-021: Language options for provider profile capacity
 - FR-026: Country codes, timezone options (fixed offsets, REQ-026-121), password policy (REQ-SYS-007)
-- FR-031: Permission "View and Edit Billing Settings" (default Owner only) and the per-feature role matrix
+- FR-031: Permissions "View Billing Settings" (default Owner and Billing Staff) and "Edit Billing Settings" (held by the Owner only, not grantable to any other role) and the per-feature role matrix
 - FR-009: Team roles and team member accounts
 - FR-017: Bank account details for payouts and payout readiness (REQ-017-064)
 - FR-033: Help Centre content, view and vote records (REQ-033-096, REQ-033-097)
@@ -1793,19 +1793,20 @@ A team member updates their own phone number, changes their own timezone, and ch
 
 ---
 
-### User Story 4 - Manage Billing Settings (Owner Role Only) (Priority: P1)
+### User Story 4 - Manage Billing Settings (Owner Edits, Billing Staff Views) (Priority: P1)
 
 A provider Owner adds bank account details for receiving payouts from Hairline platform after completing first treatment.
 
 **Why this priority**: Billing settings required for provider payouts per FR-017. Without bank account details, provider cannot receive payout for completed treatments. 95% of providers add billing settings within 7 days of completing first treatment.
 
-**Independent Test**: Can be fully tested by adding bank account details as Owner role, verifying S-02 validation succeeds, confirming bank account saved encrypted, and testing non-owner role denied access.
+**Independent Test**: Can be fully tested by adding bank account details as Owner role, verifying S-02 validation succeeds, confirming bank account saved encrypted, testing a role without View Billing Settings denied access, and testing Billing Staff sees the settings read-only.
 
 **Acceptance Scenarios**:
 
 1. **Given** provider Owner has completed first treatment and needs to receive payout, **When** provider Owner navigates to Settings → Billing, enters bank account details (Account Holder: "Istanbul Hair Clinic Ltd", Bank: "Garanti BBVA", Account Number: "TR123456789012345678901234", SWIFT: "TGBATRISXXX", IBAN: "TR12 0001 0012 3456 7890 1234 56"), clicks "Save Bank Account", **Then** system sends validation request to S-02 Payment Service, S-02 validates bank account format, system saves bank account details encrypted with AES-256, logs billing settings change in audit trail, displays "Bank account details saved successfully" message, sends confirmation email to Owner, and bank account used for next provider payout
 2. **Given** provider Owner enters invalid IBAN format (too short), **When** provider Owner submits bank account form with IBAN "TR1234", **Then** system validates IBAN format, detects invalid format (Turkey IBAN requires 26 chars), displays error "Invalid IBAN format. Turkey IBAN must be 26 characters (e.g., TR12 0001 0012 3456 7890 1234 56)", and prevents saving until valid IBAN entered
-3. **Given** provider has Manager role (not Owner), **When** the Manager navigates to Settings & Support > Settings, **Then** system validates the "View and Edit Billing Settings" permission (FR-031, default Owner only), finds it missing, and hides the Billing tab from navigation (non-owner cannot see or access billing settings)
+3. **Given** provider has Manager role (not Owner), **When** the Manager navigates to Settings & Support > Settings, **Then** system validates the "View Billing Settings" permission (FR-031, default Owner and Billing Staff), finds it missing, and hides the Billing tab from navigation (the Manager cannot see or access billing settings)
+4. **Given** provider has Billing Staff role with the default permissions, **When** the Billing Staff user opens Settings & Support > Settings > Billing, **Then** system shows the bank account details with the account number masked and the Commission & Payout panel, with no "Edit Bank Account Details" button, no save or cancel buttons and no "Complete Stripe sign-up" link
 
 ---
 
@@ -1873,7 +1874,7 @@ A provider closing their clinic permanently requests account closure, and an adm
   - System receives validation error from S-02 (e.g., "Bank not found" or "SWIFT code mismatch"), displays error message to provider "Bank account validation failed: [error detail from S-02]. Please verify your bank details and try again.", prevents saving bank account details, and provider must correct details and retry (REQ-032-087)
 
 - How does system handle **the Owner role is handed to another person**?
-  - A Hairline admin hands the Owner role over (FR-015); the previous Owner becomes a Manager, and next time that user navigates to Settings & Support > Settings, the Billing tab is hidden from navigation (non-owner cannot see or access billing settings); existing bank account details stay with the clinic and are accessible to the new Owner (REQ-032-089)
+  - A Hairline admin hands the Owner role over (FR-015); the previous Owner becomes a Manager, and next time that user navigates to Settings & Support > Settings, the Billing tab is hidden from navigation (the Manager holds no billing settings permission by default and cannot see or access billing settings); existing bank account details stay with the clinic and are accessible to the new Owner (REQ-032-089)
 
 - What occurs if **Help Centre content fails to load due to network issue**?
   - System attempts to fetch Help Centre content from admin content database, detects network timeout or error, displays cached version of Help Centre content (if available) with warning banner "Content may be outdated. Please refresh to load latest updates.", and provides "Retry" button for manual refresh (REQ-032-097)
@@ -1900,7 +1901,7 @@ A provider closing their clinic permanently requests account closure, and an adm
 - **REQ-032-008**: System MUST allow providers to configure unified notification preferences (individual notification type toggles for quote, schedule, treatment start, aftercare, review, and promotion/discount notifications + global channel preferences: email, push)
 - **REQ-032-009**: System MUST enforce notification preferences via S-03 Notification Service (FR-020 integration)
 - **REQ-032-010**: System MUST allow provider Owners to manage billing settings (bank account details for payouts, FR-017 integration)
-- **REQ-032-011**: System MUST restrict billing settings access to the holder of the permission "View and Edit Billing Settings", held by FR-031 with the default Owner only (REQ-031-005)
+- **REQ-032-011**: System MUST restrict billing settings access to the holders of the permission "View Billing Settings" (default Owner and Billing Staff) and MUST allow only the Owner, the only holder of "Edit Billing Settings" (not grantable to any other role), to change them, both held by FR-031 (REQ-031-005); a View-only user gets the read-only screen with no edit, save or cancel controls and no unmasked account number
 - **REQ-032-012**: System MUST allow providers to access Help Centre with admin-managed content (FR-033 integration)
 - **REQ-032-013**: System MUST allow the Owner to request account closure; the request is processed by an admin, who deactivates the provider through FR-015 (no self-service deactivation)
 
@@ -1917,7 +1918,7 @@ A provider closing their clinic permanently requests account closure, and an adm
 - **REQ-032-019**: System MUST hash passwords using bcrypt (cost factor 12+) and never store plain text passwords
 - **REQ-032-020**: System MUST log all profile changes, account settings changes, billing settings changes, and account closure requests in audit trail (timestamp, user ID, IP address, action, and old/new values; bank details, password, phone and email values are masked)
 - **REQ-032-021**: System MUST send email notification to provider after password change (security alert)
-- **REQ-032-022**: System MUST enforce role-based access control for billing settings (permission "View and Edit Billing Settings", FR-031, default Owner only; roles without it cannot see or access billing settings tab)
+- **REQ-032-022**: System MUST enforce role-based access control for billing settings (permissions "View Billing Settings", default Owner and Billing Staff, and "Edit Billing Settings", held by the Owner only, not grantable to any other role, FR-031; roles without View cannot see or access the billing settings tab, and View-only users see it read-only)
 - **REQ-032-023**: System MUST process approved account-closure requests as FR-015 deactivation (account status = "Deactivated", standard FR-015 cascade, data archived; retention follows the system PRD, Platform-Wide Rules: One 10-year retention period)
 
 ### Integration Requirements
@@ -1929,10 +1930,10 @@ A provider closing their clinic permanently requests account closure, and an adm
 - **REQ-032-028**: System MUST integrate with FR-033 to display admin-managed Help Centre content
 - **REQ-032-029**: System MUST show provider Owners a read-only Commission & Payout panel in Screen 4 with commission model, value, Flat Rate Currency, Effective Date, any scheduled configuration, and payout timing (automatic release on the Stripe Connect rail; the one platform-wide settlement period owned by FR-029 on the manual rail; there is no per-clinic payout frequency), plus the payout method (chosen by the admin when the clinic is created in FR-015) and payout readiness
 - **REQ-032-030**: System MUST apply Rule 6: show a persistent Account Suspended banner with the admin reason to all provider users while suspended, restrict editing to the listed exceptions, and block login with a deactivation message once deactivated
-- **REQ-032-031**: System MUST NOT offer a provider notification preference toggle for any mandatory provider notice, and MUST deliver each mandatory notice to the affected provider regardless of notification type and channel preferences. Which notices are mandatory, to whom they go and what they say is defined by the notification Rules: FR-020 REQ-020-020 for the inquiry-cancelled quote notice (`quote.cancelled_inquiry`) and FR-030 Non-Disableable by Default for the others
-- **REQ-032-141**: System MUST apply the who-edits-what table in Screen 1 (General Business Rules): clinic profile, languages, awards and documents are edited by the Owner and a Manager by default, gated by the FR-031 permission "Edit Profile"; notification settings are gated by "Edit Notification Settings" (REQ-032-142); the account closure request by the Owner only; personal account settings by every role for their own account only; billing settings need the permission "View and Edit Billing Settings", held by FR-031 with the default Owner only (REQ-031-005)
+- **REQ-032-031**: System MUST NOT offer a provider notification preference toggle for any mandatory provider notice, and MUST always send each mandatory notice to the affected provider by email, whatever the notification type toggles and the Email channel preference; Push and any other optional channel follow the provider's own setting, and the in-app record in notification history is always created (FR-020 REQ-020-038). Which notices are mandatory, to whom they go and what they say is defined by the notification Rules: FR-020 REQ-020-020 for the inquiry-cancelled quote notice (`quote.cancelled_inquiry`) and FR-030 Non-Disableable by Default for the others
+- **REQ-032-141**: System MUST apply the who-edits-what table in Screen 1 (General Business Rules): clinic profile, languages, awards and documents are edited by the Owner and a Manager by default, gated by the FR-031 permission "Edit Profile"; notification settings are gated by "Edit Notification Settings" (REQ-032-142); the account closure request by the Owner only; personal account settings by every role for their own account only; billing settings are viewed under "View Billing Settings" (default Owner and Billing Staff) and edited under "Edit Billing Settings" (held by the Owner only, not grantable to any other role), both held by FR-031 (REQ-031-005)
 - **REQ-032-142**: System MUST let only the holders of the FR-031 permission "Edit Notification Settings" (by default the Owner and a Manager) change the clinic's notification settings; other roles see them read-only; every change is audit-logged with the user who made it
-- **REQ-032-143**: System MUST send support case notices (admin reply, status change, resolved) always, with no toggle; Email and Push MAY both be off for a notification type, but mandatory notices ignore the setting
+- **REQ-032-143**: System MUST send support case notices (admin reply, status change, resolved) always, with no toggle; Email and Push MAY both be off for a notification type, but a mandatory notice is still always sent by email, while Push follows the provider's own setting (FR-020 REQ-020-038)
 - **REQ-032-144**: System MUST show Account Email read-only for every role. The Owner's login email is changed only by a Hairline admin (FR-015, REQ-015-114); a team member's email is changed by contacting support
 - **REQ-032-145**: System MUST save the timezone per person; at a person's first login System MUST set it without a prompt to the listed whole-hour offset nearest to the browser time zone (UTC when the browser zone cannot be read), and the person can change it on Screen 2 at any time; dates display with the fixed offsets of the FR-026 timezone list (REQ-026-121)
 - **REQ-032-146**: System MUST show and require the bank form only when the Payout Method is Manual bank transfer; for Stripe Connect it MUST show a status panel and a "Complete Stripe sign-up" link; Payout Readiness is display only and owned by FR-017 (REQ-017-064)
@@ -1945,6 +1946,7 @@ A provider closing their clinic permanently requests account closure, and an adm
 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
+| 2026-11-25 | 1.21 | Owner rulings 2026-11-25. (A) Billing settings: the permission View and Edit Billing Settings is split into View Billing Settings and Edit Billing Settings (FR-031 v1.8); by default Owner and Billing Staff can view (View Billing Settings is grantable), only the Owner can edit (Edit Billing Settings is held by the Owner only and cannot be granted to any other role); a View-only user gets the read-only screen with no edit, save or cancel controls and no unmasked account number; Alternative Flow B9 now covers roles without View. (B) Mandatory notices (including support case notices and critical system alerts) are always sent by email whatever the provider's settings; Push follows the provider's own setting; the in-app record is always created (FR-020 REQ-020-038, FR-030 REQ-030-208). | Product Owner / Documentation |
 | 2026-11-25 | 1.20 | Cross-FR alignment: password complexity follows the platform password policy (REQ-SYS-007, REQ-032-066); no other wording change. | Product Owner / Documentation |
 | 2026-11-24 | 1.19 | Logic review pass 2: video view recorded after 30 seconds of play; provider only replies (no resolve control); support form limits aligned with FR-034 (subject and feedback title minimum 10, up to 5 attachments, DOC added); phone number required, unique per user within the provider and verified when changed; who-edits-what table names the FR-031 permission per row (Edit Profile, Edit Notification Settings, View and Edit Billing Settings) and notification settings follow "Edit Notification Settings"; reopen request outcome (admin reopens in FR-034, or answers and the Request Reopen button returns); closure card pending state and refusal of a second request; Account Name sync step and Owner handover rule; timezone set silently at first login; audit steps for phone and timezone changes; "we aim to review within 5 business days" for closure. Rules changed: REQ-032-061, 062, 064, 071, 073, 102, 104, 114, 125, 141, 142, 145. | Product Owner / Documentation |
 | 2026-11-24 | 1.18 | Logic review pass 1: support case reply and reopen rules aligned with FR-034 (reply enabled for Resolved, reopen request is a flagged message, case stays Closed); 24-hour response note on business days; Service Status fourth value and no subscription; closure and role wording (keeps its current status, Owner role handed over by an admin, Suspended Owner exceptions); Account Email read-only and per-person account settings including timezone; notification settings roles and support notices; bank form for Manual bank transfer only with Stripe panel; language list; Help Centre view and vote records; Reviews tab server-side paging and Edited marker; billing permission cited from FR-031 with a who-edits-what table; new rules REQ-032-141 to REQ-032-148. | Product Owner / Documentation |

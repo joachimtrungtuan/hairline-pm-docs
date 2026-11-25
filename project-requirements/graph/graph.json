@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T04:04:11Z",
+  "generated_at": "2026-11-25T04:07:57Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -116,7 +116,7 @@
       "owner_fr": null,
       "title": "Provider Billing Staff",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "group": "provider",
         "description": "Provider team member with the Billing Staff role."
@@ -39401,12 +39401,12 @@
       "id": "FLW-032-billing-read-only",
       "type": "Flow",
       "owner_fr": null,
-      "title": "Alternative Flow A8: Provider Owner Views Billing Settings (Read-Only)",
+      "title": "Alternative Flow A8: Provider Views Billing Settings (Read-Only)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "kind": "alternative",
-        "description": "Alternative Flow A8: Provider Owner Views Billing Settings (Read-Only)",
+        "description": "Alternative Flow A8: Provider Views Billing Settings (Read-Only)",
         "prd_ref": "Alternative Flow A8 (Billing Read-Only)"
       }
     },
@@ -39635,12 +39635,12 @@
       "id": "FLW-032-manage-billing-settings",
       "type": "Flow",
       "owner_fr": null,
-      "title": "Main Flow: Manage Billing Settings (Owner Role Only)",
+      "title": "Main Flow: Manage Billing Settings (Owner Edits)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "kind": "main",
-        "description": "Main Flow: Manage Billing Settings (Owner Role Only)",
+        "description": "Main Flow: Manage Billing Settings (Owner Edits)",
         "prd_ref": "Main Flow: Manage Billing Settings"
       }
     },
@@ -39661,12 +39661,12 @@
       "id": "FLW-032-non-owner-billing-access",
       "type": "Flow",
       "owner_fr": null,
-      "title": "Alternative Flow B9: Non-Owner Role Attempts to Access Billing Settings",
+      "title": "Alternative Flow B9: Role Without View Billing Settings Permission Attempts to Access Billing Settings",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "kind": "alternative",
-        "description": "Alternative Flow B9: Non-Owner Role Attempts to Access Billing Settings",
+        "description": "Alternative Flow B9: Role Without View Billing Settings Permission Attempts to Access Billing Settings",
         "prd_ref": "Alternative Flow B9 (Non-Owner Hits Billing)"
       }
     },
@@ -91033,10 +91033,10 @@
       "owner_fr": "FR-031",
       "title": "Provider permissions limited to named roles",
       "status": "active",
-      "version": 7,
+      "version": 8,
       "attrs": {
-        "statement": "Provider permissions View and Edit Billing Settings and Edit Settings are Owner only; Document Treatment is limited to Owner or Clinical Staff (not Manager); Remove Team Members is limited to Owner (any non-Owner member) or Manager (Clinical Staff and Billing Staff only); Invite Team Members and Edit Team Member Roles (non-Owner) are limited to Owner or Manager, and a Manager may invite or set only Clinical Staff and Billing Staff and cannot create a Manager.",
-        "rationale": "Screen 4 provider permission categories (PR-03, PR-05, PR-06, PR-01)."
+        "statement": "Provider permissions Edit Billing Settings and Edit Settings are Owner only; Document Treatment is limited to Owner or Clinical Staff (not Manager); Remove Team Members is limited to Owner (any non-Owner member) or Manager (Clinical Staff and Billing Staff only); Invite Team Members and Edit Team Member Roles (non-Owner) are limited to Owner or Manager, and a Manager may invite or set only Clinical Staff and Billing Staff and cannot create a Manager.",
+        "rationale": "Screen 4 provider permission categories (PR-03, PR-05, PR-06, PR-01). Owner ruling 2026-11-25: Edit Billing Settings stays Owner only and cannot be granted to any other role; only View Billing Settings is grantable (REQ-031-118)."
       }
     },
     {
@@ -91634,10 +91634,10 @@
       "owner_fr": "FR-031",
       "title": "Provider permissions: Financial & Billing (PR-05)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Permission category \"Financial & Billing\" (PR-05) in the provider permission matrix offers: View Financial Dashboard (View revenue and earnings; Read); View Payouts (View payment history and upcoming payouts; Read); View and Edit Billing Settings (View and edit the provider billing settings tab, including bank account details; Write (Owner only; viewing the tab needs the same permission)); View Financial Reports (Access financial analytics; Read).",
-        "rationale": "Screen 4 permission matrix structure, provider platform categories. Rows copied from the PRD table (Permission, Description, Access Level)."
+        "statement": "Permission category \"Financial & Billing\" (PR-05) in the provider permission matrix offers: View Financial Dashboard (View revenue and earnings; Read); View Payouts (View payment history and upcoming payouts; Read); View Billing Settings (View the provider billing settings tab read-only, including bank account details, the account number stays masked; Read, grantable, default holders Owner and Billing Staff); Edit Billing Settings (Edit the provider billing settings, including bank account details; Write, Owner only, not grantable to any other role, the Owner always has View Billing Settings too); View Financial Reports (Access financial analytics; Read).",
+        "rationale": "Screen 4 permission matrix structure, provider platform categories. Rows copied from the PRD table (Permission, Description, Access Level). Owner ruling 2026-11-25 split View and Edit Billing Settings into two permissions."
       }
     },
     {
@@ -91968,12 +91968,12 @@
       "id": "REQ-032-011",
       "type": "Rule",
       "owner_fr": "FR-032",
-      "title": "Billing settings need the View and Edit Billing Settings permission",
+      "title": "Billing settings are viewed under View Billing Settings and edited under Edit Billing Settings",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST restrict billing settings access to the holder of the permission \"View and Edit Billing Settings\", held by FR-031 with the default Owner only (REQ-031-005)",
-        "rationale": "Restated by Business Rule 4, Billing Rule 3, Screen 4 and Alternative Flow B9 (non-Owner roles Manager, Clinical Staff, Billing Staff). Same rule as REQ-032-022. Screen: SCR-032-08."
+        "statement": "System MUST restrict billing settings access to the holders of the permission \"View Billing Settings\" (default Owner and Billing Staff) and MUST allow only the Owner, the only holder of \"Edit Billing Settings\" (not grantable to any other role), to change them, both held by FR-031 (REQ-031-005); a View-only user gets the read-only screen with no edit, save or cancel controls and no unmasked account number",
+        "rationale": "Restated by Business Rule 4, Billing Rule 3, Screen 4 and Alternative Flows A8 and B9. Same rule as REQ-032-022. Owner ruling 2026-11-25: Billing Staff can view billing settings read-only by default; only the Owner can edit. Screen: SCR-032-08."
       }
     },
     {
@@ -92102,9 +92102,9 @@
       "owner_fr": "FR-032",
       "title": "Permission-based access to billing settings",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST enforce role-based access control for billing settings (permission \"View and Edit Billing Settings\", FR-031, default Owner only; roles without it cannot see or access billing settings tab)",
+        "statement": "System MUST enforce role-based access control for billing settings (permissions \"View Billing Settings\", default Owner and Billing Staff, and \"Edit Billing Settings\", held by the Owner only, not grantable to any other role, FR-031; roles without View cannot see or access the billing settings tab, and View-only users see it read-only)",
         "rationale": "Same rule as REQ-032-011 (Security & Privacy restatement), kept because the PRD numbers it separately. Edge case on Owner role change: REQ-032-079."
       }
     },
@@ -92208,12 +92208,12 @@
       "id": "REQ-032-031",
       "type": "Rule",
       "owner_fr": "FR-032",
-      "title": "Mandatory notices have no toggle",
+      "title": "Mandatory notices have no toggle and are always sent by email",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST NOT offer a provider notification preference toggle for any mandatory provider notice, and MUST deliver each mandatory notice to the affected provider regardless of notification type and channel preferences. Which notices are mandatory, to whom they go and what they say is defined by the notification Rules: FR-020 REQ-020-020 for the inquiry-cancelled quote notice (`quote.cancelled_inquiry`) and FR-030 Non-Disableable by Default for the others",
-        "rationale": "Restated by Business Rule 2, Screen 3 (no toggle; neither the Quote or Schedule toggles, \"Disable All\" nor channel preferences can suppress them), Main Flow step 4 toggle notes and Alternative Flow A5 step 6. Product owner decision log mtg002-quote-model-decisions-2026-10-16 Q12, Q42 and Q47 record these notices as mandatory. Screen: SCR-032-07."
+        "statement": "System MUST NOT offer a provider notification preference toggle for any mandatory provider notice, and MUST always send each mandatory notice to the affected provider by email, whatever the notification type toggles and the Email channel preference; Push and any other optional channel follow the provider's own setting, and the in-app record in notification history is always created (FR-020 REQ-020-038). Which notices are mandatory, to whom they go and what they say is defined by the notification Rules: FR-020 REQ-020-020 for the inquiry-cancelled quote notice (`quote.cancelled_inquiry`) and FR-030 Non-Disableable by Default for the others",
+        "rationale": "Restated by Business Rule 2, Screen 3 (no toggle; neither the Quote or Schedule toggles, \"Disable All\" nor the Email channel preference can suppress the email), Main Flow step 4 toggle notes and Alternative Flow A5 step 6. Product owner decision log mtg002-quote-model-decisions-2026-10-16 Q12, Q42 and Q47 record these notices as mandatory. Owner ruling 2026-11-25: a locked notice guarantees email only (FR-030 REQ-030-208). Screen: SCR-032-07."
       }
     },
     {
@@ -92763,9 +92763,9 @@
       "owner_fr": "FR-032",
       "title": "Disable-all needs confirmation",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "If all notification types are disabled, the system shows a confirmation dialog \"Warning: You have disabled all notifications. You may miss important updates about inquiries, appointments, and reviews. Are you sure?\" before saving. Email and Push may both be off for a type, and mandatory notices ignore the setting (REQ-032-143)",
+        "statement": "If all notification types are disabled, the system shows a confirmation dialog \"Warning: You have disabled all notifications. You may miss important updates about inquiries, appointments, and reviews. Are you sure?\" before saving. Email and Push may both be off for a type, and a mandatory notice is still sent by email while Push follows the provider's own setting (REQ-032-143)",
         "rationale": "Alternative Flow A5 dialog: \"Warning: You have disabled all notifications. You may miss important updates about inquiries, appointments, and reviews. Are you sure?\" Screen: SCR-032-07."
       }
     },
@@ -92775,9 +92775,9 @@
       "owner_fr": "FR-032",
       "title": "Channel preferences override type toggles",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Global channel preferences override individual notification types (e.g., if Email disabled, no notifications sent via email regardless of individual toggles); mandatory notices ignore the setting (REQ-032-143)",
+        "statement": "Global channel preferences override individual notification types (e.g., if Email disabled, no notifications sent via email regardless of individual toggles); mandatory notices are the exception for email (REQ-032-143)",
         "rationale": "Screen: SCR-032-07."
       }
     },
@@ -92785,12 +92785,12 @@
       "id": "REQ-032-081",
       "type": "Rule",
       "owner_fr": "FR-032",
-      "title": "Critical system alerts bypass preferences",
+      "title": "Critical system alerts are mandatory: always sent by email",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Critical system alerts (e.g., payment failure, security breach) bypass preferences and always sent via all available channels",
-        "rationale": "Screen 3; Business Rule 2."
+        "statement": "Critical system alerts (e.g., payment failure, security breach) are mandatory notices: always sent by email whatever the provider's preferences, while Push and any other optional channel follow the provider's own setting (FR-020 REQ-020-038, FR-030 REQ-030-208)",
+        "rationale": "Screen 3; Business Rule 2. Owner ruling 2026-11-25: a locked notice guarantees email only."
       }
     },
     {
@@ -93471,10 +93471,10 @@
       "owner_fr": "FR-032",
       "title": "Who edits what is fixed per area",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "System MUST apply the who-edits-what table in Screen 1 (General Business Rules): clinic profile, languages, awards and documents are edited by the Owner and a Manager by default, gated by the FR-031 permission \"Edit Profile\"; notification settings are gated by \"Edit Notification Settings\" (REQ-032-142); the account closure request by the Owner only; personal account settings by every role for their own account only; billing settings need the permission \"View and Edit Billing Settings\", held by FR-031 with the default Owner only (REQ-031-005).",
-        "rationale": "One table replaces the scattered role wording. The billing permission is owned by FR-031, not FR-009."
+        "statement": "System MUST apply the who-edits-what table in Screen 1 (General Business Rules): clinic profile, languages, awards and documents are edited by the Owner and a Manager by default, gated by the FR-031 permission \"Edit Profile\"; notification settings are gated by \"Edit Notification Settings\" (REQ-032-142); the account closure request by the Owner only; personal account settings by every role for their own account only; billing settings are viewed under \"View Billing Settings\" (default Owner and Billing Staff) and edited under \"Edit Billing Settings\" (held by the Owner only, not grantable to any other role), both held by FR-031 (REQ-031-005)",
+        "rationale": "One table replaces the scattered role wording. The billing permissions are owned by FR-031, not FR-009."
       }
     },
     {
@@ -93493,11 +93493,11 @@
       "id": "REQ-032-143",
       "type": "Rule",
       "owner_fr": "FR-032",
-      "title": "Support case notices are always sent",
+      "title": "Support case notices are always sent by email",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "System MUST send support case notices (admin reply, status change, resolved) always, with no toggle; Email and Push MAY both be off for a notification type, but mandatory notices ignore the setting.",
+        "statement": "System MUST send support case notices (admin reply, status change, resolved) always, with no toggle; Email and Push MAY both be off for a notification type, but a mandatory notice is still always sent by email, while Push follows the provider's own setting (FR-020 REQ-020-038).",
         "rationale": "A provider must not miss an admin answer on a support case."
       }
     },
@@ -103523,12 +103523,12 @@
       "id": "SCR-032-08",
       "type": "Screen",
       "owner_fr": "FR-032",
-      "title": "Billing Settings (Owner only)",
+      "title": "Billing Settings (Owner edits, Billing Staff views)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "platform": "provider",
-        "description": "Provider Platform, Settings > Billing, visible to the holder of the View and Edit Billing Settings permission, the Owner by default (PRD Screen 4): bank account details for payouts (form only when the payout method is Manual bank transfer; a Stripe Connect status panel with a Complete Stripe sign-up link otherwise) and the read-only Commission & Payout panel. UI controls, not fields: Edit / Save / Cancel buttons."
+        "description": "Provider Platform, Settings > Billing, visible to the holders of the View Billing Settings permission (grantable; Owner and Billing Staff by default) and editable only by the Owner, the only holder of Edit Billing Settings (not grantable); a View-only user sees it read-only with no edit, save or cancel controls and no Complete Stripe sign-up link (PRD Screen 4): bank account details for payouts (form only when the payout method is Manual bank transfer; a Stripe Connect status panel with a Complete Stripe sign-up link otherwise) and the read-only Commission & Payout panel. UI controls, not fields: Edit / Save / Cancel buttons."
       }
     },
     {
@@ -131737,7 +131737,7 @@
       "owner_fr": "FR-032",
       "title": "Navigate to Settings, Billing",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A8 (Billing Read-Only) step 1"
       }
@@ -131759,7 +131759,7 @@
       "owner_fr": "FR-032",
       "title": "Review the information",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A8 (Billing Read-Only) step 3"
       }
@@ -131770,7 +131770,7 @@
       "owner_fr": "FR-032",
       "title": "Make no changes",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A8 (Billing Read-Only) step 4"
       }
@@ -172383,6 +172383,12 @@
       "from_id": "ACT-provider-billing-staff",
       "verb": "uses",
       "to_id": "SCR-014-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "ACT-provider-billing-staff",
+      "verb": "uses",
+      "to_id": "SCR-032-08",
       "attrs": {}
     },
     {
@@ -299108,6 +299114,12 @@
     {
       "from_id": "REQ-032-011",
       "verb": "applies to",
+      "to_id": "ACT-provider-billing-staff",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-032-011",
+      "verb": "applies to",
       "to_id": "ACT-provider-owner",
       "attrs": {}
     },
@@ -299349,6 +299361,12 @@
       "from_id": "REQ-032-022",
       "verb": "applies at",
       "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-032-022",
+      "verb": "applies to",
+      "to_id": "ACT-provider-billing-staff",
       "attrs": {}
     },
     {
@@ -439956,6 +439974,12 @@
     {
       "from_id": "STP-032-153",
       "verb": "done by",
+      "to_id": "ACT-provider-billing-staff",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-153",
+      "verb": "done by",
       "to_id": "ACT-provider-owner",
       "attrs": {}
     },
@@ -440010,6 +440034,12 @@
     {
       "from_id": "STP-032-155",
       "verb": "done by",
+      "to_id": "ACT-provider-billing-staff",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-155",
+      "verb": "done by",
       "to_id": "ACT-provider-owner",
       "attrs": {}
     },
@@ -440029,6 +440059,12 @@
       "from_id": "STP-032-156",
       "verb": "at",
       "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-156",
+      "verb": "done by",
+      "to_id": "ACT-provider-billing-staff",
       "attrs": {}
     },
     {
@@ -461980,6 +462016,37 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-040639-6fb63795",
+      "at": "2026-11-25T04:06:39.908958+00:00",
+      "changed_by": "docs-manager",
+      "reason": "Owner rulings 2026-11-25: (A) Billing Staff views billing settings read-only by default, only the Owner edits; the permission View and Edit Billing Settings is split into View Billing Settings and Edit Billing Settings. (B) A locked notification guarantees email only; push follows the recipient's own setting.",
+      "source_id": "SRC-PRD-032",
+      "nodes_added": [],
+      "nodes_updated": [
+        "ACT-provider-billing-staff",
+        "FLW-032-billing-read-only",
+        "FLW-032-manage-billing-settings",
+        "FLW-032-non-owner-billing-access",
+        "REQ-031-068",
+        "REQ-031-118",
+        "REQ-032-011",
+        "REQ-032-022",
+        "REQ-032-031",
+        "REQ-032-079",
+        "REQ-032-080",
+        "REQ-032-081",
+        "REQ-032-141",
+        "REQ-032-143",
+        "SCR-032-08",
+        "STP-032-153",
+        "STP-032-155",
+        "STP-032-156"
+      ],
+      "edges_added": 6,
+      "edges_removed": 0,
+      "rows": 34
+    },
     {
       "id": "cs-20261125-040255-56f330e1",
       "at": "2026-11-25T04:02:55.073145+00:00",

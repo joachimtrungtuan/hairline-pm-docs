@@ -1646,7 +1646,7 @@ Option prices are never added together.
 - Providers MUST have access to a dedicated billing settings section
 - Main account holder (Owner) MUST be able to manage bank account details for payouts
 - System MUST support bank account information: account holder name, bank name, account number, routing/SWIFT code, IBAN (if applicable)
-- Billing settings MUST be accessible only to Owners (per FR-009 role permissions)
+- Only the Owner MUST be able to edit billing settings; Billing Staff can view them read-only by default (permissions View Billing Settings and Edit Billing Settings, FR-031; screen in FR-032)
 
 **Help Centre**:
 
@@ -1659,7 +1659,7 @@ Option prices are never added together.
 - FR-020: Notification preferences integration
 - FR-021: Language options (profile languages match system languages)
 - FR-026: Country codes and timezone lists
-- FR-009: Role-based access control (billing settings Owner-only)
+- FR-009: Role-based access control (billing settings: Owner edits, Billing Staff views read-only by default, see FR-032)
 - FR-017: Billing integration (bank account details for payouts)
 
 **Note**: Detailed requirements to be documented in dedicated FR-032 PRD.
@@ -2245,6 +2245,7 @@ These rules bind every module, screen, and Functional Requirement. The system PR
 | 1.3.0 | 2026-11-20 | Vân Tay Media | Requirements graph programme baseline: owner rulings applied (no Change Request, system document): new **Platform-Wide Rules** section owned by the system PRD with fourteen rules, each cited by title from the Functional Requirements (patient identity hidden until booking confirmation; one 10-year retention period for everything; soft deletes only; encryption in transit and at rest; no card numbers stored; core security controls fixed in code; password and one-time-code policy; admin API rate limit; role-based, audited access; times in the user's local time zone; GDPR and HIPAA-equivalent compliance; concurrent admin edits warn then last save wins; setting and policy changes apply to new cases only; download links expire and check permission); NFR-003 points to the rules instead of restating them; FR-023 and FR-002 and FR-003 summaries follow the 10-year period and the identity rule, leftover 7-year wording removed; payment flow lines follow the fund-release rulings (release per booking after completion and the confirmation window, then payout by Stripe Connect or settlement statement); booking status written as `In progress` (stored value unchanged); status line set to pending verification; cross-document reconciliation (admin quote edits after acceptance) |
 | 1.4.0 | 2026-11-23 | Vân Tay Media | Owner ruling 2026-11-23 (no Change Request, new baseline): the aftercare specialist is clinic staff on the provider side; the Hairline role is the Aftercare Coordinator. Persona 3 heading, Workflow 1 actors and the Aftercare Team Access lines reworded. |
 | 1.4.0 | 2026-11-25 | Vân Tay Media | Reference only, no version change: the Constitution Document pointer now names the canonical file `local-docs/project-requirements/constitution.md`. |
+| 1.4.0 | 2026-11-25 | Vân Tay Media | Reference only, no version change (owner ruling 2026-11-25, no Change Request, new baseline): billing settings are edited by the Owner only; Billing Staff can view them read-only by default (FR-031 permissions View Billing Settings and Edit Billing Settings, FR-032 Screen 4). |
 
 ---
 
