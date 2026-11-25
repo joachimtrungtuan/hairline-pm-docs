@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T08:49:34Z",
+  "generated_at": "2026-11-25T08:54:01Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -87031,9 +87031,9 @@
       "owner_fr": "FR-030",
       "title": "Rate limit notifications per recipient, limit set by admins",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST enforce rate limiting to prevent notification spam: a maximum number of notifications per hour per recipient, set by admins with a default of 10 (notices over the limit are held and sent in order in the next hour; locked (critical) notices are never held)",
+        "statement": "System MUST enforce rate limiting to prevent notification spam: a maximum number of notifications per hour per recipient, set by admins with a default of 10 (notices over the limit are held and sent in order in the next hour; critical notices are never held)",
         "rationale": "Functional Requirements Summary and General Module Rule 6. The limit is admin-editable (Screen 1 field Notification Rate Limit); it is no longer on the Fixed list."
       }
     },
@@ -88717,9 +88717,9 @@
       "owner_fr": "FR-030",
       "title": "Admin is alerted when a locked notice fails permanently",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Admin receives a system.alert (in-app and by a channel other than the failing one) when a locked (critical) notice fails permanently; admin contacts the recipient via alternative channel (phone, in-app message) to update email address",
+        "statement": "Admin receives a system.alert (in-app and by a channel other than the failing one) when a locked notice fails permanently; admin contacts the recipient via alternative channel (phone, in-app message) to update email address",
         "rationale": "prd.md lines 331, 332."
       }
     },
@@ -88763,11 +88763,11 @@
       "id": "REQ-030-164",
       "type": "Rule",
       "owner_fr": "FR-030",
-      "title": "Clicking a rule opens the Rule Editor; both screens offer a back link that preserves filters",
+      "title": "Clicking a rule opens the Rule Editor; both screens offer a back link that preserves filters and search context",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Clicking a rule row (or the Event Name link / \"Configure\" action) opens Screen 2: Alerts & Notifications (Rule Editor) for that event Rule Editor MUST include a clear \"Back to list\" / breadcrumb link returning to the Rules Dashboard with the previous filters preserved",
+        "statement": "Clicking a rule row (or the Event Name link / \"Configure\" action) opens Screen 2: Alerts & Notifications (Rule Editor) for that event Rule Editor MUST include a clear \"Back to list\" / breadcrumb link returning to the Rules Dashboard with the previous filters and search context preserved",
         "rationale": "prd.md lines 388, 389, 448."
       }
     },
@@ -89233,9 +89233,9 @@
       "owner_fr": "FR-030",
       "title": "Missing template variable renders a placeholder, logs a warning and alerts admin for locked notices",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System renders template with placeholder text for missing variable (e.g., \"[Phone number not provided]\") or omits section containing missing variable if template designed with conditional logic System logs warning in admin notification logs: \"Variable `patient.phone` not available for notification [notification_id]; rendered with placeholder\" Admin receives alert if missing variable affects a locked (critical) notice (e.g., payment confirmation missing the amount)",
+        "statement": "System renders template with placeholder text for missing variable (e.g., \"[Phone number not provided]\") or omits section containing missing variable if template designed with conditional logic System logs warning in admin notification logs: \"Variable `patient.phone` not available for notification [notification_id]; rendered with placeholder\" Admin receives alert if missing variable affects a locked notice (e.g., payment confirmation missing the amount)",
         "rationale": "prd.md lines 864, 865, 866, 867."
       }
     },
@@ -89449,9 +89449,9 @@
       "owner_fr": "FR-030",
       "title": "One platform-wide quiet-hours period, set only by admins",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Admins set one platform-wide quiet-hours period during which non-critical notifications are held and sent in order when it ends. It is set only on the Rules Dashboard by an admin; recipients and providers cannot set their own. Default: 10 PM to 7 AM in the recipient's local time; start and end must differ; locked (critical) notices are never held; the hourly rate limit still applies to the release",
+        "statement": "Admins set one platform-wide quiet-hours period during which non-critical notifications are held and sent in order when it ends. It is set only on the Rules Dashboard by an admin; recipients and providers cannot set their own. Default: 10 PM to 7 AM in the recipient's local time; start and end must differ; critical notices are never held; the hourly rate limit still applies to the release",
         "rationale": "Scope and Screen 1 field Quiet Hours. Replaces the retired provider business hours Rule REQ-030-110."
       }
     },
@@ -90305,6 +90305,54 @@
       "attrs": {
         "statement": "Aftercare Team Message (aftercare.team_message) is an admin-configurable notification event. Primary recipients: Patient. Sent when the aftercare team sends the patient a message or replies to the patient's Contact Support message (FR-011 REQ-011-103). Channels push and email; it opens the Messages list on the patient Aftercare Dashboard",
         "rationale": "Event Catalog table, row aftercare.team_message. Category: Aftercare."
+      }
+    },
+    {
+      "id": "REQ-030-296",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Team Member Compliance Flag Raised",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Team Member Compliance Flag Raised (team.compliance_flag_raised) is an admin-configurable notification event. Primary recipients: Admin (compliance team). Sent to the admin compliance team when a compliance flag is raised on a provider team member (FR-009 REQ-009-135)",
+        "rationale": "Event Catalog table, row team.compliance_flag_raised. Category: Provider Team. Event nodes: EVT-team-compliance-flag-raised."
+      }
+    },
+    {
+      "id": "REQ-030-297",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Payout Statements Ready for Review",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Payout Statements Ready for Review (payout.statements_ready_for_review) is an admin-configurable notification event. Primary recipients: Admin. Sent when the cutoff-day job has created the payout statements for review: the notice says how many statements are ready and gives the payout date (FR-017 REQ-017-041). MVP default channels: Email + Push",
+        "rationale": "Event Catalog table, row payout.statements_ready_for_review. Category: Billing/Payouts. Event nodes: EVT-billing-statements-ready-for-review."
+      }
+    },
+    {
+      "id": "REQ-030-298",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Overdue Payout Alert",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Overdue Payout Alert (payout.statement_overdue) is an admin-configurable notification event. Primary recipients: Admin. Sent on payout day when a statement was not approved between the cutoff day and the payout day and became Overdue (FR-017 REQ-017-153, REQ-017-035). MVP default channels: Email + Push",
+        "rationale": "Event Catalog table, row payout.statement_overdue. Category: Billing/Payouts. Event nodes: EVT-billing-overdue-payout-alert."
+      }
+    },
+    {
+      "id": "REQ-030-299",
+      "type": "Rule",
+      "owner_fr": "FR-030",
+      "title": "Catalog event: Outstanding Invoice Alert",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Outstanding Invoice Alert (payment.outstanding_invoice_alert) is an admin-configurable notification event. Primary recipients: Admin. Internal alert sent when a patient invoice has been overdue for the alert threshold, an admin setting in days overdue (default 7) (FR-017 REQ-017-182). MVP default channels: Email + Push",
+        "rationale": "Event Catalog table, row payment.outstanding_invoice_alert. Category: Billing/Payouts. Event nodes: EVT-billing-outstanding-invoice-alert."
       }
     },
     {
@@ -184959,7 +185007,7 @@
       "verb": "active in",
       "to_id": "STG-main-05-payment",
       "attrs": {
-        "rules": 11
+        "rules": 12
       },
       "derived": true
     },
@@ -185047,9 +185095,18 @@
     {
       "from_id": "FR-030",
       "verb": "active in",
-      "to_id": "STG-payout-02-approval",
+      "to_id": "STG-payout-01-statement",
       "attrs": {
         "rules": 1
+      },
+      "derived": true
+    },
+    {
+      "from_id": "FR-030",
+      "verb": "active in",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {
+        "rules": 2
       },
       "derived": true
     },
@@ -185085,7 +185142,7 @@
       "verb": "active in",
       "to_id": "STG-provider-03-active",
       "attrs": {
-        "rules": 30
+        "rules": 31
       },
       "derived": true
     },
@@ -296034,6 +296091,102 @@
     },
     {
       "from_id": "REQ-030-295",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-296",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-296",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-296",
+      "verb": "applies to",
+      "to_id": "EVT-team-compliance-flag-raised",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-296",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-297",
+      "verb": "applies at",
+      "to_id": "STG-payout-01-statement",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-297",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-297",
+      "verb": "applies to",
+      "to_id": "EVT-billing-statements-ready-for-review",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-297",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-298",
+      "verb": "applies at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-298",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-298",
+      "verb": "applies to",
+      "to_id": "EVT-billing-overdue-payout-alert",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-298",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-299",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-299",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-299",
+      "verb": "applies to",
+      "to_id": "EVT-billing-outstanding-invoice-alert",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-030-299",
       "verb": "decided by",
       "to_id": "SRC-PRD-030",
       "attrs": {}
@@ -463575,6 +463728,29 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-085247-2e5d53e9",
+      "at": "2026-11-25T08:52:47.237341+00:00",
+      "changed_by": "controller",
+      "reason": "Backlog points settled for FR-030: critical/locked wording aligned with REQ-030-208, back link keeps filters and search context, catalogue rows for the compliance flag notice (FR-009 REQ-009-135) and three admin billing alerts (FR-017 REQ-017-041, REQ-017-153, REQ-017-182).",
+      "source_id": "SRC-PRD-030",
+      "nodes_added": [
+        "REQ-030-296",
+        "REQ-030-297",
+        "REQ-030-298",
+        "REQ-030-299"
+      ],
+      "nodes_updated": [
+        "REQ-030-017",
+        "REQ-030-157",
+        "REQ-030-164",
+        "REQ-030-204",
+        "REQ-030-224"
+      ],
+      "edges_added": 16,
+      "edges_removed": 0,
+      "rows": 46
+    },
     {
       "id": "cs-20261125-084820-cbe2eab4",
       "at": "2026-11-25T08:48:20.901100+00:00",

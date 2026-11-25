@@ -182,6 +182,9 @@ Notes:
 | Billing/Payouts | Funds Released to Clinic | `payout.funds_released` | Provider | Fired when money held for a booking is released to the clinic; states the booking and the amount released. MVP default channels: Email + Push | REQ-030-221 |
 | Billing/Payouts | Cancellation Charge Deducted | `payout.cancellation_charge_deducted` | Provider | Fired when a cancellation charge is deducted from the clinic's money; states the booking, the amount deducted and that the reason is a cancellation. MVP default channels: Email + Push | REQ-030-222 |
 | Billing/Payouts | Payout Dispute Resolved | `payout.dispute_resolved` | Provider | Sent when an admin saves a dispute resolution (FR-017 REQ-017-111): automatic and mandatory for Add to Next Payout and Pay Now, and for the other resolution actions only when the admin ticks Notify Provider. **Locked:** the toggle cannot be switched off | REQ-030-261 |
+| Billing/Payouts | Payout Statements Ready for Review | `payout.statements_ready_for_review` | Admin | Sent when the cutoff-day job has created the payout statements for review: the notice says how many statements are ready and gives the payout date (FR-017 REQ-017-041). MVP default channels: Email + Push | REQ-030-297 |
+| Billing/Payouts | Overdue Payout Alert | `payout.statement_overdue` | Admin | Sent on payout day when a statement was not approved between the cutoff day and the payout day and became Overdue (FR-017 REQ-017-153, REQ-017-035). MVP default channels: Email + Push | REQ-030-298 |
+| Billing/Payouts | Outstanding Invoice Alert | `payment.outstanding_invoice_alert` | Admin | Internal alert sent when a patient invoice has been overdue for the alert threshold, an admin setting in days overdue (default 7) (FR-017 REQ-017-182). MVP default channels: Email + Push | REQ-030-299 |
 | Messaging/Support | New Message Received | `message.received` | Patient, Provider, Admin (optional) | Real-time notification for new messages | REQ-030-061 |
 | Messaging/Support | Admin Intervention Notice | `message.admin_intervention` | Patient, Provider | Sent to both parties of a conversation when an Admin intervenes in it (FR-012 REQ-012-007). **Locked:** the toggle cannot be switched off and the notice is held for no one | REQ-030-255 |
 | Messaging/Support | Keyword Flag Raised | `message.keyword_flag_raised` | Admin | Sent to Admins when a conversation is flagged for a policy keyword, with a link to the flagged conversation (FR-012 REQ-012-094, REQ-012-026). The patient and the provider are not told. **Locked:** the toggle cannot be switched off | REQ-030-256 |
@@ -254,6 +257,7 @@ Notes:
 | Provider Team | Team Member Suspended or Reactivated | `team.member_suspended` / `team.member_reactivated` | Provider (the affected team member) | Sent to the member when a suspension is set and again when it is lifted (FR-009 REQ-009-082, REQ-009-192) | REQ-030-282 |
 | Provider Team | Owner Role Handed Over | `team.owner_handover` | Provider Owner (the new Owner and the previous Owner) | Email to both when a Hairline admin hands the Owner role to another team member (FR-009 REQ-009-174) | REQ-030-283 |
 | Provider Team | Team Invitation Delivery Failed | `team.invitation_delivery_failed` | Admin | Sent when an invitation email still fails once the retry rule is exhausted (FR-009 REQ-009-055) | REQ-030-284 |
+| Provider Team | Team Member Compliance Flag Raised | `team.compliance_flag_raised` | Admin (compliance team) | Sent to the admin compliance team when a compliance flag is raised on a provider team member (FR-009 REQ-009-135) | REQ-030-296 |
 | System/Operations | System Escalation | `system.escalation` | Admin | Operational escalation events requiring admin action; also the escalation notice S-03 sends to the escalation recipients when a locked notice meets its escalation condition (Not delivered or Not opened after the wait time). **Mandatory — admin cannot disable this event; toggle locked** | REQ-030-103 |
 | System/Operations | System Alert | `system.alert` | Admin | System health/monitoring alerts surfaced via notifications; also raised when a locked notice fails permanently, in-app and by a channel other than the failing one. **Mandatory — admin cannot disable this event; toggle locked** | REQ-030-104 |
 | System/Operations | Provider Role Sync Failed | `system.role_sync_failed` | Admin (all Super Admins) | In-app alert sent when a provider role permission change fails to reach the Provider Platform after the automatic retries (FR-031 REQ-031-130) | REQ-030-292 |
@@ -393,10 +397,10 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
   5. If retry is enabled and the bounce is soft (for example mailbox full), system queues a retry after the retry interval (platform default 1 hour; see General Module Rule 7); a hard bounce (for example an invalid address) is not retried and is marked "Failed - Permanent" at once
   6. After ordinary retries are exhausted (platform default 3; an admin may set 1 to 5), system marks notification as "Failed - Permanent"; while an email provider outage lasts, the notice is held for up to 24 hours and then marked "Failed - Service Outage" without using up its retries
   7. System flags the recipient's account with an "Email delivery issue" indicator, whatever the account type: the flag is set on the patient account or on the provider account according to who the recipient is. Admins see it on the admin patient detail (FR-016) and on the provider detail (FR-015 Screen 3, REQ-015-141); no admin action sets or clears it. The flag clears by itself when a later email to that address is delivered successfully, or when the account's email address is changed and verified
-  8. If the notice is a locked (critical) notice, system raises a `system.alert` to admins, in-app and by a channel other than the failing one
+  8. If the notice is a locked notice, system raises a `system.alert` to admins, in-app and by a channel other than the failing one
   9. Admin contacts the recipient via alternative channel (phone, in-app message) to update email address
   10. Once the address is updated, admin selects Retry on the failed notice in the Failed Deliveries list; the system sends it again (allowed only for status Failed) and logs the retry
-- **Outcome**: Failed delivery logged; admin alerted for locked (critical) notices; account flagged for follow-up; admin can retry the failed notice
+- **Outcome**: Failed delivery logged; admin alerted for locked notices; account flagged for follow-up; admin can retry the failed notice
 
 **B2: Template Variable Missing or Invalid**:
 
@@ -447,8 +451,8 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 | Add Rule | button | Yes | Starts a new rule in Draft status for a chosen event from the event catalog, including an event that already has a rule (see Workflow B3) | Permission-based visibility; Rule Name must be unique for that event | no graph field (control) |
 | Notification Analytics | dashboard panel | Yes | Delivery metrics for the selected period: total sent, delivered, failed, opened (email) and clicked (email), grouped by event type, channel and recipient type (REQ-030-010) | Display only; date range filter; read from the delivery logs | no graph field (dashboard panel) |
 | Failed Deliveries | drill-down list | No | Opens from the failed count in Notification Analytics and lists each failed delivery with masked recipient, event type, channel, failure reason, status (Failed - Permanent or Failed - Service Outage) and timestamp; admin can filter by failure reason and export to CSV; each row has one action, Retry, which sends that failed notice again, is allowed only for status Failed and is logged (REQ-030-226) | Recipient contact masked per Privacy Rule 1 | no graph field (drill-down list) |
-| Quiet Hours | time range | Yes | The one platform-wide period during which non-critical notifications are held and sent in order when it ends. Set only here by an admin; recipients and providers cannot set their own (REQ-030-224) | Default: 10 PM to 7 AM in the recipient's local time; start and end must differ; locked (critical) notices are never held; the hourly rate limit still applies to the release | no graph field (setting SET-messaging-notification-preferences) |
-| Notification Rate Limit | number | Yes | Maximum number of notifications one recipient receives per hour; notices over the limit are held and sent in order in the next hour, and locked (critical) notices are never held (REQ-030-017) | Whole number, min 1; default 10 | no graph field (setting SET-notification-throttling-thresholds) |
+| Quiet Hours | time range | Yes | The one platform-wide period during which non-critical notifications are held and sent in order when it ends. Set only here by an admin; recipients and providers cannot set their own (REQ-030-224) | Default: 10 PM to 7 AM in the recipient's local time; start and end must differ; critical notices are never held; the hourly rate limit still applies to the release | no graph field (setting SET-messaging-notification-preferences) |
+| Notification Rate Limit | number | Yes | Maximum number of notifications one recipient receives per hour; notices over the limit are held and sent in order in the next hour, and critical notices are never held (REQ-030-017) | Whole number, min 1; default 10 | no graph field (setting SET-notification-throttling-thresholds) |
 | Transplant Progress Reminder Schedule | number + unit | Yes | How often the default patient progress reminder is sent on a transplant-progress case, and for how long, counted from the case creation date. The patient may change or switch off their own reminders; FR-038 refers to this schedule (REQ-030-225) | Default: once a month for 12 months from the case creation date | no graph field (setting SET-transplant-progress-reminder-defaults) |
 | Aftercare Progress Reminder Schedule | number + unit | Yes | How often the default patient progress reminder is sent during aftercare, and for how long, counted from the treatment completion date. The patient may change or switch off their own reminders; the default is the FR-011 setting (REQ-011-088) (REQ-030-252) | Default: once a month for 12 months after treatment | no graph field (setting SET-aftercare-progress-reminder-default) |
 
@@ -461,7 +465,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 - See REQ-030-159 and REQ-030-228.
 - Testing a rule sends sample notification to admin's registered email/phone immediately
 - Clicking a rule row (or the Event Name link / "Configure" action) opens **Screen 2: Alerts & Notifications (Rule Editor)** for that event (REQ-030-164)
-- Rule Editor MUST include a clear "Back to list" / breadcrumb link returning to the Rules Dashboard with the previous filters preserved
+- Rule Editor MUST include a clear "Back to list" / breadcrumb link returning to the Rules Dashboard with the previous filters and search context preserved
 
 **Notes**:
 
@@ -550,6 +554,7 @@ These event types may exist in backend roadmap but MUST NOT appear in admin UI u
 | Available Variables | list (read-only) | Yes | Variables available for this event type (e.g., `{{patient.display_name}}`, `{{booking.date}}`) | Display only; click to insert | ENT-notification-template.available_variables |
 | Variable Preview Values | JSON editor | No | Sample values for template preview | Valid JSON; used only for preview | no graph field (preview only) |
 | Template Status | select (dropdown) | Yes | Active, Draft, Archived | Default: Draft; archiving or setting Draft on a template that an Active rule uses is refused with a message naming the rule | ENT-notification-template.status |
+| Template Version History | list (read-only) | No | The saved versions of this template, each with its version number, kept for audit; Revert by Creating New Version starts from a selected prior version (REQ-030-183, REQ-030-212) | Display only | ENT-notification-template.version_number |
 
 **Business Rules**:
 
@@ -782,7 +787,7 @@ Admin needs to monitor notification delivery performance to identify and resolve
 - How does system handle **template variable missing in event payload at runtime** (e.g., template uses `{{patient.phone}}` but phone number not provided in patient profile)?
   - System renders template with placeholder text for missing variable (e.g., "[Phone number not provided]") or omits section containing missing variable if template designed with conditional logic
   - System logs warning in admin notification logs: "Variable `patient.phone` not available for notification [notification_id]; rendered with placeholder"
-  - Admin receives alert if missing variable affects a locked (critical) notice (e.g., payment confirmation missing the amount) (REQ-030-204)
+  - Admin receives alert if missing variable affects a locked notice (e.g., payment confirmation missing the amount) (REQ-030-204)
 
 - Which contact does system deliver to?
   - Profiles hold one email address and one phone number each (FR-001, FR-032); delivery goes to them, and there is no secondary-contact retry and no double send (REQ-030-205)
@@ -839,7 +844,7 @@ Admin needs to monitor notification delivery performance to identify and resolve
 
 - **REQ-030-015**: System MUST encrypt notification templates at rest using AES-256; decrypt only during template rendering in S-03 Notification Service
 - **REQ-030-016**: System MUST mask recipient contact information (email, phone) in admin interfaces to protect privacy (e.g., "mar***@example.com", "+44***1234")
-- **REQ-030-017**: System MUST enforce rate limiting to prevent notification spam: a maximum number of notifications per hour per recipient, set by admins with a default of 10 (notices over the limit are held and sent in order in the next hour; locked (critical) notices are never held)
+- **REQ-030-017**: System MUST enforce rate limiting to prevent notification spam: a maximum number of notifications per hour per recipient, set by admins with a default of 10 (notices over the limit are held and sent in order in the next hour; critical notices are never held)
 - **REQ-030-018**: System MUST HTML-escape all template variables during rendering to prevent XSS attacks from user-generated content
 - **REQ-030-019**: System MUST respect recipient opt-out preferences for notifications that are not locked (marketing, general updates); locked notices are always sent by email despite opt-out, with in-app explanation, while push follows the recipient's own setting
 - **REQ-030-020**: System MUST record every notification rule change in the audit trail with admin user ID, timestamp, change summary, old and new configuration, IP address and reason (if provided); audit log retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
@@ -853,7 +858,7 @@ Admin needs to monitor notification delivery performance to identify and resolve
 - **REQ-030-025**: System MUST publish notification events to audit log service (Elasticsearch, CloudWatch Logs) for compliance and troubleshooting
 - **REQ-030-026**: System MUST list `aftercare.provider_reassigned` (FR-011 producer; Patient and new aftercare provider) as a locked mandatory event that FR-032 preferences cannot suppress, and MUST raise `provider.status_cancellation_admin_support`, never `booking.provider_fault_replacement`, when a provider-status event leaves an `In Progress` booking open with `supportRequired` for an admin decision
 - **REQ-030-156**: System flags the recipient's account with an "Email delivery issue" indicator, whatever the account type: the flag is set on the patient account or on the provider account according to the recipient, and admins see it on the admin patient detail (FR-016) and on the provider detail (FR-015 Screen 3, REQ-015-141). No admin action sets or clears the flag. System clears it automatically when a later email to that address is delivered successfully, or when the account's email address is changed and verified
-- **REQ-030-157**: Admin receives a `system.alert` (in-app and by a channel other than the failing one) when a locked (critical) notice fails permanently; admin contacts the recipient via alternative channel (phone, in-app message) to update email address
+- **REQ-030-157**: Admin receives a `system.alert` (in-app and by a channel other than the failing one) when a locked notice fails permanently; admin contacts the recipient via alternative channel (phone, in-app message) to update email address
 - **REQ-030-158**: System displays error: "Variable `patient.procedure_date` not available for this event. Available variables: [list]"
 
 ---
@@ -872,6 +877,7 @@ Admin needs to monitor notification delivery performance to identify and resolve
 | 2026-11-25 | 1.28 | Owner ruling 2026-11-25: providers carry the same email delivery issue flag as patients, shown to admins (patient detail in FR-016, provider detail in FR-015 Screen 3, REQ-015-141). Bounce flow B1 step 7 and REQ-030-156 now say the flag sits on the patient or provider account according to the recipient, and state a clear condition (cleared automatically when a later email to that address is delivered, or when the email address is changed and verified; no admin action). The `quote.expired` catalogue row notes that an admin-authored replacement quote notifies the patient only. | Claude (AI Assistant) |
 | 2026-11-25 | 1.29 | Owner ruling 2026-11-25 follow-up: the quote.cancelled_inquiry row excludes the provider of a replacement quote, whether draft or sent (REQ-030-039). | Claude (AI Assistant) |
 | 2026-11-25 | 1.30 | Owner ruling 2026-11-25: new catalogue event `aftercare.team_message` (REQ-030-295), sent to the patient when the aftercare team writes or replies (FR-011 REQ-011-103). | Claude (AI Assistant) |
+| 2026-11-25 | 1.31 | Backlog points settled: the catalogue gains three admin billing alerts (REQ-030-297 to REQ-030-299) and the team compliance flag notice (REQ-030-296); the Template Editor lists the template version history; the back link keeps filters and search context; the shorthand "locked (critical)" now reads "locked" or "critical" as each rule needs. | Claude (AI Assistant) |
 
 ---
 
