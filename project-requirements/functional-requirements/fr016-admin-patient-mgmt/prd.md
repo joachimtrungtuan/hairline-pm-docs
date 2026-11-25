@@ -33,7 +33,7 @@ This is a critical operational module that ensures the platform can provide effe
 - **Patient Platform (P-##)**: No direct patient-facing functionality - patients are unaware of admin oversight (REQ-016-033)
 - **Provider Platform (PR-##)**: No provider-facing functionality - providers don't see admin interventions (REQ-016-033)
 - **Admin Platform (A-01)**: Full patient management interface with search, view, edit, and oversight capabilities
-- **Admin Platform Role Model**: Admin roles and permissions follow FR-031 (Admin Access Control & Permissions): default roles Super Admin, Aftercare Coordinator, Billing Staff, and Support Staff, plus custom roles (REQ-016-198)
+- **Admin Platform Role Model**: Admin roles and permissions follow FR-031 (Admin Access Control & Permissions): default roles Super Admin, Aftercare Coordinator, Billing Admin, and Support Staff, plus custom roles (REQ-016-198)
 - **Shared Services (S-##)**: Uses S-03 (Notification Service) for alerts and S-05 (Media Storage Service) for accessing patient scans
 
 ### Multi-Tenant Breakdown
@@ -226,7 +226,7 @@ This is a critical operational module that ensures the platform can provide effe
   4. Admin enters justification: "Patient requested password reset via Support Center case #1234"
   5. Admin confirms action
   6. System generates password reset token (REQ-016-050)
-  7. System sends email to patient with reset link (6-digit OTP) (REQ-016-050)
+  7. System sends email to patient with reset link (6-digit OTP); when the patient completes the reset, every existing session of the patient ends on every device (REQ-016-050, FR-001 REQ-001-182)
   8. System logs admin action in audit trail
   9. System displays: "Password reset email sent to patient"
 - **Outcome**: Patient receives reset email and can regain account access
@@ -243,7 +243,7 @@ This is a critical operational module that ensures the platform can provide effe
   6. Admin enters detailed justification: "Multiple fraudulent payment attempts - 3 chargebacks in 1 month"
   7. Admin selects suspension duration: 30 days, 90 days, Permanent
   8. Admin confirms suspension
-  9. System immediately revokes patient authentication tokens (REQ-016-053)
+  9. System immediately revokes patient authentication tokens, which ends every existing session of the patient on every device (REQ-016-053, FR-001 REQ-001-182)
   10. System cancels each booking in `Accepted`, `Payment Window Expired` or `Confirmed` through the FR-006 admin booking cancellation, with the cancellation cause "Patient account suspended" and the fixed reason "Booking cancelled because the patient account was suspended" sent to the patient and the provider; the admin justification stays in the audit entry only; refunds follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault) (REQ-016-217, REQ-016-219)
   11. If a cancellation fails, the suspension still applies, the failed bookings are listed for admin follow-up and marked "Cancellation failed" on the patient's Overview tab, and the admin retries each through the FR-006 cancel action (REQ-016-218)
   12. System sends suspension notification to patient; the notice tells the patient to contact support to appeal, which creates an FR-034 support ticket (REQ-016-054)
@@ -268,7 +268,7 @@ This is a critical operational module that ensures the platform can provide effe
 - **Steps**:
   1. Admin opens the Locked patient and clicks "Unlock Account" (needs Edit Patients) (REQ-016-009, REQ-016-110)
   2. Admin enters a justification and confirms
-  3. System sets the account to Active and logs Account Unlock (REQ-016-009, REQ-016-049)
+  3. System sets the account to Active, clears the lock time, resets the failed-attempt count (FR-001 REQ-001-007) and logs Account Unlock (REQ-016-009, REQ-016-049)
 - **Outcome**: The patient can log in again
 
 **A11: A timed suspension ends by itself**:
@@ -341,7 +341,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 |------------|------|----------|-------------|------------------|-------------|
 | Search Input | text | No | Search by name, email, patient code, phone | Min 2 characters (REQ-016-180) | ENT-patient.name, ENT-patient.email, ENT-patient.patient_id, ENT-patient.phone |
 | Status Filter | multi-select | No | Filter by journey stage | Options: Inquiry, Quoted, Accepted, Confirmed, In Progress, Aftercare, Completed, Cancelled (the FR-003 stage list) (REQ-016-182) | ENT-inquiry.stage |
-| Account Status Filter | multi-select | No | Filter by account status | Options: Active, Suspended, Locked (REQ-016-183) | ENT-patient.account_status |
+| Account Status Filter | multi-select | No | Filter by account status | Options: Active, Suspended, Locked; Deactivated is a reserved FR-001 value that nothing sets or shows, so it is not offered (REQ-016-183, FR-001 REQ-001-188) | ENT-patient.account_status |
 | Date Range Filter | date-range | No | Filter by registration date or last activity | Start date ≤ End date (REQ-016-209) | ENT-patient.registration_date, ENT-patient.last_activity_at |
 | Location Filter | select | No | Filter by patient country | Country list from admin settings (REQ-016-210) | ENT-patient.country |
 | Provider Filter | select | No | Filter by assigned provider | Active providers only (REQ-016-181) | ENT-booking.provider_id |
@@ -401,6 +401,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 | Patient Name | text | Yes (display only) | Full legal name | Read-only | ENT-patient.name |
 | Patient Code | text | Yes (display only) | Unique identifier (e.g., HP258742) | Read-only | ENT-patient.patient_id |
 | Email | email | Yes (display only) | Contact email | Read-only | ENT-patient.email |
+| Email Verified | badge | Yes (display only) | Whether the patient has confirmed the email with a code; an "Email change pending" mark shows beside it while a new address waits for the patient's code | Read-only (REQ-016-226) | ENT-patient.email_verified, ENT-patient.pending_email |
 | Phone | text | Yes (display only) | Phone with country code | Read-only | ENT-patient.phone |
 | Date of Birth | date | No (display only) | Patient age calculation | Read-only | ENT-patient.date_of_birth |
 | Location | text | Yes (display only) | Country, city | Read-only | ENT-patient.country, ENT-patient.city |
@@ -408,7 +409,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 | Last Activity | datetime | Yes (display only) | Most recent platform action | Read-only | ENT-patient.last_activity_at |
 | Current Status | badge | Yes (display only) | Journey stage | Read-only, color-coded | ENT-inquiry.stage |
 | Assigned Provider | link | No (display only) | Provider name (if applicable) | Click to navigate to provider profile | ENT-booking.provider_id |
-| Account Status | badge | Yes (display only) | Active, Suspended, Locked | Read-only, color-coded | ENT-patient.account_status |
+| Account Status | badge | Yes (display only) | Active, Suspended, Locked; Deactivated is reserved by FR-001 (REQ-001-188) and never set or shown | Read-only, color-coded | ENT-patient.account_status |
 | Suspension End Date | date | Conditional (display only) | When a 30-day or 90-day suspension ends and the account returns to Active by itself | Read-only; only shown when Account Status = Suspended for 30 or 90 days (REQ-016-201) | ENT-patient.suspension_end_date |
 | Cancellation Reason | text | Conditional (display only) | Patient-selected cancellation reason (from FR-026 Screen 5a options), or provider-caused cause `ProviderSuspended` / `ProviderDeactivated` (FR-015 A5) | Read-only; only shown when Current Status = Cancelled | ENT-inquiry.cancellation_reason, ENT-provider-inquiry.cancellation_cause |
 | Cancellation Timestamp | datetime | Conditional (display only) | When the inquiry was cancelled by the patient | Read-only; only shown when Current Status = Cancelled | ENT-inquiry.cancelled_at |
@@ -420,6 +421,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 
 - All personal information displayed is read-only in Overview tab (REQ-016-098)
 - Admin must use "Edit Patient" button to modify profile fields (REQ-016-099)
+- An email change made with Edit Patient is saved as unverified, a notice goes to the old address, and the patient confirms a code sent to the new address at the next login (FR-001 REQ-001-184); an address already in use is refused. The Overview shows the verification state and an "Email change pending" mark (REQ-016-226)
 - Patient code is hyperlinked (click to copy to clipboard) (REQ-016-100)
 - Email and phone are clickable (email opens mail client, phone copies to clipboard) (REQ-016-101)
 - "Assigned Provider" link navigates to provider management module (REQ-016-102)
@@ -544,13 +546,13 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 - Stripe Payment ID links directly to Stripe dashboard for admins with Stripe access (REQ-016-136)
 - "Issue Refund" button available only for succeeded payments (REQ-016-137)
 - Refunds require admin justification; "Issue Refund" enters an FR-007 manual refund, which another admin with billing permission approves or denies as FR-007 sets (the requesting admin never approves their own), and amounts > $1,000 trigger an extended confirmation modal in addition; the threshold is in US dollars, and amounts in other currencies are converted at the rate FR-007 applies to that payment (REQ-016-011, REQ-016-020, REQ-016-221)
-- "Retry Payment" calls the FR-007B Retry Charge action (FR-016 has no retry of its own), and "Retry Payment" and "Send Payment Reminder" both use the same access as that action (REQ-016-070, REQ-016-140)
+- "Retry Payment" calls the FR-007B Retry Charge action (FR-016 has no retry of its own), "Retry Payment" needs the Retry Charge permission and "Send Payment Reminder" needs Send Payment Reminders (REQ-016-070, REQ-016-140)
 - Installment plans show: total installments, paid installments, remaining installments, next due date (REQ-016-138)
 
 **Notes**:
 
 - Payment timeline visualization shows payment schedule vs. actual payments (REQ-016-139)
-- "Send Payment Reminder" button for overdue installments (REQ-016-140)
+- "Send Payment Reminder" button for overdue installments; it needs the FR-031 Send Payment Reminders permission, held by Super Admin and Billing Admin by default (REQ-016-140)
 - "Export Transactions" generates CSV for accounting purposes (REQ-016-141)
 - Real-time payment status updates (WebSocket notification when payment succeeds/fails) (REQ-016-142)
 - Commission calculation shown: Total Amount, Provider Share, Hairline Commission (REQ-016-143)
@@ -579,12 +581,12 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 
 - All messages are read-only; admins cannot send messages from this view (REQ-016-144)
 - Conversations grouped by partner: "With Provider: Dr. Mehmet's Clinic", "With Support Team", "With Aftercare Team" (REQ-016-145)
-- Flagged conversations highlighted in red (flagged by automated keyword detection or manual provider report) (REQ-016-146)
-- Keywords that trigger auto-flagging: "outside platform", "direct payment", "bank transfer", "WhatsApp", phone numbers, email addresses (REQ-016-147)
-- Admin can manually flag/unflag conversations with justification (REQ-016-148)
+- Flagged conversations are highlighted by flag type as in FR-012: red for an automatic keyword flag, orange for a manual observation flag; system flags follow FR-012. A flag is resolved, never removed (REQ-016-146)
+- The words that trigger automatic flags are the keyword list in the FR-012 Screen 5 Moderation settings (FR-012 REQ-012-105), not a fixed list on this tab (REQ-016-147)
+- Admin can add a manual observation flag with a justification and resolve an open flag with a note; a flag is resolved, never unflagged or removed (FR-012 REQ-012-109, REQ-012-023) (REQ-016-148)
 - Message thread displays chronologically with clear sender identification (REQ-016-149)
 - Images in messages displayed as thumbnails; click to view full size (REQ-016-150)
-- Export conversation as PDF for dispute resolution documentation (REQ-016-151)
+- Conversation export is deferred to a future phase, as in FR-012 (REQ-012-061, REQ-012-076); this tab has no Export control until then (REQ-016-151)
 
 **Notes**:
 
@@ -594,7 +596,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 - Search within conversation thread functionality (REQ-016-154)
 - Real-time updates: New messages appear without page refresh (REQ-016-155)
 - Flagged conversations generate notification in admin dashboard (REQ-016-156)
-- Anonymized patient identity maintained in pre-payment messages (display as "Patient #HP12345") (REQ-016-157)
+- Admins see the patient's real identity on this tab; the masked identifier "Patient #HP12345" applies only on the provider screens until payment is confirmed (FR-012 REQ-012-028) (REQ-016-157)
 
 ---
 
@@ -692,7 +694,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 | Request Type Filter | select | No | Filter by request type | Options: All, Cancellation, Appointment Change | ENT-support-case.request_type |
 | Request Status Filter | select | No | Filter by request status | Options: Open, Resolved, Declined; default Open (REQ-016-192) | ENT-support-case.request_status |
 | Requests Table | table | Yes (display only) | One row per request | Sorted by oldest open request first (REQ-016-193) | no graph field (list of the column rows below) |
-| Table Column: Support Case Reference | link | Yes (display only) | FR-034 support case that holds the request | Opens the support case | ENT-support-case.case_id |
+| Table Column: Support Case Reference | link | Yes (display only) | FR-034 support case that holds the request | Opens the support case for an admin with View Support Center; for an admin without it the reference is plain text with no link (FR-034 REQ-034-094; REQ-016-227) | ENT-support-case.case_id |
 | Table Column: Patient | text | Yes (display only) | Patient name and HPID | Click opens the patient Overview tab | ENT-patient.name, ENT-patient.patient_id |
 | Table Column: Booking Reference and Status | text | Yes (display only) | Booking reference and current booking status | Read-only | ENT-booking.booking_reference, ENT-booking.status |
 | Table Column: Current Appointment | datetime | Yes (display only) | The booking's current appointment date and time with time zone | Read-only | ENT-booking.appointment_at, ENT-booking.appointment_timezone |
@@ -711,7 +713,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 - A request becomes Resolved when its FR-006 action completes, and Declined when the admin records a decline reason; the patient is answered through the FR-034 support case in both cases (REQ-016-177)
 - Every action on this screen is logged on Screen 7 with the request and booking references (REQ-016-178)
 - Refund amounts and cancellation fees are not set here; they follow the refund rules in FR-006 (Payment & Billing Rules: the refund ladder set in FR-029, or the provider-fault terms where the provider is at fault) (REQ-016-179)
-- Each request is an FR-034 support case whose Ticket Source shows that the patient raised it through Contact Support on an FR-006 booking screen; the Ticket Source values are defined by FR-034 (REQ-016-208)
+- Each request is an FR-034 support case that carries a request type (booking cancellation or booking change, shown here as Cancellation or Appointment Change; FR-034 REQ-034-167); the patient raised it through Contact Support on an FR-006 booking screen, and the Ticket Source values are defined by FR-034 (REQ-016-208)
 - The request type, request status (Open, Resolved, Declined), decline reason, and outcome are owned by FR-034 on the support case; this screen only shows them
 
 ## Business Rules
@@ -722,7 +724,7 @@ FR-016 references patient support escalations, but **formal Support Center + Tic
 - **Rule 2**: Admins MAY edit a patient's medical questionnaire responses and alerts (FR-003 admin edit capability), but only with a typed reason that is logged in the audit trail with the edit. Patient scans MUST NOT be modified by admins; scan media is immutable except by patients (REQ-016-069)
 - **Rule 3**: Admin visibility and edit rights follow the FR-031 role permissions: View Patients grants patient visibility (all default roles), Edit Patients grants patient edits (Super Admin by default), Manage Aftercare covers aftercare actions and access to medical data and scans (Super Admin and Aftercare Coordinator by default), View Support Center and Respond to Support cover support actions (Super Admin, Aftercare Coordinator, and Support Staff by default), Issue Refunds covers refunds, and Delete Patients covers approving deletion requests (REQ-016-070). Actions the FR-031 list does not name map as follows:
   - Reset Password, Unlock Account, Lift Suspension, and Take Action on a flagged conversation need Edit Patients (REQ-016-070, REQ-016-225)
-  - Payment Retry and Send Payment Reminder use the same access as the FR-007B Retry Charge action, and the FR-016 buttons call that action (REQ-016-070)
+  - Payment Retry needs the FR-031 Retry Charge permission and Send Payment Reminder needs Send Payment Reminders; Super Admin and Billing Admin hold both by default, and the Payment Retry button calls the FR-007B Retry Charge action (REQ-016-070)
   - Send Notification needs Respond to Support (REQ-016-070)
   - The Payments tab needs View Patient Billing (REQ-016-070)
   - The Communications tab needs View Provider-Patient Messages, and flagging a conversation needs Flag Communications (REQ-016-070)
@@ -1004,11 +1006,11 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 ### Admin Intervention Requirements
 
 - **REQ-016-008**: System MUST allow admins to reset patient passwords with email notification sent to patient
-- **REQ-016-009**: System MUST allow admins to unlock patient accounts after failed login attempts
+- **REQ-016-009**: System MUST allow admins to unlock patient accounts after failed login attempts; an unlock clears the lock time and resets the failed-attempt count (FR-001 REQ-001-007)
 - **REQ-016-010**: System MUST allow admins to reschedule bookings only through the FR-006 Change Appointment action with justification, notifying both patient and provider through `booking.rescheduled`
 - **REQ-016-011**: System MUST let admins start a refund from the patient page as an FR-007 manual refund, which another admin with billing permission approves or denies (never the requesting admin), with enhanced confirmation workflow for amounts > $1,000 in addition
 - **REQ-016-012**: System MUST allow admins to suspend patient accounts (30 days / 90 days / Permanent) with justification; a suspension started from any admin screen runs the Alternative Flow A6 steps
-- **REQ-016-013**: System MUST allow admins to update patient profile information (name, email, phone, location) with justification and audit logging
+- **REQ-016-013**: System MUST allow admins to update patient profile information (name, email, phone, location) with justification and audit logging; an email change is saved as unverified and confirmed by the patient at the next login (REQ-016-226)
 - **REQ-016-028**: System MUST display FR-015 provider-caused cancellation causes (`ProviderSuspended`, `ProviderDeactivated`) distinctly from patient cancellation and let admins filter/badge patients with unresolved Admin Support Required records
 - **REQ-016-029**: System MUST show, per affected record, the inquiry/case reference, prior stage, cancellation cause, support state, and linked FR-034 support case (if any)
 - **REQ-016-030**: System MUST require a resolution reason and log an audit event before clearing Admin Support Required; the cause remains, an inquiry's marker stays while any linked provider-caused impact is unresolved, and no ticket is auto-created
@@ -1048,6 +1050,7 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 | 2026-11-23 | 1.17 | Owner ruling 2026-11-23: the aftercare specialist is clinic staff on the provider side; the Hairline admin role is renamed Aftercare Coordinator with unchanged permissions. Role name replaced in 6 place(s). No permission change. | Product Owner / Documentation |
 | 2026-11-24 | 1.18 | Logic review pass 1: Cancel Booking offered only in the FR-006 cancel states; audit entries for system actions need no admin or 20-character justification; audit action list extended; suspension cascade limited to cancellable bookings with a fixed neutral reason and a failure step; Lift Suspension and Unlock Account on Screen 2 and a system entry at automatic suspension end; Deactivated status and archive interface removed; deletion flow B5 reduced to the admin steps of the FR-023 process; Screen 8 filter, badges and approval conditions; deletion certificate dropped; Edge Case 5 follows FR-023 A3; permission mapping for uncovered actions; refund threshold in US dollars; FR-020 events noted. | Product Owner / Documentation |
 | 2026-11-24 | 1.19 | Logic review pass 2: Approve shown only for Pending Admin Review (Verification Required is validated first, Deny allowed from both); refunds started here enter an FR-007 manual refund approved by another billing admin; Payment Retry and Send Payment Reminder use the FR-007B Retry Charge access; suspension cascade names the cause Patient account suspended, lists booking ids cancelled, failed and left untouched, marks failed ones Cancellation failed and retries through the FR-006 cancel action; a password reset never changes a Suspended status; while suspended, conversations are read-only and open inquiries and quotes stay as they are; Take Action on a flagged conversation offers a patient warning or suspension (provider warning removed); audit action types Payment Reminder, Provider Medical Report Request and Data Export added; flows for Lift Suspension, Unlock Account, automatic suspension end and Take Action added; a denied deletion request ends Denied with the patient notified. | Product Owner / Documentation |
+| 2026-11-25 | 1.20 | Cross-FR alignment: Billing Admin and the Retry Charge and Send Payment Reminders permissions named; reset and suspension end every session; unlock clears the lock fields; an admin email change is saved as unverified and Overview shows the verification state (REQ-016-226); Deactivated noted as a reserved FR-001 value; Communications tab follows the FR-012 flag colours, keyword list, resolve-not-remove rule, deferred export and unmasked admin view; booking request wording follows the FR-034 request type and the case reference is a plain reference without View Support Center (REQ-016-227). | Product Owner / Documentation |
 
 ---
 
@@ -1063,4 +1066,4 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0
 **Based on**: FR-011 Aftercare & Recovery Management PRD template
-**Last Updated**: 2026-11-24
+**Last Updated**: 2026-11-25

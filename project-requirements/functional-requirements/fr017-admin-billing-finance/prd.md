@@ -328,8 +328,8 @@ flowchart TD
 
 **Role-Based Action Visibility**:
 
-- **Billing Admin** and **Super Admin** can view all admin financial screens and execute payout approvals, retries, refunds, overrides, and bulk actions (REQ-017-047)
-- Read-only finance access is granted by permission, not by a named role. An admin who holds only the read-only finance permission can access the same screens in read-only mode, but selection checkboxes, money-moving buttons, retry buttons, override buttons, and confirmation modals are hidden (REQ-017-047)
+- Admin access follows the FR-031 permissions: Process Payouts covers the money-moving payout actions (payout approvals, retries, overrides and bulk actions) and View Transactions is the read-only finance permission that opens every admin financial screen; Super Admin and Billing Admin hold both by default. A refund needs Issue Refunds, which Super Admin holds by default and Billing Admin does not (REQ-017-047)
+- Read-only finance access is the View Transactions permission, not a named role. An admin who holds only View Transactions can access the same screens in read-only mode, but selection checkboxes, money-moving buttons, retry buttons, override buttons, and confirmation modals are hidden (REQ-017-047)
 - Any action that moves money or changes a financial status MUST invoke the financial re-authentication step before the final confirm action is enabled (REQ-017-047)
 
 #### Screen 1: Financial Reporting - Revenue Dashboard
@@ -393,19 +393,19 @@ flowchart TD
 
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |------------|------|----------|-------------|------------------|---------|
-| Select | checkbox | Conditional | Row selection for batch payout approval | Enabled ONLY for Billing Admin / Super Admin when Status = "Pending Approval" or "Overdue" and Payout Readiness = "Ready" | no graph field (control) |
+| Select | checkbox | Conditional | Row selection for batch payout approval | Enabled ONLY for an admin holding Process Payouts when Status = "Pending Approval" or "Overdue" and Payout Readiness = "Ready" | no graph field (control) |
 | Provider Name | text | Yes | Clinic/provider name | Display only | ENT-provider.name |
 | Provider ID | text | Yes | Unique provider identifier (e.g., "HP-PRV-00123") | Display only | ENT-provider.id |
 | Payout Reference | text | Yes | Unique payout statement reference (e.g., "PST-HP-PRV-00123-2026-04-W1") | Display only | ENT-provider-payout.payout_reference |
 | Payment Schedule | badge | Yes | The platform-wide settlement period that applies to manual-rail clinics (weekly by default; set in admin payment settings) | Display only | no graph field (display) |
-| Next Payout Date | date | Yes | Scheduled payout date for this statement: the platform-wide payout day (Wednesday by default; admin-editable) | Format: DD-MM-YYYY | ENT-provider-payout.payout_date |
+| Next Payout Date | date | Yes | Scheduled payout date for this statement: the platform-wide payout day (Wednesday by default; admin-editable); for a Stripe Connect payout, the release date of the booking's funds, because that payout is made at release (REQ-017-187) | Format: DD-MM-YYYY | ENT-provider-payout.payout_date |
 | Outstanding Earnings | currency | Yes | Total revenue pending payout | Format: £X,XXX.XX | ENT-provider-payout.total_revenue |
 | Commission | text | Yes | Effective commission snapshot for the bookings in this statement. Source: provider-specific commission configuration managed in FR-015 / A-02 or FR-029 / A-09 when defined; otherwise the FR-029 / A-09 global default captured at booking confirmation | Display: 15% or £150 Flat (REQ-017-063) | ENT-provider-payout.commission_value |
 | Net Payout | currency | Yes | Provider payout after commission | Auto-calculated | ENT-provider-payout.net_payout |
 | Bank Account | text | Yes | Bank account last 4 digits (masked) | Display: ****1234 | ENT-provider-payout.bank_account_id |
 | Payout Readiness | badge | Yes | Statement (manual rail): "Ready", "Missing Bank Details", "Invalid Bank Details", "Manual Review Required". Stripe Connect payout: "Not onboarded", "Restricted", "Ready", "Manual Review Required" (REQ-017-194, REQ-017-196) | Color-coded | ENT-provider-payout.payout_readiness_status |
 | Status | badge | Yes | Statement: "Pending Approval", "Approved", "Overdue", "Paid", "Voided" (REQ-017-186). Stripe Connect payout: "Waiting for clinic setup", "Processing", "Paid", "Failed" (REQ-017-187) | Color-coded | ENT-provider-payout.payout_status |
-| Open Clinic Balance | currency | Conditional | Signed sum of the clinic's open balance entries (refund deduction, chargeback recovery, clinic cancellation deduction, bank charge); a negative amount is money the clinic owes Hairline (REQ-017-191) | Visible when not zero; display only | ENT-clinic-balance-entry.amount |
+| Open Clinic Balance | currency | Conditional | Signed sum of the clinic's open balance entries (refund deduction, chargeback recovery, clinic cancellation deduction, bank charge, handover fee credit); a negative amount is money the clinic owes Hairline (REQ-017-191, REQ-017-203) | Visible when not zero; display only | ENT-clinic-balance-entry.amount |
 | Blocked Reason | text | Conditional | Explanation shown when payout approval is unavailable | Visible when Payout Readiness is not "Ready" | ENT-provider-payout.blocked_reason |
 | Actions | buttons | Yes | "View Details", "Approve Payout", "Unapprove", "Void Statement", "Add Note" on a statement; "Retry Payout" on a Stripe Connect payout; "Clear Manual Review" on a statement or a Stripe Connect payout; "Write Off Balance" on an open clinic balance | Conditional visibility | no graph field (control) |
 
@@ -431,6 +431,7 @@ flowchart TD
 - A manually paid clinic is "Ready" once the admin has set its payout method to manual bank transfer and saved valid bank details; for such a clinic the admin records the bank details
 - Nothing is forfeited: the earnings of a clinic removed from the platform are always settled by an admin through General Module Rule 16 and the Release earnings resolution on Screen 7 (REQ-017-193)
 - Statements with missing or invalid bank details remain visible in the list for operational follow-up, but Payout Readiness is not "Ready" and approval controls remain disabled until the provider updates payout details in FR-032 / PR-06 (REQ-017-064)
+- A Suspended clinic's Owner can still update the bank details in FR-032 (REQ-032-067); a Deactivated clinic has no portal access, so an admin collects the corrected bank details outside the platform and records them as for a manually paid clinic, after which Payout Readiness follows the stored details as usual (REQ-017-064)
 - "Approve Payout" button enabled ONLY for statements with status "Pending Approval" or "Overdue", and not while Payout Readiness is "Manual Review Required" (REQ-017-065, REQ-017-194). Approving an Overdue statement never waits for the next payout day: it is payable at once and the admin pays it and marks it as paid (REQ-017-076)
 - "Retry Payout" button is shown only in the Stripe Connect payouts section and is enabled ONLY for a Failed per-booking payout that is not in "Manual Review Required"; clicking it re-initiates the Stripe transfer; retry is logged in audit trail with admin ID, timestamp, and failure reason from prior attempt. A failed Stripe Connect payout first gets 3 automatic attempts with exponential backoff and then goes to Manual Review Required; once an admin clears it with a review note, this button is available for the manual retry. A statement has no retry: an admin marks it as paid (REQ-017-066, REQ-017-194)
 - The Stripe Connect payouts section lists each per-booking payout with the states "Waiting for clinic setup" (the clinic's Stripe setup is not Ready), "Processing", "Paid" and "Failed", and the readiness values "Not onboarded", "Restricted" and "Ready"; Stripe webhooks move these payouts and never a statement (REQ-017-187, REQ-017-196)
@@ -466,7 +467,8 @@ flowchart TD
 | Provider ID | text | Yes | Unique provider identifier | Display only | ENT-provider.id |
 | Payout Reference | text | Yes | Unique payout statement reference | Display only | ENT-provider-payout.payout_reference |
 | Statement Status | badge | Yes | Statement: "Pending Approval", "Approved", "Overdue", "Paid", "Voided". Stripe Connect payout: "Waiting for clinic setup", "Processing", "Paid", "Failed" | Color-coded | ENT-provider-payout.payout_status |
-| Payout Period | daterange | Yes | Date range covered by payout | Format: DD-MM-YYYY to DD-MM-YYYY | ENT-provider-payout.payout_period |
+| Payout Period | daterange | Conditional | Date range covered by a statement; a Stripe Connect payout is one booking paid at release, so it has a release date instead of a period (REQ-017-187) | Format: DD-MM-YYYY to DD-MM-YYYY | ENT-provider-payout.payout_period |
+| Release Date | date | Conditional | Stripe Connect payout only: the date the booking's funds were released and the payout made (REQ-017-187) | Format: DD-MM-YYYY | ENT-provider-payout.payout_date |
 | Payout Readiness | badge | Yes | Indicates whether approval or payment can proceed. Statement: "Ready", "Missing Bank Details", "Invalid Bank Details", "Manual Review Required". Stripe Connect payout: "Not onboarded", "Restricted", "Ready", "Manual Review Required" | Color-coded | ENT-provider-payout.payout_readiness_status |
 | Blocked Reason | text | Conditional | Reason the statement cannot currently be approved, or the payout cannot be retried or is waiting for clinic setup | Visible when Payout Readiness is not "Ready" or the status is "Failed" or "Waiting for clinic setup" | ENT-provider-payout.blocked_reason |
 | Bank Account | text | Conditional | Destination bank account (masked) of a manual-rail statement | Display: ****1234 | ENT-provider-payout.bank_account_id |
@@ -508,7 +510,7 @@ flowchart TD
 
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |------------|------|----------|-------------|------------------|---------|
-| Adjustment Type | badge | Yes | "Refund Deduction", "Chargeback Recovery", "Clinic Cancellation Deduction", "Carry-Forward Adjustment" or "Bank Charge" (a bank charge of an earlier manual transfer, borne by the clinic and applied to this payout). Each except Carry-Forward Adjustment is an entry of the clinic balance record applied to this payout (REQ-017-191) | Color-coded | ENT-payout-adjustment.adjustment_type |
+| Adjustment Type | badge | Yes | "Refund Deduction", "Chargeback Recovery", "Clinic Cancellation Deduction", "Carry-Forward Adjustment", "Bank Charge" (a bank charge of an earlier manual transfer, borne by the clinic and applied to this payout) or "Handover Fee" (a credit, REQ-017-203). Each except Carry-Forward Adjustment is an entry of the clinic balance record applied to this payout (REQ-017-191) | Color-coded | ENT-payout-adjustment.adjustment_type |
 | Booking Reference | text | Yes | Original booking tied to the adjustment | Clickable link | ENT-booking.booking_reference |
 | Effective Date | date | Yes | Date the adjustment first applied to a payout statement | Format: DD-MM-YYYY | ENT-payout-adjustment.effective_date |
 | Description | text | Yes | Provider-visible label shown on the payout statement | Display only; format example: "Adjustment: Refund deducted — [Booking Reference] — [Date]" | ENT-payout-adjustment.description |
@@ -527,11 +529,12 @@ flowchart TD
 - If a patient refund is processed AFTER the provider has already been paid, the next provider payout statement MUST include a row in `Payout Adjustments` labelled `Adjustment: Refund deducted — [Booking Reference] — [Date]` (REQ-017-075)
 - If a refund deduction exceeds the provider's current payout amount, the unapplied balance remains visible in `Remaining Balance` and carries forward to the next payout cycle until fully recovered; the same applies to every entry of the clinic balance record, on either rail. A debt with no further payout coming stays open on the clinic's balance until an admin writes it off (REQ-017-075, REQ-017-191, REQ-017-192)
 - Internal notes visible ONLY to admins (never exposed to provider) (REQ-017-069)
-- "Approve Payout" is enabled ONLY when Payout Readiness = "Ready", the user role is Billing Admin or Super Admin, and financial re-authentication succeeds (REQ-017-065)
+- "Approve Payout" is enabled ONLY when Payout Readiness = "Ready", the admin holds Process Payouts, and financial re-authentication succeeds (REQ-017-065)
 - "Approve Payout" button marks the statement as "Approved"; no payment is started by the review action. An approved statement is paid by the admin by bank transfer outside the platform and marked as paid. An Overdue statement that is approved is payable at once and does not wait for the next payout day (REQ-017-076)
 - "Mark as Paid" is offered for a statement in "Approved" status, and for an "Overdue" one that has just been approved. The admin enters the bank reference and the payment date, may enter a bank charge, and re-authenticates; the statement becomes "Paid", a "Payout Marked Paid" entry is written to the audit trail, the clinic is notified, and the payout invoice document is generated on that event. The statement keeps its approved amount: a bank charge is recorded as a Bank Charge entry of the clinic balance record and applied to the clinic's next payout, never deducted from the statement being marked as paid (REQ-017-188, REQ-017-191)
 - For a Stripe Connect payout, the Stripe Transfer ID remains blank until Stripe confirms `transfer.created`; failure reason remains blank unless Stripe or validation returns a blocking error (REQ-017-077, REQ-017-187)
 - A booking's Hairline discount reimbursement is shown as its own row and in the payout total; it is read from the frozen booking snapshot and never recomputed (REQ-017-195)
+- A handover fee that Hairline owes a provider after an aftercare handover (FR-011) is a credit entry of type Handover Fee on the clinic's balance record, created only when the admin-set fee is above zero; it is paid by Hairline, never taken from a patient price or from the provider's earnings, carries no commission, and is added to the clinic's next payout on either rail (REQ-017-203, REQ-011-057)
 
 **Batch Approval Confirmation Modal** (appears when admin clicks "Approve All Selected Payouts" in Screen 2):
 
@@ -781,6 +784,7 @@ flowchart TD
 - A refund for a booking that is Completed with an open problem case is opened from Screen 7 with the admin-set amount, as described under Screen 7 (REQ-017-190)
 - Invoice effect owned by FR-017: when FR-007 completes a refund, the invoice shows it as a row in the refund history on Screen 4a and its adjusted total updates; a full refund moves the Payment Status to "Refunded" and a part refund leaves it unchanged (REQ-017-199, REQ-017-086)
 - Payout effect owned by FR-017: a refund of a booking not yet paid out removes it from, or reduces it in, the clinic's next statement or per-booking payout; a refund of a booking already paid out creates a refund deduction entry on the clinic's balance record (REQ-017-075, REQ-017-191)
+- Commission reversal: a refund reverses the commission on the refunded money in the same proportion, so the clinic's matching amount is the refunded money less the reversed commission; this holds for a part refund, a patient cancellation refund and the pro-rata refund of the unused full months of an aftercare plan paid in full, and the payout effect follows REQ-017-075 and REQ-017-191 (REQ-017-202, REQ-011-097)
 - The closure refund of Rule 13 is started by the system through FR-007; no admin action is needed on this screen (REQ-017-199)
 
 ---
@@ -797,14 +801,14 @@ flowchart TD
 |------------|------|----------|-------------|------------------|---------|
 | Discount Code | text | Yes | Code identifier (e.g., "SUMMER25") | Display only; links to FR-019 detail | ENT-promotion-code.code |
 | Discount Name | text | Yes | Internal campaign name | Display only | ENT-promotion-program.name |
-| Type | badge | Yes | Platform-Wide / Provider-Specific / Affiliate | Display only | ENT-discount-code.discount_type |
+| Type | badge | Yes | Program type as FR-019 defines it: Admin-via-Provider / Provider Self-Created / Hairline-Funded and Direct-Issued (an affiliate code belongs to a Hairline-Funded and Direct-Issued program) | Display only | ENT-promotion-program.program_type |
 | Times Used | number | Yes | Total bookings where discount applied | Display only | ENT-discount-usage-summary.times_used |
 | Total Discount Amount | currency | Yes | Cumulative discount value granted | Display only | ENT-discount-usage-summary.total_discount_amount |
 | Hairline Cost | currency | Yes | Portion borne by Hairline: the commission effect, plus, for a Both Fees discount, the Hairline share % of the discount defined in FR-019 that Hairline reimburses to the provider at payout | Display only | ENT-discount-usage-summary.hairline_cost |
 | Provider Cost | currency | Yes | Portion borne by the provider. Commission is always calculated on the price after promotion, so the provider bears part of every discount, including Hairline Only discounts. For a Both Fees discount, the FR-019 Hairline share % reimbursed by Hairline reduces Provider Cost | Display only | ENT-discount-usage-summary.provider_cost |
 | Revenue Generated | currency | Yes | Total booking revenue attributed to this code | Display only | ENT-discount-usage-summary.revenue_generated |
 | Active Window | daterange | Yes | Valid From — Valid Until | Display only | ENT-promotion-program.start_at, ENT-promotion-program.end_at |
-| Status | badge | Yes | Active / Expired / Disabled | Display only | ENT-discount-code.status |
+| Status | badge | Yes | Program lifecycle state as FR-019 defines it: Draft / Active / Paused / Expired / Archived | Display only | ENT-promotion-program.lifecycle_state |
 
 **Business Rules**:
 
@@ -816,7 +820,7 @@ flowchart TD
 
 - "View in A-06" deep-link on each row opens the discount's management page in FR-019 (REQ-017-100)
 - Used primarily for financial reconciliation: confirming discount costs align with commission calculations
-- Implement filtering by: Status (Active / Expired / Disabled), Discount Type (Platform-Wide / Provider-Specific / Affiliate), and Active Window date range (codes valid within a given period) (REQ-017-100)
+- Implement filtering by: Status (the program lifecycle state), Program Type (Admin-via-Provider / Provider Self-Created / Hairline-Funded and Direct-Issued), and Active Window date range (codes valid within a given period) (REQ-017-100)
 - Support free-text search by discount code or campaign name (REQ-017-100)
 - Export to CSV button for finance reconciliation (includes all visible columns for the filtered result set) (REQ-017-100)
 
@@ -836,11 +840,11 @@ flowchart TD
 | Affiliate Name | text | Yes | Affiliate partner name (individual or company) | Display only | ENT-affiliate.name |
 | Affiliate ID | text | Yes | Unique affiliate identifier (e.g., "HP-AFF-00012") | Display only | ENT-affiliate-commission.affiliate_id |
 | Payout Reference | text | Yes | Unique affiliate payout reference | Display only | ENT-affiliate-commission.payout_reference |
-| Discount Code(s) | text | Yes | Assigned discount codes (comma-separated if multiple) | Display only | ENT-discount-code.discount_code |
+| Discount Code(s) | text | Yes | Assigned discount codes (comma-separated if multiple) | Display only | ENT-promotion-code.code |
 | Payout Period | daterange | Yes | Date range for commission calculation | Format: DD-MM-YYYY to DD-MM-YYYY | ENT-affiliate-commission.payout_period |
 | Total Referrals | number | Yes | Number of bookings via affiliate code | Display only | ENT-affiliate-commission.total_referrals |
 | Total Referral Revenue | currency | Yes | Sum of booking amounts from affiliate referrals | Auto-calculated | ENT-affiliate-commission.total_referral_revenue |
-| Commission Rate | number | Yes | Percentage or fixed amount per booking | Display: X% or £X | ENT-affiliate-commission.commission_rate |
+| Commission Rate | number | Yes | Percentage or fixed amount per booking | Display: X% or a fixed USD amount | ENT-affiliate-commission.commission_rate |
 | Commission Earned | currency | Yes | Total affiliate commission | Auto-calculated | ENT-affiliate-commission.commission_earned |
 | Payment Status | badge | Yes | "Pending", "Processing", "Paid", "Failed" | Color-coded | ENT-affiliate-commission.payout_status |
 | Payout Readiness | badge | Yes | Indicates whether a transfer can be initiated: "Ready", "Missing Destination", "Invalid Destination", "Manual Review Required". Shown as set by FR-018 for the affiliate's payout (ENT-affiliate-payout.payout_readiness); FR-017 does not recompute it (REQ-017-198) | Color-coded | ENT-affiliate-commission.payout_readiness_status |
@@ -861,6 +865,7 @@ flowchart TD
 - Commission rate and referral attribution are managed in FR-018; any disputes on commission amounts must be resolved in FR-018 before admin processes payout here (REQ-017-102)
 - A payout is payable on this screen only when all four hold: the payout month is closed (the scheduled payout date has arrived), the unpaid balance is at or above the USD 50 minimum (an Inactive affiliate has no minimum), Payout Readiness is "Ready", and no hold applies. A flagged payout stays visible with its flag for admin review (REQ-017-197)
 - All affiliate amounts are in USD (FR-018); the USD 50 floor is checked in USD after any conversion at the locked rate, with one threshold for all affiliates, not each affiliate's own currency (REQ-017-198)
+- An Inactive affiliate without a ban flag stays in the monthly run for any month with unpaid commission: the whole unpaid balance, including commission confirmed after the offboarding, is paid in the next run with no USD 50 minimum, a normal offboarding clears any hold, and there is no admin-initiated final payout on this screen (REQ-017-197; FR-018 REQ-018-313, REQ-018-318)
 - "Process Payout" button enabled ONLY for payouts that are payable (status "Pending" and the payable condition above) and after successful financial re-authentication (REQ-017-103, REQ-017-197)
 - "Retry Payout" button enabled ONLY for payouts with status "Failed", Payout Readiness = "Ready", and successful financial re-authentication (REQ-017-103)
 - "Add Note" button available for all affiliate payouts at any status (admin-only internal notes, max 500 characters, not visible to affiliate); note saved and logged in audit trail with action_type "Note Added" (REQ-017-104)
@@ -927,10 +932,10 @@ flowchart TD
 | Treatment Date | date | Yes | Date treatment was performed | Format: DD-MM-YYYY | ENT-booking.appointment_at |
 | Treatment Type | text | Yes | FUE, FUT, DHI, etc. | Display only | ENT-treatment.name |
 | Booking Amount | currency | Yes | Total booking value (net of discounts, before commission) | Display only | ENT-affiliate-commission.booking_amount |
-| Commission Rate | number | Yes | Affiliate commission rate applied to this booking | Display: X% or £X | ENT-affiliate-commission.commission_rate |
+| Commission Rate | number | Yes | Affiliate commission rate applied to this booking | Display: X% or a fixed USD amount | ENT-affiliate-commission.commission_rate |
 | Commission Earned | currency | Yes | Commission earned from this specific booking | Auto-calculated | ENT-affiliate-commission.commission_earned |
 | Currency | text | Yes | Booking currency | Display: GBP, USD, TRY | ENT-patient-invoice.currency |
-| Referral Code | text | Yes | Discount/referral code captured for the booking | Display only | ENT-discount-code.discount_code |
+| Referral Code | text | Yes | Discount/referral code captured for the booking | Display only | ENT-promotion-code.code |
 
 **Notes**:
 
@@ -1442,9 +1447,9 @@ These rules record the product owner's decisions on how a clinic's money is rele
 
 - **Authentication**: In MVP, require admin password re-authentication for financial operations (payout approvals, refunds). Once the shared MFA stack from FR-026 / FR-031 is delivered, these actions MUST require MFA-based re-authentication. (REQ-017-016)
 - **Authorization**: Role-based access control (RBAC) with granular permissions: (REQ-017-017)
-  - **Billing Admin**: Full access (view, approve payouts, process refunds with mandatory reason)
-  - Read-only finance access is a permission, not a named role: an admin holding only that permission cannot approve payouts or refunds
-  - **Super Admin**: Full access, identical refund flow to Billing Admin
+  - **Process Payouts**: approve, retry, override and bulk payout actions; held by Super Admin and Billing Admin by default
+  - **View Transactions**: read-only finance access, a permission and not a named role; an admin holding only this permission cannot approve payouts or refunds
+  - **Issue Refunds**: process refunds with a mandatory reason; held by Super Admin by default and not by Billing Admin
 - **Encryption**: Encrypt provider bank account details at rest using AES-256; decrypt only during payout processing (REQ-017-021)
 - **Audit trail**: Log ALL financial actions with admin ID, timestamp, IP address, action type, before/after values (REQ-017-018)
 - **Fraud prevention**:
@@ -1459,7 +1464,7 @@ These rules record the product owner's decisions on how a clinic's money is rele
 
 - **Entity 9 - Clinic Balance Entry**
   - **Relationships**: One clinic has many signed balance entries (refund deduction, chargeback recovery, clinic cancellation deduction, bank charge), each linked to the booking or payout that caused it; open entries are applied to the clinic's next payout (REQ-017-191)
-  - **Key Attributes**: entry type (refund deduction, chargeback recovery, clinic cancellation deduction, bank charge), clinic, source reference (the booking or payout that caused it), signed amount, state (open, applied, written off), the payout it was applied to, write-off reason, created at (REQ-017-191, REQ-017-192)
+  - **Key Attributes**: entry type (refund deduction, chargeback recovery, clinic cancellation deduction, bank charge, handover fee credit), clinic, source reference (the booking or payout that caused it), signed amount, state (open, applied, written off), the payout it was applied to, write-off reason, created at (REQ-017-191, REQ-017-192)
 
 **Currency Alert (from the removed entity list)**
 
@@ -1715,6 +1720,7 @@ A patient requests refund due to cancellation, admin reviews request against can
   - Admin contacts provider via support system to request updated bank account
   - Provider updates bank account in PR-06: Profile & Settings Management
   - Admin's "verifies" means the payout readiness check on the new account has passed (no extra manual check), then the admin manually retries the payout
+  - A Deactivated clinic has no portal access, so the admin collects the corrected bank details outside the platform and records them (REQ-017-064)
 
 - **What occurs if** a promotion code reaches its usage limit while two patients accept?
   - Two patients have applied code "SUMMER25" (usage: 499/500) to a named subquote before acceptance
@@ -1787,7 +1793,7 @@ A patient requests refund due to cancellation, admin reviews request against can
 ### Security & Privacy Requirements
 
 - **REQ-017-016**: In MVP, system MUST require admin password re-authentication for financial operations (payout approval, refund processing). Once FR-026 / FR-031 shared MFA is delivered, these actions MUST require MFA-based re-authentication
-- **REQ-017-017**: System MUST implement role-based access control (RBAC) with granular permissions: Billing Admin (full access) and Super Admin (full access); read-only finance access is granted by permission, not by a named role
+- **REQ-017-017**: System MUST implement role-based access control (RBAC) with the FR-031 permissions: Process Payouts and View Transactions (the read-only finance permission) are held by Super Admin and Billing Admin by default, and Issue Refunds by Super Admin by default; read-only finance access is granted by permission, not by a named role
 - **REQ-017-018**: System MUST log ALL financial actions with audit trail: admin ID, timestamp, IP address, action type, before/after values
 - **REQ-017-019**: System MUST mask patient payment methods in UI (display "Visa ending in 1234" NOT full card number)
 - **REQ-017-020**: System MUST soft-delete financial records (no hard deletion); retention follows the system PRD, Platform-Wide Rules: One 10-year retention period
@@ -1816,6 +1822,7 @@ A patient requests refund due to cancellation, admin reviews request against can
 | 2026-11-23 | 2.18 | Independent compression review: 8 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 | 2026-11-24 | 2.19 | Logic review: a settlement statement is manual-rail only (Mark as Paid on Screen 3, Overdue payable at once), Stripe Connect per-booking payouts listed on Screen 2; funds-released gate with Pending release and Released; Screen 7 outcomes and Release earnings; Screen 4b is a launcher into FR-007 Screen 6; FR-007 Payment Status list read as defined there; one hourly job for installments; clinic balance record with write-off; no forfeiture (earlier ban rule removed); Stripe readiness and Manual Review Required; Hairline discount reimbursement row; affiliate payable condition and readiness from FR-018. | Product Owner / Documentation |
 | 2026-11-24 | 2.20 | Logic review pass 2: an interrupted-treatment payout hold ends when the FR-006 route completes and Screen 7 outcomes stay for Completed bookings (REQ-017-185, REQ-017-190); a bank charge is carried to the clinic's next payout as a clinic balance entry and never deducted from the statement being marked as paid (REQ-017-176, REQ-017-188); the clinic's share of a retained patient cancellation fee is an earning released into the next payout (REQ-017-200); Manual Review Required named by the payout flag, cleared on a statement or a Stripe Connect payout and returned to its prior state or to Failed (REQ-017-161, REQ-017-194); the one-off statement of Release Earnings is created Approved and paid with Mark as Paid (REQ-017-193); an Approved statement past its payout day may be voided (REQ-017-068); clinic balance entry fields and the Clinic Balance audit entity type; Screen 7 Pay Now for a Stripe Connect clinic (REQ-017-201). | Product Owner / Documentation |
+| 2026-11-25 | 2.21 | Cross-FR alignment: admin access named by the FR-031 permissions Process Payouts, View Transactions and Issue Refunds instead of roles (REQ-017-047, REQ-017-065, REQ-017-017); a Stripe Connect payout shows a release date instead of a period (REQ-017-187); commission reversed with every refund, including the pro-rata refund of an aftercare plan (REQ-017-202); handover fee credit on the clinic balance record (REQ-017-203); Screen 5 and Screen 6 read the FR-019 promotion program and code fields; an Inactive affiliate is paid in the next run with no minimum (REQ-017-197); a Deactivated clinic's bank details are collected by an admin (REQ-017-064). | Product Owner / Documentation |
 
 ---
 
@@ -1834,4 +1841,4 @@ A patient requests refund due to cancellation, admin reviews request against can
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-017 Admin Billing & Financial Management (system-prd.md), with FR-005/FR-006 accepted-subquote context
-**Last Updated**: 2026-11-24
+**Last Updated**: 2026-11-25

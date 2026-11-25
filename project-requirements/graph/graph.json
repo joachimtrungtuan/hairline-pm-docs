@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T00:43:36Z",
+  "generated_at": "2026-11-25T00:52:46Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -6989,7 +6989,7 @@
       "owner_fr": "FR-017",
       "title": "Entry type",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "description": "Kind of the entry: refund deduction, chargeback recovery, clinic cancellation deduction or bank charge."
       }
@@ -18921,7 +18921,7 @@
       "owner_fr": "FR-017",
       "title": "Adjustment type",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {}
     },
     {
@@ -23526,6 +23526,17 @@
       "version": 2,
       "attrs": {
         "description": "Copy of the clinic address (Key Entity 3 Clinic Information), held on the Provider record."
+      }
+    },
+    {
+      "id": "ENT-provider.aftercare_participation",
+      "type": "Field",
+      "owner_fr": "FR-015",
+      "title": "Aftercare participation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "Whether this clinic takes the aftercare of its own patients; default On. When On, FR-011 assigns a patient's aftercare to this clinic while it is Active; when Off, to the Hairline aftercare team (FR-011 REQ-011-054)."
       }
     },
     {
@@ -56722,9 +56733,9 @@
       "owner_fr": "FR-012",
       "title": "Messaging enabled only after the provider sent a quote; conversation read-only when nothing live is left",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "System MUST enable patient-provider messaging only when provider has sent a quote to patient. The conversation is open while the pair has a live quote, booking or aftercare; it becomes read-only (history kept for both parties, nobody can send, admins can still view it) when the provider is suspended or deactivated, the patient's account is deleted, or nothing live is left between the pair, and it opens again when the same provider sends a new quote. Read-only is derived from those conditions and is not a stored conversation status. On a read-only conversation the composer, attach control and call buttons are disabled with a banner giving the reason, and Enable Emergency Intervention is not available.",
+        "statement": "System MUST enable patient-provider messaging only when provider has sent a quote to patient. The conversation is open while the pair has a live quote, booking or aftercare; it becomes read-only (history kept for both parties, nobody can send, admins can still view it) when the provider is deactivated, when the provider is suspended and the pair has no open In Progress or Aftercare case (a suspended provider may still chat on those, FR-015 REQ-015-077), when the patient's account is suspended or deleted, or when nothing live is left between the pair. It opens again when the patient's suspension is lifted or ends (FR-016 REQ-016-224) and when the same provider sends a new quote. Read-only is derived from those conditions and is not a stored conversation status. On a read-only conversation the composer, attach control and call buttons are disabled with a banner giving the reason, and Enable Emergency Intervention is not available.",
         "rationale": "Functional Requirements Summary, prd.md line 963."
       }
     },
@@ -57970,9 +57981,9 @@
       "owner_fr": "FR-013",
       "title": "Review events raise notifications; delivery follows FR-020 and FR-030",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "The review module raises a notification on each of these events: new published review, provider reply, admin removal of a review (to the reviewing patient), admin removal of a provider response (to the provider, with the reason), takedown decision, review edited by the patient (to the provider, informational only), review edited by an admin (to the reviewing patient), takedown requested (to admins), and takedown overdue (to admins). Notices that would go to the placeholder patient of an admin-seeded review are not sent. The invitation fires on the eligibility date (3 months after the treatment case was marked Completed in FR-010) and reminder timing counts from that date; reminder cadence is owned by FR-030. Delivery, recipients, content and opt-out follow the notification-service Rule in FR-020 and the FR-030 notification catalogue.",
+        "statement": "The review module raises a notification on each of these events: new published review, provider reply, admin removal of a review (to the reviewing patient), admin removal of a provider response (event `review.response_removed`, raised by this module, to the provider with the reason), takedown decision, review edited by the patient (to the provider, informational only), review edited by an admin (to the reviewing patient), takedown requested (to admins), and takedown overdue (to admins). Notices that would go to the placeholder patient of an admin-seeded review are not sent. The invitation fires on the eligibility date (3 months after the treatment case was marked Completed in FR-010) and reminder timing counts from that date; reminder cadence is owned by FR-030. Delivery, recipients, content and opt-out follow the notification-service Rule in FR-020 and the FR-030 notification catalogue.",
         "rationale": "Restated by Main Flow step 4(d), workflows A3 step 4, A4 step 4 and B1 outcome, the Provider Platform scope (receive notification on new published reviews) and Shared Services. Invite and reminder timing is owned by FR-030; delivery, recipients, content and opt-out are owned by FR-020 and the FR-030 catalogue."
       }
     },
@@ -58234,9 +58245,9 @@
       "owner_fr": "FR-013",
       "title": "Admin edit and remove need a reason; removal reason at least 10 characters",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Insert authenticated reviews and edit/remove existing reviews with mandatory reasons. Removal reason must be at least 10 characters.",
+        "statement": "Insert authenticated reviews and edit/remove existing reviews with mandatory reasons. These actions stay available for a provider of any status, including a Deactivated provider, because reviews are retained. Removal reason must be at least 10 characters.",
         "rationale": "Admin Editability Rules, Editable by Admin list, plus the Screen 8 rows Edit fields (Reason required for edit), Remove review (Removal reason min 10 chars) and Removal/edit reason (Reason catalog plus optional details; required for edit/remove). The insert case is covered by the source verification rules, which the PRD calls the provenance inputs."
       }
     },
@@ -63073,9 +63084,9 @@
       "owner_fr": "FR-015",
       "title": "Percentage commission formula and base",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Percentage Model: Calculated as `Booking Total * (Commission Rate / 100)`. The booking total is the accepted price after promotion, in the quote currency, read from the FR-005 acceptance snapshot; commission never reads the live quote or option record. The same base applies to every discount type, including discounts funded only by Hairline. The rate is the one fixed at booking confirmation (Commission Rule 4).",
+        "statement": "Percentage Model: Calculated as `Booking Total * (Commission Rate / 100)`. The booking total is the accepted price after promotion, in the quote currency, read from the FR-005 acceptance snapshot; commission never reads the live quote or option record. The same base applies to every discount type, including discounts funded only by Hairline. The rate is the one fixed at booking confirmation (Commission Rule 4). When money is refunded to the patient, the commission on the refunded amount is reversed with it, in the same proportion, so Hairline keeps commission only on money the patient keeps; FR-017 owns the refund and payout mechanics (REQ-017-202).",
         "rationale": "prd.md line 829 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -63372,9 +63383,9 @@
       "owner_fr": "FR-015",
       "title": "Provider creation is rate limited per admin",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Rate limiting on provider creation API (max 10 provider creations per admin per hour) to prevent bulk account creation abuse",
+        "statement": "Rate limiting on provider creation API (max 10 provider creations per admin per hour) to prevent bulk account creation abuse. The limit is a fixed platform setting; it is not editable in the admin console and is not listed on FR-026 Screen 8.",
         "rationale": "prd.md line 1081 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -64219,6 +64230,30 @@
       }
     },
     {
+      "id": "REQ-015-139",
+      "type": "Rule",
+      "owner_fr": "FR-015",
+      "title": "Provider suspension and deactivation make conversations read-only",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Suspension and deactivation also make the provider's conversations with patients read-only, history kept, as FR-012 REQ-012-018 rules. A suspended provider may still chat on its open `In Progress` and `Aftercare` cases (REQ-015-077); a deactivated provider cannot, because its login is disabled.",
+        "rationale": "Provider status effects; the read-only rule itself is owned by FR-012 REQ-012-018."
+      }
+    },
+    {
+      "id": "REQ-015-140",
+      "type": "Rule",
+      "owner_fr": "FR-015",
+      "title": "Aftercare Participation is a yes or no setting on the provider profile",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Aftercare Participation is a yes or no setting on the provider profile, default On, that an admin sets when creating the provider (Screen 2 Step 5) and can change later in Tab 1 while the provider is Active or Suspended. When On, FR-011 assigns a patient's aftercare to this clinic while it is Active; when Off, to the Hairline aftercare team (FR-011 REQ-011-054). A change applies to aftercare assigned afterwards.",
+        "rationale": "Screen 2 Step 5 and Screen 3 Tab 1; the assignment rule is owned by FR-011 REQ-011-054."
+      }
+    },
+    {
       "id": "REQ-016-001",
       "type": "Rule",
       "owner_fr": "FR-016",
@@ -64320,9 +64355,9 @@
       "owner_fr": "FR-016",
       "title": "Allow admins to unlock patient accounts after failed login attempts",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST allow admins to unlock patient accounts after failed login attempts",
+        "statement": "System MUST allow admins to unlock patient accounts after failed login attempts; an unlock clears the lock time and resets the failed-attempt count (FR-001 REQ-001-007)",
         "rationale": "Stated in prd.md, Admin Intervention Requirements (line 1112)."
       }
     },
@@ -64368,9 +64403,9 @@
       "owner_fr": "FR-016",
       "title": "Allow admins to update patient profile information (name, email, phone",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST allow admins to update patient profile information (name, email, phone, location) with justification and audit logging",
+        "statement": "System MUST allow admins to update patient profile information (name, email, phone, location) with justification and audit logging; an email change is saved as unverified and confirmed by the patient at the next login",
         "rationale": "Stated in prd.md, Admin Intervention Requirements (line 1116). Restated: prd.md line 705: \"Patient profile information (name, email, phone, location) with justification\""
       }
     },
@@ -64789,9 +64824,9 @@
       "owner_fr": "FR-016",
       "title": "Password reset generates a token and emails a 6-digit OTP link to the patient",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System generates password reset token; System sends email to patient with reset link (6-digit OTP)",
+        "statement": "System generates password reset token; System sends email to patient with reset link (6-digit OTP); when the patient completes the reset, every existing session of the patient ends on every device (FR-001 REQ-001-182)",
         "rationale": "Stated in prd.md, Alternative Flows (line 229)."
       }
     },
@@ -64825,9 +64860,9 @@
       "owner_fr": "FR-016",
       "title": "System immediately revokes patient authentication tokens",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System immediately revokes patient authentication tokens",
+        "statement": "System immediately revokes patient authentication tokens, which ends every existing session of the patient on every device (FR-001 REQ-001-182)",
         "rationale": "Stated in prd.md, Alternative Flows (line 247)."
       }
     },
@@ -65029,9 +65064,9 @@
       "owner_fr": "FR-016",
       "title": "Admin visibility and edit rights follow FR-031 role permissions",
       "status": "active",
-      "version": 7,
+      "version": 8,
       "attrs": {
-        "statement": "Admin visibility and edit rights follow the FR-031 role permissions: View Patients grants patient visibility (all default roles), Edit Patients grants patient edits (Super Admin by default), Manage Aftercare covers aftercare actions and access to medical data and scans (Super Admin and Aftercare Coordinator by default), View Support Center and Respond to Support cover support actions (Super Admin, Aftercare Coordinator, and Support Staff by default), Issue Refunds covers refunds, and Delete Patients covers approving deletion requests. Actions the FR-031 list does not name map as follows: Reset Password, Unlock Account, Lift Suspension, and Take Action on a flagged conversation need Edit Patients; Payment Retry and Send Payment Reminder use the same access as the FR-007B Retry Charge action, and the FR-016 buttons call that action; Send Notification needs Respond to Support; the Payments tab needs View Patient Billing; the Communications tab needs View Provider-Patient Messages, and flagging a conversation needs Flag Communications",
+        "statement": "Admin visibility and edit rights follow the FR-031 role permissions: View Patients grants patient visibility (all default roles), Edit Patients grants patient edits (Super Admin by default), Manage Aftercare covers aftercare actions and access to medical data and scans (Super Admin and Aftercare Coordinator by default), View Support Center and Respond to Support cover support actions (Super Admin, Aftercare Coordinator, and Support Staff by default), Issue Refunds covers refunds, and Delete Patients covers approving deletion requests. Actions the FR-031 list does not name map as follows: Reset Password, Unlock Account, Lift Suspension, and Take Action on a flagged conversation need Edit Patients; Payment Retry needs the FR-031 Retry Charge permission and Send Payment Reminder needs Send Payment Reminders; Super Admin and Billing Admin hold both by default, and the Payment Retry button calls the FR-007B Retry Charge action; Send Notification needs Respond to Support; the Payments tab needs View Patient Billing; the Communications tab needs View Provider-Patient Messages, and flagging a conversation needs Flag Communications",
         "rationale": "Stated in prd.md, General Module Rules (line 683)."
       }
     },
@@ -65845,9 +65880,9 @@
       "owner_fr": "FR-016",
       "title": "\"Send Payment Reminder\" button for overdue installments",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "\"Send Payment Reminder\" button for overdue installments; it uses the same access as the FR-007B Retry Charge action",
+        "statement": "\"Send Payment Reminder\" button for overdue installments; it needs the FR-031 Send Payment Reminders permission, held by Super Admin and Billing Admin by default",
         "rationale": "Stated in prd.md, Screen 5: Patient Detail View - Payments Tab (line 519)."
       }
     },
@@ -65917,9 +65952,9 @@
       "owner_fr": "FR-016",
       "title": "Flagged conversations are highlighted in red",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Flagged conversations highlighted in red (flagged by automated keyword detection or manual provider report)",
+        "statement": "Flagged conversations are highlighted by flag type as in FR-012: red for an automatic keyword flag, orange for a manual observation flag; system flags follow FR-012. A flag is resolved, never removed",
         "rationale": "Stated in prd.md, Screen 6: Patient Detail View - Communications Tab (line 548)."
       }
     },
@@ -65929,9 +65964,9 @@
       "owner_fr": "FR-016",
       "title": "Keywords such as outside platform, bank transfer and WhatsApp trigger auto-flagging",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Keywords that trigger auto-flagging: \"outside platform\", \"direct payment\", \"bank transfer\", \"WhatsApp\", phone numbers, email addresses",
+        "statement": "The words that trigger automatic flags are the keyword list in the FR-012 Screen 5 Moderation settings (FR-012 REQ-012-105), not a fixed list on this tab",
         "rationale": "Stated in prd.md, Screen 6: Patient Detail View - Communications Tab (line 549)."
       }
     },
@@ -65941,9 +65976,9 @@
       "owner_fr": "FR-016",
       "title": "Admin can manually flag/unflag conversations with justification",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Admin can manually flag/unflag conversations with justification",
+        "statement": "Admin can add a manual observation flag with a justification and resolve an open flag with a note; a flag is resolved, never unflagged or removed (FR-012 REQ-012-109, REQ-012-023)",
         "rationale": "Stated in prd.md, Screen 6: Patient Detail View - Communications Tab (line 550)."
       }
     },
@@ -65977,9 +66012,9 @@
       "owner_fr": "FR-016",
       "title": "Export conversation as PDF for dispute resolution documentation",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Export conversation as PDF for dispute resolution documentation",
+        "statement": "Conversation export is deferred to a future phase, as in FR-012 (REQ-012-061, REQ-012-076); this tab has no Export control until then",
         "rationale": "Stated in prd.md, Screen 6: Patient Detail View - Communications Tab (line 553)."
       }
     },
@@ -66049,9 +66084,9 @@
       "owner_fr": "FR-016",
       "title": "Patient identity stays anonymized in pre-payment messages",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Anonymized patient identity maintained in pre-payment messages (display as \"Patient #HP12345\")",
+        "statement": "Admins see the patient's real identity on this tab; the masked identifier \"Patient #HP12345\" applies only on the provider screens until payment is confirmed (FR-012 REQ-012-028)",
         "rationale": "Stated in prd.md, Screen 6: Patient Detail View - Communications Tab (line 562)."
       }
     },
@@ -66349,9 +66384,9 @@
       "owner_fr": "FR-016",
       "title": "Account status filter: Active, Suspended, Locked",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Account status filter: Filter by account status; Options: Active, Suspended, Locked",
+        "statement": "Account status filter: Filter by account status; Options: Active, Suspended, Locked; Deactivated is a reserved FR-001 value that nothing sets or shows, so it is not offered (FR-001 REQ-001-188)",
         "rationale": "Stated in prd.md, Screen 1: Patient List View, Account Status Filter row."
       }
     },
@@ -66529,9 +66564,9 @@
       "owner_fr": "FR-016",
       "title": "Admin roles follow the FR-031 role model",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Admin roles and permissions follow FR-031 (Admin Access Control & Permissions): default roles Super Admin, Aftercare Coordinator, Billing Staff, and Support Staff, plus custom roles",
+        "statement": "Admin roles and permissions follow FR-031 (Admin Access Control & Permissions): default roles Super Admin, Aftercare Coordinator, Billing Admin, and Support Staff, plus custom roles",
         "rationale": "Stated verbatim in prd.md, Multi-Tenant Architecture (line 38)."
       }
     },
@@ -66649,9 +66684,9 @@
       "owner_fr": "FR-016",
       "title": "Each booking support request is an FR-034 support case with a Ticket Source",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "Each request on the Booking Support Requests screen is an FR-034 support case whose Ticket Source shows that the patient raised it through Contact Support on an FR-006 booking screen; the Ticket Source values are defined by FR-034",
+        "statement": "Each request on the Booking Support Requests screen is an FR-034 support case that carries a request type (booking cancellation or booking change, shown here as Cancellation or Appointment Change; FR-034 REQ-034-167); the patient raised it through Contact Support on an FR-006 booking screen, and the Ticket Source values are defined by FR-034",
         "rationale": "Stated in prd.md, Screen 9: Booking Support Requests (Cancellation and Change), Business Rules."
       }
     },
@@ -66860,6 +66895,30 @@
       }
     },
     {
+      "id": "REQ-016-226",
+      "type": "Rule",
+      "owner_fr": "FR-016",
+      "title": "Admin email change is saved unverified and shown on the Overview",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "An email change made with Edit Patient is saved as unverified, a notice goes to the old address, and the patient confirms a code sent to the new address at the next login (FR-001 REQ-001-184); an address already in use is refused. The Overview shows the verification state and an \"Email change pending\" mark",
+        "rationale": "Edit Patient and Overview Email Verified row; the verification flow is owned by FR-001 REQ-001-184."
+      }
+    },
+    {
+      "id": "REQ-016-227",
+      "type": "Rule",
+      "owner_fr": "FR-016",
+      "title": "Support Case Reference is a plain reference without View Support Center",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "On Booking Support Requests the Support Case Reference opens the support case for an admin with View Support Center; for an admin without it the reference is plain text with no link (FR-034 REQ-034-094)",
+        "rationale": "Booking Support Requests screen; the access rule is owned by FR-034 REQ-034-094."
+      }
+    },
+    {
       "id": "REQ-017-001",
       "type": "Rule",
       "owner_fr": "FR-017",
@@ -67057,9 +67116,9 @@
       "owner_fr": "FR-017",
       "title": "Billing RBAC roles",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "System MUST implement role-based access control (RBAC) with granular permissions: Billing Admin (full access) and Super Admin (full access); read-only finance access is granted by permission, not by a named role",
+        "statement": "System MUST implement role-based access control (RBAC) with the FR-031 permissions: Process Payouts and View Transactions (the read-only finance permission) are held by Super Admin and Billing Admin by default, and Issue Refunds by Super Admin by default; read-only finance access is granted by permission, not by a named role",
         "rationale": "PRD id REQ-017-017 (prd.md line 1786). Restated by Security Considerations Authorization (lines 1475-1478: Billing Viewer cannot approve payouts or refunds; Super Admin has the same refund flow as Billing Admin)."
       }
     },
@@ -67393,9 +67452,9 @@
       "owner_fr": "FR-017",
       "title": "Read-only finance access is a permission; money-moving actions need re-authentication",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Billing Admin and Super Admin can view all admin financial screens and execute payout approvals, retries, refunds, overrides, and bulk actions. Read-only finance access is granted by permission, not by a named role. An admin who holds only the read-only finance permission can access the same screens in read-only mode, but selection checkboxes, money-moving buttons, retry buttons, override buttons, and confirmation modals are hidden. Any action that moves money or changes a financial status MUST invoke the financial re-authentication step before the final confirm action is enabled",
+        "statement": "Admin access follows the FR-031 permissions: Process Payouts covers the money-moving payout actions (payout approvals, retries, overrides and bulk actions) and View Transactions is the read-only finance permission that opens every admin financial screen; Super Admin and Billing Admin hold both by default. A refund needs Issue Refunds, which Super Admin holds by default and Billing Admin does not. Read-only finance access is the View Transactions permission, not a named role. An admin who holds only View Transactions can access the same screens in read-only mode, but selection checkboxes, money-moving buttons, retry buttons, override buttons, and confirmation modals are hidden. Any action that moves money or changes a financial status MUST invoke the financial re-authentication step before the final confirm action is enabled",
         "rationale": "Admin Platform Screens, Role-Based Action Visibility (prd.md lines 307-309)."
       }
     },
@@ -67597,9 +67656,9 @@
       "owner_fr": "FR-017",
       "title": "Missing or invalid bank details block approval",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Bank account details shown ONLY if provider has a valid bank account on file in FR-032 Billing Settings. Statements with missing or invalid bank details remain visible in the list for operational follow-up, but Payout Readiness is not \"Ready\" and approval controls remain disabled until the provider updates payout details in FR-032 / PR-06",
+        "statement": "Bank account details shown ONLY if provider has a valid bank account on file in FR-032 Billing Settings. Statements with missing or invalid bank details remain visible in the list for operational follow-up, but Payout Readiness is not \"Ready\" and approval controls remain disabled until the provider updates payout details in FR-032 / PR-06. A Suspended clinic's Owner can still update the bank details in FR-032 (REQ-032-067); a Deactivated clinic has no portal access, so an admin collects the corrected bank details outside the platform and records them as for a manually paid clinic, after which Payout Readiness follows the stored details as usual",
         "rationale": "Screen 2 business rules (prd.md lines 397-398)."
       }
     },
@@ -67609,9 +67668,9 @@
       "owner_fr": "FR-017",
       "title": "When Approve Payout is enabled",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "\"Approve Payout\" button enabled ONLY for statements with status \"Pending Approval\" or \"Overdue\", and not while Payout Readiness is \"Manual Review Required\". \"Approve Payout\" is enabled ONLY when Payout Readiness = \"Ready\", the user role is Billing Admin or Super Admin, and financial re-authentication succeeds",
+        "statement": "\"Approve Payout\" button enabled ONLY for statements with status \"Pending Approval\" or \"Overdue\", and not while Payout Readiness is \"Manual Review Required\". \"Approve Payout\" is enabled ONLY when Payout Readiness = \"Ready\", the admin holds Process Payouts, and financial re-authentication succeeds",
         "rationale": "Screen 2 business rules (prd.md line 408) and Screen 3 business rules (line 495)."
       }
     },
@@ -67981,9 +68040,9 @@
       "owner_fr": "FR-017",
       "title": "Discount usage deep link, filters, search and export",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "\"View in A-06\" deep-link on each row opens the discount's management page in FR-019. Implement filtering by: Status (Active / Expired / Disabled), Discount Type (Platform-Wide / Provider-Specific / Affiliate), and Active Window date range (codes valid within a given period). Support free-text search by discount code or campaign name. Export to CSV button for finance reconciliation (includes all visible columns for the filtered result set)",
+        "statement": "\"View in A-06\" deep-link on each row opens the discount's management page in FR-019. Implement filtering by: Status (the program lifecycle state), Program Type (Admin-via-Provider / Provider Self-Created / Hairline-Funded and Direct-Issued), and Active Window date range (codes valid within a given period). Support free-text search by discount code or campaign name. Export to CSV button for finance reconciliation (includes all visible columns for the filtered result set)",
         "rationale": "Screen 5 notes (prd.md lines 777-783)."
       }
     },
@@ -69099,9 +69158,9 @@
       "owner_fr": "FR-017",
       "title": "When an affiliate payout is payable on Screen 6",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "An affiliate payout is payable on Screen 6 only when the payout month is closed, the unpaid balance is at or above the USD 50 minimum (an Inactive affiliate has no minimum), Payout Readiness is Ready and no hold applies. Screen 6 shows a Held or Flagged column: Held for the unpaid commission of a Suspended affiliate, Flagged for a payout with a booking that still breaches the margin check.",
+        "statement": "An affiliate payout is payable on Screen 6 only when the payout month is closed, the unpaid balance is at or above the USD 50 minimum (an Inactive affiliate has no minimum), Payout Readiness is Ready and no hold applies. Screen 6 shows a Held or Flagged column: Held for the unpaid commission of a Suspended affiliate, Flagged for a payout with a booking that still breaches the margin check. An Inactive affiliate without a ban flag stays in the monthly run for any month with unpaid commission: the whole unpaid balance, including commission confirmed after the offboarding, is paid in the next run with no USD 50 minimum, a normal offboarding clears any hold, and there is no admin-initiated final payout on this screen",
         "rationale": "Screen 6 business rules; FR-018 payout and margin guard rules."
       }
     },
@@ -69151,6 +69210,30 @@
       "attrs": {
         "statement": "On Screen 7, for a Stripe Connect clinic the Target Payout Cycle field is hidden and Pay Now replaces Add to Next Payout. Pay Now is available only when the booking was not already paid, its funds are released and the admin has provided an Internal Note; it starts a direct per-booking payout, which shows Waiting for clinic setup until the clinic's Stripe setup is Ready, and the provider notification is mandatory. Confirm Already Paid and Escalate Technical Investigation stay for both rails.",
         "rationale": "Screen 7 Dispute Resolution Panel and business rules; Alternative Flow B4."
+      }
+    },
+    {
+      "id": "REQ-017-202",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "A refund reverses commission in proportion, including an aftercare plan refund",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A refund reverses the commission on the refunded money in the same proportion, so the clinic's matching amount is the refunded money less the reversed commission; this holds for a part refund, a patient cancellation refund and the pro-rata refund of the unused full months of an aftercare plan paid in full, and the payout effect follows REQ-017-075 and REQ-017-191",
+        "rationale": "Payout effect of a refund on Screen 5; the aftercare refund amount is owned by FR-011 REQ-011-097 and the commission principle by FR-015 REQ-015-041."
+      }
+    },
+    {
+      "id": "REQ-017-203",
+      "type": "Rule",
+      "owner_fr": "FR-017",
+      "title": "A handover fee is a credit entry on the clinic balance record",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "A handover fee that Hairline owes a provider after an aftercare handover (FR-011) is a credit entry of type Handover Fee on the clinic's balance record, created only when the admin-set fee is above zero; it is paid by Hairline, never taken from a patient price or from the provider's earnings, carries no commission, and is added to the clinic's next payout on either rail",
+        "rationale": "Screen 3 payout adjustments; the fee amount and the handover are owned by FR-011 REQ-011-057."
       }
     },
     {
@@ -101810,7 +101893,7 @@
       "owner_fr": "FR-015",
       "title": "Provider Creation Wizard",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
         "description": "Six-step wizard (basic information, professional details, clinic, documents, commission and settings, review) that creates an Active provider (Screen 2)."
@@ -101822,7 +101905,7 @@
       "owner_fr": "FR-015",
       "title": "Provider Profile Details",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "platform": "admin",
         "description": "Tabbed provider view: Basic Information, Languages, Staff List, Awards, Reviews, Documents, Commission and Financials, Activity Log; header quick actions including Login as Provider, and a Closure request notice with Deactivate Provider and Reject Request while a closure request is pending (Screen 3). Edit Profile is hidden and all tabs are read-only for a Deactivated provider."
@@ -101870,7 +101953,7 @@
       "owner_fr": "FR-016",
       "title": "Patient Detail View - Overview Tab",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "platform": "admin",
         "description": "Patient profile summary and current status. Controls: Edit Patient, Reset Password, Suspend Account, Lift Suspension (only while Suspended), Unlock Account (only while Locked), Send Notification, Resolve Support, flags View All, copy and mail actions."
@@ -101990,7 +102073,7 @@
       "owner_fr": "FR-017",
       "title": "Provider Payout Detail Modal",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "platform": "admin",
         "description": "UI controls (no field): Batch Approval Confirmation Modal (summary, counts, warning, re-authentication, confirm, cancel, result summary); Approve Payout Confirmation Modal; Mark as Paid Modal (re-authentication, bank reference, payment date, optional bank charge, confirm); Retry Payout Confirmation Modal; Clear Manual Review input; Export payout report."
@@ -102038,7 +102121,7 @@
       "owner_fr": "FR-017",
       "title": "Discount Usage Overview",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
         "description": "PRD prd.md lines 750-785. UI controls (no field): FR-019 detail link; Filters, search and export."
@@ -102050,7 +102133,7 @@
       "owner_fr": "FR-017",
       "title": "Affiliate Billing: Commission Payouts",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
         "description": "PRD prd.md lines 787-901. UI controls (no field): Select checkbox; Actions (View Details, Process Payout, Retry Payout, Add Note, Download Report); Bulk Payout Toolbar (Selected Payouts, Selected Total, Process All Selected Payouts, Clear Selection); Bulk Affiliate Payout Confirmation Modal; Process Payout Confirmation Modal; Retry Payout Confirmation Modal; Pending and Paid tabs, filters."
@@ -105385,9 +105468,9 @@
       "owner_fr": "FR-015",
       "title": "Provider creation rate limit",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Maximum provider creations per admin per hour (Implementation Notes, Security Considerations).",
+        "description": "Maximum provider creations per admin per hour (Implementation Notes, Security Considerations). A fixed platform setting: not editable in the admin console and not listed on FR-026 Screen 8.",
         "default": "10",
         "unit": "creations per admin per hour"
       }
@@ -117292,7 +117375,7 @@
       "owner_fr": "FR-015",
       "title": "System applies the deactivation cascade and notifications",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "prd_ref": "A7 step 4"
       }
@@ -117785,9 +117868,9 @@
       "id": "STP-016-067",
       "type": "Step",
       "owner_fr": "FR-016",
-      "title": "System sends the reset email with a 6-digit OTP to the patient",
+      "title": "System sends the reset email with a 6-digit OTP to the patient; when the patient completes the reset, every existing session of the patient ends on every device",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A4 step 7"
       }
@@ -117906,9 +117989,9 @@
       "id": "STP-016-079",
       "type": "Step",
       "owner_fr": "FR-016",
-      "title": "System immediately revokes patient authentication tokens",
+      "title": "System immediately revokes patient authentication tokens, which ends every existing session of the patient on every device",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A6 step 9"
       }
@@ -118214,9 +118297,9 @@
       "id": "STP-016-125",
       "type": "Step",
       "owner_fr": "FR-016",
-      "title": "System sets the account to Active and logs Account Unlock",
+      "title": "System sets the account to Active, clears the lock time, resets the failed-attempt count and logs Account Unlock",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A10 step 3"
       }
@@ -155429,6 +155512,14 @@
       "calculated_by": null
     },
     {
+      "id": "ENT-provider.aftercare_participation",
+      "entity_id": "ENT-provider",
+      "name": "aftercare_participation",
+      "data_type": "bool",
+      "required": false,
+      "calculated_by": null
+    },
+    {
       "id": "ENT-provider.availability_status",
       "entity_id": "ENT-provider",
       "name": "availability_status",
@@ -163483,6 +163574,12 @@
       "sort_order": 3
     },
     {
+      "field_id": "ENT-clinic-balance-entry.entry_type",
+      "value": "handover_fee",
+      "label": "Handover fee credit",
+      "sort_order": 4
+    },
+    {
       "field_id": "ENT-clinic-balance-entry.state",
       "value": "open",
       "label": "Open",
@@ -166313,6 +166410,12 @@
       "value": "clinic_cancellation_deduction",
       "label": "Clinic Cancellation Deduction",
       "sort_order": 4
+    },
+    {
+      "field_id": "ENT-payout-adjustment.adjustment_type",
+      "value": "handover_fee",
+      "label": "Handover Fee",
+      "sort_order": 5
     },
     {
       "field_id": "ENT-payout-adjustment.status",
@@ -182182,7 +182285,7 @@
       "verb": "active in",
       "to_id": "STG-provider-01-invited",
       "attrs": {
-        "rules": 32
+        "rules": 33
       },
       "derived": true
     },
@@ -182200,7 +182303,7 @@
       "verb": "active in",
       "to_id": "STG-provider-03-active",
       "attrs": {
-        "rules": 91
+        "rules": 92
       },
       "derived": true
     },
@@ -182209,7 +182312,7 @@
       "verb": "active in",
       "to_id": "STG-provider-04-suspended",
       "attrs": {
-        "rules": 45
+        "rules": 47
       },
       "derived": true
     },
@@ -182218,7 +182321,7 @@
       "verb": "active in",
       "to_id": "STG-provider-05-offboarded",
       "attrs": {
-        "rules": 38
+        "rules": 39
       },
       "derived": true
     },
@@ -182347,7 +182450,7 @@
       "verb": "active in",
       "to_id": "STG-main-04-booking",
       "attrs": {
-        "rules": 29
+        "rules": 30
       },
       "derived": true
     },
@@ -182365,7 +182468,7 @@
       "verb": "active in",
       "to_id": "STG-patient-03-active",
       "attrs": {
-        "rules": 173
+        "rules": 174
       },
       "derived": true
     },
@@ -182665,7 +182768,7 @@
       "verb": "active in",
       "to_id": "STG-payout-02-approval",
       "attrs": {
-        "rules": 9
+        "rules": 11
       },
       "derived": true
     },
@@ -222593,6 +222696,12 @@
     {
       "from_id": "REQ-013-017",
       "verb": "applies to",
+      "to_id": "EVT-review-response-removed",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-013-017",
+      "verb": "applies to",
       "to_id": "EVT-takedown-decided",
       "attrs": {}
     },
@@ -240645,6 +240754,90 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-015-139",
+      "verb": "applies at",
+      "to_id": "STG-provider-04-suspended",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-139",
+      "verb": "applies at",
+      "to_id": "STG-provider-05-offboarded",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-139",
+      "verb": "applies to",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-139",
+      "verb": "applies to",
+      "to_id": "ENT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-139",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-140",
+      "verb": "applies at",
+      "to_id": "STG-provider-01-invited",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-140",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-140",
+      "verb": "applies at",
+      "to_id": "STG-provider-04-suspended",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-140",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-140",
+      "verb": "applies to",
+      "to_id": "ENT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-140",
+      "verb": "applies to",
+      "to_id": "ENT-provider.aftercare_participation",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-140",
+      "verb": "applies to",
+      "to_id": "SCR-015-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-140",
+      "verb": "applies to",
+      "to_id": "SCR-015-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-140",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-015",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-016-001",
       "verb": "applies at",
       "to_id": "STG-patient-03-active",
@@ -240906,6 +241099,18 @@
       "from_id": "REQ-016-009",
       "verb": "applies to",
       "to_id": "ENT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-009",
+      "verb": "applies to",
+      "to_id": "ENT-patient.failed_login_count",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-009",
+      "verb": "applies to",
+      "to_id": "ENT-patient.locked_at",
       "attrs": {}
     },
     {
@@ -245315,6 +245520,12 @@
     {
       "from_id": "REQ-016-208",
       "verb": "applies to",
+      "to_id": "ENT-support-case.request_type",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-208",
+      "verb": "applies to",
       "to_id": "ENT-support-case.ticket_source",
       "attrs": {}
     },
@@ -245770,6 +245981,78 @@
     },
     {
       "from_id": "REQ-016-225",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-226",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-226",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-226",
+      "verb": "applies to",
+      "to_id": "ENT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-226",
+      "verb": "applies to",
+      "to_id": "ENT-patient.email_verified",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-226",
+      "verb": "applies to",
+      "to_id": "ENT-patient.pending_email",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-226",
+      "verb": "applies to",
+      "to_id": "SCR-016-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-226",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-227",
+      "verb": "applies at",
+      "to_id": "STG-main-04-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-227",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-227",
+      "verb": "applies to",
+      "to_id": "ENT-support-case.case_id",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-227",
+      "verb": "applies to",
+      "to_id": "SCR-016-09",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-016-227",
       "verb": "decided by",
       "to_id": "SRC-PRD-016",
       "attrs": {}
@@ -250660,6 +250943,60 @@
     },
     {
       "from_id": "REQ-017-201",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-202",
+      "verb": "applies at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-202",
+      "verb": "applies to",
+      "to_id": "ENT-clinic-balance-entry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-202",
+      "verb": "applies to",
+      "to_id": "ENT-payout-adjustment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-202",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-017",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-203",
+      "verb": "applies at",
+      "to_id": "STG-payout-02-approval",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-203",
+      "verb": "applies to",
+      "to_id": "ENT-clinic-balance-entry",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-203",
+      "verb": "applies to",
+      "to_id": "ENT-payout-adjustment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-203",
+      "verb": "applies to",
+      "to_id": "SCR-017-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-017-203",
       "verb": "decided by",
       "to_id": "SRC-PRD-017",
       "attrs": {}
@@ -336494,6 +336831,16 @@
     {
       "from_id": "SCR-015-02",
       "verb": "shows",
+      "to_id": "ENT-provider.aftercare_participation",
+      "attrs": {
+        "provenance": "default",
+        "label": "Aftercare Participation (default On)",
+        "editable": true
+      }
+    },
+    {
+      "from_id": "SCR-015-02",
+      "verb": "shows",
       "to_id": "ENT-provider.awards",
       "attrs": {
         "provenance": "user input",
@@ -336937,6 +337284,16 @@
         "provenance": "inherited from another FR",
         "label": "Total review count (Tab 5)",
         "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-015-03",
+      "verb": "shows",
+      "to_id": "ENT-provider.aftercare_participation",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Aftercare Participation",
+        "editable": true
       }
     },
     {
@@ -337545,6 +337902,15 @@
     {
       "from_id": "SCR-016-02",
       "verb": "shows",
+      "to_id": "ENT-patient.email_verified",
+      "attrs": {
+        "provenance": "inherited from another FR",
+        "label": "Email Verified"
+      }
+    },
+    {
+      "from_id": "SCR-016-02",
+      "verb": "shows",
       "to_id": "ENT-patient.flags_alerts",
       "attrs": {
         "provenance": "retrieved",
@@ -337576,6 +337942,15 @@
       "attrs": {
         "provenance": "inherited from another FR",
         "label": "Patient Code"
+      }
+    },
+    {
+      "from_id": "SCR-016-02",
+      "verb": "shows",
+      "to_id": "ENT-patient.pending_email",
+      "attrs": {
+        "provenance": "inherited from another FR",
+        "label": "Email change pending"
       }
     },
     {
@@ -338891,6 +339266,15 @@
     {
       "from_id": "SCR-017-03",
       "verb": "shows",
+      "to_id": "ENT-provider-payout.payout_date",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Release Date"
+      }
+    },
+    {
+      "from_id": "SCR-017-03",
+      "verb": "shows",
       "to_id": "ENT-provider-payout.payout_period",
       "attrs": {
         "provenance": "system calculated",
@@ -339527,24 +339911,6 @@
     {
       "from_id": "SCR-017-07",
       "verb": "shows",
-      "to_id": "ENT-discount-code.discount_type",
-      "attrs": {
-        "provenance": "inherited from another FR",
-        "label": "Type"
-      }
-    },
-    {
-      "from_id": "SCR-017-07",
-      "verb": "shows",
-      "to_id": "ENT-discount-code.status",
-      "attrs": {
-        "provenance": "inherited from another FR",
-        "label": "Status"
-      }
-    },
-    {
-      "from_id": "SCR-017-07",
-      "verb": "shows",
       "to_id": "ENT-discount-usage-summary.hairline_cost",
       "attrs": {
         "provenance": "system calculated",
@@ -339608,10 +339974,28 @@
     {
       "from_id": "SCR-017-07",
       "verb": "shows",
+      "to_id": "ENT-promotion-program.lifecycle_state",
+      "attrs": {
+        "provenance": "inherited from another FR",
+        "label": "Status"
+      }
+    },
+    {
+      "from_id": "SCR-017-07",
+      "verb": "shows",
       "to_id": "ENT-promotion-program.name",
       "attrs": {
         "provenance": "inherited from another FR",
         "label": "Discount Name"
+      }
+    },
+    {
+      "from_id": "SCR-017-07",
+      "verb": "shows",
+      "to_id": "ENT-promotion-program.program_type",
+      "attrs": {
+        "provenance": "inherited from another FR",
+        "label": "Type"
       }
     },
     {
@@ -339830,15 +340214,6 @@
     {
       "from_id": "SCR-017-08",
       "verb": "shows",
-      "to_id": "ENT-discount-code.discount_code",
-      "attrs": {
-        "provenance": "inherited from another FR",
-        "label": "Discount Code(s); Referral Booking: Referral Code"
-      }
-    },
-    {
-      "from_id": "SCR-017-08",
-      "verb": "shows",
       "to_id": "ENT-patient-invoice.currency",
       "attrs": {
         "provenance": "retrieved",
@@ -339852,6 +340227,15 @@
       "attrs": {
         "provenance": "retrieved",
         "label": "Referral Booking: Patient Name"
+      }
+    },
+    {
+      "from_id": "SCR-017-08",
+      "verb": "shows",
+      "to_id": "ENT-promotion-code.code",
+      "attrs": {
+        "provenance": "inherited from another FR",
+        "label": "Discount Code(s); Referral Booking: Referral Code"
       }
     },
     {
@@ -396583,6 +396967,12 @@
       "from_id": "STP-015-174",
       "verb": "done by",
       "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-015-174",
+      "verb": "next",
+      "to_id": "STP-009-089",
       "attrs": {}
     },
     {
@@ -461284,6 +461674,65 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-005131-52f0aeb9",
+      "at": "2026-11-25T00:51:31.705731+00:00",
+      "changed_by": "docs-manager",
+      "reason": "Cross-FR alignment of owner PRDs: FR-012 read-only conversation conditions; FR-013 response-removed event key and admin review actions for a Deactivated provider; FR-015 conversations on suspension, Aftercare Participation setting, commission reversal on refund, fixed creation rate limit; FR-016 permission wording, session end on reset, unlock fields, email change, flag and export rules, request type and case reference; FR-017 permission names, commission reversal on refund, handover fee credit, release date for a Connect payout, promotion fields on Screens 5 and 6, Inactive affiliate payout, Deactivated clinic bank details.",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-provider.aftercare_participation",
+        "REQ-015-139",
+        "REQ-015-140",
+        "REQ-016-226",
+        "REQ-016-227",
+        "REQ-017-202",
+        "REQ-017-203"
+      ],
+      "nodes_updated": [
+        "ENT-clinic-balance-entry.entry_type",
+        "ENT-payout-adjustment.adjustment_type",
+        "REQ-012-018",
+        "REQ-013-017",
+        "REQ-013-039",
+        "REQ-015-041",
+        "REQ-015-066",
+        "REQ-016-009",
+        "REQ-016-013",
+        "REQ-016-050",
+        "REQ-016-053",
+        "REQ-016-070",
+        "REQ-016-140",
+        "REQ-016-146",
+        "REQ-016-147",
+        "REQ-016-148",
+        "REQ-016-151",
+        "REQ-016-157",
+        "REQ-016-183",
+        "REQ-016-198",
+        "REQ-016-208",
+        "REQ-017-017",
+        "REQ-017-047",
+        "REQ-017-064",
+        "REQ-017-065",
+        "REQ-017-100",
+        "REQ-017-197",
+        "SCR-015-02",
+        "SCR-015-03",
+        "SCR-016-02",
+        "SCR-017-03",
+        "SCR-017-07",
+        "SCR-017-08",
+        "SET-provider-creation-rate-limit",
+        "STP-015-174",
+        "STP-016-067",
+        "STP-016-079",
+        "STP-016-125"
+      ],
+      "edges_added": 48,
+      "edges_removed": 3,
+      "rows": 127
+    },
     {
       "id": "cs-20261125-004221-34eb1465",
       "at": "2026-11-25T00:42:21.378091+00:00",
