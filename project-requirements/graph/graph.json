@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T07:53:27Z",
+  "generated_at": "2026-11-25T07:56:25Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -50683,6 +50683,18 @@
       "version": 1,
       "attrs": {
         "statement": "On an Active plan, Pay now also lets the patient pay the next scheduled installment, or all remaining installments at once, in due-date order; the due dates of unpaid installments do not change, and the plan is Completed when every installment is Paid."
+      }
+    },
+    {
+      "id": "REQ-007B-113",
+      "type": "Rule",
+      "owner_fr": "FR-007B",
+      "title": "A failed scheduled installment job is queued for retry and the admin is alerted when the scheduling system is unavailable",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST queue a failed scheduled installment job for retry and MUST alert the admin when the scheduling system is unavailable (the schedule of the job is owned by FR-017, REQ-017-183).",
+        "rationale": "Carried clause Failure handling of the original PRD, restored in prd.md Business Rules in version 1.14 and now stated as a rule."
       }
     },
     {
@@ -181132,7 +181144,7 @@
       "verb": "active in",
       "to_id": "STG-main-05-payment",
       "attrs": {
-        "rules": 111
+        "rules": 112
       },
       "derived": true
     },
@@ -208024,6 +208036,24 @@
     },
     {
       "from_id": "REQ-007B-112",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-007B",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007B-113",
+      "verb": "applies at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007B-113",
+      "verb": "applies to",
+      "to_id": "ENT-installment-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007B-113",
       "verb": "decided by",
       "to_id": "SRC-PRD-007B",
       "attrs": {}
@@ -462371,6 +462401,20 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-075509-9a718952",
+      "at": "2026-11-25T07:55:09.096746+00:00",
+      "changed_by": "controller",
+      "reason": "Backlog points settled: the carried scheduler failure-handling clause (queue a failed job for retry, alert the admin when the scheduling system is unavailable) had no graph Rule.",
+      "source_id": "SRC-PRD-007B",
+      "nodes_added": [
+        "REQ-007B-113"
+      ],
+      "nodes_updated": [],
+      "edges_added": 3,
+      "edges_removed": 0,
+      "rows": 9
+    },
     {
       "id": "cs-20261125-075211-4be36118",
       "at": "2026-11-25T07:52:11.066713+00:00",

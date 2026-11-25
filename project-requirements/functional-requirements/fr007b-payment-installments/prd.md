@@ -553,7 +553,7 @@ Per Hairline Platform Constitution (Principle VI: Data Integrity & Audit Trail),
 
 **Carried from dropped sections (original wording)**:
 
-- **Failure handling**: Queue failed jobs for retry; alert admin if scheduling system unavailable
+- **Failure handling**: see REQ-007B-113
 - **Provenance**: resolves the AcceptanceEvent, accepted parent quote and subquote IDs and versions through its booking (FR-007 REQ-007-019)
 - **Entity 3 - Payment Method**: The single record of a patient's saved payment method, used by installment plans here and read by the FR-007 payment screens and the FR-016 patient payments view. The payment method it records is a card: a tokenized recurring payment method. Installments need a saved card and the first installment must use it; a bank transfer cannot pay an installment plan
 - **Ownership**: FR-007B owns installment plans and payment methods; the Stripe account and the split-payment setting belong to FR-029
@@ -738,6 +738,7 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 - **REQ-007B-018**: System MUST execute 3 automatic retry attempts for an installment whose charge failed for a retryable reason (any failure except a hard decline, so a technical fault or insufficient funds), with waits of 1 day, 3 days and 7 days (retries fall on day 1, day 4 and day 11 after the failure). A hard decline is a refusal because the card is expired, lost, stolen, invalid or flagged for fraud. After a hard decline, or when a retry returns one, System MUST NOT retry automatically and MUST cancel the retries still pending; it MUST notify the patient, who must use Pay now or update the card, and the installment becomes Defaulted on day 11 after the due date if still unpaid. Admin retries do not count toward the 3 automatic retries
 - **REQ-007B-019**: System MUST flag installment plan as "Defaulted" after 3 failed retry attempts, or on day 11 after the due date when the charge was hard declined and the installment is still unpaid
 - **REQ-007B-020**: System MUST notify the admin (for intervention), the patient and the provider of a defaulted installment plan
+- **REQ-007B-113**: System MUST queue a failed scheduled installment job for retry and MUST alert the admin when the scheduling system is unavailable (the schedule of the job is owned by FR-017, REQ-017-183)
 
 ### Cancellation & Refund Requirements
 
@@ -779,6 +780,7 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 | 2026-11-23 | 1.16 | Second logic review of the installment flows. A pending provider fault now also pauses the count toward the cancellation point and the hand-off to FR-006. Paused installments on a Defaulted plan carry no Overdue flag, notice, reminder or fee and are charged once at the next daily run when the plan returns to Active, which happens whoever pays. Mark as Resolved is limited to a recorded bank transfer that a second billing admin approves. The late fee has a currency and a base, sits outside the clinic's share and commission, waits until the retries end, lapses with the plan and is returned on a provider-fault refund. Screen 1 shows the late fee, grace period and cancellation point, the plan keeps them as confirmed, and the overdue notice states the cancellation date. A date change keeps the due dates and recalculates only the final payment deadline. Only enabled installment counts are offered. Pay now can pay early. The provider list covers plans of every status. The clinic's share follows the FR-007 timing. Insufficient funds is retried and hard declines are defined. One void step runs before the refund and sets the plan Cancelled. The schedule of the daily job is left to FR-017. The word cancelled is spelled one way. | Controller / Documentation |
 | 2026-11-25 | 1.16 | Reference only, no version change: the Source line now names the canonical constitution file `local-docs/project-requirements/constitution.md`. | Product Owner |
 | 2026-11-25 | 1.17 | Cross-FR alignment. Installment actions are gated by the FR-031 permissions (Retry Charge, Resolve Installments) instead of role names, and the second approver of Mark as Resolved holds Resolve Installments; refund approval names the Issue Refunds permission. The installment-charged and plan-completed notifications are stated as going to the patient. Completing the last installment is named as the moment the booking becomes Full paid, which FR-018 reads. The installment job schedule is pointed to FR-017. | Product Owner / Documentation |
+| 2026-11-25 | 1.18 | Backlog points settled: the scheduler failure-handling clause now stands as rule REQ-007B-113 (queue a failed job for retry, alert the admin when the scheduling system is unavailable); the other backlog points were already settled by the live rules or are owner questions. | Claude (AI Assistant) |
 
 ---
 

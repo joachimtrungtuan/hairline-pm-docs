@@ -1,0 +1,9 @@
+# Backlog settle FR-007B: the scheduler failure-handling clause becomes a Rule.
+reason: "Backlog points settled: the carried scheduler failure-handling clause (queue a failed job for retry, alert the admin when the scheduling system is unavailable) had no graph Rule."
+by: controller
+source_id: SRC-PRD-007B
+operations:
+  - {"op": "add_node", "id": "REQ-007B-113", "type": "Rule", "owner_fr": "FR-007B", "title": "A failed scheduled installment job is queued for retry and the admin is alerted when the scheduling system is unavailable", "attrs": {"statement": "System MUST queue a failed scheduled installment job for retry and MUST alert the admin when the scheduling system is unavailable (the schedule of the job is owned by FR-017, REQ-017-183).", "rationale": "Carried clause Failure handling of the original PRD, restored in prd.md Business Rules in version 1.14 and now stated as a rule."}}
+  - {"op": "add_edge", "from": "REQ-007B-113", "verb": "applies at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "REQ-007B-113", "verb": "applies to", "to": "ENT-installment-payment"}
+  - {"op": "add_edge", "from": "REQ-007B-113", "verb": "decided by", "to": "SRC-PRD-007B"}
