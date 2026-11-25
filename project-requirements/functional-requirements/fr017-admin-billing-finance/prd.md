@@ -3,7 +3,7 @@
 **Module**: A-05: Billing & Financial Reconciliation | PR-05: Financial Management & Reporting
 **Feature Branch**: `fr017-admin-billing-finance`
 **Created**: 2025-11-12
-**Status**: 🟡 Revised — Pending Consolidated Verification
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-017 from `system-prd.md`; [SRC-MTG-002](../../sources/meetings/meeting-02-launch-quote-options-fund-release-and-payments.md#mtg-002-o01-quote-option-contract), approved FR-005/FR-006 accepted-subquote handoff, and [FR-007 payment context](../fr007-payment-processing/prd.md#payment--billing-rules). This revision clarifies existing booking-based billing; no new payment policy.
 
 ---
@@ -1828,13 +1828,7 @@ A patient requests refund due to cancellation, admin reviews request against can
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-|------|------|------|--------------------|
-| Product Owner — v2.7 documentation clarification | Joachim Trung Tuan | 2026-10-13 | Approved to complete remaining Meeting 2 quote-model work; prior approvals remain historical, with consolidated verification and implementation reconciliation pending for this revision. |
-| Product Owner — v2.10 post-suspension payment reconciliation | Joachim Trung Tuan | 2026-10-15 | Approved (CR-FR017-20261015-01); implementation reconciliation required. |
-| Product Owner — v2.11 MTG-002 quote model alignment | Joachim Trung Tuan | 2026-10-16 | Documentation approved via the 2026-10-16 decision log (CR-FR017-20261016-01); consolidated verification pending; implementation reconciliation required. |
-| Product Owner — v2.12 commission base for all discount types | Joachim Trung Tuan | 2026-10-16 | Documentation approved via the 2026-10-16 Product Owner follow-up decisions (CR-FR017-20261016-01); implementation reconciliation pending. |
-| Product Owner — v2.13 and v2.14 verification and final audit corrections | Joachim Trung Tuan | 2026-10-18 | Approved via MTG-002 decision log (documentation only) (CR-FR017-20261016-01). |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

@@ -3,7 +3,7 @@
 **Module**: PR-06: Profile & Settings Management
 **Feature Branch**: `fr032-provider-dashboard-settings`
 **Created**: 2025-11-17
-**Status**: 🟡 Revised — Pending Consolidated Verification
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-032 from system-prd.md
 
 ---
@@ -1956,10 +1956,7 @@ A provider closing their clinic permanently requests account closure, and an adm
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-|------|------|------|--------------------|
-| Product Owner | Joachim Trung Tuan | 2026-10-18 | Approved FR-032 v1.10 to v1.12 via MTG-002 decision log (documentation only), including CR-FR032-20261016-01 |
-| Product Owner | Joachim Trung Tuan | 2026-10-27 | Approved FR-032 v1.13 (documentation only) |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

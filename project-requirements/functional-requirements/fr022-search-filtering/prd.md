@@ -3,7 +3,7 @@
 **Module**: P-02: Quote Request & Management | P-06: Communication | P-08: Help & Support | PR-01: Provider Team | PR-02: Inquiry & Quote Management | PR-03: Treatment Execution & Documentation | PR-04: Aftercare Participation | PR-05: Financial Management & Reporting | PR-06: Profile & Settings Management | PR-07: Communication & Messaging | A-01: Patient Management & Oversight | A-02: Provider Management & Onboarding | A-03: Aftercare Team Management | A-05: Billing & Financial Reconciliation | A-06: Discount & Promotion Management | A-07: Affiliate Program Management | A-09: System Settings & Configuration | A-10: Communication Monitoring & Support
 **Feature Branch**: `fr022-search-filtering`
 **Created**: 2025-11-12
-**Status**: 🟡 Revised — Pending Consolidated Verification
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-022 from system-prd.md
 
 ---
@@ -2186,14 +2186,7 @@ A patient has received two parent quotes from two providers. Each parent quote o
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-|------|------|------|--------------------|
-| Product Owner | — | 2026-04-13 | ✅ Approved |
-| Technical Lead | — | 2026-04-13 | ✅ Approved |
-| Stakeholder | — | 2026-04-13 | ✅ Approved |
-| Product Owner | Joachim Trung Tuan | 2026-09-16 | Approved FR-005 subquote sort/filter alignment through v2.13 |
-| Product Owner | Joachim Trung Tuan | 2026-10-16 | Documentation approved through v2.15 via the MTG-002 decision log (CR-FR022-20261016-01); v2.16 approvals refresh on 2026-10-18; implementation reconciliation required |
-| Product Owner | Joachim Trung Tuan | 2026-10-18 | Approved via MTG-002 decision log (documentation only), v2.17 final audit corrections (CR-FR022-20261016-01); implementation reconciliation required |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

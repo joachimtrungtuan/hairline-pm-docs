@@ -3,7 +3,7 @@
 **Module**: S-03: Notification Service
 **Feature Branch**: `fr020-notifications-alerts`
 **Created**: 2025-11-11
-**Status**: 🟡 Revised — Pending Consolidated Verification
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-020 from local-docs/project-requirements/system-prd.md; Transcriptions (patient/admin/provider references); FR-015 v1.9 provider-status cancellation cascade
 
 ---
@@ -516,11 +516,7 @@ Acceptance Scenarios:
 
 ## Appendix: Approvals
 
-| Role           | Name | Date | Signature/Approval |
-|----------------|------|------|--------------------|
-| Product Owner  | Joachim Trung Tuan | 2026-09-16 | Approved FR-005 quote-outcome and recipient-privacy alignment through v2.1 |
-| Product Owner  | Joachim Trung Tuan | 2026-10-18 | Approved FR-020 v2.7 to v2.10 via MTG-002 decision log (documentation only), including CR-FR020-20261016-01 |
-| Product Owner  | Joachim Trung Tuan | 2026-10-27 | Approved FR-020 v2.12 (documentation only), including CR-FR020-20261027-01 |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

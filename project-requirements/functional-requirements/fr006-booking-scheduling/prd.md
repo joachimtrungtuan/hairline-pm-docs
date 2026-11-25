@@ -3,7 +3,7 @@
 **Module**: P-03: Booking & Payment | PR-02: Inquiry & Quote Management | A-01: Patient Management & Oversight
 **Feature Branch**: `fr006-booking-scheduling`
 **Created**: 2025-11-04
-**Status**: 🟡 Revised — Pending Consolidated Verification
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-006 from `system-prd.md`; SRC-MTG-002, CR-FR006-20260915-01 and CR-FR006-20261016-01; continuation from FR-004 (Quote Submission) and FR-005 v2.3 (Subquote Comparison & Acceptance); coordinated with FR-007/FR-007B (Payments)
 
 ---
@@ -1173,13 +1173,7 @@ A late cancellation performed by an admin at the patient's request applies the r
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-|------|------|------|--------------------|
-| Product Owner | [NAME NOT RECORDED] | 2025-11-12 | ✅ Approved through v1.7 |
-| Technical Lead | [NAME NOT RECORDED] | 2025-11-12 | ✅ Approved through v1.7 |
-| Stakeholder | [NAME NOT RECORDED] | 2025-11-12 | ✅ Approved through v1.7 |
-| Product Owner | Product Owner | 2026-09-16 | Approved through v2.5 accepted-subquote handoff, complete screen provenance, exclusive acceptance-time slot reservation, payment-window, and appointment-confirmation boundaries; consolidated verification pending |
-| Product Owner | Product Owner | 2026-10-18 | Approved v2.10 via MTG-002 decision log (documentation only) |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

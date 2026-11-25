@@ -3,7 +3,7 @@
 **Module**: P-05: Aftercare & Progress Monitoring | PR-04: Aftercare Participation *(elevated to P1 scope for FR-011 delivery)* | A-03: Aftercare Team Management  
 **Feature Branch**: `fr011-aftercare-recovery-management`  
 **Created**: 2025-10-23  
-**Status**: 🟡 Revised — Pending Consolidated Verification  
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending  
 **Source**: FR-011 from system-prd.md; FR-015 v1.9 provider-status cancellation cascade  
 
 ## Executive Summary
@@ -1719,9 +1719,7 @@ Acceptance Scenarios:
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-|------|------|------|--------------------|
-| Product Owner | Product Owner | 2026-10-18 | Approved v1.5 via MTG-002 decision log (documentation only) |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

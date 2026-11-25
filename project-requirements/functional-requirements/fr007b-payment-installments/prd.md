@@ -3,7 +3,7 @@
 **Module**: P-03: Booking & Payment | S-02: Payment Processing Service
 **Feature Branch**: `fr007b-payment-installments`
 **Created**: 2025-11-10
-**Status**: 🟡 Revised — Pending Consolidated Verification
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-007B from local-docs/project-requirements/system-prd.md (Split Payment / Installment Plans) + Constitution (local-docs/project-requirements/constitution.md)
 
 ---
@@ -784,9 +784,7 @@ Patient requests booking cancellation after paying 2 of 4 installments; admin re
 
 ## Appendix: Approvals
 
-| Role            | Name   | Date   | Signature/Approval |
-|-----------------|--------|--------|--------------------|
-| Product Owner   | Product Owner | 2026-10-18 | Approved v1.5 via MTG-002 decision log (documentation only) |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

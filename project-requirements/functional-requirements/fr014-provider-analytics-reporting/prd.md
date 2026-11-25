@@ -4,7 +4,7 @@
 **Feature Branch**: `fr014-provider-analytics-reporting`
 **Created**: 2025-11-11
 **Version**: 3.24
-**Status**: 🟡 Revised — Documentation Approved; Pending Consolidated Verification
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-014 from system-prd.md; SRC-MTG-002 (MTG-002-D03–D06 and O01 as refined by the Product Owner); FR-004, FR-005, and FR-006 approved quote/acceptance/booking contracts; Product Owner approvals dated 2026-10-07, 2026-10-13, and 2026-10-14
 
 ---
@@ -1853,19 +1853,7 @@ These are required implementation/reconciliation cases, not a claim that the dep
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-|------|------|------|--------------------|
-| Product Owner — documentation delta v3.18 | Joachim Trung Tuan | 2026-10-18 | ✅ Approved via MTG-002 decision log (documentation only): final audit corrections (CR-FR014-20261016-01) |
-| Product Owner — prior baseline v3.6 | Joachim Trung Tuan | 2026-04-18 | ✅ Approved (historical baseline; approver name corrected 2026-10-13) |
-| Product Owner — documentation delta v3.15 to v3.17 | Joachim Trung Tuan | 2026-10-16 | ✅ Approved: MTG-002 quote-model alignment via the 2026-10-16 decision log (CR-FR014-20261016-01); v3.17 consolidated verification correction on 2026-10-18 applies decision Q15. Implementation reconciliation required; not an implementation sign-off |
-| Product Owner — documentation delta v3.14 | Joachim Trung Tuan | 2026-10-14 | ✅ Approved: sixth verify-fr pass resolutions (Issue 1 option 1 global filter rule, Issue 2 option 1 define rating source, Issue 3 align wording, Issue 4 define both). Not an implementation sign-off |
-| Product Owner — documentation delta v3.13 | Joachim Trung Tuan | 2026-10-14 | ✅ Approved: fifth verify-fr pass resolutions (Issue 1 revised: treatment comes only from the provider's parent quote; Issue 2 option 1; Issue 3 option 1 with small clinics pooled and low-sample visuals left to UX; Issue 4 fix Screen 4 wording). Not an implementation sign-off |
-| Product Owner — documentation delta v3.12 | Joachim Trung Tuan | 2026-10-14 | ✅ Approved: fourth verify-fr pass resolutions (Issue 1 option C, Issues 2–6 option A, Issue 7 add dependencies, Issue 8 reword Rule 11, Issue 9 align dates). Not an implementation sign-off |
-| Product Owner — documentation delta v3.11 | Joachim Trung Tuan | 2026-10-13 | ✅ Approved: third verify-fr pass resolutions (11 decisions, including the provider-filter option for Screen 11 Widget 4); edits applied 2026-10-14. Not an implementation sign-off |
-| Product Owner — documentation delta v3.10 | Joachim Trung Tuan | 2026-10-13 | ✅ Approved: second verify-fr pass resolutions (Issue 1 option 3, Issue 2 option 1, Issue 3 option 1, provider-scoped returning patients, FR-007B labels, global accessibility rule, Issues 7–10 recommended options) and CR-FR014-20261013-02. Not an implementation sign-off |
-| Product Owner — documentation delta v3.9 | Joachim Trung Tuan | 2026-10-13 | ✅ Approved: verify-fr medium/minor resolutions (Issues 5–15, option 1 each). Not an implementation sign-off |
-| Product Owner — documentation delta v3.8 | Joachim Trung Tuan | 2026-10-13 | ✅ Approved: verify-fr resolution choices (flat-rate per procedure, Qualified stage removed, FR-010 No-show source, FR-026 analytics settings owner). Not an implementation sign-off |
-| Product Owner — documentation delta v3.7 | Joachim Trung Tuan | 2026-10-07 | ✅ Approved: "Please update as per your suggestions"; includes accepted-price distribution and metric-only Screen 1 exception. Not an implementation sign-off |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

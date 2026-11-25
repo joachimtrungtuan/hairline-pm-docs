@@ -1312,11 +1312,7 @@ An admin content manager needs to reorganize existing FAQ items into logical top
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-|------|------|------|--------------------|
-| Product Owner | [Name] | 2026-01-19 | ✅ Approved |
-| Technical Lead | [Name] | 2026-01-19 | ✅ Approved |
-| Stakeholder | [Name] | 2026-01-19 | ✅ Approved |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

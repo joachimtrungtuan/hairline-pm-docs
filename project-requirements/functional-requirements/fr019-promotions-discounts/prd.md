@@ -3,7 +3,7 @@
 **Module**: A-06: Discount & Promotion Management | PR-05: Financial Management & Reporting
 **Feature Branch**: `fr019-promotions-discounts`
 **Created**: 2025-11-11
-**Status**: 🟡 Revised — Pending Consolidated Verification
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-019 from local-docs/project-requirements/system-prd.md; Transcriptions (admin/provider references)
 
 ---
@@ -909,12 +909,7 @@ Acceptance Scenarios:
 
 ## Appendix: Approvals
 
-| Role           | Name | Date       | Signature/Approval |
-|----------------|------|------------|--------------------|
-| Product Owner  | TBD  | 2026-05-12 | Approved           |
-| Technical Lead | TBD  | 2026-05-14 | Approved           |
-| Stakeholder    | TBD  | 2026-05-14 | Approved           |
-| Product Owner  | Joachim Trung Tuan | 2026-10-18 | Approved FR-019 v2.2 to v2.5 via MTG-002 decision log (documentation only) |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

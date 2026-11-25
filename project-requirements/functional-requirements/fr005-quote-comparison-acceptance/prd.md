@@ -3,7 +3,7 @@
 **Module**: P-02: Quote Request & Management | PR-02: Inquiry & Quote Management | A-01: Patient Management & Oversight  
 **Feature Branch**: `fr005-quote-comparison-acceptance`  
 **Created**: 2025-11-03  
-**Status**: 🟡 Revised — Pending Consolidated Verification
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-005 from system-prd.md; SRC-MTG-002 and CR-FR005-20260915-01
 
 ---
@@ -525,9 +525,7 @@ The system rejects unsafe acceptances and handles the end of the payment window 
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-|------|------|------|--------------------|
-| Product Owner | Product Owner | 2026-10-18 | Documentation approved through v2.8 (documentation only): MTG-002 decision log of 2026-10-16 (CR-FR005-20261016-01) and the v2.8 final audit corrections; consolidated verification pending |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

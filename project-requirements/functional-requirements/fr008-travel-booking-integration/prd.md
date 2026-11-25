@@ -4,7 +4,7 @@
 **Feature Branch**: `fr008-travel-booking-integration`
 **Created**: 2025-11-10
 **Last Updated**: 2026-11-24
-**Status**: 🟡 Revised — Pending Consolidated Verification
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-008 from system-prd.md; cross-checked with transcriptions (HairlineApp-Part1/2, ProviderPlatformPart1, AdminPlatformPart1/2, HairlineOverview); SRC-MTG-002, CR-FR008-20260929-01, CR-FR008-20261016-01, and Product Owner binary-path decision of 2026-09-29
 
 ---
@@ -1010,15 +1010,7 @@ Related FRs: FR-001 (patient authentication), FR-004 (quote option `included_ser
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-|------|------|------|--------------------|
-| Product Owner | [Name] | 2026-02-23 | ✅ Verified & Approved |
-| Technical Lead | [Name] | 2026-02-23 | ✅ Verified & Approved |
-| Stakeholder | [Name] | 2026-02-23 | ✅ Verified & Approved |
-| Product Owner | [Name] | 2026-09-29 | ✅ Approved v2.5 revision scope and binary-path preservation; consolidated verification pending |
-| Product Owner | Product Owner | 2026-10-18 | Approved v2.9 via MTG-002 decision log (documentation only) |
-
-The 2026-02-23 verification approvals apply to the earlier baseline, not to the revised v2.5 contract.
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

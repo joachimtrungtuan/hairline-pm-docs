@@ -3,7 +3,7 @@
 **Module**: A-09: System Settings & Configuration (Cross-Cutting Concern)  
 **Feature Branch**: `fr023-data-retention-compliance`  
 **Created**: 2025-11-12  
-**Status**: Draft  
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending  
 **Source**: FR-023 in system-prd.md; Client transcriptions (HairlineApp-Part1.txt, Hairline-AdminPlatform-Part1.txt, Hairline-ProviderPlatformPart1.txt)
 
 ---
@@ -248,8 +248,7 @@ Related FRs: FR-001 (Delete Account screen, account-deletion-requested event, su
 
 ## Appendix: Approvals
 
-| Role            | Name | Date | Signature/Approval |
-|-----------------|------|------|--------------------|
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

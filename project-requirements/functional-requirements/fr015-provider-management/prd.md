@@ -4,7 +4,7 @@
 **Feature Branch**: `fr015-provider-management`
 **Created**: 2025-11-11
 **Version**: 1.33
-**Status**: Revised 2026-11-22 (owner ruling: provider-status cancellation payment terms); previously revised 2026-11-20 (requirements graph programme baseline: owner rulings applied); previously revised 2026-10-28 (backend confirmations: seat usage member statuses, changed-fields-only saves, Owner login email change notice); previously revised 2026-10-27 (dev-team follow-up question resolution: save conflicts, data encryption, seat usage, impersonation, notification timing and recipients, cascade timing), pending consolidated verification; implementation reconciliation pending
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-015 from system-prd.md (§ FR-015: Provider Management (Admin-Initiated))
 
 ---
@@ -1043,28 +1043,7 @@ Admin configures a provider account with a fixed commission fee (e.g., £200 per
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-|------|------|------|--------------------|
-| Product Owner | Joachim Trung Tuan | 2025-12-08 | ✅ Approved |
-| Technical Lead | Claude (AI Assistant) | 2025-12-08 | ✅ Verified |
-| Stakeholder | Vân Tay Media | 2025-12-08 | ✅ Approved |
-| Product Owner | Joachim Trung Tuan | 2026-10-13 | Approved FR-015 v1.8 documentation changes and CR-FR015-20261013-01 via "Please proceed"; implementation reconciliation and consolidated verification pending |
-| Product Owner | Joachim Trung Tuan | 2026-10-14 | Approved FR-015 v1.9 verification fixes (Issues 1-11 and minor issues) and the related downstream Change Requests; implementation reconciliation remains required |
-| Product Owner | Joachim Trung Tuan | 2026-10-14 | Approved FR-015 v1.10 re-verification decisions (Issues 1-7 and minor fixes) via AskUserQuestion and "Yes"; implementation reconciliation remains required |
-| Product Owner | Joachim Trung Tuan | 2026-10-15 | Approved FR-015 v1.11 third verification decisions (Issues 1-6) via AskUserQuestion and "Yes", including CR-FR032-20261015-01; implementation reconciliation remains required |
-| Product Owner | Joachim Trung Tuan | 2026-10-15 | Approved FR-015 v1.12 fourth verification decisions (Issues 1-5) via AskUserQuestion and "Yes", including CR-FR029-20261015-01; implementation reconciliation remains required |
-| Product Owner | Joachim Trung Tuan | 2026-10-15 | Approved FR-015 v1.13 fifth verification decisions (Issues 1-7) via AskUserQuestion and "Yes", including CR-FR009-20261015-01, CR-FR017-20261015-01, and CR-FR026-20261015-01; implementation reconciliation remains required |
-| Product Owner | Joachim Trung Tuan | 2026-10-15 | Approved FR-015 v1.14 sixth verification decisions (Issues 1-6) via AskUserQuestion and "Yes", including CR-FR032-20261015-02 and CR-FR020-20261015-01; implementation reconciliation remains required |
-| Product Owner | Joachim Trung Tuan | 2026-10-15 | Approved FR-015 v1.15 seventh verification decisions (Issues 1-3 and minor fixes) via AskUserQuestion ("Apply all now"), including CR-FR009-20261015-02; implementation reconciliation remains required |
-| Product Owner | Joachim Trung Tuan | 2026-10-15 | Approved FR-015 v1.16 eighth verification decisions (Issues 1-6) via AskUserQuestion and "Yes", including CR-FR032-20261015-03, CR-FR020-20261015-02, CR-FR030-20261015-02, CR-FR029-20261015-02, and CR-FR003-20261015-01; implementation reconciliation remains required |
-| Product Owner | Joachim Trung Tuan | 2026-10-16 | Approved FR-015 v1.17 MTG-002 quote model alignment through the 2026-10-16 decision log (D6, D6-M, D12, M5, M18, P1), including CR-FR015-20261016-01; consolidated verification and implementation reconciliation remain required |
-| Product Owner | Joachim Trung Tuan | 2026-10-16 | Approved FR-015 v1.18 commission-base clarification for all discount types through the 2026-10-16 Product Owner follow-up decisions; implementation reconciliation pending |
-| Product Owner | Joachim Trung Tuan | 2026-10-26 | Approved FR-015 v1.21 dev-team question decisions via AskUserQuestion (documentation only); implementation reconciliation pending |
-| Product Owner | Joachim Trung Tuan | 2026-10-18 | Approved FR-015 v1.19 and v1.20 via MTG-002 decision log (documentation only), including [CR-FR015-20261016-01](../../../../archived/prd-baseline-2026-11-08/fr015-provider-management/change-request-2026-10-16-mtg002-quote-model-alignment.md) |
-| Product Owner | Joachim Trung Tuan | 2026-10-27 | Approved FR-015 v1.22 dev-team follow-up decisions (documentation only), including CR-FR015-20261027-01; implementation reconciliation pending |
-| Product Owner | Joachim Trung Tuan | 2026-10-28 | Approved FR-015 v1.23 backend confirmations (documentation only), with CR-FR009-20261028-01; implementation reconciliation pending |
-
-Historical verification above applies to the prior baseline, not the new v1.8 cancellation/support contracts. The Product Owner's "all related treatment" scope is documented as all non-terminal Accepted, Confirmed, In Progress, and Aftercare cases; completed and already-terminal history remains unchanged. Other owning PRDs require separate controlled alignment before this change is considered cross-FR verified.
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

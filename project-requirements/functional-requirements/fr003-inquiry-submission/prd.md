@@ -3,7 +3,7 @@
 **Module**: P-02: Quote Request & Management | PR-02: Inquiry & Quote Management | A-01: Patient Management & Oversight  
 **Feature Branch**: `fr003-inquiry-submission`  
 **Created**: 2025-10-23  
-**Status**: 🟡 Revised — Pending Consolidated Verification  
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending  
 **Source**: FR-003 from system-prd.md  
 
 ## Executive Summary
@@ -1365,9 +1365,7 @@ Acceptance Scenarios:
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-| --- | --- | --- | --- |
-| Product Owner | Product Owner | 2026-10-18 | Approved via MTG-002 decision log (documentation only), v2.11 (CR-FR003-20261016-01) |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

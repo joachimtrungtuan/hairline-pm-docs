@@ -4,7 +4,7 @@
 **Feature Branch**: `fr029-payment-system-config`
 **Created**: 2025-11-13
 **Version**: 1.19
-**Status**: 🟡 Revised — Pending Consolidated Verification
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-029 from system-prd.md (lines 1427-1455) + Hairline-AdminPlatformPart2.txt (lines 128-230)
 **Change Request**: [CR-FR029-20261014-01 — Provider-specific Flat Rate commission alignment with FR-015](../../../../archived/prd-baseline-2026-11-08/fr029-payment-system-config/change-request-2026-10-14-provider-flat-rate-commission.md)
 **Change Request**: [CR-FR029-20261015-01 — Single-provider scope edits and scheduled commission configuration](../../../../archived/prd-baseline-2026-11-08/fr029-payment-system-config/change-request-2026-10-15-single-provider-scope-scheduled-commission.md)
@@ -1185,12 +1185,7 @@ As a platform administrator managing provider commission, I need the commission 
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-|------|------|------|--------------------|
-| Product Owner |  | 2025-12-16 | ✅ Approved |
-| Technical Lead |  | 2025-12-16 | ✅ Approved |
-| Stakeholder |  | 2025-12-16 | ✅ Approved |
-| Product Owner | Joachim Trung Tuan | 2026-10-18 | Approved FR-029 v1.11 to v1.14 via MTG-002 decision log (documentation only), including CR-FR029-20261016-01 |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

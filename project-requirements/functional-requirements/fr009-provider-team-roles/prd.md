@@ -3,7 +3,7 @@
 **Module**: PR-01: Auth & Team Management
 **Feature Branch**: `fr009-provider-team-roles`
 **Created**: 2025-11-11
-**Status**: Proposed revision (v1.14); prior v1.2 document marked Verified & Approved
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-009 from system-prd.md
 
 ---
@@ -1130,10 +1130,7 @@ Implementation teams MUST treat the above as **non-blocking, non-MVP requirement
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-|------|------|------|--------------------|
-| Product Owner | Joachim Trung Tuan | 2026-10-27 | Approved v1.6 seat usage and impersonation alignment (documentation only), with CR-FR015-20261027-01 |
-| Product Owner | Joachim Trung Tuan | 2026-10-28 | Approved v1.7 invitation and team member model and seat usage (documentation only), with CR-FR009-20261028-01 |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

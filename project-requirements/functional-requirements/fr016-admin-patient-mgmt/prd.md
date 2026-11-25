@@ -3,7 +3,7 @@
 **Module**: A-01: Patient Management & Oversight
 **Feature Branch**: `fr016-admin-patient-mgmt`
 **Created**: 2025-11-11
-**Status**: 🟡 Revised — Pending Consolidated Verification
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-016 from system-prd.md; FR-015 v1.9 provider-status cancellation cascade
 
 ---
@@ -1058,10 +1058,7 @@ A provider is suspended or deactivated (FR-015 A5) and the patient's case is can
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-|------|------|------|--------------------|
-| Product Owner | Product Owner | 2026-10-18 | Approved v1.9 via MTG-002 decision log (documentation only) |
-| Product Owner | Joachim Trung Tuan | 2026-10-27 | Approved v1.10 (documentation only) with CR-FR020-20261027-01 |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

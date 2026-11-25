@@ -3,7 +3,7 @@
 **Module**: P-08: Help Center & Support Access | Integrates with FR-033 (Help Centre Content Management) and FR-034 (Support Center & Ticketing System)
 **Feature Branch**: `fr035-patient-help-support`
 **Created**: 2026-03-06
-**Status**: Draft
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-035 from system-prd.md, Client transcriptions (HairlineApp-Part2.txt, Hairline-AdminPlatform-Part1.txt, Hairline-ProviderPlatformPart2.txt), missing-mobile-flows-design-complement.md (Flow P08.1)
 
 ---
@@ -722,8 +722,7 @@ A patient preparing for their upcoming procedure browses the Help Center for edu
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-|------|------|------|---------------------|
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

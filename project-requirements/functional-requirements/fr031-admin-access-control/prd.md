@@ -3,7 +3,7 @@
 **Module**: A-09: System Settings & Configuration
 **Feature Branch**: `fr031-admin-access-control`
 **Created**: 2025-11-14
-**Status**: Revision v1.8 (requirements graph programme baseline with logic review pass 2 and cross-FR alignment and the billing settings view ruling applied); v1.0.2 baseline verified and approved
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-031 from system-prd.md
 
 ---
@@ -1351,11 +1351,7 @@ As a platform administrator, I need the system to prevent any Super Admin accoun
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-|------|------|------|--------------------|
-| Product Owner | TBD | 2026-01-04 | ✅ Verified & Approved |
-| Technical Lead | TBD | 2026-01-04 | ✅ Verified & Approved |
-| Security Lead | TBD | 2026-01-04 | ✅ Verified & Approved |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

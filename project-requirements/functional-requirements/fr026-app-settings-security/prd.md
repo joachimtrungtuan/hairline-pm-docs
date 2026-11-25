@@ -3,7 +3,7 @@
 **Module**: A-09: System Settings & Configuration
 **Feature Branch**: `fr026-app-settings-security`
 **Created**: 2025-11-04
-**Status**: 🟡 Revised — Pending Consolidated Verification
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-026 from system-prd.md, Client transcription (Hairline-AdminPlatformPart2.txt)
 
 ---
@@ -1385,12 +1385,7 @@ Admin needs one versioned source for the thresholds and targets used by FR-014 a
 
 ## Appendix: Approvals
 
-| Role           | Name                     | Date       | Signature/Approval |
-| -------------- | ------------------------ | ---------- | ------------------ |
-| Product Owner  | Hairline Product Owner   | 2025-12-11 | ✅ Approved         |
-| Technical Lead | Hairline Technical Lead  | 2025-12-11 | ✅ Approved         |
-| Security Lead  | Hairline Security Lead   | 2025-12-11 | ✅ Approved         |
-| Product Owner  | Hairline Product Owner   | 2026-10-16 | ✅ Approved (v1.13 documentation; implementation reconciliation required) |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

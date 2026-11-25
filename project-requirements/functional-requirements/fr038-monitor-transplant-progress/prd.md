@@ -3,7 +3,7 @@
 **Module**: P-05: Aftercare & Progress Monitoring | P-07: 3D Scan Capture & Viewing | A-01: Patient Management & Oversight | S-03: Notification Service | S-05: Media Processing Service
 **Feature Branch**: `fr038-monitor-transplant-progress`
 **Created**: 2026-08-17
-**Status**: Draft
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-038 from system-prd.md; product-owner requirements confirmed 2026-08-17; reuses compatible standalone-treatment intake from FR-011 and scan contracts from FR-002
 
 ---
@@ -541,8 +541,7 @@ No Provider Dashboard screens are defined in FR-038. This monitoring case is sel
 
 ## Appendix: Approvals
 
-| Role | Name | Status | Date |
-| --- | --- | --- | --- |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

@@ -3,7 +3,7 @@
 **Module**: P-03: Booking & Payment | PR-05: Financial Management & Reporting | A-01: Patient Management & Oversight | A-05: Billing & Financial Reconciliation | S-02: Payment Processing Service | S-03: Notification Service
 **Feature Branch**: `fr007-payment-processing`
 **Created**: 2025-11-04
-**Status**: 🟡 Revised — Documentation Approved; Consolidated Verification Pending
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-007 from `system-prd.md`; [SRC-MTG-002](../../sources/meetings/meeting-02-launch-quote-options-fund-release-and-payments.md#mtg-002-o01-quote-option-contract) and the approved FR-004/FR-005/FR-006 accepted-subquote handoff; Constitution (local-docs/project-requirements/constitution.md)
 
 ---
@@ -1043,12 +1043,7 @@ Admin processes a refund request according to cancellation policy; patient and p
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-|------|------|------|--------------------|
-| Product Owner — v1.6 documentation delta | Joachim Trung Tuan | 2026-10-13 | Approved to complete remaining Meeting 2 quote-model work; implementation reconciliation and consolidated verification pending. |
-| Product Owner — v1.7 documentation delta | Joachim Trung Tuan | 2026-10-16 | Approved via the MTG-002 quote-model decision log; implementation reconciliation and consolidated verification pending. |
-| Product Owner — v1.8 documentation delta | Joachim Trung Tuan | 2026-10-16 | Approved via the MTG-002 Product Owner follow-up decisions; implementation reconciliation and consolidated verification pending. |
-| Product Owner — v1.10 documentation delta | Product Owner | 2026-10-18 | Approved v1.10 via MTG-002 decision log (documentation only) |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

@@ -3,7 +3,7 @@
 **Module**: PR-02: Inquiry & Quote Management | A-01: Patient Management & Oversight
 **Feature Branch**: `fr004-quote-submission-management`
 **Created**: 2025-10-30
-**Status**: 🟡 Revised — Pending Consolidated Verification
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-004 from system-prd.md; SRC-MTG-002 (MTG-002-D03 through D06 and O01); FR-005 v2.5; FR-006 v2.7; Product Owner clarifications dated 2026-09-09, 2026-09-10, and 2026-09-16; Product Owner MTG-002 quote-model decision log dated 2026-10-16
 
 ## Executive Summary
@@ -998,11 +998,7 @@ Acceptance Scenarios:
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-|------|------|------|--------------------|
-| Product Owner | Joachim Trung Tuan | 2026-09-16 | Approved through FR-004 v2.8 — quote hierarchy, FR-005 subquote projection, aggregate `QuoteVersion` source, and subquote-driven lifecycle reconciliation |
-| Product Owner | Joachim Trung Tuan | 2026-10-16 | Documentation approved through v3.2 via the MTG-002 quote-model decision log (CR-FR004-20261016-01); v3.3 consolidated verification corrections on 2026-10-18 apply decisions Q24 and Q29 to Q31; implementation reconciliation required |
-| Product Owner | Joachim Trung Tuan | 2026-10-18 | Approved via MTG-002 decision log (documentation only), v3.4 final audit corrections (CR-FR004-20261016-01); implementation reconciliation required |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

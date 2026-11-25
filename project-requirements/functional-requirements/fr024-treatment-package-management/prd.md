@@ -3,7 +3,7 @@
 **Module**: A-09: System Settings & Configuration | PR-06: Profile & Settings Management
 **Feature Branch**: `fr024-treatment-package-management`
 **Created**: 2025-11-12
-**Status**: 🟡 Revised — Pending Consolidated Verification
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-024 from system-prd.md
 
 ---
@@ -986,12 +986,7 @@ Provider needs to temporarily stop offering a package (seasonal hotel unavailabi
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-|------|------|------|--------------------|
-| Product Owner | Hairline Product Team | 2025-11-28 | ✅ Approved |
-| Technical Lead | Hairline Engineering | 2025-11-28 | ✅ Approved |
-| Stakeholder | Hairline Leadership | 2025-11-28 | ✅ Approved |
-| Product Owner | Hairline Product Team | 2026-10-16 | ✅ Documentation approved through v1.4 via the MTG-002 decision log (CR-FR024-20261016-01); v1.5 consolidated verification correction on 2026-10-18 applies decision M6; implementation reconciliation required |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

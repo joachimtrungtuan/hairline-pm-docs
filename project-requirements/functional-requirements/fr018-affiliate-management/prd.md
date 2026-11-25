@@ -1597,11 +1597,7 @@ Business negotiates new commission terms with affiliate; admin updates commissio
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-| --- | --- | --- | --- |
-| Product Owner | [Name] | 2026-06-23 | ✅ Verified & Approved |
-| Technical Lead | [Name] | 2026-06-23 | ✅ Verified & Approved |
-| Stakeholder | [Name] | 2026-06-23 | ✅ Verified & Approved |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

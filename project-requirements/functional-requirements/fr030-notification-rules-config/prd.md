@@ -3,7 +3,7 @@
 **Module**: A-09: System Settings & Configuration | S-03: Notification Service
 **Feature Branch**: `fr030-notification-rules-config`
 **Created**: 2025-11-13
-**Status**: 🟡 Revised — Pending Consolidated Verification
+**Status**: ✅ Documentation Approved (baseline 2026-11-25); implementation reconciliation pending
 **Source**: FR-030 from system-prd.md
 
 ---
@@ -877,13 +877,7 @@ Admin needs to monitor notification delivery performance to identify and resolve
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-|------|------|------|--------------------|
-| Product Owner | TBD | 2025-12-22 | ✅ Verified & Approved |
-| Technical Lead | TBD | 2025-12-22 | ✅ Verified & Approved |
-| Stakeholder | TBD | 2025-12-22 | ✅ Verified & Approved |
-| Product Owner | Joachim Trung Tuan | 2026-09-16 | Approved FR-005 quote-outcome and recipient-privacy alignment through v1.6 |
-| Product Owner | Joachim Trung Tuan | 2026-10-18 | Approved FR-030 v1.12 to v1.15 via MTG-002 decision log (documentation only), including CR-FR030-20261016-01 |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

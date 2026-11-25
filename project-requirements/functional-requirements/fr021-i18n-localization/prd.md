@@ -968,9 +968,7 @@ Admin configures a machine-translation provider and uses it to prepare a non-Eng
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-| --- | --- | --- | --- |
-| Product Owner | Joachim | 2026-05-25 | ✅ Approved |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 

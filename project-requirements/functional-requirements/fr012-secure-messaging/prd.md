@@ -859,11 +859,7 @@ Acceptance Scenarios:
 
 ## Appendix: Approvals
 
-| Role | Name | Date | Signature/Approval |
-|------|------|------|--------------------|
-| Product Owner | TBD | 2025-12-22 | ✅ Verified & Approved |
-| Technical Lead | TBD | 2025-12-22 | ✅ Verified & Approved |
-| Stakeholder | TBD | 2025-12-22 | ✅ Verified & Approved |
+Approved by the Product Owner as part of the requirements baseline of 2026-11-25. Record: `project-requirements/baseline-sign-off.md`. Changes after that date are listed in the Change Log above.
 
 ---
 
