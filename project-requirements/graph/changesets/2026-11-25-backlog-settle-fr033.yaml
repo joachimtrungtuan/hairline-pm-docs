@@ -1,0 +1,40 @@
+# FR-033 backlog points settled on 2026-11-25: admin-platform queue-and-sync rule, virus scan wired to every upload, soft-delete and edit steps tied to their rules, patient video upload path.
+reason: "Backlog points settled for FR-033: queue-and-sync failure rule added; virus-scan branch made the only path after each upload (attachments and thumbnails included); soft-delete, content-kind change and restore steps tied to their rules; patient video source choice reaches the upload step."
+by: controller
+source_id: SRC-PRD-033
+operations:
+  - {"op": "add_node", "id": "REQ-033-101", "type": "Rule", "owner_fr": "FR-033", "title": "Admin platform API unavailable: queue changes locally, sync, notify admin of sync failures", "attrs": {"statement": "If the API is unavailable when the admin platform saves Help Centre content, System MUST queue the content changes locally and sync them when the API is available, and MUST notify the admin of sync failures", "rationale": "Business Rules, Integration Failure Handling, Integration 3 (carried PRD line)."}}
+  - {"op": "add_edge", "from": "REQ-033-101", "verb": "applies at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "REQ-033-101", "verb": "applies to", "to": "ENT-help-centre-content"}
+  - {"op": "add_edge", "from": "REQ-033-101", "verb": "applies to", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "REQ-033-101", "verb": "decided by", "to": "SRC-PRD-033"}
+  - {"op": "remove_edge", "from": "STP-033-148", "verb": "next", "to": "STP-033-149"}
+  - {"op": "remove_edge", "from": "STP-033-151", "verb": "next", "to": "STP-033-152"}
+  - {"op": "remove_edge", "from": "STP-033-041", "verb": "next", "to": "STP-033-042"}
+  - {"op": "remove_edge", "from": "STP-033-007", "verb": "next", "to": "STP-033-008"}
+  - {"op": "add_edge", "from": "STP-033-007", "verb": "next", "to": "STP-033-165", "attrs": {"label": "attachment uploaded, scan", "condition": "REQ-033-098"}}
+  - {"op": "add_edge", "from": "STP-033-165", "verb": "next", "to": "STP-033-008", "attrs": {"label": "file clean", "condition": "REQ-033-098"}}
+  - {"op": "add_edge", "from": "STP-033-165", "verb": "next", "to": "STP-033-007", "attrs": {"label": "file rejected", "condition": "REQ-033-098"}}
+  - {"op": "remove_edge", "from": "STP-033-045", "verb": "next", "to": "STP-033-046"}
+  - {"op": "add_edge", "from": "STP-033-045", "verb": "next", "to": "STP-033-165", "attrs": {"label": "thumbnail uploaded, scan", "condition": "REQ-033-098"}}
+  - {"op": "add_edge", "from": "STP-033-165", "verb": "next", "to": "STP-033-046", "attrs": {"label": "file clean", "condition": "REQ-033-098"}}
+  - {"op": "add_edge", "from": "STP-033-165", "verb": "next", "to": "STP-033-045", "attrs": {"label": "file rejected", "condition": "REQ-033-098"}}
+  - {"op": "remove_edge", "from": "STP-033-149", "verb": "next", "to": "STP-033-150"}
+  - {"op": "add_edge", "from": "STP-033-149", "verb": "next", "to": "STP-033-165", "attrs": {"label": "thumbnail uploaded, scan", "condition": "REQ-033-098"}}
+  - {"op": "add_edge", "from": "STP-033-165", "verb": "next", "to": "STP-033-150", "attrs": {"label": "file clean", "condition": "REQ-033-098"}}
+  - {"op": "remove_edge", "from": "STP-033-152", "verb": "next", "to": "STP-033-153"}
+  - {"op": "add_edge", "from": "STP-033-152", "verb": "next", "to": "STP-033-165", "attrs": {"label": "thumbnail uploaded, scan", "condition": "REQ-033-098"}}
+  - {"op": "add_edge", "from": "STP-033-165", "verb": "next", "to": "STP-033-153", "attrs": {"label": "file clean", "condition": "REQ-033-098"}}
+  - {"op": "add_edge", "from": "STP-033-165", "verb": "on", "to": "SCR-033-04"}
+  - {"op": "add_edge", "from": "STP-033-165", "verb": "on", "to": "SCR-033-07"}
+  - {"op": "add_edge", "from": "STP-033-165", "verb": "on", "to": "SCR-033-19"}
+  - {"op": "add_edge", "from": "STP-033-165", "verb": "on", "to": "SCR-033-21"}
+  - {"op": "add_edge", "from": "STP-033-154", "verb": "next", "to": "STP-033-041", "attrs": {"label": "Upload File"}}
+  - {"op": "add_edge", "from": "STP-033-021", "verb": "applies", "to": "REQ-033-036"}
+  - {"op": "add_edge", "from": "STP-033-166", "verb": "applies", "to": "REQ-033-092"}
+  - {"op": "add_edge", "from": "STP-033-094", "verb": "applies", "to": "REQ-033-016"}
+  - {"op": "add_edge", "from": "STP-033-100", "verb": "applies", "to": "REQ-033-016"}
+  - {"op": "add_edge", "from": "STP-033-108", "verb": "applies", "to": "REQ-033-016"}
+  - {"op": "add_edge", "from": "STP-033-116", "verb": "applies", "to": "REQ-033-016"}
+  - {"op": "add_edge", "from": "STP-033-122", "verb": "applies", "to": "REQ-033-016"}
+  - {"op": "add_edge", "from": "STP-033-130", "verb": "applies", "to": "REQ-033-016"}

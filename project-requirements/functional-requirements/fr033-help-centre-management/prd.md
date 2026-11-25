@@ -690,6 +690,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 | Video Transcript | textarea | No | Text transcript of video (optional) | Max 10,000 chars (REQ-033-076) | ENT-help-centre-content.transcript |
 | Category/Tags | multi-select | No | Content tags for organization | Pre-defined tags or create new | ENT-help-centre-content.tags |
 | Related Videos | multi-select | No | Links to related video tutorials | References to other videos (REQ-033-063) | ENT-help-centre-content.related_content_ids |
+| Processing Status | display | No | Processing state of an uploaded video: Uploading, Processing, Ready or Failed | Read-only, set by the system; an uploaded video can be published only when Ready; embedded videos are exempt (REQ-033-077) | ENT-help-centre-content.processing_status |
 | View Count | display | No | Number of times video viewed (>30 seconds) | Read-only, incremented on view (REQ-033-079, REQ-033-097) | ENT-help-centre-content.view_count |
 | Publish Status | dropdown | Yes | Draft or Published (an Unpublished item can only move to Published) | Dropdown offers Draft and Published only and is read-only while the item is Published (REQ-033-099) | ENT-help-centre-content.publish_status |
 | Helpfulness Rating | display | No | Aggregated feedback (Yes/No counts) | Read-only, calculated from provider feedback (REQ-033-087, REQ-033-096) | ENT-help-centre-content.helpfulness_rating |
@@ -740,6 +741,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 | Video Source Type | dropdown | Yes | How video is provided | Options: Upload File, Embed from Third-Party; required (REQ-033-076) | ENT-help-centre-content.video_source_type |
 | Video File | file upload | Conditional | Video file to upload when using "Upload File" source type | Max 500MB, formats: MP4, MOV; required for new videos when Video Source Type = Upload File (REQ-033-077) | ENT-help-centre-content.attachments |
 | Video Embed URL | text | Conditional | URL to embedded video when using "Embed from Third-Party" source type | Required when Video Source Type = Embed from Third-Party; must be valid URL for supported providers (e.g., YouTube, Vimeo) (REQ-033-078) | ENT-help-centre-content.video_embed_url |
+| Processing Status | display | No | Processing state of an uploaded video: Uploading, Processing, Ready or Failed | Read-only, set by the system; an uploaded video can be published only when Ready; embedded videos are exempt (REQ-033-077) | ENT-help-centre-content.processing_status |
 | Video Thumbnail | image upload | No | Custom thumbnail image | Max 2MB, PNG/JPG, 16:9 aspect ratio recommended (REQ-033-076) | ENT-help-centre-content.thumbnail_url |
 | Video Duration | auto-calculated | No | Video length in minutes:seconds | Read-only, extracted from video file (REQ-033-077) | ENT-help-centre-content.duration |
 | Video Transcript | textarea | No | Text transcript of video (optional) | Max 10,000 chars (REQ-033-076) | ENT-help-centre-content.transcript |
@@ -1102,7 +1104,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 - **Integration 2**: Patient app fetches patient-specific Help Centre content via REST API (REQ-033-026)
   - **Error handling**: If API unavailable, display cached content or "Help Centre temporarily unavailable" message; retry API call on next page load
 - **Integration 3**: Admin platform manages Help Centre content for both audiences via REST API with rich text editor
-  - **Error handling**: If API unavailable, queue content changes locally and sync when API available; notify admin of sync failures
+  - **Error handling**: If API unavailable, queue content changes locally and sync when API available; notify admin of sync failures (REQ-033-101)
 - **Integration 4**: Media storage service (S-05) stores uploaded files for both audiences (REQ-033-027)
   - **Error handling**: If upload fails, retry with exponential backoff (3 attempts); if all retries fail, notify admin and save content as draft (REQ-033-058)
 
@@ -1120,7 +1122,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 - **Search**: Full-text search across all content (title, body, tags) is required for P1 and scoped to the selected audience (provider or patient). Database full-text indexing is the minimum implementation baseline; a dedicated search engine remains an optional later enhancement. (REQ-033-035)
 - Patient content will be curated to avoid medical advice and focus on platform usage, appointment management, and general information (REQ-033-088)
-- Service status updates managed by Hairline technical operations team with real-time incident updates during outages (provider-only feature) (REQ-033-030)
+- Service status is a provider-only feature (REQ-033-030); updates, including incident updates during an outage, are made by admins with Help Centre management permission (REQ-033-020) and reach providers within 1 minute (REQ-033-033)
 - Admins will maintain Help Centre content currency by reviewing and updating content quarterly or as platform features change for both provider and patient content
 - Providers access Help Centre via modern web browsers (Chrome, Firefox, Safari, Edge - latest 2 versions) on desktop or tablet devices
 - Patients access Help Centre via mobile app (iOS/Android) with occasional web browser access
@@ -1295,6 +1297,7 @@ An admin content manager needs to reorganize existing FAQ items into logical top
 - **REQ-033-098**: A file that fails the virus scan MUST be rejected and not stored; the admin sees "File failed security scan. Upload a clean file." and the event is written to the audit trail
 - **REQ-033-099**: Content status moves are limited to Draft to Published, Published to Unpublished (only through the Unpublish action with its reason), Unpublished to Published, and any state to Archived by Delete; the Publish Status dropdown offers Draft and Published only, Draft is not selectable for an Unpublished item, and the dropdown is read-only while the item is Published
 - **REQ-033-100**: Each content list MUST have an admin-only "Archived" filter, and a Restore action MUST return an archived item as Draft; Related Content links removed at deletion (REQ-033-092) are not put back
+- **REQ-033-101**: If the API is unavailable when the admin platform saves Help Centre content, System MUST queue the content changes locally and sync them when the API is available, and MUST notify the admin of sync failures
 
 ---
 
@@ -1307,6 +1310,7 @@ An admin content manager needs to reorganize existing FAQ items into logical top
 | 2026-11-24 | 2.5 | Logic review: size limit stated per upload kind; helpfulness vote and view recording rules (REQ-033-096, REQ-033-097); virus-scan rejection (REQ-033-098); uploaded video published only when processing is Ready, with a Failed state; same required-field check on Save as Draft and Publish; Resource Category field separated from FAQ topic; status-move rule (REQ-033-099); Archived filter and Restore (REQ-033-100); version created on save with last save wins; patient propagation within 1 minute; service status overall-status and maintenance clarifications; patient Article Type values and Policy Document blocked for patients. | Product Owner / Documentation |
 | 2026-11-24 | 2.6 | Logic review pass 2: a Published video whose file is replaced or whose source is switched stays live with the previous video until the new one is Ready (REQ-033-077, REQ-033-094); an admin may delete a Published item directly and it leaves the audience's view within 1 minute (REQ-033-034, REQ-033-099); bulk status change offers Publish and Unpublish only with one shared Unpublish reason, bulk delete follows single-item rules (REQ-033-062); Draft is not selectable for an Unpublished item; a deleted service component is kept on past incidents and maintenance windows and cannot be deleted while on an open incident or an upcoming or running maintenance window (REQ-033-081). | Product Owner / Documentation |
 | 2026-11-25 | 2.7 | Cross-FR alignment: Overall Status description adds the fourth value Status not available, never a dropdown option; enum value added for ENT-service-status.overall_status (REQ-033-080). | Product Owner / Documentation |
+| 2026-11-25 | 2.8 | Backlog points settled: queue-and-sync failure handling for the admin platform stated as REQ-033-101; Processing Status row added to the video list and video form tables; technical-operations line reworded to cite the rules that govern it; graph wiring of the virus scan, soft delete and patient video upload completed. | Claude (AI Assistant) |
 
 ---
 

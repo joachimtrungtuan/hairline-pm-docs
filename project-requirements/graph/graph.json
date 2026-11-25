@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T08:54:01Z",
+  "generated_at": "2026-11-25T08:57:42Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -94776,6 +94776,18 @@
       }
     },
     {
+      "id": "REQ-033-101",
+      "type": "Rule",
+      "owner_fr": "FR-033",
+      "title": "Admin platform API unavailable: queue changes locally, sync, notify admin of sync failures",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "If the API is unavailable when the admin platform saves Help Centre content, System MUST queue the content changes locally and sync them when the API is available, and MUST notify the admin of sync failures",
+        "rationale": "Business Rules, Integration Failure Handling, Integration 3 (carried PRD line)."
+      }
+    },
+    {
       "id": "REQ-034-001",
       "type": "Rule",
       "owner_fr": "FR-034",
@@ -134129,7 +134141,7 @@
       "owner_fr": "FR-033",
       "title": "Upload attachments if needed",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Main Flow: Admin Creates Help Centre Content step 7"
       }
@@ -134272,7 +134284,7 @@
       "owner_fr": "FR-033",
       "title": "Change title, body, attachments or content kind (a change of kind also moves the content to the matching section)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A2 (Admin Edits Existing Help Centre Content) step 6"
       }
@@ -134492,7 +134504,7 @@
       "owner_fr": "FR-033",
       "title": "Upload video file (MP4 or MOV, max 500MB)",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 5"
       }
@@ -134525,7 +134537,7 @@
       "owner_fr": "FR-033",
       "title": "Upload custom thumbnail or use the auto-generated one",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A4 (Admin Uploads Video Tutorial) step 9"
       }
@@ -135009,7 +135021,7 @@
       "owner_fr": "FR-033",
       "title": "System asks the admin to confirm before the article is deleted; the record is archived, not erased (provider)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Screen 3 (Provider Article Management)"
       }
@@ -135075,7 +135087,7 @@
       "owner_fr": "FR-033",
       "title": "System asks the admin to confirm before the resource is deleted; the record is archived, not erased (provider)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Screen 4 (Provider Resource Library Management)"
       }
@@ -135163,7 +135175,7 @@
       "owner_fr": "FR-033",
       "title": "System asks the admin to confirm before the FAQ is deleted; the record is archived, not erased (patient)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Screen 9 (Patient FAQ Management, mirror of Screen 2)"
       }
@@ -135251,7 +135263,7 @@
       "owner_fr": "FR-033",
       "title": "System asks the admin to confirm before the article is deleted; the record is archived, not erased (patient)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Screen 10 (Patient Article Management, mirror of Screen 3)"
       }
@@ -135317,7 +135329,7 @@
       "owner_fr": "FR-033",
       "title": "System asks the admin to confirm before the resource is deleted; the record is archived, not erased (patient)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Screen 11 (Patient Resource Library Management, mirror of Screen 4)"
       }
@@ -135405,7 +135417,7 @@
       "owner_fr": "FR-033",
       "title": "System asks the admin to confirm before the video is deleted; the record is archived, not erased (patient)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Screen 12 (Patient Video Tutorial Management, mirror of Screen 5)"
       }
@@ -135603,7 +135615,7 @@
       "owner_fr": "FR-033",
       "title": "Admin uploads the resource file by drag and drop or file picker, or uses Replace File to keep the same resource record (provider)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Screen 4.1 (Resource Add/Edit Form)"
       }
@@ -135614,7 +135626,7 @@
       "owner_fr": "FR-033",
       "title": "Admin optionally uploads a custom thumbnail (provider)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Screen 4.1 (Resource Add/Edit Form)"
       }
@@ -135636,7 +135648,7 @@
       "owner_fr": "FR-033",
       "title": "Admin uploads the resource file by drag and drop or file picker, or uses Replace File to keep the same resource record (patient)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Screen 4.1 (Resource Add/Edit Form)"
       }
@@ -135647,7 +135659,7 @@
       "owner_fr": "FR-033",
       "title": "Admin optionally uploads a custom thumbnail (patient)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Screen 4.1 (Resource Add/Edit Form)"
       }
@@ -135669,7 +135681,7 @@
       "owner_fr": "FR-033",
       "title": "Admin chooses the video source type, Upload File or Embed from Third-Party (patient)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Screen 12.1 (Patient Video Add/Edit Form, mirror of Screen 5.1)"
       }
@@ -135790,7 +135802,7 @@
       "owner_fr": "FR-033",
       "title": "System rejects a file that fails the virus scan, does not store it, shows File failed security scan. Upload a clean file. and writes the event to the audit trail",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step 8"
       }
@@ -135801,7 +135813,7 @@
       "owner_fr": "FR-033",
       "title": "Admin selects the Archived filter and clicks Restore; the item returns as Draft and the Related Content links removed at deletion are not put back",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A7"
       }
@@ -185745,7 +185757,7 @@
       "verb": "active in",
       "to_id": "STG-admin-01-configuration",
       "attrs": {
-        "rules": 87
+        "rules": 88
       },
       "derived": true
     },
@@ -304731,6 +304743,30 @@
     },
     {
       "from_id": "REQ-033-100",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-033",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-101",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-101",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-101",
+      "verb": "applies to",
+      "to_id": "ENT-help-centre-content",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-033-101",
       "verb": "decided by",
       "to_id": "SRC-PRD-033",
       "attrs": {}
@@ -447429,8 +447465,11 @@
     {
       "from_id": "STP-033-007",
       "verb": "next",
-      "to_id": "STP-033-008",
-      "attrs": {}
+      "to_id": "STP-033-165",
+      "attrs": {
+        "label": "attachment uploaded, scan",
+        "condition": "REQ-033-098"
+      }
     },
     {
       "from_id": "STP-033-007",
@@ -448144,6 +448183,12 @@
       "from_id": "STP-033-019",
       "verb": "on",
       "to_id": "SCR-033-25",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-021",
+      "verb": "applies",
+      "to_id": "REQ-033-036",
       "attrs": {}
     },
     {
@@ -449046,8 +449091,11 @@
     {
       "from_id": "STP-033-045",
       "verb": "next",
-      "to_id": "STP-033-046",
-      "attrs": {}
+      "to_id": "STP-033-165",
+      "attrs": {
+        "label": "thumbnail uploaded, scan",
+        "condition": "REQ-033-098"
+      }
     },
     {
       "from_id": "STP-033-045",
@@ -450864,6 +450912,12 @@
     {
       "from_id": "STP-033-094",
       "verb": "applies",
+      "to_id": "REQ-033-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-094",
+      "verb": "applies",
       "to_id": "REQ-033-059",
       "attrs": {}
     },
@@ -451033,6 +451087,12 @@
       "from_id": "STP-033-099",
       "verb": "on",
       "to_id": "SCR-033-08",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-100",
+      "verb": "applies",
+      "to_id": "REQ-033-016",
       "attrs": {}
     },
     {
@@ -451248,6 +451308,12 @@
     {
       "from_id": "STP-033-108",
       "verb": "applies",
+      "to_id": "REQ-033-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-108",
+      "verb": "applies",
       "to_id": "REQ-033-059",
       "attrs": {}
     },
@@ -451452,6 +451518,12 @@
     {
       "from_id": "STP-033-116",
       "verb": "applies",
+      "to_id": "REQ-033-016",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-116",
+      "verb": "applies",
       "to_id": "REQ-033-059",
       "attrs": {}
     },
@@ -451621,6 +451693,12 @@
       "from_id": "STP-033-121",
       "verb": "on",
       "to_id": "SCR-033-22",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-122",
+      "verb": "applies",
+      "to_id": "REQ-033-016",
       "attrs": {}
     },
     {
@@ -451819,6 +451897,12 @@
       "from_id": "STP-033-129",
       "verb": "on",
       "to_id": "SCR-033-24",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-130",
+      "verb": "applies",
+      "to_id": "REQ-033-016",
       "attrs": {}
     },
     {
@@ -452322,12 +452406,6 @@
     {
       "from_id": "STP-033-148",
       "verb": "next",
-      "to_id": "STP-033-149",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-033-148",
-      "verb": "next",
       "to_id": "STP-033-165",
       "attrs": {
         "label": "file uploaded, scan",
@@ -452355,8 +452433,11 @@
     {
       "from_id": "STP-033-149",
       "verb": "next",
-      "to_id": "STP-033-150",
-      "attrs": {}
+      "to_id": "STP-033-165",
+      "attrs": {
+        "label": "thumbnail uploaded, scan",
+        "condition": "REQ-033-098"
+      }
     },
     {
       "from_id": "STP-033-149",
@@ -452415,12 +452496,6 @@
     {
       "from_id": "STP-033-151",
       "verb": "next",
-      "to_id": "STP-033-152",
-      "attrs": {}
-    },
-    {
-      "from_id": "STP-033-151",
-      "verb": "next",
       "to_id": "STP-033-165",
       "attrs": {
         "label": "file uploaded, scan",
@@ -452448,8 +452523,11 @@
     {
       "from_id": "STP-033-152",
       "verb": "next",
-      "to_id": "STP-033-153",
-      "attrs": {}
+      "to_id": "STP-033-165",
+      "attrs": {
+        "label": "thumbnail uploaded, scan",
+        "condition": "REQ-033-098"
+      }
     },
     {
       "from_id": "STP-033-152",
@@ -452498,6 +452576,14 @@
       "verb": "done by",
       "to_id": "ACT-platform-admin",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-033-154",
+      "verb": "next",
+      "to_id": "STP-033-041",
+      "attrs": {
+        "label": "Upload File"
+      }
     },
     {
       "from_id": "STP-033-154",
@@ -452826,9 +452912,45 @@
     {
       "from_id": "STP-033-165",
       "verb": "next",
+      "to_id": "STP-033-007",
+      "attrs": {
+        "label": "file rejected",
+        "condition": "REQ-033-098"
+      }
+    },
+    {
+      "from_id": "STP-033-165",
+      "verb": "next",
+      "to_id": "STP-033-008",
+      "attrs": {
+        "label": "file clean",
+        "condition": "REQ-033-098"
+      }
+    },
+    {
+      "from_id": "STP-033-165",
+      "verb": "next",
       "to_id": "STP-033-041",
       "attrs": {
         "label": "file rejected",
+        "condition": "REQ-033-098"
+      }
+    },
+    {
+      "from_id": "STP-033-165",
+      "verb": "next",
+      "to_id": "STP-033-045",
+      "attrs": {
+        "label": "file rejected",
+        "condition": "REQ-033-098"
+      }
+    },
+    {
+      "from_id": "STP-033-165",
+      "verb": "next",
+      "to_id": "STP-033-046",
+      "attrs": {
+        "label": "file clean",
         "condition": "REQ-033-098"
       }
     },
@@ -452845,6 +452967,15 @@
       "from_id": "STP-033-165",
       "verb": "next",
       "to_id": "STP-033-149",
+      "attrs": {
+        "label": "file clean",
+        "condition": "REQ-033-098"
+      }
+    },
+    {
+      "from_id": "STP-033-165",
+      "verb": "next",
+      "to_id": "STP-033-150",
       "attrs": {
         "label": "file clean",
         "condition": "REQ-033-098"
@@ -452870,6 +453001,27 @@
     },
     {
       "from_id": "STP-033-165",
+      "verb": "next",
+      "to_id": "STP-033-153",
+      "attrs": {
+        "label": "file clean",
+        "condition": "REQ-033-098"
+      }
+    },
+    {
+      "from_id": "STP-033-165",
+      "verb": "on",
+      "to_id": "SCR-033-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-165",
+      "verb": "on",
+      "to_id": "SCR-033-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-165",
       "verb": "on",
       "to_id": "SCR-033-09",
       "attrs": {}
@@ -452883,6 +453035,18 @@
     {
       "from_id": "STP-033-165",
       "verb": "on",
+      "to_id": "SCR-033-19",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-165",
+      "verb": "on",
+      "to_id": "SCR-033-21",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-165",
+      "verb": "on",
       "to_id": "SCR-033-23",
       "attrs": {}
     },
@@ -452890,6 +453054,12 @@
       "from_id": "STP-033-165",
       "verb": "on",
       "to_id": "SCR-033-25",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-033-166",
+      "verb": "applies",
+      "to_id": "REQ-033-092",
       "attrs": {}
     },
     {
@@ -463728,6 +463898,38 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-085628-eb2b8e63",
+      "at": "2026-11-25T08:56:28.655233+00:00",
+      "changed_by": "controller",
+      "reason": "Backlog points settled for FR-033: queue-and-sync failure rule added; virus-scan branch made the only path after each upload (attachments and thumbnails included); soft-delete, content-kind change and restore steps tied to their rules; patient video source choice reaches the upload step.",
+      "source_id": "SRC-PRD-033",
+      "nodes_added": [
+        "REQ-033-101"
+      ],
+      "nodes_updated": [
+        "STP-033-007",
+        "STP-033-021",
+        "STP-033-041",
+        "STP-033-045",
+        "STP-033-094",
+        "STP-033-100",
+        "STP-033-108",
+        "STP-033-116",
+        "STP-033-122",
+        "STP-033-130",
+        "STP-033-148",
+        "STP-033-149",
+        "STP-033-151",
+        "STP-033-152",
+        "STP-033-154",
+        "STP-033-165",
+        "STP-033-166"
+      ],
+      "edges_added": 27,
+      "edges_removed": 7,
+      "rows": 40
+    },
     {
       "id": "cs-20261125-085247-2e5d53e9",
       "at": "2026-11-25T08:52:47.237341+00:00",
