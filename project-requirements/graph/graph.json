@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T04:00:11Z",
+  "generated_at": "2026-11-25T04:02:24Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -6511,6 +6511,17 @@
       "attrs": {}
     },
     {
+      "id": "ENT-booking.cancellation_policy_version_shown",
+      "type": "Field",
+      "owner_fr": "FR-006",
+      "title": "Cancellation policy version shown",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "description": "The published version of the Cancellation Policy (FR-027) that the full policy link showed when the patient ticked the cancellation policy acknowledgment; stored with the acknowledgment time (REQ-006-038)."
+      }
+    },
+    {
       "id": "ENT-booking.cancellation_reason",
       "type": "Field",
       "owner_fr": "FR-006",
@@ -6547,9 +6558,9 @@
       "owner_fr": "FR-006",
       "title": "Closure cause",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "description": "Why the booking was closed. Provider-fault causes named by FR-004: ProviderFault, ProviderSuspended, ProviderDeactivated; UnpaidBalance for the system cancellation of an Installments booking whose balance is unpaid at the FR-029 cancellation point (Alternative Flow B8); and Patient account suspended for a booking cancelled by the FR-016 suspension cascade (REQ-006-084)."
+        "description": "Why the booking was closed. Provider-fault causes named by FR-004: ProviderFault, ProviderSuspended, ProviderDeactivated; UnpaidBalance for the system cancellation of an Installments booking whose balance is unpaid at the FR-029 cancellation point (Alternative Flow B8); Patient account suspended for a booking cancelled by the FR-016 suspension cascade (REQ-006-084); and NoFaultEarlyClose for an In Progress case an admin closes early with no fault (Alternative Flow B9, REQ-006-086)."
       }
     },
     {
@@ -40525,7 +40536,7 @@
       "owner_fr": null,
       "title": "Booking & Scheduling",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
         "module": "fr006-booking-scheduling",
         "prd_path": "project-requirements/functional-requirements/fr006-booking-scheduling/prd.md",
@@ -47629,10 +47640,10 @@
       "owner_fr": "FR-006",
       "title": "Pay disabled until acknowledgments are checked",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Disable Pay button until all required acknowledgments (cancellation policy, T&C) are checked.",
-        "rationale": "prd.md line 269 (found by matching the rule statement to the PRD text)."
+        "statement": "Disable Pay button until all required acknowledgments (cancellation policy, T&C) are checked; the Cancellation Policy version shown at the tick is stored on the booking with the acknowledgment time.",
+        "rationale": "Screen 1 field Cancellation Policy Ack. FR-027 owns the policy document and its versions."
       }
     },
     {
@@ -48160,6 +48171,30 @@
       "attrs": {
         "statement": "When the FR-016 suspension cascade cancels a patient's `Accepted`, `Payment Window Expired` or `Confirmed` booking, System MUST cancel it through the admin booking cancellation with the cause \"Patient account suspended\" (admin-initiated, request source Admin, the acting admin carried from FR-016) and the fixed reason \"Booking cancelled because the patient account was suspended\" sent to the patient and the provider, keep the admin justification in the audit entry only, and refund by the refund ladder set in FR-029, or by the provider-fault terms where the provider is at fault (REQ-016-219).",
         "rationale": "prd.md Alternative Flow B2, Screen 9 and Payment and Billing Rules"
+      }
+    },
+    {
+      "id": "REQ-006-085",
+      "type": "Rule",
+      "owner_fr": "FR-006",
+      "title": "Patient sees a read-only note when the treatment was closed early",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "When an admin has closed a treatment early with no fault (FR-010 Rule 17, REQ-010-116), System MUST show the patient, on the Screen 2 booking detail, a read-only note \"Treatment closed early\" with the decision date (the date the booking moved to `Aftercare`) and, only when a refund greater than zero was issued for the closure, the refund amount (a zero or absent refund shows no amount line); the note adds no patient action, no new booking status and no change to the closure flow.",
+        "rationale": "Screen 2 row Early Close Note, shown while the booking is in Aftercare or Completed. FR-010 REQ-010-116 owns the early close and the Closed Early record status; REQ-006-086 owns the closure; the refund amount is read from the booking refund history owned by FR-007."
+      }
+    },
+    {
+      "id": "REQ-006-086",
+      "type": "Rule",
+      "owner_fr": "FR-006",
+      "title": "Admin closes an In Progress case early with no fault on Screen 11",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "When an `In Progress` case cannot be completed and the provider is not at fault, an admin MAY close it early on Screen 11 with the route \"Move to Aftercare, no fault\" (Alternative Flow B9; FR-010 Rule 17, REQ-010-079, REQ-010-116), with a mandatory reason, confirmation and audit entry. System MUST move the booking to `Aftercare` from the decision date (the aftercare start date handed to FR-011), record the closure cause `NoFaultEarlyClose`, set no `supportRequired` marker and hold no payout, apply the admin-set patient refund amount (zero up to the full amount paid) as an exception refund under the FR-007 approval rule, make the provider's share (what is left after the refund and the Hairline commission) eligible for payout on the decision date with no waiting window, and signal FR-010 and FR-011 for the Closed Early record status and the post-op instructions.",
+        "rationale": "Screen 11 route Move to Aftercare, no fault, and Screen 6 action Close Case Early, No Fault. FR-010 REQ-010-116 and Rule 17 own the record status, the reminders and the payout trigger; FR-006 owns the decision screen."
       }
     },
     {
@@ -100597,7 +100632,7 @@
       "owner_fr": "FR-006",
       "title": "Payment & Booking Confirmation",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "platform": "patient",
         "description": "Review the accepted subquote and inherited parent context, view its pre-scheduled appointment slot, and proceed to payment without reselection. Accessed from FR-005's Accepted Subquote detail view; shows a read-only blocked state when the booking can no longer be paid."
@@ -100609,7 +100644,7 @@
       "owner_fr": "FR-006",
       "title": "Booking Confirmation & Itinerary",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "platform": "patient",
         "description": "Confirmed booking, reference number, next steps and basic itinerary; appears immediately after successful payment."
@@ -100657,10 +100692,10 @@
       "owner_fr": "FR-006",
       "title": "Booking Detail & Intervention (Admin)",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "platform": "admin",
-        "description": "Complete booking details from all stages, with the governed intervention actions: revive, change appointment, cancel, provider-fault transfer, resolve in-progress provider fault, reassign aftercare, refund, internal note."
+        "description": "Complete booking details from all stages, with the governed intervention actions: revive, change appointment, cancel, provider-fault transfer, resolve in-progress provider fault, close an in-progress case early with no fault, reassign aftercare, refund, internal note."
       }
     },
     {
@@ -100715,12 +100750,12 @@
       "id": "SCR-006-11",
       "type": "Screen",
       "owner_fr": "FR-006",
-      "title": "Resolve In-Progress Provider Fault (Admin Modal)",
+      "title": "Resolve In-Progress Case (Admin Modal)",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "admin",
-        "description": "Record the admin's case-by-case decision for a provider fault while the booking is In Progress, opened from Screen 6."
+        "description": "Record the admin's decision for a booking that is In Progress, opened from Screen 6: the case-by-case decision for a provider fault, or the early close with no fault."
       }
     },
     {
@@ -143168,6 +143203,14 @@
       "calculated_by": null
     },
     {
+      "id": "ENT-booking.cancellation_policy_version_shown",
+      "entity_id": "ENT-booking",
+      "name": "cancellation_policy_version_shown",
+      "data_type": "text",
+      "required": false,
+      "calculated_by": null
+    },
+    {
       "id": "ENT-booking.cancellation_reason",
       "entity_id": "ENT-booking",
       "name": "cancellation_reason",
@@ -163394,6 +163437,12 @@
       "sort_order": 4
     },
     {
+      "field_id": "ENT-booking.closure_cause",
+      "value": "no_fault_early_close",
+      "label": "NoFaultEarlyClose",
+      "sort_order": 5
+    },
+    {
       "field_id": "ENT-booking.deposit_payment_method",
       "value": "card",
       "label": "Card",
@@ -180605,7 +180654,7 @@
       "verb": "active in",
       "to_id": "STG-main-06-treatment",
       "attrs": {
-        "rules": 2
+        "rules": 3
       },
       "derived": true
     },
@@ -180614,7 +180663,7 @@
       "verb": "active in",
       "to_id": "STG-main-07-aftercare",
       "attrs": {
-        "rules": 3
+        "rules": 4
       },
       "derived": true
     },
@@ -180675,7 +180724,19 @@
     {
       "from_id": "FR-006",
       "verb": "references",
+      "to_id": "REQ-010-079",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-006",
+      "verb": "references",
       "to_id": "REQ-010-106",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-006",
+      "verb": "references",
+      "to_id": "REQ-010-116",
       "attrs": {}
     },
     {
@@ -200994,6 +201055,12 @@
     {
       "from_id": "REQ-006-038",
       "verb": "applies to",
+      "to_id": "ENT-booking.cancellation_policy_version_shown",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-038",
+      "verb": "applies to",
       "to_id": "SCR-006-01",
       "attrs": {}
     },
@@ -202121,6 +202188,96 @@
     },
     {
       "from_id": "REQ-006-084",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-085",
+      "verb": "applies at",
+      "to_id": "STG-main-07-aftercare",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-085",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-085",
+      "verb": "applies to",
+      "to_id": "ENT-booking.refund_history",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-085",
+      "verb": "applies to",
+      "to_id": "ENT-booking.status_history",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-085",
+      "verb": "applies to",
+      "to_id": "ENT-treatment-record.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-085",
+      "verb": "applies to",
+      "to_id": "SCR-006-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-085",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-006",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-086",
+      "verb": "applies at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-086",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-086",
+      "verb": "applies to",
+      "to_id": "ENT-booking",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-086",
+      "verb": "applies to",
+      "to_id": "ENT-booking.closure_cause",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-086",
+      "verb": "applies to",
+      "to_id": "ENT-booking.status",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-086",
+      "verb": "applies to",
+      "to_id": "SCR-006-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-086",
+      "verb": "applies to",
+      "to_id": "SCR-006-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-006-086",
       "verb": "decided by",
       "to_id": "SRC-PRD-006",
       "attrs": {}
@@ -320299,6 +320456,15 @@
     {
       "from_id": "SCR-006-01",
       "verb": "shows",
+      "to_id": "ENT-booking.cancellation_policy_version_shown",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Cancellation Policy Ack (version shown)"
+      }
+    },
+    {
+      "from_id": "SCR-006-01",
+      "verb": "shows",
       "to_id": "ENT-booking.closure_cause",
       "attrs": {
         "provenance": "retrieved",
@@ -320605,6 +320771,15 @@
     {
       "from_id": "SCR-006-02",
       "verb": "shows",
+      "to_id": "ENT-booking.refund_history",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Early Close Note (refund amount)"
+      }
+    },
+    {
+      "from_id": "SCR-006-02",
+      "verb": "shows",
       "to_id": "ENT-booking.remaining_balance",
       "attrs": {
         "provenance": "system calculated",
@@ -320618,6 +320793,15 @@
       "attrs": {
         "provenance": "retrieved",
         "label": "Booking Status"
+      }
+    },
+    {
+      "from_id": "SCR-006-02",
+      "verb": "shows",
+      "to_id": "ENT-booking.status_history",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Early Close Note (decision date)"
       }
     },
     {
@@ -320681,6 +320865,15 @@
       "attrs": {
         "provenance": "inherited from another FR",
         "label": "Total Amount"
+      }
+    },
+    {
+      "from_id": "SCR-006-02",
+      "verb": "shows",
+      "to_id": "ENT-treatment-record.status",
+      "attrs": {
+        "provenance": "inherited from another FR",
+        "label": "Early Close Note (Treatment closed early)"
       }
     },
     {
@@ -322448,7 +322641,7 @@
       "to_id": "ENT-booking.closure_cause",
       "attrs": {
         "provenance": "retrieved",
-        "label": "Fault Cause"
+        "label": "Closure Cause"
       }
     },
     {
@@ -461686,6 +461879,30 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-040105-820195af",
+      "at": "2026-11-25T04:01:05.954902+00:00",
+      "changed_by": "docs-manager",
+      "reason": "Owner ruling of 2026-11-25: when a treatment is closed early with no fault (FR-010 Rule 17), the patient booking detail (FR-006 Screen 2) shows a read-only note Treatment closed early with the decision date and the refund amount when one was set. No new action, no new status, no change to the closure flow.",
+      "source_id": null,
+      "nodes_added": [
+        "ENT-booking.cancellation_policy_version_shown",
+        "REQ-006-085",
+        "REQ-006-086"
+      ],
+      "nodes_updated": [
+        "ENT-booking.closure_cause",
+        "FR-006",
+        "REQ-006-038",
+        "SCR-006-01",
+        "SCR-006-02",
+        "SCR-006-06",
+        "SCR-006-11"
+      ],
+      "edges_added": 23,
+      "edges_removed": 1,
+      "rows": 52
+    },
     {
       "id": "cs-20261125-035853-976a7209",
       "at": "2026-11-25T03:58:53.876885+00:00",
