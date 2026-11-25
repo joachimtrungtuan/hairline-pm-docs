@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T08:57:42Z",
+  "generated_at": "2026-11-25T08:59:33Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -21239,39 +21239,6 @@
       }
     },
     {
-      "id": "ENT-provider-account-settings",
-      "type": "Entity",
-      "owner_fr": "FR-032",
-      "title": "Provider account settings",
-      "status": "active",
-      "version": 3,
-      "attrs": {
-        "description": "Clinic-level account configuration. One provider has one account settings record, linked to the provider profile. Personal settings (phone number, timezone, password, account name) live on the team member record, not here."
-      }
-    },
-    {
-      "id": "ENT-provider-account-settings.last_updated_at",
-      "type": "Field",
-      "owner_fr": "FR-032",
-      "title": "Last updated",
-      "status": "active",
-      "version": 1,
-      "attrs": {
-        "description": "Last updated timestamp (Key Entities, Entity 2)."
-      }
-    },
-    {
-      "id": "ENT-provider-account-settings.provider_id",
-      "type": "Field",
-      "owner_fr": "FR-032",
-      "title": "Provider ID",
-      "status": "active",
-      "version": 1,
-      "attrs": {
-        "description": "Key Entities, Entity 2."
-      }
-    },
-    {
       "id": "ENT-provider-activity-log-entry",
       "type": "Entity",
       "owner_fr": "FR-015",
@@ -29880,11 +29847,11 @@
       "id": "ENT-team-member.password_changed_at",
       "type": "Field",
       "owner_fr": "FR-009",
-      "title": "Password last changed (deferred)",
+      "title": "Password last changed",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Flagged when older than 90 days; deferred Screen 11 Tab 4."
+        "description": "Date the person last changed their own password; set when a password change is saved (FR-032 Account Settings Main Flow step 19) and shown on Account Information (SCR-032-06). The 90-day age flag on Screen 11 Tab 4 is deferred."
       }
     },
     {
@@ -39307,13 +39274,13 @@
       "id": "FLW-032-admin-reply-notification",
       "type": "Flow",
       "owner_fr": null,
-      "title": "Alternative Flow A3: Provider Receives Admin Reply Notification",
+      "title": "Alternative Flow A16: Provider Receives Admin Reply Notification",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "kind": "alternative",
-        "description": "Alternative Flow A3: Provider Receives Admin Reply Notification",
-        "prd_ref": "Alternative Flow A3 (Admin Reply Notification)"
+        "description": "Alternative Flow A16: Provider Receives Admin Reply Notification",
+        "prd_ref": "Alternative Flow A16 (Admin Reply Notification)"
       }
     },
     {
@@ -39333,13 +39300,13 @@
       "id": "FLW-032-cancel-closure-dialog",
       "type": "Flow",
       "owner_fr": null,
-      "title": "Alternative Flow A13: Provider Cancels Closure Request Dialog",
+      "title": "Alternative Flow A17: Provider Cancels Closure Request Dialog",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "kind": "alternative",
-        "description": "Alternative Flow A13: Provider Cancels Closure Request Dialog",
-        "prd_ref": "Alternative Flow A13 (Cancel Closure Dialog)"
+        "description": "Alternative Flow A17: Provider Cancels Closure Request Dialog",
+        "prd_ref": "Alternative Flow A17 (Cancel Closure Dialog)"
       }
     },
     {
@@ -39489,13 +39456,13 @@
       "id": "FLW-032-filter-search-cases",
       "type": "Flow",
       "owner_fr": null,
-      "title": "Alternative Flow A2: Provider Filters and Searches Cases",
+      "title": "Alternative Flow A15: Provider Filters and Searches Cases",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "kind": "alternative",
-        "description": "Alternative Flow A2: Provider Filters and Searches Cases",
-        "prd_ref": "Alternative Flow A2 (Filter and Search Cases)"
+        "description": "Alternative Flow A15: Provider Filters and Searches Cases",
+        "prd_ref": "Alternative Flow A15 (Filter and Search Cases)"
       }
     },
     {
@@ -39632,13 +39599,13 @@
       "id": "FLW-032-request-reopen-closed-case",
       "type": "Flow",
       "owner_fr": null,
-      "title": "Alternative Flow A1: Provider Requests to Reopen Closed Case",
+      "title": "Alternative Flow A14: Provider Requests to Reopen Closed Case",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "kind": "alternative",
-        "description": "Alternative Flow A1: Provider Requests to Reopen Closed Case",
-        "prd_ref": "Alternative Flow A1 (Request Reopen Closed Case)"
+        "description": "Alternative Flow A14: Provider Requests to Reopen Closed Case",
+        "prd_ref": "Alternative Flow A14 (Request Reopen Closed Case)"
       }
     },
     {
@@ -92127,7 +92094,7 @@
       "owner_fr": "FR-032",
       "title": "Audit log of settings changes",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "statement": "System MUST log all profile changes, account settings changes, billing settings changes, and account closure requests in audit trail (timestamp, user ID, IP address, action, and old/new values; bank details, password, phone and email values are masked)",
         "rationale": "Restated by the Audit Rule (adds old value and new value), Business Rule 3 (account settings changes with timestamp, user ID, IP address), the per-screen audit lines on Screens 1-4 and closure Main Flow step 9 (user, timestamp, reason)."
@@ -92704,10 +92671,10 @@
       "owner_fr": "FR-032",
       "title": "Closure request needs explicit acknowledgement",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "statement": "[Checkbox] \"I understand that closing my account is permanent and my account data will be archived.\"; Reason for closure: [textarea] (optional); System closes dialog without creating closure request",
-        "rationale": "Closure Main Flow steps 4-5 (warning dialog text: permanent deactivation, cannot be reversed, open inquiries/quotes/bookings cancelled and patients notified, captured payments reconciled, data archived) and Alternative Flow A13 (cancel). Screen: SCR-032-06."
+        "rationale": "Closure Main Flow steps 4-5 (warning dialog text: permanent deactivation, cannot be reversed, open inquiries/quotes/bookings cancelled and patients notified, captured payments reconciled, data archived) and Alternative Flow A17 (cancel). Screen: SCR-032-06."
       }
     },
     {
@@ -93124,10 +93091,10 @@
       "owner_fr": "FR-032",
       "title": "Support case search and filters",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "statement": "Search Bar: Min 3 chars to trigger search, real-time search; searches across Case ID, Title, Description, Message content; Filters are cumulative (AND logic between different filter types); Filter options: Status (Open, In Progress, Resolved, Closed; default Open and In Progress), Type (Support Request, Feedback; default all types), Date Range (custom range on the case creation date; default last 90 days); several selections within one filter combine as OR; filter selections persist during the session",
-        "rationale": "Screen 5.7; Alternative Flow A2. Screen: SCR-032-16."
+        "rationale": "Screen 5.7; Alternative Flow A15. Screen: SCR-032-16."
       }
     },
     {
@@ -93184,10 +93151,10 @@
       "owner_fr": "FR-032",
       "title": "Admin reply link opens the case",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "System opens the provider platform and opens the case directly on Screen 5.8, whatever the filters of the case list, with the new reply in the Communication Thread",
-        "rationale": "Support Alternative Flow A3 (email link \"View case in My Support Cases\"). Screen: SCR-032-16."
+        "rationale": "Support Alternative Flow A16 (email link \"View case in My Support Cases\"). Screen: SCR-032-16."
       }
     },
     {
@@ -93196,10 +93163,10 @@
       "owner_fr": "FR-032",
       "title": "Reopen request needs a reason",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "statement": "Modal only accessible from Screen 5.8 when viewing Closed cases; Reopening reason required (min 20 chars) to prevent accidental/spam reopening; Reopening Reason: Min 20 chars, max 500 chars; the reason and, optionally, the requested priority are sent to FR-034 as a flagged reopen-request message in the case thread (text)",
-        "rationale": "Screen 5.9; Support Alternative Flow A1. Screen: SCR-032-18."
+        "rationale": "Screen 5.9; Support Alternative Flow A14. Screen: SCR-032-18."
       }
     },
     {
@@ -93208,10 +93175,10 @@
       "owner_fr": "FR-032",
       "title": "Reopen request is sent to the admin and the case stays Closed",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "statement": "The reopen request is sent to FR-034 as a flagged message in the case thread; the case stays Closed until the admin reopens it; the provider sees \"Request sent, awaiting admin\" with the reply box disabled; FR-034 notifies the admin through the user-reply notice (support.case_user_reply, REQ-034-178). When an admin accepts the request, the admin reopens the case in FR-034 (status Open, REQ-034-145), which enables the reply box again; when an admin answers but keeps the case Closed, the \"Request sent, awaiting admin\" banner clears and the Request Reopen button returns, so the provider may ask again",
-        "rationale": "Screen 5.9; Support Alternative Flow A1 step 11. Reply Message Box is enabled again after reopening. Screen: SCR-032-18."
+        "rationale": "Screen 5.9; Support Alternative Flow A14 step 11. Reply Message Box is enabled again after reopening. Screen: SCR-032-18."
       }
     },
     {
@@ -93484,10 +93451,10 @@
       "owner_fr": "FR-032",
       "title": "After a reopen request is submitted the system shows the confirmation \"Reopen request subm",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "After a reopen request is submitted the system shows the confirmation \"Reopen request submitted. We'll review your case shortly.\"",
-        "rationale": "prd.md lines 705, 1576 (alternative flow A1 step 10 and Screen 5.9 Business Rules). Screen: SCR-032-18."
+        "rationale": "Support Alternative Flow A14 step 10 and Screen 5.9 Business Rules. Screen: SCR-032-18."
       }
     },
     {
@@ -108622,7 +108589,7 @@
       "owner_fr": null,
       "title": "Active",
       "status": "active",
-      "version": 32,
+      "version": 33,
       "attrs": {
         "timeline": "provider-account",
         "sequence": 3,
@@ -108661,7 +108628,7 @@
       "owner_fr": null,
       "title": "Configuration",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "timeline": "provider-configuration",
         "sequence": 1,
@@ -131557,9 +131524,9 @@
       "id": "STP-032-093",
       "type": "Step",
       "owner_fr": "FR-032",
-      "title": "Save the new password hash",
+      "title": "Save the new password hash and the password change date",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow: Update Account Settings step 19"
       }
@@ -131625,7 +131592,7 @@
       "owner_fr": "FR-032",
       "title": "Validate and save the phone number",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow A6 (Change Only Phone Number) step 3"
       }
@@ -131636,9 +131603,9 @@
       "owner_fr": "FR-032",
       "title": "Timezone and password remain unchanged",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A6 (Change Only Phone Number) step 4"
+        "prd_ref": "Alternative Flow A6 (Change Only Phone Number) step 5"
       }
     },
     {
@@ -131658,7 +131625,7 @@
       "owner_fr": "FR-032",
       "title": "Save the timezone preference for this person",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A7 (Change Timezone) step 2"
       }
@@ -131669,9 +131636,9 @@
       "owner_fr": "FR-032",
       "title": "Display future timestamps in the new timezone",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A7 (Change Timezone) step 3"
+        "prd_ref": "Alternative Flow A7 (Change Timezone) step 4"
       }
     },
     {
@@ -131680,9 +131647,9 @@
       "owner_fr": "FR-032",
       "title": "Display existing UTC timestamps converted to the new timezone",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A7 (Change Timezone) step 4"
+        "prd_ref": "Alternative Flow A7 (Change Timezone) step 5"
       }
     },
     {
@@ -133396,9 +133363,9 @@
       "owner_fr": "FR-032",
       "title": "Open a closed case in My Support Cases",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow A1 (Request Reopen Closed Case) step 1"
+        "prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 1"
       }
     },
     {
@@ -133407,9 +133374,9 @@
       "owner_fr": "FR-032",
       "title": "Display case detail with status Closed and previous resolution summary",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A1 (Request Reopen Closed Case) step 2"
+        "prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 2"
       }
     },
     {
@@ -133418,9 +133385,9 @@
       "owner_fr": "FR-032",
       "title": "Disable the Reply Message Box with the case-closed message",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A1 (Request Reopen Closed Case) step 3"
+        "prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 3"
       }
     },
     {
@@ -133429,9 +133396,9 @@
       "owner_fr": "FR-032",
       "title": "Click Request Reopen",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A1 (Request Reopen Closed Case) step 4"
+        "prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 4"
       }
     },
     {
@@ -133440,9 +133407,9 @@
       "owner_fr": "FR-032",
       "title": "Open the reopen request modal",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A1 (Request Reopen Closed Case) step 5"
+        "prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 5"
       }
     },
     {
@@ -133451,9 +133418,9 @@
       "owner_fr": "FR-032",
       "title": "Fill the reopening reason and select the priority",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A1 (Request Reopen Closed Case) step 6"
+        "prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 6"
       }
     },
     {
@@ -133462,9 +133429,9 @@
       "owner_fr": "FR-032",
       "title": "Click Submit Reopen Request",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A1 (Request Reopen Closed Case) step 7"
+        "prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 7"
       }
     },
     {
@@ -133473,9 +133440,9 @@
       "owner_fr": "FR-032",
       "title": "Validate the reason (min 20 chars) and send it to FR-034 as a flagged reopen-request message",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow A1 (Request Reopen Closed Case) step 8"
+        "prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 8"
       }
     },
     {
@@ -133484,9 +133451,9 @@
       "owner_fr": "FR-032",
       "title": "FR-034 notifies the admin through the user-reply notice (support.case_user_reply)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow A1 (Request Reopen Closed Case) step 9"
+        "prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 9"
       }
     },
     {
@@ -133495,9 +133462,9 @@
       "owner_fr": "FR-032",
       "title": "Display the reopen-request-submitted confirmation and Request sent, awaiting admin",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow A1 (Request Reopen Closed Case) step 10"
+        "prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 10"
       }
     },
     {
@@ -133506,9 +133473,9 @@
       "owner_fr": "FR-032",
       "title": "Keep the case Closed until the admin decides on the reopen request",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow A1 (Request Reopen Closed Case) step 11"
+        "prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 11"
       }
     },
     {
@@ -133517,9 +133484,9 @@
       "owner_fr": "FR-032",
       "title": "Review the reopening reason",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow A1 (Request Reopen Closed Case) step 12"
+        "prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 12"
       }
     },
     {
@@ -133528,9 +133495,9 @@
       "owner_fr": "FR-032",
       "title": "Reply to the case with next troubleshooting steps",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A1 (Request Reopen Closed Case) step 13"
+        "prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 13"
       }
     },
     {
@@ -133539,9 +133506,9 @@
       "owner_fr": "FR-032",
       "title": "Receive the notification and continue the conversation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A1 (Request Reopen Closed Case) step 14"
+        "prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 14"
       }
     },
     {
@@ -133550,9 +133517,9 @@
       "owner_fr": "FR-032",
       "title": "Open the My Support Cases screen",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow A2 (Filter and Search Cases) step 1"
+        "prd_ref": "Alternative Flow A15 (Filter and Search Cases) step 1"
       }
     },
     {
@@ -133561,9 +133528,9 @@
       "owner_fr": "FR-032",
       "title": "Select Resolved and Closed statuses in the Filter Bar",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A2 (Filter and Search Cases) step 2"
+        "prd_ref": "Alternative Flow A15 (Filter and Search Cases) step 2"
       }
     },
     {
@@ -133572,9 +133539,9 @@
       "owner_fr": "FR-032",
       "title": "Enter a search term in the Search Bar",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow A2 (Filter and Search Cases) step 3"
+        "prd_ref": "Alternative Flow A15 (Filter and Search Cases) step 3"
       }
     },
     {
@@ -133583,9 +133550,9 @@
       "owner_fr": "FR-032",
       "title": "Filter cases by status and keyword",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A2 (Filter and Search Cases) step 4"
+        "prd_ref": "Alternative Flow A15 (Filter and Search Cases) step 4"
       }
     },
     {
@@ -133594,9 +133561,9 @@
       "owner_fr": "FR-032",
       "title": "Display the filtered results",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A2 (Filter and Search Cases) step 5"
+        "prd_ref": "Alternative Flow A15 (Filter and Search Cases) step 5"
       }
     },
     {
@@ -133605,9 +133572,9 @@
       "owner_fr": "FR-032",
       "title": "Click a case to view details",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A2 (Filter and Search Cases) step 6"
+        "prd_ref": "Alternative Flow A15 (Filter and Search Cases) step 6"
       }
     },
     {
@@ -133616,9 +133583,9 @@
       "owner_fr": "FR-032",
       "title": "Send a reply to the provider's case in FR-034",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow A3 (Admin Reply Notification) step 1"
+        "prd_ref": "Alternative Flow A16 (Admin Reply Notification) step 1"
       }
     },
     {
@@ -133627,9 +133594,9 @@
       "owner_fr": "FR-032",
       "title": "FR-034 triggers the support.case_admin_reply event to S-03",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A3 (Admin Reply Notification) step 2"
+        "prd_ref": "Alternative Flow A16 (Admin Reply Notification) step 2"
       }
     },
     {
@@ -133638,9 +133605,9 @@
       "owner_fr": "FR-032",
       "title": "S-03 sends the email to the provider",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A3 (Admin Reply Notification) step 3"
+        "prd_ref": "Alternative Flow A16 (Admin Reply Notification) step 3"
       }
     },
     {
@@ -133649,9 +133616,9 @@
       "owner_fr": "FR-032",
       "title": "The email includes a link to the case",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A3 (Admin Reply Notification) step 4"
+        "prd_ref": "Alternative Flow A16 (Admin Reply Notification) step 4"
       }
     },
     {
@@ -133660,9 +133627,9 @@
       "owner_fr": "FR-032",
       "title": "Click the link in the email",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A3 (Admin Reply Notification) step 5"
+        "prd_ref": "Alternative Flow A16 (Admin Reply Notification) step 5"
       }
     },
     {
@@ -133671,9 +133638,9 @@
       "owner_fr": "FR-032",
       "title": "Open the provider platform directly on the case in Support Case Detail",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow A3 (Admin Reply Notification) step 6"
+        "prd_ref": "Alternative Flow A16 (Admin Reply Notification) step 6"
       }
     },
     {
@@ -133682,9 +133649,9 @@
       "owner_fr": "FR-032",
       "title": "Show the case with the new reply in the Communication Thread",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow A3 (Admin Reply Notification) step 7"
+        "prd_ref": "Alternative Flow A16 (Admin Reply Notification) step 7"
       }
     },
     {
@@ -133693,9 +133660,9 @@
       "owner_fr": "FR-032",
       "title": "Read the admin's response in the Communication Thread",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A3 (Admin Reply Notification) step 8"
+        "prd_ref": "Alternative Flow A16 (Admin Reply Notification) step 8"
       }
     },
     {
@@ -133704,9 +133671,9 @@
       "owner_fr": "FR-032",
       "title": "Reply if needed",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow A3 (Admin Reply Notification) step 9"
+        "prd_ref": "Alternative Flow A16 (Admin Reply Notification) step 9"
       }
     },
     {
@@ -133889,11 +133856,11 @@
       "id": "STP-032-321",
       "type": "Step",
       "owner_fr": "FR-032",
-      "title": "Click Request account closure",
+      "title": "Click Request account closure, then decide not to submit",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Alternative Flow A13 (Cancel Closure Dialog) step 1"
+        "prd_ref": "Alternative Flow A17 (Cancel Closure Dialog) step 1"
       }
     },
     {
@@ -133902,9 +133869,9 @@
       "owner_fr": "FR-032",
       "title": "Display the warning dialog",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A13 (Cancel Closure Dialog) step 2"
+        "prd_ref": "Alternative Flow A17 (Cancel Closure Dialog) step 2"
       }
     },
     {
@@ -133913,9 +133880,9 @@
       "owner_fr": "FR-032",
       "title": "Read the warning",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A13 (Cancel Closure Dialog) step 3"
+        "prd_ref": "Alternative Flow A17 (Cancel Closure Dialog) step 3"
       }
     },
     {
@@ -133924,9 +133891,9 @@
       "owner_fr": "FR-032",
       "title": "Click Cancel",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A13 (Cancel Closure Dialog) step 4"
+        "prd_ref": "Alternative Flow A17 (Cancel Closure Dialog) step 4"
       }
     },
     {
@@ -133935,9 +133902,9 @@
       "owner_fr": "FR-032",
       "title": "Close the dialog without creating a closure request",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A13 (Cancel Closure Dialog) step 5"
+        "prd_ref": "Alternative Flow A17 (Cancel Closure Dialog) step 5"
       }
     },
     {
@@ -134009,9 +133976,9 @@
       "owner_fr": "FR-032",
       "title": "Admin reopens the case in FR-034 with Reopen Case (status Open), which enables the reply box again",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "prd_ref": "Alternative Flow A1 (Request Reopen Closed Case) step 12"
+        "prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 12"
       }
     },
     {
@@ -134067,6 +134034,28 @@
       "version": 1,
       "attrs": {
         "prd_ref": "Main Flow: Update Account Settings step 13"
+      }
+    },
+    {
+      "id": "STP-032-339",
+      "type": "Step",
+      "owner_fr": "FR-032",
+      "title": "Log the phone number change in the audit trail with the phone values masked",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A6 (Change Only Phone Number) step 4"
+      }
+    },
+    {
+      "id": "STP-032-340",
+      "type": "Step",
+      "owner_fr": "FR-032",
+      "title": "Log the timezone change in the audit trail",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow A7 (Change Timezone) step 3"
       }
     },
     {
@@ -154295,22 +154284,6 @@
       "entity_id": "ENT-promotion-usage-reservation",
       "name": "state",
       "data_type": "enum",
-      "required": true,
-      "calculated_by": null
-    },
-    {
-      "id": "ENT-provider-account-settings.last_updated_at",
-      "entity_id": "ENT-provider-account-settings",
-      "name": "last_updated_at",
-      "data_type": "datetime",
-      "required": false,
-      "calculated_by": null
-    },
-    {
-      "id": "ENT-provider-account-settings.provider_id",
-      "entity_id": "ENT-provider-account-settings",
-      "name": "provider_id",
-      "data_type": "id",
       "required": true,
       "calculated_by": null
     },
@@ -176114,12 +176087,6 @@
       "from_id": "ENT-provider",
       "verb": "decided by",
       "to_id": "SRC-PRD-015",
-      "attrs": {}
-    },
-    {
-      "from_id": "ENT-provider-account-settings",
-      "verb": "decided by",
-      "to_id": "SRC-PRD-032",
       "attrs": {}
     },
     {
@@ -299854,12 +299821,6 @@
     {
       "from_id": "REQ-032-020",
       "verb": "applies to",
-      "to_id": "ENT-provider-account-settings",
-      "attrs": {}
-    },
-    {
-      "from_id": "REQ-032-020",
-      "verb": "applies to",
       "to_id": "ENT-provider-billing-settings",
       "attrs": {}
     },
@@ -366859,12 +366820,6 @@
     {
       "from_id": "STG-provider-03-active",
       "verb": "reads",
-      "to_id": "ENT-provider-account-settings",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-provider-03-active",
-      "verb": "reads",
       "to_id": "ENT-provider-activity-log-entry",
       "attrs": {}
     },
@@ -367316,12 +367271,6 @@
       "from_id": "STG-provider-03-active",
       "verb": "writes",
       "to_id": "ENT-provider",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-provider-03-active",
-      "verb": "writes",
-      "to_id": "ENT-provider-account-settings",
       "attrs": {}
     },
     {
@@ -367849,12 +367798,6 @@
     {
       "from_id": "STG-provider-config-01-configuration",
       "verb": "reads",
-      "to_id": "ENT-provider-account-settings",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-provider-config-01-configuration",
-      "verb": "reads",
       "to_id": "ENT-provider-award",
       "attrs": {}
     },
@@ -367940,12 +367883,6 @@
       "from_id": "STG-provider-config-01-configuration",
       "verb": "writes",
       "to_id": "ENT-package-plan-day",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-provider-config-01-configuration",
-      "verb": "writes",
-      "to_id": "ENT-provider-account-settings",
       "attrs": {}
     },
     {
@@ -440399,7 +440336,7 @@
     {
       "from_id": "STP-032-099",
       "verb": "next",
-      "to_id": "STP-032-100",
+      "to_id": "STP-032-339",
       "attrs": {}
     },
     {
@@ -440483,7 +440420,7 @@
     {
       "from_id": "STP-032-102",
       "verb": "next",
-      "to_id": "STP-032-103",
+      "to_id": "STP-032-340",
       "attrs": {}
     },
     {
@@ -447140,6 +447077,66 @@
     },
     {
       "from_id": "STP-032-338",
+      "verb": "on",
+      "to_id": "SCR-032-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-339",
+      "verb": "applies",
+      "to_id": "REQ-032-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-339",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-339",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-339",
+      "verb": "next",
+      "to_id": "STP-032-100",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-339",
+      "verb": "on",
+      "to_id": "SCR-032-06",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-340",
+      "verb": "applies",
+      "to_id": "REQ-032-020",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-340",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-340",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-340",
+      "verb": "next",
+      "to_id": "STP-032-103",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-032-340",
       "verb": "on",
       "to_id": "SCR-032-06",
       "attrs": {}
@@ -463898,6 +463895,80 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-085819-bf988169",
+      "at": "2026-11-25T08:58:19.912158+00:00",
+      "changed_by": "controller",
+      "reason": "Backlog points settled for FR-032: flow label uniqueness, audit steps in the phone-only and timezone-only flows, password change date writer, vestigial account settings entity retired, distinct step title.",
+      "source_id": "SRC-PRD-032",
+      "nodes_added": [
+        "STP-032-339",
+        "STP-032-340"
+      ],
+      "nodes_updated": [
+        "ENT-provider-account-settings",
+        "ENT-provider-account-settings.last_updated_at",
+        "ENT-provider-account-settings.provider_id",
+        "ENT-team-member.password_changed_at",
+        "FLW-032-admin-reply-notification",
+        "FLW-032-cancel-closure-dialog",
+        "FLW-032-filter-search-cases",
+        "FLW-032-request-reopen-closed-case",
+        "REQ-032-020",
+        "REQ-032-070",
+        "REQ-032-107",
+        "REQ-032-112",
+        "REQ-032-113",
+        "REQ-032-114",
+        "REQ-032-137",
+        "STG-provider-03-active",
+        "STG-provider-config-01-configuration",
+        "STP-032-093",
+        "STP-032-099",
+        "STP-032-100",
+        "STP-032-102",
+        "STP-032-103",
+        "STP-032-104",
+        "STP-032-276",
+        "STP-032-277",
+        "STP-032-278",
+        "STP-032-279",
+        "STP-032-280",
+        "STP-032-281",
+        "STP-032-282",
+        "STP-032-283",
+        "STP-032-284",
+        "STP-032-285",
+        "STP-032-286",
+        "STP-032-287",
+        "STP-032-288",
+        "STP-032-289",
+        "STP-032-290",
+        "STP-032-291",
+        "STP-032-292",
+        "STP-032-293",
+        "STP-032-294",
+        "STP-032-295",
+        "STP-032-296",
+        "STP-032-297",
+        "STP-032-298",
+        "STP-032-299",
+        "STP-032-300",
+        "STP-032-301",
+        "STP-032-302",
+        "STP-032-303",
+        "STP-032-304",
+        "STP-032-321",
+        "STP-032-322",
+        "STP-032-323",
+        "STP-032-324",
+        "STP-032-325",
+        "STP-032-333"
+      ],
+      "edges_added": 12,
+      "edges_removed": 7,
+      "rows": 92
+    },
     {
       "id": "cs-20261125-085628-eb2b8e63",
       "at": "2026-11-25T08:56:28.655233+00:00",

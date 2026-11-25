@@ -316,7 +316,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
     - New password meets the password policy. See system PRD, Platform-Wide Rules: Password and one-time-code policy
     - New password matches confirmation
 18. System hashes new password using bcrypt (cost factor 12+)
-19. System saves new password hash
+19. System saves new password hash and the password change date
 20. System logs password change event in audit trail (timestamp, user ID, IP address)
 21. System displays success message "Password changed successfully"
 22. System sends email notification to provider's email address "Your password was changed on [date] at [time]"
@@ -330,7 +330,8 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
   1. Provider edits phone number field
   2. Provider saves phone number
   3. System validates and saves phone number
-  4. Other account settings (timezone, password) remain unchanged
+  4. System logs the phone number change in the audit trail with the phone values masked (REQ-032-020)
+  5. Other account settings (timezone, password) remain unchanged
 - **Outcome**: Phone number updated, other settings unchanged
 
 **A7: Provider Changes Timezone for Different Region**:
@@ -339,8 +340,9 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - **Steps**:
   1. Provider selects new timezone from dropdown
   2. System saves timezone preference for this person only; other team members keep their own (REQ-032-145)
-  3. All future timestamps in this person's provider dashboard display in new timezone
-  4. Existing data timestamps remain in UTC but display converted to new timezone
+  3. System logs the timezone change in the audit trail (REQ-032-020)
+  4. All future timestamps in this person's provider dashboard display in new timezone
+  5. Existing data timestamps remain in UTC but display converted to new timezone
 - **Outcome**: Provider sees all dates/times in new local timezone (fixed offsets of the FR-026 list, REQ-026-121)
 
 **B5: Invalid Phone Number Format**:
@@ -689,7 +691,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 **Alternative Flows**:
 
-**A1: Provider Requests to Reopen Closed Case**:
+**A14: Provider Requests to Reopen Closed Case**:
 
 - **Trigger**: Provider's issue persists after case was marked as Resolved and Closed
 - **Steps**:
@@ -711,7 +713,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 - **Alternative outcome**: If an admin answers but keeps the case Closed, the "Request sent, awaiting admin" banner clears and the Request Reopen button returns, so the provider may ask again (REQ-032-114)
 - **Outcome**: Reopen request delivered to the admin; the case stays Closed until an admin reopens it
 
-**A2: Provider Filters and Searches Cases**:
+**A15: Provider Filters and Searches Cases**:
 
 - **Trigger**: Provider wants to find specific past case or filter by status
 - **Steps**:
@@ -723,7 +725,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
   6. Provider clicks case to view details
 - **Outcome**: Provider finds historical case for reference
 
-**A3: Provider Receives Admin Reply Notification**:
+**A16: Provider Receives Admin Reply Notification**:
 
 - **Trigger**: Admin replies to provider's support case
 - **Steps**:
@@ -780,7 +782,7 @@ Provider Dashboard Settings & Profile Management enables clinic administrators a
 
 ### Alternative Flows
 
-**A13: Provider Cancels Closure Request Dialog**:
+**A17: Provider Cancels Closure Request Dialog**:
 
 - **Trigger**: Provider changes mind before submitting closure request
 - **Steps**:
@@ -927,8 +929,9 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 | Rating Distribution | bar chart | No | Percentage/count visualization for 5★ through 1★ reviews | Read-only; calculated from Reviews service | **Read-only**: Bar chart showing distribution of ratings (e.g., 60% 5-star, 25% 4-star, etc.) with counts; updates automatically | ENT-provider-review-summary.rating_distribution |
 | Rating Filters | checkbox/pill group | No | Filter reviews by rating (5★, 4★, 3★, 2★, 1★); multiple selections allowed | Filtering runs on the server over the whole review list (REQ-032-148); selections persist per session | **Interactive**: Click rating pill/checkbox to toggle filter; multiple ratings can be selected; filtered results update immediately; filter state persists during session | no graph field (control) |
 | Sort Dropdown | dropdown | No | Sort order options: "Most recent" (default), "Highest rated", "Lowest rated", "Oldest first" | Sorting runs on the server over the whole review list (REQ-032-148); selection persists per session | **Interactive**: Select from dropdown to change sort order; results update immediately; sort preference persists during session | no graph field (control) |
-| Review Cards | list | No | List of review cards displaying: reviewer avatar/name, treatment type, rating stars, review date, review text (truncated), optional "Read more" link | Read-only content from Reviews service; pagination supported; a review edited by the patient after publishing carries the "Edited" marker (FR-013 REQ-013-032, REQ-032-148) | **Read-only**: Review cards display review information; click "Read more" to expand full review text; click reviewer name/avatar (if implemented) may show reviewer profile; cards update automatically when new reviews added | ENT-review.reviewer_avatar_url, ENT-review.reviewer_name, ENT-review.treatment_name, ENT-review.overall_rating, ENT-review.created_at, ENT-review.feedback_text |
+| Review Cards | list | No | List of review cards displaying: reviewer avatar/name, treatment type, rating stars, review date, review text (truncated), optional "Read more" link | Read-only content from Reviews service; pagination supported; a review edited by the patient after publishing carries the "Edited" marker (FR-013 REQ-013-032, REQ-032-148) | **Read-only**: Review cards display review information; click "Read more" to expand full review text; click reviewer name/avatar (if implemented) may show reviewer profile; cards update automatically when new reviews added | ENT-review.reviewer_avatar_url, ENT-review.reviewer_name, ENT-review.treatment_name, ENT-review.overall_rating, ENT-review.created_at, ENT-review.feedback_text, ENT-review.last_edited_at |
 | Pagination Controls | control group | No | Page navigation: page numbers, next/previous buttons, page-size selector (10/20/50 per page) | Paging runs on the server over the whole review list (REQ-032-148) | **Interactive**: Click page numbers or next/previous to navigate; select page size from dropdown; pagination state persists during session (REQ-032-122) | no graph field (control) |
+| Last Sync | display | No | Timestamp of the last sync with the Reviews service, shown at the bottom of the tab | Read-only; calculated from Reviews service | **Read-only**: Updates with each sync | ENT-provider-review-summary.last_synced_at |
 
 **Business Rules**:
 
@@ -1053,6 +1056,8 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 | Current Password | password | Yes (for password change) | Current password for verification | Must match existing password hash | Editable by all roles | no graph field (input checked against the stored hash) |
 | New Password | password | Yes (for password change) | New password | See system PRD, Platform-Wide Rules: Password and one-time-code policy | Editable by all roles, for their own account | ENT-team-member.password |
 | Confirm New Password | password | Yes (for password change) | Confirm new password | Must match New Password field (REQ-032-065) | Editable by all roles | no graph field (input that must match New Password) |
+| Last Password Change | display | N/A | Date this person last changed their own password, shown below the password section; set when a password change is saved (Account Settings Main Flow step 19) | Read-only | Shown to every role, for their own account | ENT-team-member.password_changed_at |
+| Reason for Closure (Account Closure dialog) | textarea | No | Optional reason the Owner gives when requesting account closure; entered in the Account Closure dialog opened from this screen (Owner only) | Optional (REQ-032-070) | **Owner only**: the dialog is offered to the Owner only (REQ-032-141) | ENT-provider-closure-request.reason |
 
 **Business Rules**:
 
@@ -1119,6 +1124,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 | Promotion/Discount Notifications | toggle/checkbox | No (default enabled) | New platform discounts created by admin that require provider acceptance/opt-in | Toggle on/off | ENT-provider-notification-preferences.promotion_notifications |
 | Email Notifications | toggle/checkbox | No (default enabled) | Send notifications via email | Toggle on/off, email address from profile | ENT-provider-notification-preferences.email_enabled |
 | Push/In-App Notifications | toggle/checkbox | No (default enabled) | Show notifications in web portal | Toggle on/off | ENT-provider-notification-preferences.push_enabled |
+| Last Updated | display | N/A | Date and time of the last preference update | Read-only; set when the preferences are saved | ENT-provider-notification-preferences.last_updated_at |
 
 **Business Rules**:
 
@@ -1160,6 +1166,7 @@ See FR-009 Screen 1 for complete field specifications, business rules, and staff
 | Account Number | text | Yes (Manual bank transfer only) | Bank account number | Format varies by country, validated by S-02 Payment Service | ENT-provider-billing-settings.account_number |
 | Routing/SWIFT Code | text | Yes (Manual bank transfer only) | Bank routing code (USA) or SWIFT code (international) | 8-11 chars for SWIFT, 9 digits for USA routing (REQ-032-085) | ENT-provider-billing-settings.routing_swift_code |
 | IBAN | text | Conditional (if applicable) | International Bank Account Number | Format validated per country (e.g., Turkey = 26 chars) (REQ-032-085) | ENT-provider-billing-settings.iban |
+| Last Bank Account Update | display | N/A | Date and time the bank account details were last updated | Read-only; set when the bank details are saved | ENT-provider-billing-settings.last_updated_at |
 
 **Commission & Payout (Read-Only Panel)**:
 
@@ -1946,6 +1953,7 @@ A provider closing their clinic permanently requests account closure, and an adm
 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
+| 2026-11-25 | 1.22 | Backlog points settled: support case flows and the closure-cancel flow relabelled A14 to A17 so every alternative flow label is unique; phone-only and timezone-only flows now log the audit entry; password change saves the change date; Last Sync, Last Password Change, Reason for Closure, Last Updated and Last Bank Account Update added as screen rows with their graph fields. No rule wording changed. | Claude (AI Assistant) |
 | 2026-11-25 | 1.21 | Owner rulings 2026-11-25. (A) Billing settings: the permission View and Edit Billing Settings is split into View Billing Settings and Edit Billing Settings (FR-031 v1.8); by default Owner and Billing Staff can view (View Billing Settings is grantable), only the Owner can edit (Edit Billing Settings is held by the Owner only and cannot be granted to any other role); a View-only user gets the read-only screen with no edit, save or cancel controls and no unmasked account number; Alternative Flow B9 now covers roles without View. (B) Mandatory notices (including support case notices and critical system alerts) are always sent by email whatever the provider's settings; Push follows the provider's own setting; the in-app record is always created (FR-020 REQ-020-038, FR-030 REQ-030-208). | Product Owner / Documentation |
 | 2026-11-25 | 1.20 | Cross-FR alignment: password complexity follows the platform password policy (REQ-SYS-007, REQ-032-066); no other wording change. | Product Owner / Documentation |
 | 2026-11-24 | 1.19 | Logic review pass 2: video view recorded after 30 seconds of play; provider only replies (no resolve control); support form limits aligned with FR-034 (subject and feedback title minimum 10, up to 5 attachments, DOC added); phone number required, unique per user within the provider and verified when changed; who-edits-what table names the FR-031 permission per row (Edit Profile, Edit Notification Settings, View and Edit Billing Settings) and notification settings follow "Edit Notification Settings"; reopen request outcome (admin reopens in FR-034, or answers and the Request Reopen button returns); closure card pending state and refusal of a second request; Account Name sync step and Owner handover rule; timezone set silently at first login; audit steps for phone and timezone changes; "we aim to review within 5 business days" for closure. Rules changed: REQ-032-061, 062, 064, 071, 073, 102, 104, 114, 125, 141, 142, 145. | Product Owner / Documentation |

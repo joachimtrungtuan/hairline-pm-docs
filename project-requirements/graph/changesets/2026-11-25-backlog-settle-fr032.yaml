@@ -1,0 +1,81 @@
+# Backlog points settled for FR-032 on 2026-11-25. NOT APPLIED: to be applied by the controller with write.py.
+# Alternative flow labels made unique (support case flows A1-A3 become A14-A16, closure cancel A13 becomes A17); phone-only and timezone-only flows reach new audit steps; password change saves the change date; the clinic-level account settings entity, which has no content in the PRD (account settings are per person on the team member record, REQ-032-015), is retired with its fields; the two closure-flow click steps get distinct titles.
+reason: "Backlog points settled for FR-032: flow label uniqueness, audit steps in the phone-only and timezone-only flows, password change date writer, vestigial account settings entity retired, distinct step title."
+by: controller
+source_id: SRC-PRD-032
+operations:
+  - {"op": "update_node", "id": "FLW-032-request-reopen-closed-case", "title": "Alternative Flow A14: Provider Requests to Reopen Closed Case", "attrs": {"description": "Alternative Flow A14: Provider Requests to Reopen Closed Case", "prd_ref": "Alternative Flow A14 (Request Reopen Closed Case)"}}
+  - {"op": "update_node", "id": "FLW-032-filter-search-cases", "title": "Alternative Flow A15: Provider Filters and Searches Cases", "attrs": {"description": "Alternative Flow A15: Provider Filters and Searches Cases", "prd_ref": "Alternative Flow A15 (Filter and Search Cases)"}}
+  - {"op": "update_node", "id": "FLW-032-admin-reply-notification", "title": "Alternative Flow A16: Provider Receives Admin Reply Notification", "attrs": {"description": "Alternative Flow A16: Provider Receives Admin Reply Notification", "prd_ref": "Alternative Flow A16 (Admin Reply Notification)"}}
+  - {"op": "update_node", "id": "FLW-032-cancel-closure-dialog", "title": "Alternative Flow A17: Provider Cancels Closure Request Dialog", "attrs": {"description": "Alternative Flow A17: Provider Cancels Closure Request Dialog", "prd_ref": "Alternative Flow A17 (Cancel Closure Dialog)"}}
+  - {"op": "update_node", "id": "STP-032-276", "attrs": {"prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 1"}}
+  - {"op": "update_node", "id": "STP-032-277", "attrs": {"prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 2"}}
+  - {"op": "update_node", "id": "STP-032-278", "attrs": {"prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 3"}}
+  - {"op": "update_node", "id": "STP-032-279", "attrs": {"prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 4"}}
+  - {"op": "update_node", "id": "STP-032-280", "attrs": {"prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 5"}}
+  - {"op": "update_node", "id": "STP-032-281", "attrs": {"prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 6"}}
+  - {"op": "update_node", "id": "STP-032-282", "attrs": {"prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 7"}}
+  - {"op": "update_node", "id": "STP-032-283", "attrs": {"prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 8"}}
+  - {"op": "update_node", "id": "STP-032-284", "attrs": {"prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 9"}}
+  - {"op": "update_node", "id": "STP-032-285", "attrs": {"prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 10"}}
+  - {"op": "update_node", "id": "STP-032-286", "attrs": {"prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 11"}}
+  - {"op": "update_node", "id": "STP-032-287", "attrs": {"prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 12"}}
+  - {"op": "update_node", "id": "STP-032-288", "attrs": {"prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 13"}}
+  - {"op": "update_node", "id": "STP-032-289", "attrs": {"prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 14"}}
+  - {"op": "update_node", "id": "STP-032-333", "attrs": {"prd_ref": "Alternative Flow A14 (Request Reopen Closed Case) step 12"}}
+  - {"op": "update_node", "id": "STP-032-290", "attrs": {"prd_ref": "Alternative Flow A15 (Filter and Search Cases) step 1"}}
+  - {"op": "update_node", "id": "STP-032-291", "attrs": {"prd_ref": "Alternative Flow A15 (Filter and Search Cases) step 2"}}
+  - {"op": "update_node", "id": "STP-032-292", "attrs": {"prd_ref": "Alternative Flow A15 (Filter and Search Cases) step 3"}}
+  - {"op": "update_node", "id": "STP-032-293", "attrs": {"prd_ref": "Alternative Flow A15 (Filter and Search Cases) step 4"}}
+  - {"op": "update_node", "id": "STP-032-294", "attrs": {"prd_ref": "Alternative Flow A15 (Filter and Search Cases) step 5"}}
+  - {"op": "update_node", "id": "STP-032-295", "attrs": {"prd_ref": "Alternative Flow A15 (Filter and Search Cases) step 6"}}
+  - {"op": "update_node", "id": "STP-032-296", "attrs": {"prd_ref": "Alternative Flow A16 (Admin Reply Notification) step 1"}}
+  - {"op": "update_node", "id": "STP-032-297", "attrs": {"prd_ref": "Alternative Flow A16 (Admin Reply Notification) step 2"}}
+  - {"op": "update_node", "id": "STP-032-298", "attrs": {"prd_ref": "Alternative Flow A16 (Admin Reply Notification) step 3"}}
+  - {"op": "update_node", "id": "STP-032-299", "attrs": {"prd_ref": "Alternative Flow A16 (Admin Reply Notification) step 4"}}
+  - {"op": "update_node", "id": "STP-032-300", "attrs": {"prd_ref": "Alternative Flow A16 (Admin Reply Notification) step 5"}}
+  - {"op": "update_node", "id": "STP-032-301", "attrs": {"prd_ref": "Alternative Flow A16 (Admin Reply Notification) step 6"}}
+  - {"op": "update_node", "id": "STP-032-302", "attrs": {"prd_ref": "Alternative Flow A16 (Admin Reply Notification) step 7"}}
+  - {"op": "update_node", "id": "STP-032-303", "attrs": {"prd_ref": "Alternative Flow A16 (Admin Reply Notification) step 8"}}
+  - {"op": "update_node", "id": "STP-032-304", "attrs": {"prd_ref": "Alternative Flow A16 (Admin Reply Notification) step 9"}}
+  - {"op": "update_node", "id": "STP-032-321", "attrs": {"prd_ref": "Alternative Flow A17 (Cancel Closure Dialog) step 1"}}
+  - {"op": "update_node", "id": "STP-032-322", "attrs": {"prd_ref": "Alternative Flow A17 (Cancel Closure Dialog) step 2"}}
+  - {"op": "update_node", "id": "STP-032-323", "attrs": {"prd_ref": "Alternative Flow A17 (Cancel Closure Dialog) step 3"}}
+  - {"op": "update_node", "id": "STP-032-324", "attrs": {"prd_ref": "Alternative Flow A17 (Cancel Closure Dialog) step 4"}}
+  - {"op": "update_node", "id": "STP-032-325", "attrs": {"prd_ref": "Alternative Flow A17 (Cancel Closure Dialog) step 5"}}
+  - {"op": "update_node", "id": "REQ-032-070", "attrs": {"rationale": "Closure Main Flow steps 4-5 (warning dialog text: permanent deactivation, cannot be reversed, open inquiries/quotes/bookings cancelled and patients notified, captured payments reconciled, data archived) and Alternative Flow A17 (cancel). Screen: SCR-032-06."}}
+  - {"op": "update_node", "id": "REQ-032-107", "attrs": {"rationale": "Screen 5.7; Alternative Flow A15. Screen: SCR-032-16."}}
+  - {"op": "update_node", "id": "REQ-032-112", "attrs": {"rationale": "Support Alternative Flow A16 (email link \"View case in My Support Cases\"). Screen: SCR-032-16."}}
+  - {"op": "update_node", "id": "REQ-032-113", "attrs": {"rationale": "Screen 5.9; Support Alternative Flow A14. Screen: SCR-032-18."}}
+  - {"op": "update_node", "id": "REQ-032-114", "attrs": {"rationale": "Screen 5.9; Support Alternative Flow A14 step 11. Reply Message Box is enabled again after reopening. Screen: SCR-032-18."}}
+  - {"op": "update_node", "id": "REQ-032-137", "attrs": {"rationale": "Support Alternative Flow A14 step 10 and Screen 5.9 Business Rules. Screen: SCR-032-18."}}
+  - {"op": "update_node", "id": "STP-032-100", "attrs": {"prd_ref": "Alternative Flow A6 (Change Only Phone Number) step 5"}}
+  - {"op": "update_node", "id": "STP-032-103", "attrs": {"prd_ref": "Alternative Flow A7 (Change Timezone) step 4"}}
+  - {"op": "update_node", "id": "STP-032-104", "attrs": {"prd_ref": "Alternative Flow A7 (Change Timezone) step 5"}}
+  - {"op": "add_node", "id": "STP-032-339", "type": "Step", "owner_fr": "FR-032", "title": "Log the phone number change in the audit trail with the phone values masked", "attrs": {"prd_ref": "Alternative Flow A6 (Change Only Phone Number) step 4"}}
+  - {"op": "add_node", "id": "STP-032-340", "type": "Step", "owner_fr": "FR-032", "title": "Log the timezone change in the audit trail", "attrs": {"prd_ref": "Alternative Flow A7 (Change Timezone) step 3"}}
+  - {"op": "add_edge", "from": "STP-032-339", "verb": "applies", "to": "REQ-032-020"}
+  - {"op": "add_edge", "from": "STP-032-339", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-339", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-032-339", "verb": "on", "to": "SCR-032-06"}
+  - {"op": "add_edge", "from": "STP-032-340", "verb": "applies", "to": "REQ-032-020"}
+  - {"op": "add_edge", "from": "STP-032-340", "verb": "at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "STP-032-340", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-032-340", "verb": "on", "to": "SCR-032-06"}
+  - {"op": "remove_edge", "from": "STP-032-099", "verb": "next", "to": "STP-032-100"}
+  - {"op": "add_edge", "from": "STP-032-099", "verb": "next", "to": "STP-032-339"}
+  - {"op": "add_edge", "from": "STP-032-339", "verb": "next", "to": "STP-032-100"}
+  - {"op": "remove_edge", "from": "STP-032-102", "verb": "next", "to": "STP-032-103"}
+  - {"op": "add_edge", "from": "STP-032-102", "verb": "next", "to": "STP-032-340"}
+  - {"op": "add_edge", "from": "STP-032-340", "verb": "next", "to": "STP-032-103"}
+  - {"op": "update_node", "id": "STP-032-093", "title": "Save the new password hash and the password change date"}
+  - {"op": "update_node", "id": "ENT-team-member.password_changed_at", "title": "Password last changed", "attrs": {"description": "Date the person last changed their own password; set when a password change is saved (FR-032 Account Settings Main Flow step 19) and shown on Account Information (SCR-032-06). The 90-day age flag on Screen 11 Tab 4 is deferred."}}
+  - {"op": "remove_edge", "from": "REQ-032-020", "verb": "applies to", "to": "ENT-provider-account-settings"}
+  - {"op": "remove_edge", "from": "STG-provider-03-active", "verb": "reads", "to": "ENT-provider-account-settings"}
+  - {"op": "remove_edge", "from": "STG-provider-03-active", "verb": "writes", "to": "ENT-provider-account-settings"}
+  - {"op": "remove_edge", "from": "STG-provider-config-01-configuration", "verb": "reads", "to": "ENT-provider-account-settings"}
+  - {"op": "remove_edge", "from": "STG-provider-config-01-configuration", "verb": "writes", "to": "ENT-provider-account-settings"}
+  - {"op": "retire_node", "id": "ENT-provider-account-settings.provider_id"}
+  - {"op": "retire_node", "id": "ENT-provider-account-settings.last_updated_at"}
+  - {"op": "retire_node", "id": "ENT-provider-account-settings"}
+  - {"op": "update_node", "id": "STP-032-321", "title": "Click Request account closure, then decide not to submit"}
