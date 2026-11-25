@@ -50,7 +50,7 @@ The feature spans all three tenants:
 - **P1 — MVP / Inquiry & Quote Management (PR-02)**: Search and filter inquiries by patient ID, concern, date, alerts, location (patient name excluded from search pre-payment confirmation); search and filter quotes by status, concern, location, alerts (REQ-022-033, REQ-022-034, REQ-022-035, REQ-022-036)
 - **P1 — MVP / Treatment Execution (PR-03)**: Search and filter treatment cases by patient ID, name, booking reference; filter by date and clinician (REQ-022-037, REQ-022-038)
 - **P1 — MVP / Aftercare Participation (PR-04)**: Search and filter aftercare cases by patient; filter by milestone, status, and date (REQ-022-039)
-- **P1 — MVP / Financial Management (PR-05)**: Filter analytics dashboard by date range, country and treatment type (REQ-022-040)
+- **P1 — MVP / Financial Management (PR-05)**: Filter analytics dashboard by date range and country; the Performance & Conversion screen also filters by treatment type (REQ-022-040)
 - **P1 — MVP / Profile & Settings (PR-06)**: Search Help Centre content globally; filter provider FAQs by topic; filter Resource Library content by category and file type; filter reviews by rating; search and filter support cases by case ID, title, description, message content, status, type, and creation date range (REQ-022-042, REQ-022-043)
 - **P1 — MVP / Communication & Messaging (PR-07)**: Search and filter provider message threads via FR-012 secure messaging
 
@@ -314,7 +314,7 @@ flowchart TD
   WAIT --> RETRY{"Retry?"}
   RETRY -- "Yes" --> ATTEMPT
   RETRY -- "No" --> ABANDON["Patient, clinic user, or admin abandons search (any one of them)"]
-  RETRY -- "No" --> SUPPORT["Patient or clinic user contacts support"]
+  RETRY -- "No" --> SUPPORT["Patient contacts support through Contact Support (FR-035 / Screen 5); clinic user through Contact Support (FR-032 / Screen 5.5)"]
 ```
 
 ---
@@ -706,7 +706,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 
 ###### FR-014 / Screen 1: Provider Analytics Dashboard [P1 — MVP]
 
-**Purpose**: Provider filters analytics reports by date range, country and treatment type. (REQ-022-079)
+**Purpose**: Provider filters analytics reports by date range and country. (REQ-022-079)
 
 _For UI state behaviors (inactive, active, reset), see [Control Behavior Standards](#control-behavior-standards) above. Document any screen-specific exceptions inline._
 
@@ -718,7 +718,8 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 |--------|------|---------|---------|-------|---------------|
 | Date Range | Segmented + custom picker | Today, This week, Last 4 weeks, Last 12 weeks, Custom | Last 4 weeks | Single selection | no graph field (control) |
 | Country | Multi-select | All countries | All countries | OR (within field) | no graph field (control) |
-| Treatment Type | Multi-select | All, FUE, FUT, DHI, Sapphire FUE, and other admin-defined types | All | OR (within field) | no graph field (control) |
+
+> Treatment type is not a filter on this screen: FR-014 / Screen 2 (Performance & Conversion) filters by it, and FR-014 owns the filters (the Screen 1 header filters are REQ-014-181).
 
 ---
 
@@ -1887,7 +1888,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 - **Privacy Rule 2**: The search audit log MUST be kept for audit purposes (who searched for whom, when) for the same period as the FR-031 admin audit trail (REQ-031-015). The search audit log is a back-office record only: it has no screen in the patient app, provider dashboard, admin dashboard or affiliate portal, and the technical team retrieves entries on request (owner ruling of 2026-11-25) (REQ-022-140)
 - **Privacy Rule 3**: Patient contact information MUST NOT be indexed for public search (admin only) (REQ-022-128)
 - **Privacy Rule 4**: Provider financial data MUST NOT be searchable by other providers (admin only) (REQ-022-129)
-- **Audit Rule**: All admin searches for patient and provider records MUST be logged with admin user ID, timestamp, search terms and result count; the log is written for admin searches only, not for patient or provider searches. It is a back-office record with no screen in any application (see Privacy Rule 2) (REQ-022-023)
+- **Audit Rule**: All admin searches for patient and provider records MUST be logged with admin user ID, timestamp, search type (patient or provider), search terms, filters applied and result count; the log is written for admin searches only, not for patient or provider searches. It is a back-office record with no screen in any application (see Privacy Rule 2) (REQ-022-023)
 
 ### Admin Editability Rules
 
@@ -1937,7 +1938,7 @@ _For UI state behaviors (inactive, active, reset), see [Control Behavior Standar
 - Admin search reads the Patient record (FR-001) and the Provider record (FR-015) directly
 - Admin platform accessed via modern browsers (Chrome, Firefox, Safari - last 2 versions)
 - Provider "Featured" status manually curated by admin based on performance, quality, and partnerships (REQ-022-130)
-- Patient searches for providers occur during quote request flow, not as standalone exploration [P2] (REQ-022-013)
+- Patient searches for providers occur during quote request flow, not as standalone exploration [P2] (REQ-022-059)
 - Admins can locate a patient record in under 10 seconds for 90% of searches
 - Patients can discover and select providers in under 2 minutes for 80% of quote requests [P2 - Post-MVP]
 
@@ -2115,7 +2116,7 @@ A patient has received two parent quotes from two providers. Each parent quote o
 - **REQ-022-037**: System MUST allow providers to search treatment cases by patient ID, name, and booking reference
 - **REQ-022-038**: System MUST allow providers to filter treatment cases by procedure date range and clinician
 - **REQ-022-039**: System MUST allow providers to search and filter aftercare cases by patient name/ID, milestone, status, and date range
-- **REQ-022-040**: System MUST allow providers to filter their analytics dashboard by date range, country and treatment type
+- **REQ-022-040**: System MUST allow providers to filter their analytics dashboard by date range and country on its header (FR-014 / Screen 1) and to filter the Performance & Conversion screen (FR-014 / Screen 2) by treatment type as well; the filters are owned by FR-014 (REQ-014-181)
 - **REQ-022-041**: System MUST allow providers to search their package list by name and filter it by package status (Active, Draft or Inactive)
 - **REQ-022-042**: System MUST allow providers to filter their reviews by star rating
 - **REQ-022-043**: System MUST allow providers to search their support cases by case ID, title, description and message content and filter them by status (Open, In Progress, Resolved, Closed), type (Support Request, Feedback) and creation date range; the criteria are owned by FR-032 (REQ-032-107) and the default view by FR-034 (REQ-034-114)
@@ -2154,7 +2155,7 @@ A patient has received two parent quotes from two providers. Each parent quote o
 
 - **REQ-022-021**: System MUST require valid JWT authentication for all search endpoints
 - **REQ-022-022**: System MUST enforce role-based access control (admin-only for patient/provider search)
-- **REQ-022-023**: System MUST log all admin searches for patient and provider records with user ID, timestamp, search terms, and result count; the log is written for admin searches only, not for patient or provider searches
+- **REQ-022-023**: System MUST log all admin searches for patient and provider records with user ID, timestamp, search type (patient or provider), search terms, filters applied, and result count; the log is written for admin searches only, not for patient or provider searches
 - **REQ-022-024**: System MUST sanitize all search inputs to prevent SQL injection and XSS attacks
 - **REQ-022-025**: System MUST rate-limit search queries to 100 per hour per user; a search past the limit is declined (Alternative Flow B2)
 - **REQ-022-026**: System MUST show providers only the Patient ID and a masked patient name in search results at every stage until the patient has confirmed payment; provider search stays by Patient ID, plus inquiry or quote ID and message content on the Messages list, and never by patient name
@@ -2181,6 +2182,7 @@ A patient has received two parent quotes from two providers. Each parent quote o
 | 2026-11-24 | 2.26 | Logic review pass 2: more filter lists now mirror the owning FRs (FR-034 support dashboard filters and search scope with Priority Urgent, Ticket Source and Submitter Type multi-select, Assigned To, Request Type and Request Status, 90-day default; FR-019 status without Pending Approval; FR-011 case status Pending Activation, Active, Completed, Cancelled with Overdue only and Urgent only toggles; FR-033 Unpublished status, Policy Information, resource categories and file types, video source types; FR-014 Country filter and no benchmarks toggle). FR-009 Screen 10 is now an admin screen with the owner's search and filters, and the clinic team list (FR-009 Screen 1) has its own entry; FR-029 provider search on deposit rates, currency pair list filters and the Screen 5 eligibility rule added. Search audit log wording is the same in every statement (admin searches for patient and provider records); support, message and conversation searches use the 500ms server-query debounce. | AI Assistant |
 | 2026-11-25 | 2.27 | Cross-FR alignment: the conversation monitoring filters add System Flagged to Flag Type and a Flag Category filter; the admin treatment catalog gains a Status filter; the search audit log is stated as stored for audit with no reading screen in this release. | Product Owner / Documentation |
 | 2026-11-25 | 2.28 | Owner ruling 2026-11-25: the search audit log (admin searches) is a back-office record only, with no screen in the patient app, provider dashboard, admin dashboard or affiliate portal; the technical team retrieves entries on request. What is logged, retention and encryption are unchanged. | Product Owner / Documentation |
+| 2026-11-25 | 2.29 | Backlog points settled: analytics Screen 1 filters match FR-014 (date range and country; treatment type is on its Screen 2); the audit log record names search type and filters applied as the Search Audit Log entity does; the support route from a failed search is named; one citation corrected. | Claude (AI Assistant) |
 
 ---
 

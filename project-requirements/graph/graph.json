@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T08:29:32Z",
+  "generated_at": "2026-11-25T08:36:07Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -76760,11 +76760,11 @@
       "id": "REQ-021-087",
       "type": "Rule",
       "owner_fr": "FR-021",
-      "title": "Change reason is required for English source edits and for every publish",
+      "title": "Change reason is required for English source edits",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Change reason: Required when editing English source and on every publish",
+        "statement": "Change reason: Required when editing English source. The reason for a publish or rollback is the Change summary (REQ-021-102).",
         "rationale": "PRD Screen Specifications, Screen 7 (prd.md line 508)."
       }
     },
@@ -76942,9 +76942,9 @@
       "owner_fr": "FR-021",
       "title": "Publish and rollback require a change summary",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Change summary: Required for publish/rollback",
+        "statement": "Change summary: Required for publish/rollback. It is the one reason input for a publish or rollback, including the publish summary entered on Import and Publish Version and the rollback reason.",
         "rationale": "PRD Screen Specifications, Screen 9 (prd.md line 580). Restated at: Main flow step 11 (line 157)."
       }
     },
@@ -77261,6 +77261,18 @@
       }
     },
     {
+      "id": "REQ-021-129",
+      "type": "Rule",
+      "owner_fr": "FR-021",
+      "title": "Inactive admin locale falls back to the fallback locale",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "If an admin's selected locale becomes inactive, the Admin Platform falls back to the configured fallback locale.",
+        "rationale": "PRD Screen 3 business rules; same behavior as REQ-021-060 (Patient App) and REQ-021-067 (Provider Dashboard) and General Module Rule 9."
+      }
+    },
+    {
       "id": "REQ-022-001",
       "type": "Rule",
       "owner_fr": "FR-022",
@@ -77500,9 +77512,9 @@
       "owner_fr": "FR-022",
       "title": "Admin searches for patient and provider records logged with user, time, terms and result count",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "System MUST log all admin searches for patient and provider records with user ID, timestamp, search terms, and result count; the log is written for admin searches only, not for patient or provider searches",
+        "statement": "System MUST log all admin searches for patient and provider records with user ID, timestamp, search type (patient or provider), search terms, filters applied, and result count; the log is written for admin searches only, not for patient or provider searches",
         "rationale": "Restated by the Data & Privacy Audit Rule (admin user ID, timestamp, search terms, result count) and Privacy Rule 2 (retained for audit purposes: who searched for whom, when). Stored as ENT-search-audit-log, a back-office record with no screen in any application (owner ruling of 2026-11-25; see REQ-022-140)."
       }
     },
@@ -77710,9 +77722,9 @@
       "owner_fr": "FR-022",
       "title": "Provider analytics filters",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST allow providers to filter their analytics dashboard by date range, country and treatment type",
+        "statement": "System MUST allow providers to filter their analytics dashboard by date range and country on its header (FR-014 / Screen 1) and to filter the Performance & Conversion screen (FR-014 / Screen 2) by treatment type as well; the filters are owned by FR-014 (REQ-014-181)",
         "rationale": "Restated by Multi-Tenant Breakdown PR-05 (line 54). Screen criteria: FR-014 / Screen 1 rule."
       }
     },
@@ -77858,9 +77870,9 @@
       "owner_fr": "FR-022",
       "title": "Entry points to search and filter",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Patient Platform: [P2] Provider Search is accessed when the patient begins the quote request flow and needs to select destination/providers, is triggered from the \"Choose Destination\" or \"Select Providers\" screens, and is available throughout the quote request journey for comparison; [P2] Messaging search is accessed from the patient communications inbox once FR-012 messaging is scheduled; [P1] Help & Support search is accessed from the Help & Support hub, Help Center, and My Support Tickets screens. Provider Platform: PR-01 (Team) from Provider Dashboard → Team tab → Team Management Dashboard (FR-009/Screen 1); PR-02 (Inquiries/Quotes) from Provider Dashboard → Inquiries tab → Inquiry List (FR-003/Screen 9) and Quotes List (FR-004/Screen 2); PR-03 (Treatment) from Provider Dashboard → Treatments tab → In Progress Cases (FR-010/Screen 3); PR-04 (Aftercare) from Provider Dashboard → Aftercare tab → Aftercare Cases List (FR-011/Screen 8); PR-05 (Analytics) from Provider Dashboard → Analytics tab → Analytics Dashboard (FR-014/Screen 1); PR-06 (Profile/Settings) from Provider Dashboard → Profile/Settings section — Packages (FR-024/Screen 4), Help Centre (FR-032/Screen 5), Reviews (FR-032/Screen 1 Tab 5), Support Cases (FR-032/Screen 5.7); PR-07 (Messaging) [P2 - Post-MVP] from the provider secure messaging inbox once FR-012 is scheduled. Admin Platform [P1 - MVP]: each admin module (A-01 through A-10) provides context-specific search and filtering within its own interface.",
+        "statement": "Patient Platform: [P2] Provider Search is accessed when the patient begins the quote request flow and needs to select destination/providers, is triggered from the \"Choose Destination\" or \"Select Providers\" screens, and is available throughout the quote request journey for comparison; [P1] Messaging search is accessed from the patient communications inbox; [P1] Help & Support search is accessed from the Help & Support hub, Help Center, and My Support Tickets screens. Provider Platform: PR-01 (Team) from Provider Dashboard → Team tab → Team Management Dashboard (FR-009/Screen 1); PR-02 (Inquiries/Quotes) from Provider Dashboard → Inquiries tab → Inquiry List (FR-003/Screen 9) and Quotes List (FR-004/Screen 2); PR-03 (Treatment) from Provider Dashboard → Treatments tab → In Progress Cases (FR-010/Screen 3); PR-04 (Aftercare) from Provider Dashboard → Aftercare tab → Aftercare Cases List (FR-011/Screen 8); PR-05 (Analytics) from Provider Dashboard → Analytics tab → Analytics Dashboard (FR-014/Screen 1); PR-06 (Profile/Settings) from Provider Dashboard → Profile/Settings section — Packages (FR-024/Screen 4), Help Centre (FR-032/Screen 5), Reviews (FR-032/Screen 1 Tab 5), Support Cases (FR-032/Screen 5.7); PR-07 (Messaging) [P1 - MVP] from the provider secure messaging inbox. Admin Platform [P1 - MVP]: each admin module (A-01 through A-10) provides context-specific search and filtering within its own interface.",
         "rationale": "Entry Points (prd.md lines 86-110). Business Process Assumption 3: patient searches for providers occur during the quote request flow, not as standalone exploration [P2]. Change log 2.7 removed admin global/cross-module search entry points."
       }
     },
@@ -78094,9 +78106,9 @@
       "owner_fr": "FR-022",
       "title": "Search and filter criteria: Provider Analytics Dashboard (FR-014 / Screen 1)",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "FR-014 / Screen 1: Provider Analytics Dashboard [P1 — MVP]. Provider filters analytics reports by date range, country and treatment type. Filters: Date Range (Type: Segmented + custom picker; Options: Today, This week, Last 4 weeks, Last 12 weeks, Custom; Default: Last 4 weeks; Logic: Single selection) / Country (Type: Multi-select; Options: All countries; Default: All countries; Logic: OR (within field)) / Treatment Type (Type: Multi-select; Options: All, FUE, FUT, DHI, Sapphire FUE, and other admin-defined types; Default: All; Logic: OR (within field)). Notes: No search input on this screen — filtering only.",
+        "statement": "FR-014 / Screen 1: Provider Analytics Dashboard [P1 — MVP]. Provider filters analytics reports by date range and country. Filters: Date Range (Type: Segmented + custom picker; Options: Today, This week, Last 4 weeks, Last 12 weeks, Custom; Default: Last 4 weeks; Logic: Single selection) / Country (Type: Multi-select; Options: All countries; Default: All countries; Logic: OR (within field)). Notes: No search input on this screen — filtering only. Treatment type is not a filter on this screen: FR-014 / Screen 2 (Performance & Conversion) filters by it, and FR-014 owns the filters (the Screen 1 header filters are REQ-014-181).",
         "rationale": "Screen Specifications (prd.md lines 698-715). Screen owned by FR-014 (Provider tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319)."
       }
     },
@@ -78370,9 +78382,9 @@
       "owner_fr": "FR-022",
       "title": "Search and filter criteria: Transaction Search (FR-017 / Screen 7 / Tab 1)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "FR-017 / Screen 7 / Tab 1: Transaction Search [P1 — MVP]. Admin searches for any financial transaction using multiple lookup fields and narrows results by type, date, and status. Search: Search By (type selector) (Dropdown; Booking Reference, Invoice Number, Patient Name/ID, Provider Name/ID, Affiliate Name/ID; Booking Reference; Determines search context) / Search Input (Type: text; Placeholder: Auto-updates per \"Search By\" selection; Debounce: 500ms; Notes: Free-text; case-insensitive; scoped to selected type). Filters: Record Type (Type: Multi-select; Options: Invoice, Provider Payout, Installment, Refund, Affiliate Commission; Default: All; Logic: OR (within field)) / Date Range (Type: Date range picker; Options: Custom; Default: All dates; Logic: Filters by transaction date) / Status (Type: Multi-select; Options: Dynamically scoped to selected Record Type(s) — see enumeration below; Default: All; Logic: OR (within field)). Notes: Status options by Record Type (when multiple Record Types are selected, the union of all applicable statuses is shown): Invoice: Pending, Partial, Paid, Overdue, Refunded, At Risk. Provider Payout: Pending, Approved, Paid, Voided, Failed. Installment: Active, Completed, Overdue, Defaulted. Refund: Processing, Completed, Failed. Affiliate Commission: Pending, Paid, Failed, Cancelled.",
+        "statement": "FR-017 / Screen 7 / Tab 1: Transaction Search [P1 — MVP]. Admin searches for any financial transaction using multiple lookup fields and narrows results by type, date, and status. Search: Search By (type selector) (Dropdown; Booking Reference, Invoice Number, Patient Name/ID, Provider Name/ID, Affiliate Name/ID; Booking Reference; Determines search context) / Search Input (Type: text; Placeholder: Auto-updates per \"Search By\" selection; Debounce: 500ms; Notes: Free-text; case-insensitive; scoped to selected type). Filters: Record Type (Type: Multi-select; Options: Invoice, Provider Payout, Installment, Refund, Affiliate Commission; Default: All; Logic: OR (within field)) / Date Range (Type: Date range picker; Options: Custom; Default: All dates; Logic: Filters by transaction date) / Status (Type: Multi-select; Options: Dynamically scoped to selected Record Type(s) — see enumeration below; Default: All; Logic: OR (within field)). Notes: Status options by Record Type (when multiple Record Types are selected, the union of all applicable statuses is shown): Invoice: Pending, Partial, Paid, Overdue, Refunded, At Risk. Provider Payout: Pending, Approved, Paid, Voided, Failed. Installment: Active, Completed, Canceled, Defaulted (Overdue is a calculated flag with its own yes/no filter, not a status). Refund: Processing, Completed, Failed. Affiliate Commission: Pending, Paid, Failed, Cancelled.",
         "rationale": "Screen Specifications (prd.md lines 1266-1298). Screen owned by FR-017 (Admin tenant, Master Reference Table). Search inputs and filter controls are UI controls, not Fields; FR-022 owns the criteria (Maintenance Convention, line 319). The PRD Search By row places the option list in the Placeholder column and the default in the Debounce column; rendered without column labels."
       }
     },
@@ -122125,7 +122137,7 @@
       "owner_fr": "FR-022",
       "title": "User contacts support",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step 5 (patient or clinic user only)"
       }
@@ -122136,7 +122148,7 @@
       "owner_fr": "FR-022",
       "title": "System declines the search because the user has already made 100 searches in the past hour",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B2 (hourly limit)"
       }
@@ -122147,7 +122159,7 @@
       "owner_fr": "FR-022",
       "title": "System shows 'Search temporarily unavailable. Please try again.' when a search runs longer than 10 seconds and logs the error for engineering",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B2 (10 second timeout)"
       }
@@ -183552,7 +183564,7 @@
       "verb": "active in",
       "to_id": "STG-admin-01-configuration",
       "attrs": {
-        "rules": 117
+        "rules": 118
       },
       "derived": true
     },
@@ -268191,6 +268203,36 @@
     },
     {
       "from_id": "REQ-021-128",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-021",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-129",
+      "verb": "applies at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-129",
+      "verb": "applies to",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-129",
+      "verb": "applies to",
+      "to_id": "ENT-locale",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-129",
+      "verb": "applies to",
+      "to_id": "SCR-021-03",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-021-129",
       "verb": "decided by",
       "to_id": "SRC-PRD-021",
       "attrs": {}
@@ -412791,6 +412833,18 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-022-051",
+      "verb": "on",
+      "to_id": "SCR-032-14",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-022-051",
+      "verb": "on",
+      "to_id": "SCR-035-05",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-022-052",
       "verb": "applies",
       "to_id": "REQ-022-025",
@@ -412799,7 +412853,19 @@
     {
       "from_id": "STP-022-052",
       "verb": "at",
+      "to_id": "STG-admin-02-operations",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-022-052",
+      "verb": "at",
       "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-022-052",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
       "attrs": {}
     },
     {
@@ -412832,7 +412898,19 @@
     {
       "from_id": "STP-022-053",
       "verb": "at",
+      "to_id": "STG-admin-02-operations",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-022-053",
+      "verb": "at",
       "to_id": "STG-main-01-inquiry",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-022-053",
+      "verb": "at",
+      "to_id": "STG-provider-03-active",
       "attrs": {}
     },
     {
@@ -463224,6 +463302,44 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-083131-5d8e2295",
+      "at": "2026-11-25T08:31:31.096108+00:00",
+      "changed_by": "controller",
+      "reason": "Backlog points settled (filing matters): graph rules match the live PRD and the owning FRs; support route and stages added to the search failure steps.",
+      "source_id": "SRC-PRD-022",
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-022-023",
+        "REQ-022-040",
+        "REQ-022-059",
+        "REQ-022-079",
+        "REQ-022-103",
+        "STP-022-051",
+        "STP-022-052",
+        "STP-022-053"
+      ],
+      "edges_added": 6,
+      "edges_removed": 0,
+      "rows": 11
+    },
+    {
+      "id": "cs-20261125-083017-7143c353",
+      "at": "2026-11-25T08:30:17.924599+00:00",
+      "changed_by": "controller",
+      "reason": "Backlog points settled from rules already in the PRD: the change reason is for English source edits and the Change summary is the reason for a publish or rollback; the Admin Platform falls back like the Patient App and Provider Dashboard when a selected locale becomes inactive.",
+      "source_id": "SRC-PRD-021",
+      "nodes_added": [
+        "REQ-021-129"
+      ],
+      "nodes_updated": [
+        "REQ-021-087",
+        "REQ-021-102"
+      ],
+      "edges_added": 5,
+      "edges_removed": 0,
+      "rows": 14
+    },
     {
       "id": "cs-20261125-082819-400c346b",
       "at": "2026-11-25T08:28:19.243226+00:00",
