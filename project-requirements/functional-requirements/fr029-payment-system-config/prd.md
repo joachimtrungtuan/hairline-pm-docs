@@ -3,7 +3,7 @@
 **Module**: A-09: System Settings & Configuration
 **Feature Branch**: `fr029-payment-system-config`
 **Created**: 2025-11-13
-**Version**: 1.18
+**Version**: 1.19
 **Status**: 🟡 Revised — Pending Consolidated Verification
 **Source**: FR-029 from system-prd.md (lines 1427-1455) + Hairline-AdminPlatformPart2.txt (lines 128-230)
 **Change Request**: [CR-FR029-20261014-01 — Provider-specific Flat Rate commission alignment with FR-015](../../../../archived/prd-baseline-2026-11-08/fr029-payment-system-config/change-request-2026-10-14-provider-flat-rate-commission.md)
@@ -728,6 +728,7 @@ The module delivers value by:
 - **Single-provider edit from FR-015**: When an admin edits commission in FR-015 Tab 7 for a provider covered by a scope shared with other providers, the system removes that provider from the shared scope and creates a single-provider scope for it with the new values; the shared scope and its other providers are unchanged. The split is audit-logged with before/after state. (REQ-029-115)
 - **Scheduled configuration**: Each provider has at most one pending future-dated configuration. Saving another future-dated configuration for the same provider replaces the pending one (logged); on its Effective Date the pending configuration becomes the active one automatically. Screen 5 and FR-015 Tab 7 show the same pending configuration, which FR-032 Screen 4 displays read-only to the provider. (REQ-029-116)
 - The global default is percentage-only; the Flat Rate model is available for provider-specific scopes only (REQ-029-121)
+- The Global Commission Rate also sets the commission on an aftercare payment when a provider delivers, as a percentage of the aftercare price instead of the booking total; FR-011 owns that flow (REQ-011-040)
 - **Percentage model** (global default or provider scope): commission amount = booking total (the accepted subquote price after promotion, in the quote currency, from the acceptance snapshot) × snapshotted commission percentage (rounded to the quote currency's own minor units; last payment absorbs rounding difference if needed) (REQ-029-118)
 - **Flat Rate model** (provider scope only): commission amount = the snapshotted fixed amount, deducted once per completed procedure (FR-010 completion milestone), regardless of procedure price; it is not charged per package, per Subquote, or per installment (REQ-029-119)
 - Flat Rate amounts are stored and snapshotted in their configured currency; this screen introduces no new currency conversion rule, and any conversion follows the existing FR-029 currency configuration and downstream FR-017 reconciliation handling (REQ-029-120)
@@ -769,7 +770,7 @@ The module delivers value by:
 - Disabling a currency is also blocked while it is the Default Currency of an active Stripe account (Screen 1); the admin sees the account name and changes the account first
 - Disabling a currency is also blocked while it is the Fee Currency of fixed fee amounts stored on Screen 7; the admin re-enters those amounts in another currency first
 - Changing the Default Currency does not reinterpret the fixed fee amounts stored on Screen 7: they stay in their own Fee Currency until an admin re-enters each of them in the new currency, and Screen 7 cannot be saved before that, which a banner on Screen 7 asks for
-- Changing the Default Currency creates a new FR-026 Quote Configuration version, so the configuration version recorded on a quote identifies both the quote hours and the currency used. Quotes already sent keep the currency copied onto them at first send.
+- Changing the Default Currency creates a new FR-026 Quote Configuration version with Change Type "System" (REQ-029-053; REQ-026-142), so the configuration version recorded on a quote identifies both the quote hours and the currency used. Quotes already sent keep the currency copied onto them at first send.
 - When the Default Currency changes, open quote drafts keep the numbers the provider typed and switch to the new currency without conversion. Before the provider can send such a draft, the quote screen (owned by FR-004) shows a "currency changed, check your prices" banner that the provider must acknowledge.
 
 **Notes**:
@@ -1146,7 +1147,7 @@ As a platform administrator managing provider commission, I need the commission 
 - **REQ-029-050**: System MUST calculate the Percentage commission, deposit amount, and installment split from the booking total, defined as the accepted subquote price after promotion, in the quote currency, read from the acceptance snapshot and never recomputed from the live quote
 - **REQ-029-051**: System MUST present any pre-confirmation commission (including the FR-004 quote screen) as an indicative model and value labelled "indicative, final at booking confirmation"; only the booking-confirmation snapshot is authoritative. The binding commission is fixed at booking confirmation on the accepted price after promotion, in the quote currency, from the acceptance snapshot
 - **REQ-029-052**: System MUST block disabling a currency while any non-terminal sent quote, unpaid accepted booking, or open booking or instalment plan uses it, or while it is the Default Currency of an active Stripe account, and MUST show the admin the count of records still using that currency (or the account name).
-- **REQ-029-053**: System MUST create a new FR-026 Quote Configuration version whenever the Default Currency changes; open quote drafts MUST keep their typed numbers, switch to the new currency without conversion, and require the provider to acknowledge a banner reading "currency changed, check your prices" (FR-004 quote screen) before send.
+- **REQ-029-053**: System MUST create a new FR-026 Quote Configuration version with Change Type "System" whenever the Default Currency changes (REQ-026-142); open quote drafts MUST keep their typed numbers, switch to the new currency without conversion, and require the provider to acknowledge a banner reading "currency changed, check your prices" (FR-004 quote screen) before send.
 - **REQ-029-054**: System MUST calculate commission on the accepted price after the promotion, in the quote currency and read from the acceptance snapshot, for every discount type, including discounts funded only by Hairline; no program keeps commission on the price before the promotion.
 - **REQ-029-140**: System MUST compare the booking total with the Minimum Booking Amount for installments in USD: a booking total in another currency is converted to USD with the quote-to-USD base rate in the rate set locked at FR-005 subquote acceptance, without markup, before the comparison.
 - **REQ-029-141**: System MUST allow admins to enable or disable the payment methods offered to patients, per region and currency (Screen 1); FR-007 reads this setting, and FR-007B owns the payment-method records.
@@ -1178,6 +1179,7 @@ As a platform administrator managing provider commission, I need the commission 
 | 2026-11-23 | 1.16 | Independent compression review: 6 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 | 2026-11-23 | 1.17 | Logic review corrections. A missed installment is now cancelled by the unpaid balance cancellation point, and the late fee waits for the retries; the installment minimum lead time is cutoff + 30 days and the examples follow the 30-day schedule. Screen 7 gains ranges, "Not set" states, the clinic cancellation deduction, a fee currency and lock points, with an admin flow for Screens 6 and 7. Stripe routing keeps one account per booking, uses live accounts only and has an Archived status. Currency rules cover third-currency prices, unsupported account currencies and the rate protection Acknowledge action. | Product Owner / Documentation |
 | 2026-11-23 | 1.18 | Second logic review corrections. Fixed fee amounts are re-entered when the default currency changes and are locked with their currency code; the late fee, the rescheduling fee and the grace period get starting values; balance due days lock at confirmation; the cancellation point counts from the oldest unpaid due date and is warned about when it falls before the late fee day. The rate set stored at quote acceptance is named and the USD fallback converts from it. Countries of Inactive or Archived accounts are treated as unassigned, the Global Fallback follows the deployment mode, and payment methods are checked against the charge currency. Provider-specific deposit rates are reset instead of deleted, and Acknowledge on a rate warning moves the comparison base. | Product Owner / Documentation |
+| 2026-11-25 | 1.19 | Cross-FR alignment: Default Currency change records a Quote Configuration version with Change Type System (REQ-029-053, REQ-026-142); commission rate unit covers the aftercare price (REQ-011-040). | Product Owner / Documentation |
 
 ---
 
@@ -1195,4 +1197,4 @@ As a platform administrator managing provider commission, I need the commission 
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-029 from system-prd.md + Hairline-AdminPlatformPart2.txt transcription
-**Last Updated**: 2026-11-23
+**Last Updated**: 2026-11-25

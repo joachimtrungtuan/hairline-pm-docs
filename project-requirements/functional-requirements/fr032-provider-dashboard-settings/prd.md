@@ -1672,7 +1672,7 @@ Each message in the thread displays:
 
 **Fixed in Codebase (Not Editable)**:
 
-- Password complexity requirements: see system PRD, Platform-Wide Rules: Password and one-time-code policy (FR-026)
+- Password complexity requirements: minimum 12 characters with an uppercase letter, a lowercase letter, a digit and a special character, fixed by the platform password policy (REQ-SYS-007; REQ-032-066)
 - Encryption algorithms: AES-256 for data at rest, TLS 1.3 for data in transit
 - Role-based access control rules: billing settings need the permission "View and Edit Billing Settings", held by FR-031 with the default Owner only (REQ-032-141)
 - Password hash algorithm: bcrypt with cost factor 12+
@@ -1945,6 +1945,7 @@ A provider closing their clinic permanently requests account closure, and an adm
 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
+| 2026-11-25 | 1.20 | Cross-FR alignment: password complexity follows the platform password policy (REQ-SYS-007, REQ-032-066); no other wording change. | Product Owner / Documentation |
 | 2026-11-24 | 1.19 | Logic review pass 2: video view recorded after 30 seconds of play; provider only replies (no resolve control); support form limits aligned with FR-034 (subject and feedback title minimum 10, up to 5 attachments, DOC added); phone number required, unique per user within the provider and verified when changed; who-edits-what table names the FR-031 permission per row (Edit Profile, Edit Notification Settings, View and Edit Billing Settings) and notification settings follow "Edit Notification Settings"; reopen request outcome (admin reopens in FR-034, or answers and the Request Reopen button returns); closure card pending state and refusal of a second request; Account Name sync step and Owner handover rule; timezone set silently at first login; audit steps for phone and timezone changes; "we aim to review within 5 business days" for closure. Rules changed: REQ-032-061, 062, 064, 071, 073, 102, 104, 114, 125, 141, 142, 145. | Product Owner / Documentation |
 | 2026-11-24 | 1.18 | Logic review pass 1: support case reply and reopen rules aligned with FR-034 (reply enabled for Resolved, reopen request is a flagged message, case stays Closed); 24-hour response note on business days; Service Status fourth value and no subscription; closure and role wording (keeps its current status, Owner role handed over by an admin, Suspended Owner exceptions); Account Email read-only and per-person account settings including timezone; notification settings roles and support notices; bank form for Manual bank transfer only with Stripe panel; language list; Help Centre view and vote records; Reviews tab server-side paging and Edited marker; billing permission cited from FR-031 with a who-edits-what table; new rules REQ-032-141 to REQ-032-148. | Product Owner / Documentation |
 | 2026-11-22 | 1.17 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.16) and the change requests CR-FR032-20261015-01, CR-FR032-20261015-02, CR-FR032-20261015-03, CR-FR032-20261016-01, CR-FR015-20261027-01 and CR-FR029-20261015-01 are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
@@ -1963,4 +1964,4 @@ A provider closing their clinic permanently requests account closure, and an adm
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B
 **Based on**: FR-032 from system-prd.md, Provider Platform Transcriptions Part 1 & 2
-**Last Updated**: 2026-11-24
+**Last Updated**: 2026-11-25

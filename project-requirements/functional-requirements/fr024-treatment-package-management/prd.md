@@ -763,7 +763,7 @@ There are two distinct ways a package's content can change. They must never be c
 
 **Translatable Content**:
 
-- Admin-authored library text (treatment descriptions and technique specifications) and all UI labels and error messages use FR-021 translation keys; FR-021 holds a treatment-library key group for the admin-authored text (REQ-024-081)
+- Admin-authored library text (treatment descriptions and technique specifications) and all UI labels and error messages use FR-021 translation keys; FR-021 holds a treatment-library key group for the admin-authored text. The Screen 2 treatment form is the authoring screen for the English text: saving it writes the key's English source value (creating the key if new) and marks the dependent translations Review Needed; translation and publish stay in FR-021 (REQ-024-081; REQ-021-127)
 - Provider-authored package names and descriptions are user-written free text: they are shown as written, and machine-translated for the reader only when the FR-021 free-text translation switch is on (REQ-021-119; REQ-024-081)
 
 Before production release, implementation must ensure all keyed treatment and package strings are registered with the translation management system defined in FR-021 (translation readiness checklist). (REQ-024-081)
@@ -980,6 +980,7 @@ Provider needs to temporarily stop offering a package (seasonal hotel unavailabi
 | 2026-11-23 | 1.9 | Independent compression review: 1 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 | 2026-11-24 | 2.0 | Logic review pass 1: closed gaps in treatment and package status rules (new-treatment notice on first Active, reactivation through Edit, Deactivate only on Active records, Draft only for a never-Active package, versions only on a successful Update, open-quote and open-booking warnings on every route); chosen status stored and restored on retried uploads; Screen 7 lists only Active and Inactive packages; packages not tied to a treatment; Number of Providers counts Offered configurations of Active providers; Not Offered effect on new quotes; creation-limit message and counting rule; permission-gated actions named; media-processing and image-optimisation paragraphs marked as implementation notes; FR-021 approach for library text and package free text; short flows added for Screens 6 to 8, Quick Copy Pricing, quick price edit, and bulk actions. | Product Owner / Documentation |
 | 2026-11-24 | 2.1 | Logic review pass 2: Draft for a treatment only while it has never been saved as Active or Inactive, and for a package only while it has no version; a draft is not counted toward the creation limit until first saved as Active or Inactive, needs a name, and can be discarded by its owner; open-warning, confirmation and notices apply on every route to Inactive for treatments; setting Inactive on the edit form is a versioned Update; quick price edit uses the package price rule and is hidden on drafts; failed uploads keep the previous media and status for any treatment, with one error text and a way out without the failed file; update notice only for Active treatments; back-to-Active notice only for a treatment that has been Active before; aftercare templates are Active or Inactive and earlier prescriptions keep their text; Export to CSV step added. | Product Owner / Documentation |
+| 2026-11-25 | 2.2 | Cross-FR alignment: the Screen 2 treatment form is the English authoring screen for the treatment library text (REQ-024-081, REQ-021-127). Admin treatment list keeps no status filter (REQ-024-054). | Product Owner / Documentation |
 
 ---
 
@@ -997,4 +998,4 @@ Provider needs to temporarily stop offering a package (seasonal hotel unavailabi
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-11-24
+**Last Updated**: 2026-11-25

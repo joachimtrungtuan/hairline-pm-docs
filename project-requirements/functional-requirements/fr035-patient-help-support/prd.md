@@ -28,7 +28,7 @@ The Patient Help Center & Support Submission module provides the patient-facing 
 - **Reduced Support Load**: Self-service content deflects common questions, allowing admin staff to focus on complex issues
 - **Complete Multi-Tenant Support**: Completes the support architecture across all three platforms (Patient via FR-035, Provider via FR-032, Admin via FR-034)
 - **Compliance & Audit Trail**: All support interactions tracked with case IDs, timestamps, and communication history via FR-034
-- **Healthcare Safety**: Emergency contact information always accessible for post-procedure patient safety
+- **Healthcare Safety**: Emergency contact information is always shown on the Hub whenever an admin has set a phone or an email, for post-procedure patient safety
 
 ---
 
@@ -93,7 +93,7 @@ The Patient Help Center & Support Submission module provides the patient-facing 
 
 ### Entry Points
 
-- Patient navigates to "Help & Support" from Settings screen (FR-026 / P01.2-S1) (REQ-035-033)
+- Patient navigates to "Help & Support" from the Settings Main screen (FR-001 Screen 15, REQ-001-185) (REQ-035-033)
 - In-app deep link from other screens (e.g., contextual help links from booking, payment, or aftercare screens) (REQ-035-033)
 - Push notification tap (e.g., tapping a case status change notification navigates to Ticket Detail) (REQ-035-033)
 - Report a Problem row on the Help & Support Hub opens Contact Support (Screen 5) with the category preset to Technical Issue; the system attaches the device, operating system, app version, and report time per FR-034 REQ-034-164 (REQ-035-033)
@@ -278,7 +278,7 @@ flowchart TD
 | Contact Support | link | Yes | Row with headset/message icon + "Contact Support" label + chevron | Opens Contact Support form (Screen 5), creating new ticket via FR-034 | no graph field (control) |
 | Report a Problem | link | Yes | Row with warning icon + "Report a Problem" label + chevron | Opens Contact Support form (Screen 5) with the category preset to Technical Issue (the patient can change it); the system attaches the device, operating system, app version, and report time per FR-034 REQ-034-164; the patient does not enter them | no graph field (control) |
 | My Support Tickets | link | Yes | Row with ticket icon + "My Support Tickets" label + chevron + open ticket count badge | Navigates to Screen 3; badge shows count of open/in-progress tickets | ENT-support-case.status |
-| Emergency Contact Section | group | Yes | Always-rendered section at bottom of screen with emergency contact details; each row shows when it has a value, and at least one always has (FR-026 keeps at least one of the two set) | Must remain visible regardless of scroll position (sticky or always rendered) | no graph field (group of two App Settings) |
+| Emergency Contact Section | group | Conditional | Always-rendered section at bottom of screen with emergency contact details; each row shows when it has a value, and the whole section is hidden while both values are blank | Shown whenever at least one value is set; once shown it must remain visible regardless of scroll position (sticky or always rendered) (REQ-035-040) | no graph field (group of two App Settings) |
 | — Emergency Phone | text | Conditional | Emergency phone number for urgent post-treatment concerns | Shown only when its App Setting has a value; read-only; tap-to-call on mobile | no graph field (App Setting SET-support-emergency-contact-phone) |
 | — Emergency Email | text | Conditional | Emergency email address | Shown only when its App Setting has a value; read-only; tap-to-compose on mobile | no graph field (App Setting SET-support-emergency-contact-email) |
 
@@ -286,7 +286,7 @@ flowchart TD
 
 - All Help Center content is read-only for patients; it is managed exclusively by admins via FR-033 and scoped to the patient audience (FR-033 REQ-033-008) (REQ-035-001)
 - Search covers all published patient-audience Help Center content (FAQs, Articles, Resources, Videos); results are ranked by relevance; if no results match, show a "Contact Support" prompt. Full-text search is required for P1 and must not be downgraded to browse-only behavior. (REQ-035-036)
-- **[Design Addition — not in FR-033/FR-034]** Emergency contact section is a healthcare UX best practice for post-procedure patient safety; the section is always rendered — it cannot be hidden or require scrolling past it. Emergency phone and email values are two App Settings owned by FR-026 (support emergency contact phone and email); this screen displays them. Each row is shown only when its setting has a value: a row with no value is left out, and the Contact Support row stays. FR-026 must keep at least one of the two values set: its settings screen refuses to save both blank, so the section is never empty. (REQ-035-039, REQ-035-040)
+- **[Design Addition — not in FR-033/FR-034]** Emergency contact section is a healthcare UX best practice for post-procedure patient safety; the section is always rendered while at least one value is set — it cannot be hidden or require scrolling past it. Emergency phone and email values are two App Settings owned by FR-026 (support emergency contact phone and email); this screen displays them. Each row is shown only when its setting has a value: a row with no value is left out, and the Contact Support row stays. FR-026 refuses a save that changes the phone or the email and leaves both blank, but both values are blank at launch until an admin sets one; while both are blank the whole section is hidden and the other Hub rows stay (REQ-035-039, REQ-035-040; FR-026 REQ-026-143)
 - See REQ-035-010.
 - A person who is not logged in sees only the support contact details (phone and email) when reaching Help and Support, for example when sign-up fails (FR-001 REQ-001-170); no case and no help content is shown (REQ-035-024, REQ-035-033)
 - "My Support Tickets" badge count reflects open + in-progress tickets only; hidden when count is 0 (REQ-035-041)
@@ -329,7 +329,7 @@ flowchart TD
 | Article Subtype Filter | chips | Yes | Filter chips: "All", "Tutorial Guides", "Troubleshooting Tips" | "All" default; filters the article list by subtype | no graph field (control) |
 | Article List | list | Yes | Full list of published articles for the selected subtype | Shown after patient selects Articles content type | ENT-help-centre-content |
 | — Item Title | text | Yes | Article title | Tappable; navigates to article detail | ENT-help-centre-content.title |
-| — Item Excerpt | text | No | 1-2 line description or preview | Truncated with ellipsis | ENT-help-centre-content.summary |
+| — Item Excerpt | text | No | 1-2 line preview built from the start of the article body | Truncated with ellipsis; FR-033 holds no separate excerpt for articles, so the preview is taken from the first words of the body (REQ-035-091) | ENT-help-centre-content.body |
 | — Last Updated | datetime | No | Date content was last published or updated | Relative or short date format | ENT-help-centre-content.updated_at |
 | Article Detail — Title | text | Yes | Full article title | Read-only | ENT-help-centre-content.title |
 | Article Detail — Body | text | Yes | Full article/guide content (rich text, scrollable) | Read-only; supports formatted text, inline images | ENT-help-centre-content.body |
@@ -362,7 +362,7 @@ flowchart TD
 | — Last Updated | datetime | No | Date video was last published or updated | Relative or short date format | ENT-help-centre-content.updated_at |
 | Video Detail — Embedded Player | video | Yes | In-app video player with play/pause, seek, fullscreen controls | Streams video content; supports standard playback controls | ENT-help-centre-content.attachments |
 | Video Detail — Title | text | Yes | Full video title | Read-only; displayed below player | ENT-help-centre-content.title |
-| Video Detail — Description | text | Yes | Video description (rich text) | Read-only; scrollable | ENT-help-centre-content.body |
+| Video Detail — Description | text | No | Brief video description (FR-033 Video Description, up to 500 characters) | Read-only; scrollable; left out when the video has no description (REQ-035-091) | ENT-help-centre-content.summary |
 | Video Detail — Transcript Link | link | No | Link to view video transcript | Opens transcript in a scrollable text view; accessibility best practice | ENT-help-centre-content.transcript |
 | Video Detail — "Was this helpful?" | group | Yes | Binary feedback on the video | Same aggregated feedback behavior as articles, including the Contact Support prompt after No | ENT-help-centre-content.helpfulness_rating |
 
@@ -378,8 +378,9 @@ flowchart TD
 - All content data is managed by admins via FR-033 and delivered to patients via FR-035; patients have read-only access with no ability to create, edit, or delete content (FR-033 Rule 2, REQ-033-008) (REQ-035-001)
 - Patient content is completely isolated from provider content — patients only see patient-audience content (FR-033 Rule 1, Rule 3, REQ-033-021) (REQ-035-002)
 - See REQ-035-036. Search is scoped to the patient audience repository; empty search results must always surface a "Contact Support" path (REQ-035-038).
-- "Was this helpful?" feedback is aggregated at the content level — admin dashboards show total Yes/No counts per content item. Per FR-033 Privacy Rule 2, patient analytics are aggregated and not tracked at individual user level. Feedback responses do not store individual patient identity. (REQ-035-007, REQ-035-027)
-- Content updates published by admin propagate to patient view within 1 minute (FR-033) (REQ-035-028)
+- "Was this helpful?" feedback is aggregated at the content level — admin dashboards show total Yes/No counts per content item. Per FR-033 Privacy Rule 2, patient analytics are aggregated and not tracked at individual user level. Feedback responses do not store individual patient identity. Each tap is one vote written to the item's helpfulness count through the FR-033 content interface, so a repeat tap adds another vote (REQ-035-007, REQ-035-027; FR-033 REQ-033-096)
+- An admin publishing, editing, reordering, unpublishing or deleting content reaches the patient view within 1 minute (FR-033 REQ-033-034) (REQ-035-028)
+- Opening an FAQ answer, an article, a resource detail or a video is recorded as a view through the FR-033 content interface and counted each time it is opened, a resource download is counted too, and a video view follows the 30-second rule (REQ-035-092; FR-033 REQ-033-097, REQ-033-079)
 - FAQ content must be displayed in collapsible topic sections per FR-033 REQ-033-006, not as a flat list (REQ-035-003)
 - Related content suggestions may cross content types (e.g., an article may link to a related video tutorial); related content is admin-configured in FR-033 and FR-035 shows up to 4 when configured, with no minimum
 - The Contact Support prompt follows a No tap on "Was this helpful?" for every content type (FAQ, article, resource, video), and search results are shown on this screen (REQ-035-038)
@@ -448,7 +449,7 @@ flowchart TD
 | Attachment Button | action | Conditional | Button to attach files to reply | Shown alongside Reply Input Field; max 10 MB per file, formats: JPG/PNG/PDF/DOC/DOCX; max 5 files per message; a reply file follows the same virus-scan rules as a case file (REQ-035-014, REQ-035-059). | ENT-support-case-message.attachments |
 | Send Reply Button | action | Conditional | Submits patient reply to the case thread | Enabled when reply input is non-empty; hidden for Closed cases; admin notified on send via FR-020 (support.case_user_reply); a reply that cannot be sent right now (device offline, server error, or media storage unavailable) is refused with a retry message and the typed text is kept (REQ-035-066) | no graph field (control) |
 | Closed Case Banner | group | Conditional | Informational banner shown when case is Closed | "This case is closed. If you still need help, you can create a new ticket or contact support to request this case be reopened." with "Create New Ticket" link to Screen 5 and "Email support" link that opens an email to the support address (the emergency email setting on Screen 1) with the case ID in the subject; the clause "or contact support to request this case be reopened" and the Email support link are shown only when that setting has a value (the sentence then ends after "create a new ticket"). Provides both paths: new ticket creation (in-app) and case reopening via admin (FR-034 Workflow B3, REQ-034-017). (REQ-035-069) | no graph field (control) |
-| Empty Thread State | text | Conditional | Shown when no messages exist yet (case just created) | "Your case has been submitted. Our team will respond within 24 hours on business days." (aligns with FR-034 SC-003) (REQ-035-087) | no graph field (state message) |
+| Empty Thread State | text | Conditional | Shown when no messages exist yet (case just created) | "Your case has been submitted. Our team will respond within 24 hours on business days." (REQ-034-175; REQ-035-087) | no graph field (state message) |
 
 **Business Rules**:
 
@@ -478,13 +479,14 @@ flowchart TD
 | Description | text | Yes | Detailed description of the issue or feedback | Multi-line input; min 20 characters, max 5000 characters (FR-034 REQ-034-035); placeholder: "Describe your issue in detail so we can help you faster" | ENT-support-case.description |
 | Priority Picker | dropdown | Yes | Patient-selected priority level | Options: Low, Medium, High, Urgent (FR-034 REQ-034-031); default: Medium. Brief inline descriptions help patients self-triage: Low = "General question", Medium = "Something isn't working right", High = "Blocking my care or booking", Urgent = "Critical issue needing immediate attention" | ENT-support-case.priority |
 | Attachments | file | No | Optional file attachments (screenshots, documents) | Max 5 files per submission, max 10 MB per file; accepted formats: JPG, PNG, PDF, DOC, DOCX (FR-034 REQ-034-036/037); tap to add; shows thumbnail preview with remove option; virus-scanned before acceptance. (REQ-035-088) | ENT-support-case.attachments |
+| Booking Reference | text | Conditional | The booking the patient was on when opening Contact Support from the Payment Window Expired or Cancelled booking screen (FR-006) | Passed by the opening screen; not typed, not shown as an input and not editable; saved with the case, which is a plain case with no request type (REQ-035-090, REQ-034-182) | ENT-support-case.booking_reference |
 | Submit Button | action | Yes | Submits the support request | Disabled until all required fields pass validation; on tap: creates case (CASE-YYYY-#####), links to patient record via session (FR-034 REQ-034-024), sets Ticket Source = "Patient App" and Submitter Type = "Patient", sends confirmation email unless an admin has switched it off in the Admin notification settings (FR-030, FR-034 REQ-034-090) | ENT-support-case.case_id |
 | Cancel / Discard | action | Yes | Cancels form and returns to previous screen | Prompts "Discard this request?" if any field has input; no data saved on cancel (REQ-035-057) | no graph field (control) |
 
 **Business Rules**:
 
 - All fields except Attachments are mandatory; the Submit button remains disabled until Title (>= 10 chars), Category, Description (>= 20 chars), and Priority are all valid (REQ-035-049). A failure found by the server after Submit is covered by Alternative Flow B1 (REQ-035-050).
-- Upon successful submission, the system displays a confirmation screen showing the assigned Case ID (CASE-YYYY-#####) and the message "We will respond within 24 hours on business days" (FR-034 SC-003), then navigates to My Support Tickets (Screen 3); the confirmation always shows in the app, whether or not the confirmation email is sent (REQ-035-054)
+- Upon successful submission, the system displays a confirmation screen showing the assigned Case ID (CASE-YYYY-#####) and the message "We will respond within 24 hours on business days" (REQ-034-175), then navigates to My Support Tickets (Screen 3); the confirmation always shows in the app, whether or not the confirmation email is sent (REQ-035-054)
 - File uploads are validated client-side (format + size) before upload and server-side (virus scan + format whitelist) before acceptance (FR-034 REQ-034-036/037); a file that fails the scan is refused with the FR-034 message (REQ-034-106) (REQ-035-058)
 - Category selection drives downstream admin routing — this is transparent to the patient but important for response time (REQ-035-053)
 - Priority inline descriptions are a healthcare UX pattern to reduce mis-triage; patients in distress tend to over-select "Urgent" without guidance, which degrades response quality for truly urgent cases (REQ-035-051)
@@ -507,7 +509,7 @@ flowchart TD
 - **FR-034 Ticketing API error handling**: Retry with exponential backoff on 5xx errors; a submission that cannot be sent (offline or server error) is queued and shows "queued, will be sent when online", and it gets its Case ID after it is sent; only one request waits in the queue at a time (a second submit is refused with a message to wait until the first is sent), and one not sent within 24 hours is reported to the patient as not sent, with the text kept so it can be sent again (REQ-035-062)
 - **FR-020/S-03 Notification Service error handling**: Notification delivery failures do not block case operations; retry asynchronously (REQ-035-064)
 - **Threat mitigation**: Rate limiting on new ticket submissions (max 10 new tickets per hour per patient; the patient sees a wait message); replies are not counted by this limit; file upload virus scanning (when the scanner is unavailable the file is refused with a "try again later" message and the case or reply can be sent without it); input sanitization for all text fields (REQ-035-063, REQ-035-089, REQ-035-014)
-- Admin team responds to patient support cases within 24 hours on business days (FR-034 SC-003); every patient-facing line says "within 24 hours on business days"
+- Admin team responds to patient support cases within 24 hours on business days (REQ-034-175); every patient-facing line says "within 24 hours on business days"
 - Help Center content is curated to avoid medical advice and focus on platform usage, appointment management, and general information (FR-033 Assumption 5)
 
 ### Data & Privacy Rules
@@ -527,7 +529,7 @@ flowchart TD
 - Help Center content (FAQs, articles, resources, videos) — managed via FR-033
 - Support case status, assignment, resolution — managed via FR-034
 - Auto-closure period for resolved cases (Immediately, 3, 7, or 14 days, default 7 days) — configured via FR-034
-- Emergency contact phone number and email — two App Settings owned by FR-026; at least one must stay set
+- Emergency contact phone number and email — two App Settings owned by FR-026; both may be blank until an admin sets one, and the Hub then hides the emergency contact section (REQ-035-040)
 - Help Centre content category descriptions shown to patients — managed via FR-033
 
 **Fixed in Codebase (Not Editable)**:
@@ -544,17 +546,17 @@ flowchart TD
 
 **Carried from dropped sections (original wording)**:
 
-- **Assumption 3**: Emergency contact phone and email values are configured by admin before FR-035 goes live
+- **Assumption 3**: Emergency contact phone and email values are configured by admin before FR-035 goes live; until one is set, the Hub hides the emergency contact section (REQ-035-040)
 
 ---
 
 ## Dependencies
 
-- **FR-033**: Help Centre Content Management; patient-specific content consumed read-only, updates propagate within 1 minute.
+- **FR-033**: Help Centre Content Management; patient-specific content consumed read-only; publish, edit, reorder, unpublish and delete reach the patient view within 1 minute.
 - **FR-034**: Support Center & Ticketing System; creates support cases and provides the two-way communication thread.
 - **FR-020**: Notifications & Alerts; push and email notifications for support case updates.
-- **FR-001**: Patient Authentication & Profile; authenticated session provides the patient ID.
-- **FR-026**: App Settings & Security; Settings screen entry point and emergency contact settings; the settings screen must refuse to save both support contact values (phone and email) blank, so at least one always has a value.
+- **FR-001**: Patient Authentication & Profile; authenticated session provides the patient ID; owns the Settings Main screen whose Help & Support row opens Screen 1 (REQ-001-185).
+- **FR-026**: App Settings & Security; emergency contact settings; its settings screen refuses a save that changes the phone or the email and leaves both blank, but both are blank at launch until an admin sets one (REQ-026-143).
 
 ---
 
@@ -714,6 +716,7 @@ A patient preparing for their upcoming procedure browses the Help Center for edu
 | 2026-11-23 | 1.3 | Independent compression review: 1 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 | 2026-11-24 | 1.4 | Logic review pass 1: not-logged-in view, Report a Problem entry, optional emergency rows, Immediately closure (no Resolved window), notification-setting wording, new flows A6 (Resolved case closes) and B3 (submission cannot complete now), reopen notice, original request shown on Ticket Detail, refusal of a reply sent after closure, related content up to 4, single "within 24 hours on business days" wording. See update log FR035_LOGIC_REVIEW_PASS_1_2026-11-24. | Product Owner / Documentation |
 | 2026-11-24 | 1.5 | Logic review pass 2: Closed Case Banner email link shown only with a support email, at least one support contact value always set (FR-026), Resolved case from the list reaches the reopen path, reply failure rule, offline queue limit (one request, 24 hours), resolution email switch named as in FR-034, lifecycle moves back (patient reply, Admin reopen), Report a Problem preset, notice stop for deleted patients on flow A6, failed virus scan branch, notice tap entry. See update log FR035_LOGIC_REVIEW_PASS_2_2026-11-24. | Product Owner / Documentation |
+| 2026-11-25 | 1.6 | Cross-FR alignment: 1-minute reach for content changes (REQ-035-028); vote and view write paths (REQ-035-007, REQ-035-092); excerpt and video description sources (REQ-035-091); Booking Reference on the support form (REQ-035-090); Settings Main owner FR-001 Screen 15 (REQ-001-185); emergency contact section hidden while both values are blank (REQ-035-040). | Product Owner / Documentation |
 
 ---
 
@@ -727,4 +730,4 @@ A patient preparing for their upcoming procedure browses the Help Center for edu
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-035 from system-prd.md, FR-033 Help Centre Content Management, FR-034 Support Center & Ticketing System
-**Last Updated**: 2026-11-24
+**Last Updated**: 2026-11-25

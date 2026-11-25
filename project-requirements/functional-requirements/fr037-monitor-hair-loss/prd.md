@@ -337,7 +337,7 @@ flowchart TD
 **Business Rules**:
 
 - The PDF contains the complete date-to-date log, scan photos, logged-day count, and severity summary, plus the provider advice for advice-mode cases. Provider advice appears in the completion PDF only. (REQ-037-009)
-- With zero logs the period starts at the case creation date and the log timeline shows no entries. (REQ-037-057)
+- With zero logs the period starts at the case creation date, the severity summary shows the Initial Severity as a one-point trend (first, latest, minimum, maximum and average all equal it), and the log timeline shows no entries. (REQ-037-057)
 - Failed generation is retryable without altering the completed case. (REQ-037-055)
 - The PDF is regenerated when logs or the selected scan change after it was made. (REQ-037-055)
 - A converted case shows this screen read-only, and its summary PDF can be viewed here like a completed case's, and Retry PDF stays available while the PDF has failed. (REQ-037-054, REQ-037-059)
@@ -797,6 +797,7 @@ flowchart TD
 | 2.3 | 2026-11-23 | Independent compression review: 3 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 | 2.31 | 2026-11-24 | Logic review fixes: scan save call, staged-photo cleanup and quality rule; conversion hand-off, photo references, draft and idempotency rules; summary calculation (Initial Severity, period start, date order, zero logs, deleted entries); reminders scoped to transplant-progress cases; Retry PDF and continue-without-PDF; Admin cannot edit case status; edited advice notifies the patient and only the author may edit; advice cadence and pause rules; assignment end paths (withdrawal, Admin, FR-015 suspension or deactivation); preview revocation and Admin queue exit; advice-state versus case-status labels; assignment status values; exclusivity end paths. | Product Owner / Documentation |
 | 2.32 | 2026-11-24 | Logic review fixes: open advice window expires when the assignment ends; Request Treatment shows no confirmation (Step A states that monitoring ends on submission); advice state ended and the Assign and Share gates require an active case; assignment-end notifications and a recorded end cause and Admin end reason; Admin-editable list limited to patient-supplied data, logs, ratings, scan metadata and advice; PDF failure after three tries, retry on a converted case and attach to the inquiry; Duration stored as the FR-026-managed option reference and label; provider routing evaluated when the inquiry submission succeeds; Admin advice-text change notifies the patient; first recorded severity naming; resumed conversion draft rebuilt; preview expiry 1 to 14 days; cadence changes audited. | Product Owner / Documentation |
+| 2.33 | 2026-11-25 | Cross-FR alignment: zero-log severity summary shows the Initial Severity as a one-point trend (REQ-037-057). | Product Owner / Documentation |
 
 ---
 
@@ -808,7 +809,7 @@ flowchart TD
 
 ---
 
-**Document Version**: 2.32
+**Document Version**: 2.33
 **Template Version**: 2.0.0
-**Last Updated**: 2026-11-24
+**Last Updated**: 2026-11-25
 **Next Review**: Upon a major requirement change

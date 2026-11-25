@@ -220,7 +220,7 @@ flowchart TD
 | Switch to Aftercare Package | action | Yes | Opens Screen 6 | Active case only (REQ-038-033) | no graph field (control) |
 | End Monitoring | action | Yes | Opens Screen 5 | Active case only (REQ-038-033); allowed while a conversion draft is open, and completion discards the draft (REQ-038-044) | no graph field (control) |
 | Scan History | action | Yes | Opens Screen 4 | Current case only (REQ-038-049) | no graph field (control) |
-| Reminder Preference | control | Yes | Reminder schedule: on by default with the Admin schedule; the patient changes it or switches it off | Reminders stop when the case is completed or converted (REQ-038-031) | no graph field (control) |
+| Reminder Preference | control | Yes | Reminder schedule: on by default with the Admin schedule; the patient changes it or switches it off | Reminders stop when the case is completed or converted (REQ-038-031) | ENT-monitoring-case.reminder_preference |
 
 **Business Rules**:
 
@@ -327,6 +327,7 @@ flowchart TD
 - The latest report version is shown; an Admin correction regenerates the PDF as the next version. (REQ-038-045)
 - See REQ-038-075.
 - See REQ-038-076.
+- When FR-011 ends a converted request as Rejected or Expired, the monitoring case stays converted and read-only; the patient may start a new standalone request from the same source data in FR-011, which uses a new idempotency key (FR-011 REQ-011-093, REQ-011-094). (REQ-038-082)
 
 ### Provider Platform Screens
 
@@ -534,6 +535,7 @@ No Provider Dashboard screens are defined in FR-038. This monitoring case is sel
 | 1.4 | 2026-11-22 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.3) is in `archived/prd-baseline-2026-11-08/` and in git history. | Product Owner / Documentation |
 | 1.5 | 2026-11-24 | Logic review pass 1: FR-011 hand-off lands on FR-011 Screen 6 and package choice stays in FR-011 (FR-038 Screen 6 ends at the review); conversion contract and commit order; provider access to copied data from FR-011 assignment; Screen 5 confirmation by choice; PDF status, retry, regeneration and repeat rules on Screens 6 and 7; completed or converted case reachable from the home card; only Admin corrects the treatment date; Initial Severity as first data point, monitoring period and zero-log summary; reminders on by default with a Screen 2 control and stop rule; Screen 4 and Screen 8 entry points; quality-failed scans are not saved; conversion draft set and cleared; Screen 8 filter values and audit Action column. | Product Owner / Documentation |
 | 1.6 | 2026-11-24 | Logic review pass 2: monitoring period and first severity point in date order with logs dated before the case; zero-log summary shows the Initial Severity; failed request returns to Screen 6; Retry PDF on Screen 6; export-ready notice target by draft state; idempotency key lifetime; End Monitoring with an open draft discards it; previous cases listed on the home card; Screen 6 retake and Screen 1 capture entry; case status not Admin-editable; malware-scan outcome; default reminders run 12 months from the case creation date; stale Screen 6 pointer removed; main flow check folded into the entry branch. | Product Owner / Documentation |
+| 1.7 | 2026-11-25 | Cross-FR alignment: Reminder Preference tied to ENT-monitoring-case.reminder_preference; a Rejected or Expired converted request leaves the monitoring case read-only and a new standalone request uses a new idempotency key (REQ-038-082, REQ-011-093, REQ-011-094). | Product Owner / Documentation |
 
 ---
 
@@ -544,7 +546,7 @@ No Provider Dashboard screens are defined in FR-038. This monitoring case is sel
 
 ---
 
-**Document Version**: 1.6
+**Document Version**: 1.7
 **Template Version**: 2.0.0
-**Last Updated**: 2026-11-24
+**Last Updated**: 2026-11-25
 **Next Review**: Before implementation planning

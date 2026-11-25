@@ -711,7 +711,7 @@ Each message in the thread displays:
 - Case status changes from "Closed" to "Open" when reopened (REQ-034-145)
 - System logs reopening in case timeline with timestamp, reopening reason, admin who reopened it, and reference to previous resolution (REQ-034-145)
 - If "Notify Patient/Provider" checked, system sends email notification via S-03 acknowledging case reopening (REQ-034-146)
-- Reopened case appears in default case listing view (Open status) (REQ-034-147)
+- Reopened case appears in default case listing view (Open status); the patient app shows it as Open with the reply box again (REQ-034-147; FR-035 REQ-035-071)
 - Previous resolution summary remains in case history for reference (REQ-034-145)
 - Case timeline shows clear "Case Reopened" event with full context of why it was reopened (REQ-034-145)
 - Admin can adjust priority when reopening to reflect urgency (e.g., escalate if issue was marked resolved incorrectly) (REQ-034-148)
@@ -766,7 +766,7 @@ Each message in the thread displays:
 | Tag Name (in modal) | text input | Yes | Name of tag | Max 30 chars; must be unique; Examples: Bug, Feature Request, Urgent, VIP (REQ-034-154) | ENT-support-case-tag.name |
 | Tag Color (in modal) | color picker | Yes | Badge color for tag display | Options: gray, blue, orange, red, green, purple, yellow, pink | ENT-support-case-tag.color |
 | **Section 6: Auto-Escalation Rules** | section header | N/A | Configure automatic case escalation thresholds | N/A | no graph field (section header) |
-| Urgent Case Unassigned Threshold | number input | Yes | Hours before an Open or In Progress Urgent case that is still unassigned is escalated once by the system to all Super Admins; the clock starts when the case is Urgent and unassigned (at creation or when it becomes Urgent later) and stops when the case is assigned (a fixed alert email goes to the Support Staff pool after 1 hour first) | Min: 1, Max: 48, Default: 24 hours (REQ-034-155, REQ-034-173) | no graph field (setting SET-support-urgent-unassigned-escalation-threshold) |
+| Urgent Case Unassigned Threshold | number input | Yes | Hours before an Open or In Progress Urgent case that is still unassigned is escalated once by the system to all Super Admins; the clock starts when the case is Urgent and unassigned (at creation or when it becomes Urgent later) and stops when the case is assigned (the FR-030 notice `support.urgent_case_unassigned`, REQ-030-258, goes to the Support Staff pool first, after a fixed 1 hour) | Min: 1, Max: 48, Default: 24 hours (REQ-034-155, REQ-034-173) | no graph field (setting SET-support-urgent-unassigned-escalation-threshold) |
 | High Priority Case Threshold | number input | Yes | Hours before an Open or In Progress High priority case is escalated once by the system to all Super Admins if no status change; the clock starts when the case is High and restarts on any status change; it is a stall alarm, separate from the resolution targets in Rule 12 | Min: 12, Max: 72, Default: 48 hours (REQ-034-155, REQ-034-173) | no graph field (setting SET-support-high-priority-escalation-threshold) |
 | Case Inactivity Threshold | number input | Yes | Days before an Open or In Progress case with no activity is flagged for admin review; also the one clock behind the inactivity warnings in the case list and case detail view | Min: 7, Max: 90, Default: 14 days (REQ-034-078, REQ-034-155) | no graph field (setting SET-support-case-inactivity-threshold) |
 | **Section 7: Reopen Reason Templates** | section header | N/A | Manage reopening reason templates for quick selection (optional) | N/A | no graph field (section header) |
@@ -935,9 +935,9 @@ Each message in the thread displays:
   - Case escalated to them (an escalation always goes to a Super Admin, and a system escalation goes to all Super Admins) (REQ-034-103, REQ-034-173)
   - Patient/provider replies to a case (one email per reply)
   - A case is reopened (a separate reopening notice, in addition to the reply email)
-  - An Open or In Progress Urgent case is still unassigned 1 hour after the Urgent clock started (a fixed plain system email to the Support Staff pool; if the case is still unassigned at the Urgent Case Unassigned Threshold in Screen 7, default 24 hours, the system escalates it to Super Admin) (REQ-034-173)
-  - The assigned admin of a case is deactivated and the case becomes unassigned (a plain system email to the Support Staff pool, to reassign it) (REQ-034-108)
-  - A notice to the patient or provider still fails once the FR-030 retry rule is exhausted (a plain system email to the assigned admin, or to the Support Staff pool when the case is unassigned, to contact the patient or provider by hand) (REQ-034-113)
+  - An Open or In Progress Urgent case is still unassigned 1 hour after the Urgent clock started (the FR-030 notice `support.urgent_case_unassigned` to the Support Staff pool, REQ-030-258, with the 1-hour wait fixed; if the case is still unassigned at the Urgent Case Unassigned Threshold in Screen 7, default 24 hours, the system escalates it to Super Admin) (REQ-034-173)
+  - The assigned admin of a case is deactivated and the case becomes unassigned (the FR-030 notice `support.case_orphaned` to the Support Staff pool, REQ-030-259, to reassign it) (REQ-034-108)
+  - A notice to the patient or provider still fails once the FR-030 retry rule is exhausted (the FR-030 notice `support.notice_delivery_failed` to the assigned admin, or to the Support Staff pool when the case is unassigned, REQ-030-260, to contact the patient or provider by hand) (REQ-034-113)
 - **Notification Rule 4**: All notifications sent via S-03 Notification Service; failed sends are retried following the FR-030 retry rule (REQ-034-047, REQ-034-051)
 - **Notification Rule 5**: Email notifications include case ID, title, status, and direct link to admin case view (for admin recipients) (REQ-034-093)
 
@@ -1076,7 +1076,7 @@ Support staff member encounters complex technical issue requiring more senior at
 
 - **How does system handle case assignment when assigned admin is deactivated or leaves organization?**
   - System automatically detects deactivated admin accounts and marks their assigned cases as "Unassigned" (REQ-034-108)
-  - The Support Staff pool receives a plain system email to reassign orphaned cases (REQ-034-108)
+  - The Support Staff pool receives the FR-030 notice `support.case_orphaned` (REQ-030-259) to reassign orphaned cases (REQ-034-108)
   - Case timeline logs admin account deactivation event (REQ-034-108)
 
 - **What occurs if patient deletes their account while support case is open?**
@@ -1105,7 +1105,7 @@ Support staff member encounters complex technical issue requiring more senior at
   - System queues the notification for retry following the FR-030 retry rule (FR-030 owns the retry schedule and count) (REQ-034-113)
   - Case timeline logs notification failure with timestamp (REQ-034-113)
   - Admin dashboard displays notification status indicator (sent, pending, failed) (REQ-034-113)
-  - If the notification still fails once the FR-030 retry rule is exhausted, the assigned admin (or the Support Staff pool when the case is unassigned) receives a plain system email to manually contact the patient/provider (REQ-034-113)
+  - If the notification still fails once the FR-030 retry rule is exhausted, the assigned admin (or the Support Staff pool when the case is unassigned) receives the FR-030 notice `support.notice_delivery_failed` (REQ-030-260) to manually contact the patient/provider (REQ-034-113)
 
 ---
 
@@ -1234,6 +1234,7 @@ Support staff member encounters complex technical issue requiring more senior at
 | 2026-11-23 | 2.8 | Independent compression review: 3 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | AI Assistant |
 | 2026-11-24 | 2.9 | Logic review pass 1: escalation always goes to a Super Admin, with one system escalation flow (A7, REQ-034-173); status changes only through Update Status (Open to In Progress), Resolve Case, Close Case and Reopen Case (REQ-034-102); booking request flow A8 and Open-request block (REQ-034-174); Support Center permissions on the FR-031 names (REQ-034-094, REQ-034-042, REQ-034-180); first response target 24 hours on business days (REQ-034-175); provider reopening request B3a (REQ-034-178); problem report details and provider submission limit (REQ-034-164, REQ-034-176); category Visible To (REQ-034-101); deleted-patient email rule (REQ-034-109); No Patient Link contact email (REQ-034-179); scanner-unavailable flow B4a (REQ-034-044); inactivity warning for Open and In Progress cases (REQ-034-058, REQ-034-078); Help Hub and email-reopen wording (A5, B3, REQ-034-177). | AI Assistant |
 | 2026-11-24 | 3.0 | Logic review pass 2: system escalation flow A7 written out and the Case Escalated timeline entry split into manual and system cases (REQ-034-173); escalation clocks run only while a case is Open or In Progress, start on Urgent and unassigned or on High, and escalate once per start (REQ-034-155, REQ-034-173); a manual escalation never lowers the priority (REQ-034-103); the three admin notices named as plain system emails and the Support Staff pool defined (REQ-034-092, REQ-034-094, REQ-034-108, REQ-034-113); status removed from Admin Editability (REQ-034-086); default date range 90 days with the Request Type and Request Status filters (REQ-034-116); Bulk Assign through one Screen 5 modal with one reason (REQ-034-119); Reopen Case also on Resolved cases (REQ-034-181, REQ-034-102); every patient notice goes to the contact email when No Patient Link is ticked (REQ-034-179); Contact Support on blocked booking screens creates a plain case with the booking reference (REQ-034-182). | AI Assistant |
+| 2026-11-25 | 3.1 | Cross-FR alignment: system notices for unassigned urgent cases, orphaned cases and failed notice delivery cite the FR-030 catalogue (REQ-030-258 to REQ-030-260); reopened case cites what the patient app shows (REQ-035-071). | Product Owner / Documentation |
 
 ---
 
@@ -1247,4 +1248,4 @@ Support staff member encounters complex technical issue requiring more senior at
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (PRD Standards & Requirements)  
 **Based on**: FR-011 Aftercare & Recovery Management PRD
-**Last Updated**: 2026-11-24
+**Last Updated**: 2026-11-25

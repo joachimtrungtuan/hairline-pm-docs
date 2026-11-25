@@ -801,7 +801,7 @@ The Help Centre Content Management module provides a centralized knowledge base 
 
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |------------|------|----------|-------------|------------------|-------------|
-| Overall Status | dropdown | Yes | All Systems Operational, Partial Outage, Major Outage. Calculated by the system from component statuses; admin may pick another value | Pre-defined statuses; a value set by hand stays until an admin switches back to automatic (REQ-033-080, REQ-033-093) | ENT-service-status.overall_status |
+| Overall Status | dropdown | Yes | All Systems Operational, Partial Outage, Major Outage. Calculated by the system from component statuses; admin may pick another value. With no active component the status page shows a fourth value, Status not available, which is never a dropdown option | Pre-defined statuses; a value set by hand stays until an admin switches back to automatic (REQ-033-080, REQ-033-093) | ENT-service-status.overall_status |
 | Return to Automatic | button | No | Switches the overall status back to the calculated value; shown only while the overall status was set by hand | N/A (REQ-033-093) | no graph field (control) |
 | Service Components List | table | No | List of service components | Each row: component name, status (Operational/Degraded/Down), last updated | ENT-service-status.components |
 | Component Name | text | Yes | Service component name | Max 100 chars (REQ-033-081) | ENT-service-component.name |
@@ -1306,6 +1306,7 @@ An admin content manager needs to reorganize existing FAQ items into logical top
 | 2026-11-23 | 2.4 | Independent compression review: 2 clause(s) from dropped sections restored in original wording under Business Rules. No rule changes. | Product Owner / Documentation |
 | 2026-11-24 | 2.5 | Logic review: size limit stated per upload kind; helpfulness vote and view recording rules (REQ-033-096, REQ-033-097); virus-scan rejection (REQ-033-098); uploaded video published only when processing is Ready, with a Failed state; same required-field check on Save as Draft and Publish; Resource Category field separated from FAQ topic; status-move rule (REQ-033-099); Archived filter and Restore (REQ-033-100); version created on save with last save wins; patient propagation within 1 minute; service status overall-status and maintenance clarifications; patient Article Type values and Policy Document blocked for patients. | Product Owner / Documentation |
 | 2026-11-24 | 2.6 | Logic review pass 2: a Published video whose file is replaced or whose source is switched stays live with the previous video until the new one is Ready (REQ-033-077, REQ-033-094); an admin may delete a Published item directly and it leaves the audience's view within 1 minute (REQ-033-034, REQ-033-099); bulk status change offers Publish and Unpublish only with one shared Unpublish reason, bulk delete follows single-item rules (REQ-033-062); Draft is not selectable for an Unpublished item; a deleted service component is kept on past incidents and maintenance windows and cannot be deleted while on an open incident or an upcoming or running maintenance window (REQ-033-081). | Product Owner / Documentation |
+| 2026-11-25 | 2.7 | Cross-FR alignment: Overall Status description adds the fourth value Status not available, never a dropdown option; enum value added for ENT-service-status.overall_status (REQ-033-080). | Product Owner / Documentation |
 
 ---
 
@@ -1322,4 +1323,4 @@ An admin content manager needs to reorganize existing FAQ items into logical top
 **Template Version**: 2.0.0 (Constitution-Compliant)
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)
 **Based on**: FR-011 Aftercare & Recovery Management PRD Template
-**Last Updated**: 2026-11-24
+**Last Updated**: 2026-11-25

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T00:42:02Z",
+  "generated_at": "2026-11-25T00:43:36Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -14945,9 +14945,9 @@
       "owner_fr": "FR-037",
       "title": "Idempotency key",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Makes conversion idempotent (REQ-037-031)."
+        "description": "One key per case, created at the first Request Treatment and kept when the conversion draft is cleared, so a retry never creates a second inquiry (REQ-037-031)."
       }
     },
     {
@@ -27282,9 +27282,9 @@
       "owner_fr": "FR-033",
       "title": "Overall status",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Current platform status (All Systems Operational, Partial Outage, Major Outage). Color-coded: green/yellow/red"
+        "description": "Current platform status (All Systems Operational, Partial Outage, Major Outage). Color-coded: green/yellow/red. With no active component the status page shows Status not available, which is never a dropdown option"
       }
     },
     {
@@ -40761,7 +40761,7 @@
       "owner_fr": null,
       "title": "Treatment & Package Management",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
         "module": "fr024-treatment-package-management",
         "prd_path": "project-requirements/functional-requirements/fr024-treatment-package-management/prd.md",
@@ -40800,7 +40800,7 @@
       "owner_fr": null,
       "title": "Legal Content Management",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "module": "fr027-legal-content-management",
         "prd_path": "project-requirements/functional-requirements/fr027-legal-content-management/prd.md",
@@ -40813,7 +40813,7 @@
       "owner_fr": null,
       "title": "Regional Configuration & Pricing",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "module": "fr028-regional-config-pricing",
         "prd_path": "project-requirements/functional-requirements/fr028-regional-config-pricing/prd.md",
@@ -40826,7 +40826,7 @@
       "owner_fr": null,
       "title": "Payment System Configuration",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "module": "fr029-payment-system-config",
         "prd_path": "project-requirements/functional-requirements/fr029-payment-system-config/prd.md",
@@ -40891,7 +40891,7 @@
       "owner_fr": null,
       "title": "Support Center & Ticketing System",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "module": "fr034-support-center-ticketing",
         "prd_path": "project-requirements/functional-requirements/fr034-support-center-ticketing/prd.md",
@@ -40904,7 +40904,7 @@
       "owner_fr": null,
       "title": "Patient Help Center & Support Submission",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "module": "fr035-patient-help-support",
         "prd_path": "project-requirements/functional-requirements/fr035-patient-help-support/prd.md",
@@ -40930,7 +40930,7 @@
       "owner_fr": null,
       "title": "Monitor Your Transplant Progress",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "module": "fr038-monitor-transplant-progress",
         "prd_path": "project-requirements/functional-requirements/fr038-monitor-transplant-progress/prd.md",
@@ -80194,9 +80194,9 @@
       "owner_fr": "FR-024",
       "title": "Library text and labels use translation keys; package free text follows the free-text switch",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "Admin-authored library text (treatment descriptions and technique specifications) and all UI labels and error messages use FR-021 translation keys; FR-021 holds a treatment-library key group for the admin-authored text. Provider-authored package names and descriptions are free text: they are shown as written, and machine-translated for the reader only when the FR-021 free-text translation switch is on (REQ-021-119). Treatment type codes (FUE, FUT, DHI, Sapphire FUE, Robotic), package item service type codes, and media file names and CDN URLs stay in English. Before production release all keyed treatment and package strings must be registered with the FR-021 translation management system.",
+        "statement": "Admin-authored library text (treatment descriptions and technique specifications) and all UI labels and error messages use FR-021 translation keys; FR-021 holds a treatment-library key group for the admin-authored text. The Screen 2 treatment form is the authoring screen for the English text: saving it writes the key's English source value (creating the key if new) and marks the dependent translations Review Needed; translation and publish stay in FR-021 (REQ-021-127). Provider-authored package names and descriptions are free text: they are shown as written, and machine-translated for the reader only when the FR-021 free-text translation switch is on (REQ-021-119). Treatment type codes (FUE, FUT, DHI, Sapphire FUE, Robotic), package item service type codes, and media file names and CDN URLs stay in English. Before production release all keyed treatment and package strings must be registered with the FR-021 translation management system.",
         "rationale": "Localization Rules; Dependencies, FR-021."
       }
     },
@@ -83407,9 +83407,9 @@
       "owner_fr": "FR-027",
       "title": "Cancellation Policy is read-only information and never needs acceptance",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Cancellation Policy is a read-only informational document that does NOT require user acceptance. It uses the same versioning and publishing pipeline, but Material Change is fixed to No and not editable and Requires Acceptance is always No. It is shown through the full policy link on the FR-006 booking and payment screens; the refund ladder numbers come from FR-029 and the legal text MUST NOT restate them.",
+        "statement": "Cancellation Policy is a read-only informational document that does NOT require user acceptance. It uses the same versioning and publishing pipeline, but Material Change is fixed to No and not editable and Requires Acceptance is always No. It is shown through the full policy link on the FR-006 booking and payment screens; the refund ladder numbers come from FR-029 and the legal text MUST NOT restate them. The Cancellation Policy acknowledgment checkbox on the FR-006 booking screen (REQ-006-038) is a separate booking-screen acknowledgment owned by FR-006: it is not a legal document acceptance under this module and creates no acceptance record here.",
         "rationale": "Owner default 86. FR-005 does not carry cancellation terms, FR-006 shows the policy before payment, and the percentages must have one source."
       }
     },
@@ -84780,9 +84780,9 @@
       "owner_fr": "FR-028",
       "title": "A country deactivated in FR-026 is flagged on the grouping edit screen; nothing is forced",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "When a country is deactivated in FR-026, regional groupings and price rows that reference it keep applying, and the grouping edit screen warns \"[Country] is deactivated. Remove from ordering?\"; nothing is forced, and an existing grouping or row of a deactivated country can still be saved (REQ-028-092).",
+        "statement": "When a country is deactivated in FR-026, regional groupings and price rows that reference it keep applying, and the grouping edit screen warns \"[Country] is deactivated. Remove from ordering?\"; nothing is forced, and an existing grouping or row of a deactivated country can still be saved (REQ-028-092). FR-026 also warns the admin before the deactivation and lists the groupings and price rows that use the country (REQ-026-129).",
         "rationale": "Edge case on a country deactivated in FR-026. FR-026 deactivates countries and never removes them."
       }
     },
@@ -84888,9 +84888,9 @@
       "owner_fr": "FR-028",
       "title": "A deactivated country keeps applying in groupings and starting prices until an admin edits them",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "A country deactivated in FR-026 MUST keep applying in regional groupings and starting prices (destination rows and fallback rows) until an admin edits them; the active check runs only when a country is newly selected, so an existing grouping or row of a deactivated country can still be saved, for example to set an expiry date",
+        "statement": "A country deactivated in FR-026 MUST keep applying in regional groupings and starting prices (destination rows and fallback rows) until an admin edits them; the active check runs only when a country is newly selected, so an existing grouping or row of a deactivated country can still be saved, for example to set an expiry date; FR-026 warns before the deactivation and lists the regional groupings and fallback price rows that use the country (REQ-026-129)",
         "rationale": "General Module Rule 9 and Dependencies FR-026."
       }
     },
@@ -85486,9 +85486,9 @@
       "owner_fr": "FR-029",
       "title": "Create a new FR-026 Quote Configuration version whenever the Default Currency changes",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST create a new FR-026 Quote Configuration version whenever the Default Currency changes; open quote drafts MUST keep their typed numbers, switch to the new currency without conversion, and require the provider to acknowledge a banner reading \"currency changed, check your prices\" (FR-004 quote screen) before send."
+        "statement": "System MUST create a new FR-026 Quote Configuration version with Change Type \"System\" whenever the Default Currency changes (REQ-026-142); open quote drafts MUST keep their typed numbers, switch to the new currency without conversion, and require the provider to acknowledge a banner reading \"currency changed, check your prices\" (FR-004 quote screen) before send."
       }
     },
     {
@@ -95646,9 +95646,9 @@
       "owner_fr": "FR-034",
       "title": "Admin email notifications",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Admin staff receive email notifications when: Case assigned to them; Case escalated to them (an escalation always goes to a Super Admin, and a system escalation goes to all Super Admins); Patient/provider replies to a case (one email per reply); A case is reopened (a separate reopening notice, in addition to the reply email); An Open or In Progress Urgent case is still unassigned 1 hour after the Urgent clock started (a fixed plain system email to the Support Staff pool; if the case is still unassigned at the Urgent Case Unassigned Threshold in Screen 7, default 24 hours, the system escalates it to Super Admin); The assigned admin of a case is deactivated and the case becomes unassigned (a plain system email to the Support Staff pool, to reassign it); A notice to the patient or provider still fails once the FR-030 retry rule is exhausted (a plain system email to the assigned admin, or to the Support Staff pool when the case is unassigned, to contact the patient or provider by hand)",
+        "statement": "Admin staff receive email notifications when: Case assigned to them; Case escalated to them (an escalation always goes to a Super Admin, and a system escalation goes to all Super Admins); Patient/provider replies to a case (one email per reply); A case is reopened (a separate reopening notice, in addition to the reply email); An Open or In Progress Urgent case is still unassigned 1 hour after the Urgent clock started (the FR-030 notice `support.urgent_case_unassigned` to the Support Staff pool, REQ-030-258, with the 1-hour wait fixed; if the case is still unassigned at the Urgent Case Unassigned Threshold in Screen 7, default 24 hours, the system escalates it to Super Admin); The assigned admin of a case is deactivated and the case becomes unassigned (the FR-030 notice `support.case_orphaned` to the Support Staff pool, REQ-030-259, to reassign it); A notice to the patient or provider still fails once the FR-030 retry rule is exhausted (the FR-030 notice `support.notice_delivery_failed` to the assigned admin, or to the Support Staff pool when the case is unassigned, REQ-030-260, to contact the patient or provider by hand)",
         "rationale": "Business Rules, Notification Rule 3. The 1-hour alert is fixed; the Screen 7 threshold is the point where the system escalates the case (REQ-034-173)."
       }
     },
@@ -95838,9 +95838,9 @@
       "owner_fr": "FR-034",
       "title": "Deactivated admin leaves cases unassigned",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System automatically detects deactivated admin accounts and marks their assigned cases as \"Unassigned\"; The Support Staff pool receives a plain system email to reassign orphaned cases; Case timeline logs admin account deactivation event",
+        "statement": "System automatically detects deactivated admin accounts and marks their assigned cases as \"Unassigned\"; The Support Staff pool receives the FR-030 notice `support.case_orphaned` (REQ-030-259) to reassign orphaned cases; Case timeline logs admin account deactivation event",
         "rationale": "Edge Cases (prd.md lines 1150 to 1153). The timeline event list includes Admin Deactivated (prd.md line 529)."
       }
     },
@@ -95898,9 +95898,9 @@
       "owner_fr": "FR-034",
       "title": "Failed notifications retried and flagged",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System queues the notification for retry following the FR-030 retry rule (FR-030 owns the retry schedule and count); Case timeline logs notification failure with timestamp; Admin dashboard displays notification status indicator (sent, pending, failed); If the notification still fails once the FR-030 retry rule is exhausted, the assigned admin (or the Support Staff pool when the case is unassigned) receives a plain system email to manually contact the patient/provider",
+        "statement": "System queues the notification for retry following the FR-030 retry rule (FR-030 owns the retry schedule and count); Case timeline logs notification failure with timestamp; Admin dashboard displays notification status indicator (sent, pending, failed); If the notification still fails once the FR-030 retry rule is exhausted, the assigned admin (or the Support Staff pool when the case is unassigned) receives the FR-030 notice `support.notice_delivery_failed` (REQ-030-260) to manually contact the patient/provider",
         "rationale": "Edge Cases (prd.md lines 1165 to 1168) and Implementation Notes, Integration 3 (prd.md line 1005). REQ-034-051 says retry logic is configured in FR-030, not FR-034; see migration report."
       }
     },
@@ -96295,9 +96295,9 @@
       "owner_fr": "FR-034",
       "title": "Reopened case returns to default listing",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Reopened case appears in default case listing view (Open status)",
+        "statement": "Reopened case appears in default case listing view (Open status); the patient app shows it as Open with the reply box again (FR-035 REQ-035-071)",
         "rationale": "Screen 6 business rules (prd.md line 658)."
       }
     },
@@ -96391,9 +96391,9 @@
       "owner_fr": "FR-034",
       "title": "Auto-escalation thresholds",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "Auto-escalation thresholds configurable within defined ranges to prevent overly aggressive or too lenient escalation; Urgent Case Unassigned Threshold: Hours before an Open or In Progress urgent case that is still unassigned auto-escalates once to Super Admin (REQ-034-173), counted from when the case is Urgent and unassigned and stopped on assignment, after a fixed alert email to the Support Staff pool at 1 hour (Min: 1, Max: 48, Default: 24 hours); High Priority Case Threshold: Hours before an Open or In Progress high priority case auto-escalates once to Super Admin (REQ-034-173) if no status change, counted from when the case is High and restarted on any status change; a stall alarm, separate from the resolution targets of Rule 12 (Min: 12, Max: 72, Default: 48 hours); Case Inactivity Threshold: Days before an Open or In Progress case with no activity is flagged for admin review, also the one clock behind the inactivity warnings in the case list and case detail view (Min: 7, Max: 90, Default: 14 days)",
+        "statement": "Auto-escalation thresholds configurable within defined ranges to prevent overly aggressive or too lenient escalation; Urgent Case Unassigned Threshold: Hours before an Open or In Progress urgent case that is still unassigned auto-escalates once to Super Admin (REQ-034-173), counted from when the case is Urgent and unassigned and stopped on assignment, after the FR-030 notice `support.urgent_case_unassigned` (REQ-030-258) to the Support Staff pool at a fixed 1 hour (Min: 1, Max: 48, Default: 24 hours); High Priority Case Threshold: Hours before an Open or In Progress high priority case auto-escalates once to Super Admin (REQ-034-173) if no status change, counted from when the case is High and restarted on any status change; a stall alarm, separate from the resolution targets of Rule 12 (Min: 12, Max: 72, Default: 48 hours); Case Inactivity Threshold: Days before an Open or In Progress case with no activity is flagged for admin review, also the one clock behind the inactivity warnings in the case list and case detail view (Min: 7, Max: 90, Default: 14 days)",
         "rationale": "Screen 7, Section 6. Notification Rule 3 states the 1-hour alert and the escalation to Super Admin; Alternative Flow A7 is the escalation itself."
       }
     },
@@ -96608,9 +96608,9 @@
       "owner_fr": "FR-034",
       "title": "An overdue Urgent or High case is escalated by the system to all Super Admins",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "statement": "When the Urgent Case Unassigned Threshold or the High Priority Case Threshold runs out, the system marks the case as escalated in its timeline and sends the escalation notice to all Super Admins; it does not reassign the case or change its priority. Both clocks are stall alarms that run only while the case is Open or In Progress. The Urgent clock starts when a case is Urgent and unassigned (at creation, or when it becomes Urgent later) and stops when the case is assigned; the High clock starts when a case is High and restarts on any status change. Each clock escalates once per start, with no repeat. The fixed 1-hour alert for an unassigned Urgent case goes to the Support Staff pool, counted from the same start of the Urgent clock",
+        "statement": "When the Urgent Case Unassigned Threshold or the High Priority Case Threshold runs out, the system marks the case as escalated in its timeline and sends the escalation notice to all Super Admins; it does not reassign the case or change its priority. Both clocks are stall alarms that run only while the case is Open or In Progress. The Urgent clock starts when a case is Urgent and unassigned (at creation, or when it becomes Urgent later) and stops when the case is assigned; the High clock starts when a case is High and restarts on any status change. Each clock escalates once per start, with no repeat. The FR-030 notice `support.urgent_case_unassigned` (REQ-030-258) for an unassigned Urgent case goes to the Support Staff pool after a fixed 1 hour, counted from the same start of the Urgent clock",
         "rationale": "Alternative Flow A7 and Screen 7, Section 6. It is the same Support Case Escalated event as a manual escalation (REQ-034-103), raised by a clock instead of an admin."
       }
     },
@@ -96800,9 +96800,9 @@
       "owner_fr": "FR-035",
       "title": "Was this helpful? binary feedback, aggregated anonymously",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST provide \"Was this helpful?\" binary feedback on all content types, with feedback aggregated anonymously at the content level (FR-033 Privacy Rule 2); tapping Yes or No shows the confirmation \"Thank you for your feedback\"",
+        "statement": "System MUST provide \"Was this helpful?\" binary feedback on all content types, with feedback aggregated anonymously at the content level (FR-033 Privacy Rule 2); tapping Yes or No shows the confirmation \"Thank you for your feedback\"; each tap is one vote written to the item's helpfulness count through the FR-033 content interface, so a repeat tap adds another vote (FR-033 REQ-033-096)",
         "rationale": "Restated by Privacy Rule 1 (line 461), Screen 2 rules (339) and Main Flow steps 9-10 (122). Tapping Yes or No shows the confirmation Thank you for your feedback (294); admin dashboards show total Yes and No counts per content item; FAQ, resource and video feedback behave the same (281, 310, 325). Near-duplicate of REQ-035-027, kept as both are PRD lines."
       }
     },
@@ -97028,10 +97028,10 @@
       "owner_fr": "FR-035",
       "title": "Content from FR-033 API within 1 minute",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "System MUST consume patient-specific Help Center content from FR-033 REST API with content updates reflected within 1 minute of admin publishing",
-        "rationale": "Restated by General Module Rule 4 (line 456), Screen 2 rules (340), Dependencies FR-033 (533) and Implementation Notes caching (609: cache invalidation respects the 1-minute propagation SLA)."
+        "statement": "System MUST consume patient-specific Help Center content from FR-033 REST API; an admin publishing, editing, reordering, unpublishing or deleting content reaches the patient view within 1 minute (FR-033 REQ-033-034)",
+        "rationale": "Restated by General Module Rule 4, Screen 2 rules, Dependencies FR-033 and Implementation Notes caching (cache invalidation respects the 1-minute propagation SLA)."
       }
     },
     {
@@ -97076,10 +97076,10 @@
       "owner_fr": "FR-035",
       "title": "Entry points to the patient Help Center",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Patient navigates to \"Help & Support\" from Settings screen (FR-026 / P01.2-S1); in-app deep link from other screens (e.g., contextual help links from booking, payment, or aftercare screens); push notification tap (e.g., tapping a case status change notification navigates to Ticket Detail); the Report a Problem row on the Hub opens Contact Support with the category preset to Technical Issue and the device, operating system, app version, and report time attached per FR-034 REQ-034-164; a person who is not logged in reaches only the support contact details (REQ-035-024).",
-        "rationale": "Entry Points (lines 96-98). Also Multi-Tenant Breakdown (48) and Dependencies FR-026 (547-549: the Settings screen has a Help & Support menu item linking to Screen 1)."
+        "statement": "Patient navigates to \"Help & Support\" from the Settings Main screen (FR-001 Screen 15, REQ-001-185); in-app deep link from other screens (e.g., contextual help links from booking, payment, or aftercare screens); push notification tap (e.g., tapping a case status change notification navigates to Ticket Detail); the Report a Problem row on the Hub opens Contact Support with the category preset to Technical Issue and the device, operating system, app version, and report time attached per FR-034 REQ-034-164; a person who is not logged in reaches only the support contact details (REQ-035-024).",
+        "rationale": "Entry Points (lines 96-98). Also Multi-Tenant Breakdown (48) and Dependencies FR-001 (the Settings Main screen has a Help & Support row linking to Screen 1)."
       }
     },
     {
@@ -97148,9 +97148,9 @@
       "owner_fr": "FR-035",
       "title": "Emergency Contact Section always rendered on the Hub, each row when it has a value",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "Emergency contact section is a healthcare UX best practice for post-procedure patient safety; the section is always rendered - it cannot be hidden or require scrolling past it. The section must remain visible regardless of scroll position (sticky or always rendered); emergency phone is read-only with tap-to-call on mobile and emergency email is read-only with tap-to-compose on mobile. Each row is shown only when its App Setting has a value: a row with no value is left out, and the Contact Support row stays.",
+        "statement": "Emergency contact section is a healthcare UX best practice for post-procedure patient safety; the section is always rendered while at least one value is set - it cannot be hidden or require scrolling past it. The section must remain visible regardless of scroll position (sticky or always rendered); emergency phone is read-only with tap-to-call on mobile and emergency email is read-only with tap-to-compose on mobile. Each row is shown only when its App Setting has a value: a row with no value is left out, and the Contact Support row stays.",
         "rationale": "Screen 1 rules (248, marked [Design Addition: not in FR-033/FR-034]) and Screen 1 fields Emergency Contact Section, Emergency Phone, Emergency Email (240-242). Main Flow step 2 (114) lists the section on the Hub."
       }
     },
@@ -97160,10 +97160,10 @@
       "owner_fr": "FR-035",
       "title": "Emergency phone and email are two App Settings owned by FR-026",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Emergency phone and email values are two App Settings owned by FR-026 (support emergency contact phone and email); this screen displays them. FR-026 must keep at least one of the two values set: its settings screen refuses to save both blank, so the section is never empty.",
-        "rationale": "Screen 1 rules (248), Admin Editability (474: two App Settings owned by FR-026) and Business Process Assumption 3 (599: values are configured by admin before FR-035 goes live)."
+        "statement": "Emergency phone and email values are two App Settings owned by FR-026 (support emergency contact phone and email); this screen displays them. FR-026 refuses a save that changes the phone or the email and leaves both blank, but both values are blank at launch until an admin sets one; while both are blank the whole section is hidden and the other Hub rows stay (REQ-026-143).",
+        "rationale": "Screen 1 rules, Admin Editability and Business Process Assumption 3; FR-026 REQ-026-143 lets other Screen 8 rows save while both values are blank, as at launch."
       }
     },
     {
@@ -97328,9 +97328,9 @@
       "owner_fr": "FR-035",
       "title": "Submission confirmation shows the case ID and the 24-hours-on-business-days message",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Upon successful submission, the system displays a confirmation screen showing the assigned Case ID (CASE-YYYY-#####) and the message \"We will respond within 24 hours on business days\" (FR-034 SC-003), then navigates to My Support Tickets (Screen 3); the confirmation always shows in the app, whether or not the confirmation email is sent",
+        "statement": "Upon successful submission, the system displays a confirmation screen showing the assigned Case ID (CASE-YYYY-#####) and the message \"We will respond within 24 hours on business days\" (REQ-034-175), then navigates to My Support Tickets (Screen 3); the confirmation always shows in the app, whether or not the confirmation email is sent",
         "rationale": "Screen 5 rules (441), Alternative Flow A3 steps 8-9 (164-165) and Screen 3 Create New Ticket Button (357: confirmation then return to the ticket list)."
       }
     },
@@ -97740,6 +97740,42 @@
       "attrs": {
         "statement": "Input sanitization applies to all text fields the patient fills in (search, support request title and description, ticket replies).",
         "rationale": "prd.md lines 642 (Security Considerations, Threat mitigation: input sanitization for all text fields)."
+      }
+    },
+    {
+      "id": "REQ-035-090",
+      "type": "Rule",
+      "owner_fr": "FR-035",
+      "title": "Contact Support form carries the booking reference from a blocked booking screen",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "When Contact Support is opened from the Payment Window Expired or Cancelled booking screen (FR-006), the booking reference is passed to the form and saved with the case, which is a plain case with no request type (REQ-034-182); the patient does not type or edit it.",
+        "rationale": "Screen 5 field Booking Reference. FR-034 REQ-034-182 owns the case side."
+      }
+    },
+    {
+      "id": "REQ-035-091",
+      "type": "Rule",
+      "owner_fr": "FR-035",
+      "title": "Article list excerpt and video description sources",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "The article list excerpt is a 1-2 line preview taken from the first words of the article body, because FR-033 holds no separate excerpt for articles; the Video Detail description is the FR-033 Video Description (up to 500 characters, optional) and is left out when the video has none.",
+        "rationale": "Screen 2 fields Item Excerpt and Video Detail Description."
+      }
+    },
+    {
+      "id": "REQ-035-092",
+      "type": "Rule",
+      "owner_fr": "FR-035",
+      "title": "Content views recorded through the content interface",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "Opening an FAQ answer, an article, a resource detail or a video is recorded as a view through the FR-033 content interface and counted each time it is opened; a resource download is counted too, and a video view follows the 30-second rule (FR-033 REQ-033-097, REQ-033-079).",
+        "rationale": "Screen 2 business rules. FR-033 REQ-033-097 owns the counting rule."
       }
     },
     {
@@ -98375,9 +98411,9 @@
       "owner_fr": "FR-037",
       "title": "Monitoring summary values derived from valid entries",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
-        "statement": "Monitoring summary values are derived from valid entries: deleted and superseded entries are excluded from every count and from the severity trend. The monitoring period is the date range from the earlier of the case creation date and the earliest log date through the final case date. The severity trend is in date order; the Initial Severity given at intake is a trend point dated on the case creation date that follows the same-date rule (the latest-timestamped entry on a date wins), and the summary's First recorded severity is the first (earliest-dated) remaining trend point, which can be the intake rating, recalculated when entries are deleted or superseded. Logged-day count, scan count, advice count when applicable, and severity latest, minimum, maximum, average, and trend are derived from the same valid entries. A case with zero logs starts its period on the case creation date, shows the Initial Severity as a one-point trend, and shows no log entries.",
+        "statement": "Monitoring summary values are derived from valid entries: deleted and superseded entries are excluded from every count and from the severity trend. The monitoring period is the date range from the earlier of the case creation date and the earliest log date through the final case date. The severity trend is in date order; the Initial Severity given at intake is a trend point dated on the case creation date that follows the same-date rule (the latest-timestamped entry on a date wins), and the summary's First recorded severity is the first (earliest-dated) remaining trend point, which can be the intake rating, recalculated when entries are deleted or superseded. Logged-day count, scan count, advice count when applicable, and severity latest, minimum, maximum, average, and trend are derived from the same valid entries. A case with zero logs starts its period on the case creation date, shows the Initial Severity as a one-point trend (first, latest, minimum, maximum and average all equal it), and shows no log entries.",
         "rationale": "Assembled from Screens 2, 5, 6 and 7 Step A (Derived columns); per-date severity follows REQ-037-020."
       }
     },
@@ -99602,6 +99638,18 @@
       "attrs": {
         "statement": "Confirmation (Screen 5) is required and MUST be selected: for Complete and export it acknowledges that this case will end, and for Switch to Aftercare Package it acknowledges that the case stays active until the aftercare request is created.",
         "rationale": "Screen 5 field table (Confirmation: required, must be selected)."
+      }
+    },
+    {
+      "id": "REQ-038-082",
+      "type": "Rule",
+      "owner_fr": "FR-038",
+      "title": "Rejected or expired converted request leaves the monitoring case final",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "When FR-011 ends a converted request as Rejected or Expired, the monitoring case stays converted and read-only; the patient may start a new standalone request from the same source data in FR-011, which uses a new idempotency key (FR-011 REQ-011-093, REQ-011-094).",
+        "rationale": "Screen 7 business rules. FR-011 owns the receiving side and the new request."
       }
     },
     {
@@ -103924,7 +103972,7 @@
       "owner_fr": "FR-035",
       "title": "Contact Support Form",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "platform": "patient",
         "description": "Form to submit a support request or feedback; creates an FR-034 case (PRD Screen 5). UI controls, not fields: Screen Title, Back Navigation, Submit Button, Cancel / Discard. The confirmation screen after submission is part of this screen (PRD line 441)."
@@ -104152,7 +104200,7 @@
       "owner_fr": "FR-038",
       "title": "Transplant-Progress Dashboard and Calendar (Screen 2)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "patient",
         "description": "Shows the self-paced longitudinal record and case actions."
@@ -104524,10 +104572,10 @@
       "owner_fr": "FR-029",
       "title": "Commission rate",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "Platform global default commission percentage (allowed range 15-25%, precision 0.1%, the global model is always Percentage) plus provider-specific commission scopes (Percentage 0-100% or Flat Rate, Screen 5). The PRD names no default for the global value.",
-        "unit": "percent of booking total (or fixed amount per completed procedure for Flat Rate)"
+        "description": "Platform global default commission percentage (allowed range 15-25%, precision 0.1%, the global model is always Percentage) plus provider-specific commission scopes (Percentage 0-100% or Flat Rate, Screen 5). The PRD names no default for the global value. The global rate also sets the commission on an aftercare payment when a provider delivers, as a percentage of the aftercare price (REQ-011-040).",
+        "unit": "percent of booking total or, for an aftercare payment delivered by a provider, of the aftercare price (or fixed amount per completed procedure for Flat Rate)"
       }
     },
     {
@@ -105697,9 +105745,9 @@
       "owner_fr": "FR-034",
       "title": "Urgent unassigned escalation threshold",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "description": "Hours before an Open or In Progress urgent case that is still unassigned auto-escalates once to all Super Admins; the clock starts when the case is Urgent and unassigned and stops on assignment (a fixed alert email goes to the Support Staff pool after 1 hour first). Editable by Super Admin on Screen 7 within 1 to 48 hours.",
+        "description": "Hours before an Open or In Progress urgent case that is still unassigned auto-escalates once to all Super Admins; the clock starts when the case is Urgent and unassigned and stops on assignment (the FR-030 notice `support.urgent_case_unassigned` goes to the Support Staff pool first, after a fixed 1 hour). Editable by Super Admin on Screen 7 within 1 to 48 hours.",
         "default": "24",
         "unit": "hours"
       }
@@ -124900,10 +124948,9 @@
       "owner_fr": "FR-027",
       "title": "System asks a new patient at registration to accept the Current Terms and Privacy Policy",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "prd_ref": "Main Flow User Accepts New Version, first-run step",
-        "handoff_from": "FR-001: STP-001-003, patient creates the account"
+        "prd_ref": "Main Flow User Accepts New Version, first-run step"
       }
     },
     {
@@ -167744,6 +167791,12 @@
       "sort_order": 2
     },
     {
+      "field_id": "ENT-service-status.overall_status",
+      "value": "status_not_available",
+      "label": "Status not available",
+      "sort_order": 3
+    },
+    {
       "field_id": "ENT-setting-group.group_category",
       "value": "security",
       "label": "Security",
@@ -183864,6 +183917,12 @@
     {
       "from_id": "FR-024",
       "verb": "references",
+      "to_id": "REQ-021-127",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-024",
+      "verb": "references",
       "to_id": "REQ-SYS-012",
       "attrs": {}
     },
@@ -184170,6 +184229,12 @@
     {
       "from_id": "FR-027",
       "verb": "references",
+      "to_id": "REQ-006-038",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-027",
+      "verb": "references",
       "to_id": "REQ-022-110",
       "attrs": {}
     },
@@ -184177,6 +184242,24 @@
       "from_id": "FR-027",
       "verb": "references",
       "to_id": "REQ-022-111",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-027",
+      "verb": "references",
+      "to_id": "REQ-030-239",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-027",
+      "verb": "references",
+      "to_id": "REQ-030-240",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-027",
+      "verb": "references",
+      "to_id": "REQ-030-241",
       "attrs": {}
     },
     {
@@ -184210,6 +184293,12 @@
       "from_id": "FR-028",
       "verb": "references",
       "to_id": "REQ-001-010",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-028",
+      "verb": "references",
+      "to_id": "REQ-026-129",
       "attrs": {}
     },
     {
@@ -184341,6 +184430,12 @@
     {
       "from_id": "FR-029",
       "verb": "references",
+      "to_id": "REQ-011-040",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-029",
+      "verb": "references",
       "to_id": "REQ-015-108",
       "attrs": {}
     },
@@ -184372,6 +184467,12 @@
       "from_id": "FR-029",
       "verb": "references",
       "to_id": "REQ-021-053",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-029",
+      "verb": "references",
+      "to_id": "REQ-026-142",
       "attrs": {}
     },
     {
@@ -185400,6 +185501,24 @@
     {
       "from_id": "FR-034",
       "verb": "references",
+      "to_id": "REQ-030-258",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-034",
+      "verb": "references",
+      "to_id": "REQ-030-259",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-034",
+      "verb": "references",
+      "to_id": "REQ-030-260",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-034",
+      "verb": "references",
       "to_id": "REQ-031-103",
       "attrs": {}
     },
@@ -185426,7 +185545,7 @@
       "verb": "active in",
       "to_id": "STG-patient-03-active",
       "attrs": {
-        "rules": 84
+        "rules": 87
       },
       "derived": true
     },
@@ -185438,6 +185557,12 @@
         "rules": 1
       },
       "derived": true
+    },
+    {
+      "from_id": "FR-035",
+      "verb": "references",
+      "to_id": "REQ-001-185",
+      "attrs": {}
     },
     {
       "from_id": "FR-035",
@@ -185454,13 +185579,49 @@
     {
       "from_id": "FR-035",
       "verb": "references",
+      "to_id": "REQ-026-143",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-035",
+      "verb": "references",
       "to_id": "REQ-033-008",
       "attrs": {}
     },
     {
       "from_id": "FR-035",
       "verb": "references",
+      "to_id": "REQ-033-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-035",
+      "verb": "references",
+      "to_id": "REQ-033-096",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-035",
+      "verb": "references",
+      "to_id": "REQ-033-097",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-035",
+      "verb": "references",
       "to_id": "REQ-034-164",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-035",
+      "verb": "references",
+      "to_id": "REQ-034-175",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-035",
+      "verb": "references",
+      "to_id": "REQ-034-182",
       "attrs": {}
     },
     {
@@ -185714,9 +185875,21 @@
       "verb": "active in",
       "to_id": "STG-monitoring-03-conversion",
       "attrs": {
-        "rules": 30
+        "rules": 31
       },
       "derived": true
+    },
+    {
+      "from_id": "FR-038",
+      "verb": "references",
+      "to_id": "REQ-011-093",
+      "attrs": {}
+    },
+    {
+      "from_id": "FR-038",
+      "verb": "references",
+      "to_id": "REQ-011-094",
+      "attrs": {}
     },
     {
       "from_id": "FR-038",
@@ -309304,6 +309477,84 @@
       "attrs": {}
     },
     {
+      "from_id": "REQ-035-090",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-035-090",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-035-090",
+      "verb": "applies to",
+      "to_id": "ENT-support-case.booking_reference",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-035-090",
+      "verb": "applies to",
+      "to_id": "SCR-035-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-035-090",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-035",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-035-091",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-035-091",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-035-091",
+      "verb": "applies to",
+      "to_id": "SCR-035-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-035-091",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-035",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-035-092",
+      "verb": "applies at",
+      "to_id": "STG-patient-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-035-092",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-035-092",
+      "verb": "applies to",
+      "to_id": "SCR-035-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-035-092",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-035",
+      "attrs": {}
+    },
+    {
       "from_id": "REQ-037-001",
       "verb": "applies at",
       "to_id": "STG-monitoring-01-baseline",
@@ -313829,6 +314080,30 @@
     },
     {
       "from_id": "REQ-038-081",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-038",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-038-082",
+      "verb": "applies at",
+      "to_id": "STG-monitoring-03-conversion",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-038-082",
+      "verb": "applies to",
+      "to_id": "ACT-patient",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-038-082",
+      "verb": "applies to",
+      "to_id": "SCR-038-07",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-038-082",
       "verb": "decided by",
       "to_id": "SRC-PRD-038",
       "attrs": {}
@@ -355566,6 +355841,16 @@
     {
       "from_id": "SCR-035-05",
       "verb": "shows",
+      "to_id": "ENT-support-case.booking_reference",
+      "attrs": {
+        "provenance": "inherited from another FR",
+        "label": "Booking Reference",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-035-05",
+      "verb": "shows",
       "to_id": "ENT-support-case.case_id",
       "attrs": {
         "provenance": "system calculated",
@@ -357851,6 +358136,16 @@
       "attrs": {
         "provenance": "system calculated",
         "label": "Logged Days"
+      }
+    },
+    {
+      "from_id": "SCR-038-02",
+      "verb": "shows",
+      "to_id": "ENT-monitoring-case.reminder_preference",
+      "attrs": {
+        "provenance": "user input",
+        "label": "Reminder Preference",
+        "editable": true
       }
     },
     {
@@ -460989,6 +461284,57 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-004221-34eb1465",
+      "at": "2026-11-25T00:42:21.378091+00:00",
+      "changed_by": "docs-manager",
+      "reason": "Cross-FR alignment for the FR-024, FR-025, FR-027, FR-028, FR-029, FR-032, FR-033, FR-034, FR-035, FR-037 and FR-038 requirements: treatment text authoring screen (FR-024), legal notices as catalogue events and the booking-screen acknowledgment kept apart from legal acceptance (FR-027), country deactivation warning (FR-028), Default Currency change type and aftercare commission base (FR-029), password policy citation (FR-032), fourth status page value (FR-033), support notices cited from the FR-030 catalogue (FR-034), patient help content update scope, vote and view recording, excerpt and description sources, booking reference on the support form, Settings entry point and hidden emergency contact section (FR-035), zero-log summary and idempotency key description (FR-037), reminder preference field and rejected request outcome (FR-038).",
+      "source_id": null,
+      "nodes_added": [
+        "REQ-035-090",
+        "REQ-035-091",
+        "REQ-035-092",
+        "REQ-038-082"
+      ],
+      "nodes_updated": [
+        "ENT-monitoring-conversion.idempotency_key",
+        "ENT-service-status.overall_status",
+        "FR-024",
+        "FR-027",
+        "FR-028",
+        "FR-029",
+        "FR-034",
+        "FR-035",
+        "FR-038",
+        "REQ-024-081",
+        "REQ-027-026",
+        "REQ-028-083",
+        "REQ-028-092",
+        "REQ-029-053",
+        "REQ-032-066",
+        "REQ-034-092",
+        "REQ-034-108",
+        "REQ-034-113",
+        "REQ-034-147",
+        "REQ-034-155",
+        "REQ-034-173",
+        "REQ-035-007",
+        "REQ-035-028",
+        "REQ-035-033",
+        "REQ-035-039",
+        "REQ-035-040",
+        "REQ-035-054",
+        "REQ-037-057",
+        "SCR-035-05",
+        "SCR-038-02",
+        "SET-commission-rate",
+        "SET-support-urgent-unassigned-escalation-threshold",
+        "STP-027-011"
+      ],
+      "edges_added": 39,
+      "edges_removed": 0,
+      "rows": 92
+    },
     {
       "id": "cs-20261125-004048-dc23124b",
       "at": "2026-11-25T00:40:48.099456+00:00",

@@ -12,7 +12,7 @@
 
 Provide centralized management of legal content (Terms & Conditions, Privacy Policy, Consent forms, Cancellation Policy) with versioning, preview, publishing, acceptance tracking, and audit trail. Admins can draft and preview content, publish new versions, and require users (patients and providers) to accept the latest terms where applicable. The system records which user accepted which version and when, while preserving full version history and logging all changes. This improves compliance, transparency, and reduces risk from untracked changes.
 
-> **Note on Cancellation Policy**: Cancellation Policy is a read-only informational document that does NOT require user acceptance or consent confirmation. It is managed through the same versioning and publishing pipeline as other legal documents but the `Requires Acceptance` flag is always `No` and `Material Change` is fixed to `No`. It is shown through the full policy link on the FR-006 booking and payment screens; the refund ladder numbers come from FR-029 and the legal text must not restate them. (REQ-027-026, REQ-027-027)
+> **Note on Cancellation Policy**: Cancellation Policy is a read-only informational document that does NOT require user acceptance or consent confirmation. It is managed through the same versioning and publishing pipeline as other legal documents but the `Requires Acceptance` flag is always `No` and `Material Change` is fixed to `No`. It is shown through the full policy link on the FR-006 booking and payment screens; the refund ladder numbers come from FR-029 and the legal text must not restate them. The Cancellation Policy acknowledgment checkbox on the FR-006 booking screen (REQ-006-038) is a separate booking-screen acknowledgment owned by FR-006: it is not a legal document acceptance under this module and creates no acceptance record here. (REQ-027-026, REQ-027-027)
 
 ---
 
@@ -57,6 +57,7 @@ Provide centralized management of legal content (Terms & Conditions, Privacy Pol
 - In‑app prompts to accept new versions
 - Admin notifications: to the publishing Admin when publication succeeds, and to Admins holding A-09 Edit Settings when the Acceptance Rate of a Current version is below the Admin-set threshold, from 14 days after the version became Current and once per version (REQ-027-022, REQ-027-023, REQ-027-063)
 - User reminders to accept pending legal content: to each user in the Pending set (REQ-027-053), at most one every 7 days per user, up to the reminder limit, sent by the daily job (REQ-027-063)
+- These three notices are catalogue events of FR-030 (`legal.version_published`, `legal.coverage_below_threshold` and `legal.acceptance_reminder`, FR-030 REQ-030-239 to REQ-030-241); recipients, timing and cadence stay as stated in this module (REQ-027-022, REQ-027-023, REQ-027-063)
 
 **Out of Scope**:
 
@@ -409,6 +410,7 @@ Related FRs: FR-006 (booking and payment screens that link to the full Cancellat
 | 2026-11-22 | 1.5 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v1.4) is in `archived/prd-baseline-2026-11-08/fr027-legal-content-management/` and in git history. The PRD names no change request. | Product Owner / Documentation |
 | 2026-11-24 | 1.6 | Logic review pass 1 (30 findings): Legal settings panel with unset behaviour (REQ-027-059); shared acceptance prompt Screen 5 (REQ-027-058); publish and audit at the Publish click on both branches and prompts only when Current; Scheduled status view-only and withdrawable (REQ-027-060); one version model (REQ-027-061); first-run acceptance (REQ-027-062); daily reminder and coverage job (REQ-027-063); restore reuses the main publish steps and is always material; acceptance base, once-per-version acceptance, per-member provider acceptance, gated actions, Cancellation Policy shown through the FR-006 link; audit actions replaced; effective date in UTC with a re-check at Publish; fallback fixed to English. Owner defaults 77 to 86. | Product Owner / Documentation |
 | 2026-11-24 | 1.7 | Logic review pass 2 (16 findings, FR-027 side 15, FR-022 queued): one acceptance base and Pending set for prompts, reminders, re-accept count and rate, with a fixed audience per document type (REQ-027-053, REQ-027-021, REQ-027-032, REQ-027-035, REQ-027-062); banner and alert both start 14 days after Current; Screen 5 limited-access exit; Admin may add a missing locale text to a Current version; audit actions per event (REQ-027-013); Audit trail also opens unfiltered; settings, withdraw and rejected second Publish as flow steps; provider first-run and sign-in prompts; alert and notice recipients; Consent entry in patient Settings; restore draft Material Change fixed on Screen 2. Owner defaults 87 and 88. | Product Owner / Documentation |
+| 2026-11-25 | 1.8 | Cross-FR alignment: legal notices are catalogue events owned by FR-030 (REQ-030-239 to REQ-030-241); the REQ-006-038 acknowledgment at booking is separate from legal acceptance (REQ-027-026). | Product Owner / Documentation |
 
 ---
 
@@ -425,4 +427,4 @@ Related FRs: FR-006 (booking and payment screens that link to the full Cancellat
 **Template Version**: 2.0.0 (Constitution-Compliant)  
 **Constitution Reference**: Hairline Platform Constitution v1.0.0, Section III.B (Lines 799-883)  
 **Based on**: FR-027 Legal Content Management  
-**Last Updated**: 2026-11-24
+**Last Updated**: 2026-11-25
