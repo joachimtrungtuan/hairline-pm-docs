@@ -4,7 +4,7 @@ by: controller
 source_id: SRC-PRD-006
 operations:
   - {"op": "update_node", "id": "REQ-006-014", "attrs": {"statement": "System MUST verify the parent inquiry is not in \"Cancelled\" status before allowing entry to the booking/payment flow. If cancelled, system MUST block entry and display a read-only blocked state (Screen 1 blocked state) with clear messaging."}}
-  - {"op": "add_node", "id": "FLW-006-b9", "type": "Flow", "owner_fr": "FR-006", "title": "Early close of an In Progress case with no fault", "attrs": {"kind": "alternative", "description": "An admin closes an In Progress case early on Screen 11 when the provider is not at fault; the booking moves to Aftercare", "prd_ref": "Alternative Flow B9"}}
+  - {"op": "add_node", "id": "FLW-006-b9", "type": "Flow", "title": "Early close of an In Progress case with no fault", "attrs": {"kind": "alternative", "description": "An admin closes an In Progress case early on Screen 11 when the provider is not at fault; the booking moves to Aftercare", "prd_ref": "Alternative Flow B9"}}
   - {"op": "add_node", "id": "STP-006-806", "type": "Step", "owner_fr": "FR-006", "title": "Admin opens Close Case Early, No Fault on Screen 6, which opens Screen 11 with the route Move to Aftercare, no fault, and enters the patient refund amount, a mandatory reason and a confirmation", "attrs": {"prd_ref": "Alternative Flow B9 step 1"}}
   - {"op": "add_node", "id": "STP-006-807", "type": "Step", "owner_fr": "FR-006", "title": "On submit System moves the booking from In Progress to Aftercare from the decision date, records the closure cause NoFaultEarlyClose, sets no supportRequired marker, holds no payout and writes the audit entry", "attrs": {"prd_ref": "Alternative Flow B9 step 2"}}
   - {"op": "add_node", "id": "STP-006-808", "type": "Step", "owner_fr": "FR-006", "title": "System applies the admin-set refund through FR-007 as an exception refund, makes the provider's share eligible for payout on the decision date, and signals FR-010 and FR-011", "attrs": {"prd_ref": "Alternative Flow B9 steps 3 and 4"}}
@@ -25,8 +25,8 @@ operations:
   - {"op": "add_edge", "from": "STP-006-808", "verb": "at", "to": "STG-main-06-treatment"}
   - {"op": "add_edge", "from": "STP-006-808", "verb": "done by", "to": "ACT-system"}
   - {"op": "add_edge", "from": "STP-006-808", "verb": "next", "to": "STP-010-044"}
-  - {"op": "add_edge", "from": "SCR-006-08", "verb": "shows", "to": "ENT-booking.payment_schedule"}
-  - {"op": "add_edge", "from": "SCR-006-11", "verb": "shows", "to": "ENT-booking.paid_amount"}
+  - {"op": "add_edge", "from": "SCR-006-08", "verb": "shows", "to": "ENT-booking.payment_schedule", "attrs": {"provenance": "system calculated", "label": "Installment Plan Outcome", "editable": false}}
+  - {"op": "add_edge", "from": "SCR-006-11", "verb": "shows", "to": "ENT-booking.paid_amount", "attrs": {"provenance": "retrieved", "label": "Paid Amount", "editable": false}}
   - {"op": "add_edge", "from": "STP-006-001", "verb": "applies", "to": "REQ-006-021"}
   - {"op": "add_edge", "from": "STP-006-207", "verb": "applies", "to": "REQ-006-024"}
   - {"op": "add_edge", "from": "STP-006-208", "verb": "applies", "to": "REQ-006-024"}

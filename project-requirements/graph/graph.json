@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T07:58:02Z",
+  "generated_at": "2026-11-25T08:01:27Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -35682,6 +35682,19 @@
       }
     },
     {
+      "id": "FLW-006-b9",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "Early close of an In Progress case with no fault",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "An admin closes an In Progress case early on Screen 11 when the provider is not at fault; the booking moves to Aftercare",
+        "prd_ref": "Alternative Flow B9"
+      }
+    },
+    {
       "id": "FLW-006-change-appointment",
       "type": "Flow",
       "owner_fr": null,
@@ -47392,9 +47405,9 @@
       "owner_fr": "FR-006",
       "title": "Cancelled inquiry blocks entry to booking and payment",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "System MUST verify the parent inquiry is not in \"Cancelled\" status before allowing entry to the booking/payment flow. If cancelled, system MUST block entry and display a read-only blocked state (Screen 1 blocked state) instead of the payment form, with the banner \"This inquiry has been cancelled. Booking is no longer available.\" and a Back to Dashboard button that returns the patient to the Inquiry Dashboard (FR-003 Screen 8); all payment fields and actions are hidden.",
+        "statement": "System MUST verify the parent inquiry is not in \"Cancelled\" status before allowing entry to the booking/payment flow. If cancelled, system MUST block entry and display a read-only blocked state (Screen 1 blocked state) with clear messaging.",
         "rationale": "prd.md line 1150 (found by matching the rule statement to the PRD text)."
       }
     },
@@ -100801,7 +100814,7 @@
       "owner_fr": "FR-006",
       "title": "Change Appointment (Admin Modal)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
         "description": "Change the appointment date/time of an Accepted or Confirmed booking, opened from Screen 6."
@@ -100837,7 +100850,7 @@
       "owner_fr": "FR-006",
       "title": "Resolve In-Progress Case (Admin Modal)",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "platform": "admin",
         "description": "Record the admin's decision for a booking that is In Progress, opened from Screen 6: the case-by-case decision for a provider fault, or the early close with no fault."
@@ -111524,7 +111537,7 @@
       "owner_fr": "FR-006",
       "title": "Patient opens the Accepted Subquote detail view and reviews the immutable accepted selection",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 1"
       }
@@ -111546,7 +111559,7 @@
       "owner_fr": "FR-006",
       "title": "System calculates the required deposit from FR-029 settings and presents the cancellation policy",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Main Flow step 3"
       }
@@ -111601,7 +111614,7 @@
       "owner_fr": "FR-006",
       "title": "Notification Service sends confirmations to patient and provider and the admin dashboard updates",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Main Flow step 8"
       }
@@ -111612,7 +111625,7 @@
       "owner_fr": "FR-006",
       "title": "System determines feasible installment options from FR-029 split payment settings and the 30-day constraint",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow A1 step 1"
       }
@@ -111700,7 +111713,7 @@
       "owner_fr": "FR-006",
       "title": "Admin revives the Payment Window Expired booking on Screen 7: reason, slot re-check, appointment later than the new deadline, new hold",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Screen 7"
       }
@@ -111711,7 +111724,7 @@
       "owner_fr": "FR-006",
       "title": "Admin changes the appointment on Screen 8: provider Active, slot free, feasible installment recalculation, no rescheduling fee, travel review notice",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "Screen 8"
       }
@@ -111722,7 +111735,7 @@
       "owner_fr": "FR-006",
       "title": "Admin makes an audited emergency edit on Screen 6 that changes only the appointment time on the same date and the booking notes, with a mandatory reason and full before and after history",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Admin Status and Date Intervention Rules"
       }
@@ -111755,7 +111768,7 @@
       "owner_fr": "FR-006",
       "title": "Admin opens Screen 9 from Cancel Booking on Screen 6 (Accepted, Payment Window Expired or Confirmed) or from the Cancel route of Screen 11 (In Progress), selects the request source and enters a mandatory reason",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step 1"
       }
@@ -111777,7 +111790,7 @@
       "owner_fr": "FR-006",
       "title": "System sets the booking and the inquiry to Cancelled and keeps the accepted quote accepted; for a pending provider fault the cause is ProviderFault and the submit resolves the marker; when Screen 9 was opened from Screen 11 the submit also resolves the supportRequired marker and ends the payout hold",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step 3"
       }
@@ -111810,7 +111823,7 @@
       "owner_fr": "FR-006",
       "title": "Refund follows REQ-006-053: full refund and no fee for a provider withdrawal, drop-out, suspension or deactivation, including a cancellation during a pending provider fault; the amount set on Screen 11 when opened from the in-progress fault flow; otherwise the refund ladder set in FR-029; one refund per closure; the refund step and the other money mechanics are owned by FR-007, FR-007B and FR-017",
       "status": "active",
-      "version": 5,
+      "version": 6,
       "attrs": {
         "prd_ref": "Alternative Flow B2 step 6"
       }
@@ -112122,6 +112135,39 @@
       "version": 3,
       "attrs": {
         "prd_ref": "Alternative Flow B7 step 4"
+      }
+    },
+    {
+      "id": "STP-006-806",
+      "type": "Step",
+      "owner_fr": "FR-006",
+      "title": "Admin opens Close Case Early, No Fault on Screen 6, which opens Screen 11 with the route Move to Aftercare, no fault, and enters the patient refund amount, a mandatory reason and a confirmation",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B9 step 1"
+      }
+    },
+    {
+      "id": "STP-006-807",
+      "type": "Step",
+      "owner_fr": "FR-006",
+      "title": "On submit System moves the booking from In Progress to Aftercare from the decision date, records the closure cause NoFaultEarlyClose, sets no supportRequired marker, holds no payout and writes the audit entry",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B9 step 2"
+      }
+    },
+    {
+      "id": "STP-006-808",
+      "type": "Step",
+      "owner_fr": "FR-006",
+      "title": "System applies the admin-set refund through FR-007 as an exception refund, makes the provider's share eligible for payout on the decision date, and signals FR-010 and FR-011",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Alternative Flow B9 steps 3 and 4"
       }
     },
     {
@@ -177678,6 +177724,12 @@
       "from_id": "FLW-006-b8",
       "verb": "starts at",
       "to_id": "STP-006-901",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-006-b9",
+      "verb": "starts at",
+      "to_id": "STP-006-806",
       "attrs": {}
     },
     {
@@ -322816,6 +322868,16 @@
     {
       "from_id": "SCR-006-08",
       "verb": "shows",
+      "to_id": "ENT-booking.payment_schedule",
+      "attrs": {
+        "provenance": "system calculated",
+        "label": "Installment Plan Outcome",
+        "editable": false
+      }
+    },
+    {
+      "from_id": "SCR-006-08",
+      "verb": "shows",
       "to_id": "ENT-subquote.appointment_at",
       "attrs": {
         "provenance": "inherited from another FR",
@@ -322991,6 +323053,16 @@
       "attrs": {
         "provenance": "retrieved",
         "label": "Current Treatment Day"
+      }
+    },
+    {
+      "from_id": "SCR-006-11",
+      "verb": "shows",
+      "to_id": "ENT-booking.paid_amount",
+      "attrs": {
+        "provenance": "retrieved",
+        "label": "Paid Amount",
+        "editable": false
       }
     },
     {
@@ -377505,6 +377577,12 @@
     {
       "from_id": "STP-006-001",
       "verb": "applies",
+      "to_id": "REQ-006-021",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-001",
+      "verb": "applies",
       "to_id": "REQ-006-029",
       "attrs": {}
     },
@@ -377594,6 +377672,18 @@
       "from_id": "STP-006-003",
       "verb": "applies",
       "to_id": "REQ-006-030",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-003",
+      "verb": "applies",
+      "to_id": "REQ-006-064",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-003",
+      "verb": "applies",
+      "to_id": "REQ-006-070",
       "attrs": {}
     },
     {
@@ -377812,6 +377902,24 @@
     },
     {
       "from_id": "STP-006-008",
+      "verb": "applies",
+      "to_id": "REQ-006-027",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-008",
+      "verb": "applies",
+      "to_id": "REQ-006-065",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-008",
+      "verb": "applies",
+      "to_id": "REQ-006-071",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-008",
       "verb": "at",
       "to_id": "STG-main-04-booking",
       "attrs": {}
@@ -377832,6 +377940,18 @@
       "from_id": "STP-006-101",
       "verb": "applies",
       "to_id": "REQ-006-034",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-101",
+      "verb": "applies",
+      "to_id": "REQ-006-066",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-101",
+      "verb": "applies",
+      "to_id": "REQ-006-075",
       "attrs": {}
     },
     {
@@ -378095,6 +378215,12 @@
     {
       "from_id": "STP-006-207",
       "verb": "applies",
+      "to_id": "REQ-006-024",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-207",
+      "verb": "applies",
       "to_id": "REQ-006-050",
       "attrs": {}
     },
@@ -378151,6 +378277,12 @@
     {
       "from_id": "STP-006-208",
       "verb": "applies",
+      "to_id": "REQ-006-024",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-208",
+      "verb": "applies",
       "to_id": "REQ-006-050",
       "attrs": {}
     },
@@ -378164,6 +378296,12 @@
       "from_id": "STP-006-208",
       "verb": "applies",
       "to_id": "REQ-006-062",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-208",
+      "verb": "applies",
+      "to_id": "REQ-006-067",
       "attrs": {}
     },
     {
@@ -378208,6 +378346,12 @@
       "from_id": "STP-006-209",
       "verb": "applies",
       "to_id": "REQ-006-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-209",
+      "verb": "applies",
+      "to_id": "REQ-006-024",
       "attrs": {}
     },
     {
@@ -378316,6 +378460,12 @@
     },
     {
       "from_id": "STP-006-301",
+      "verb": "applies",
+      "to_id": "REQ-006-084",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-301",
       "verb": "at",
       "to_id": "STG-main-04-booking",
       "attrs": {}
@@ -378378,6 +378528,12 @@
       "from_id": "STP-006-303",
       "verb": "applies",
       "to_id": "REQ-006-061",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-303",
+      "verb": "applies",
+      "to_id": "REQ-006-084",
       "attrs": {}
     },
     {
@@ -378465,6 +378621,12 @@
       "from_id": "STP-006-305",
       "verb": "next",
       "to_id": "STP-006-306",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-306",
+      "verb": "applies",
+      "to_id": "REQ-006-025",
       "attrs": {}
     },
     {
@@ -379451,6 +379613,102 @@
       "attrs": {
         "label": "the admin-set amount is refunded from the held payout"
       }
+    },
+    {
+      "from_id": "STP-006-806",
+      "verb": "applies",
+      "to_id": "REQ-006-050",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-806",
+      "verb": "applies",
+      "to_id": "REQ-006-078",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-806",
+      "verb": "applies",
+      "to_id": "REQ-006-086",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-806",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-806",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-806",
+      "verb": "next",
+      "to_id": "STP-006-807",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-806",
+      "verb": "on",
+      "to_id": "SCR-006-11",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-807",
+      "verb": "applies",
+      "to_id": "REQ-006-009",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-807",
+      "verb": "applies",
+      "to_id": "REQ-006-086",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-807",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-807",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-807",
+      "verb": "next",
+      "to_id": "STP-006-808",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-808",
+      "verb": "applies",
+      "to_id": "REQ-006-086",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-808",
+      "verb": "at",
+      "to_id": "STG-main-06-treatment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-808",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-006-808",
+      "verb": "next",
+      "to_id": "STP-010-044",
+      "attrs": {}
     },
     {
       "from_id": "STP-006-901",
@@ -462401,6 +462659,37 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-075854-086ed60d",
+      "at": "2026-11-25T07:58:54.264280+00:00",
+      "changed_by": "controller",
+      "reason": "Backlog points settled for FR-006: filing and graph links only, no rule change.",
+      "source_id": "SRC-PRD-006",
+      "nodes_added": [
+        "FLW-006-b9",
+        "STP-006-806",
+        "STP-006-807",
+        "STP-006-808"
+      ],
+      "nodes_updated": [
+        "REQ-006-014",
+        "SCR-006-08",
+        "SCR-006-11",
+        "STP-006-001",
+        "STP-006-003",
+        "STP-006-008",
+        "STP-006-101",
+        "STP-006-207",
+        "STP-006-208",
+        "STP-006-209",
+        "STP-006-301",
+        "STP-006-303",
+        "STP-006-306"
+      ],
+      "edges_added": 34,
+      "edges_removed": 0,
+      "rows": 56
+    },
     {
       "id": "cs-20261125-075509-9a718952",
       "at": "2026-11-25T07:55:09.096746+00:00",
