@@ -155,6 +155,7 @@ Steps:
 - Trigger: The patient accepts a subquote that carries a promotion attached at send or a valid patient-entered code.
 - Steps: In the same atomic step as the acceptance, the system creates one Application linked to the AcceptanceEvent, the parent quote and version, and the accepted option/date-price row, and reserves one use against the program's usage limits. For an automatic promotion attached at send, the use already reserved at send is consumed instead. If the accepted subquote does not carry the automatic promotion that reserved a use for its parent quote, that reservation is released with reason `not_applied` and the use returns to the limit. Sibling subquotes marked Not Selected and competing quotes never create an Application; any use reserved for them at send is released. A patient code replaces the promotion the row carried: when the replaced promotion is the automatic one, its reservation is released with reason `not_applied` and the code's use is reserved instead. If the total or per-patient usage limit of a provider-selected promotion is used up when the patient confirms, it is handled like an invalid code (FR-005 REQ-005-026): the acceptance does not happen, the reason is shown, and the patient returns to the subquote detail, which shows the row without that promotion. Pausing, revoking or ending the program after send does not affect a sent quote (General Module Rules); only the usage limit can refuse it at acceptance. A patient code entered on a subquote that was not accepted is discarded.
 - Outcome: The Application is in state Applied with its use reserved, or consumed for an automatic promotion; the discounted price is read from the acceptance snapshot by every later step.
+- Later events: beyond the first payment and the release before it, three events act on the Application, each stated once under the rule cited: an admin revive of a `Payment Window Expired` booking (REQ-019-014, REQ-019-015), a provider-fault transfer that marks it Superseded (REQ-019-019, REQ-019-089), and an admin Refund on a Completed row (REQ-019-071, REQ-019-083).
 
 **B4: Promotion Change Attempted After Acceptance**: (REQ-019-041)
 
@@ -718,14 +719,14 @@ One row per redemption tied to this provider's quotes / treatment cases.
 - Funding of a Both Fees program: this FR owns the definition. Hairline reimburses the program's Hairline share % (0 to 100, fixed at send and frozen at acceptance) of the discount to the provider at payout, on top of the commission effect. FR-017 applies this reimbursement in payout settlement and does not define its own split; payout mechanics belong to the payment work. (REQ-019-017)
 - Funding split of each Application: for every program type, the Hairline portion and the provider portion of the discount value follow the commission effect (commission on the accepted price after the promotion, so the provider bears most of the discount). A Both Fees program adds Hairline's reimbursement of the Hairline share % on top of that effect. (REQ-019-110)
 - All discount creations, approvals, applications, and removals are auditable. (REQ-019-090)
-- 95% of valid codes validate within 1 second on subquote review before acceptance.
-- 0% of accepted subquotes carry more than one discount (enforced at all steps).
-- 95% of provider approval responses are processed and reflected within 5 seconds of submission.
-- Discount usage and impact reports export in ≤ 10 seconds for 95th percentile.
-- 100% of applied discounts have audit entries (who, when, what, amount, context).
+- 95% of valid codes validate within 1 second on subquote review before acceptance. (REQ-019-039)
+- 0% of accepted subquotes carry more than one discount (enforced at all steps). (REQ-019-003, REQ-019-004)
+- 95% of provider approval responses are processed and reflected within 5 seconds of submission. (REQ-019-028)
+- Discount usage and impact reports export in ≤ 10 seconds for 95th percentile. (REQ-019-005)
+- 100% of applied discounts have audit entries (who, when, what, amount, context). (REQ-019-090)
 - Misapplied discounts detected and corrected to ≤ 0.1% of bookings monthly.
 - 99.9% monthly uptime for validation and calculation services.
-- Zero data loss for discount definitions and usage records.
+- Zero data loss for discount definitions and usage records. (REQ-019-006)
 - Providers respond to approval requests within the auto-decline window (Setting: promotion approval auto-decline window, default 3 business days).
 - Patients enter codes only while reviewing a subquote before acceptance.
 - The subquote review and acceptance flow (FR-005 Screen 2) exposes the only patient code input surface.
@@ -904,6 +905,7 @@ Acceptance Scenarios:
 | 2026-11-24 | 3.0 | Logic review fixes: archived release reason and restore re-check; send-time and acceptance-time handling of a provider-selected promotion that cannot be used; patient code replaces the row's promotion and the fallback price; a failed code at confirm follows FR-005; tie-break and limit-before-ranking for automatic programs; provider-fault transfer replacement carries no promotion and the original use returns; no program-level Pending Approval, activation, pause and resume ownership; admin overrides limited to Force-Revoke and Re-invite, with Re-invite from revoked states; auto-decline window default of 3 business days; provider code entry removed (select from the list); package-upgrade type and treatment or travel scope removed; affiliate codes follow the same usage rule and Applied means reserved at acceptance; admin edit of a sent quote counts as a re-send; code status on release or void; pre-acceptance code storage and funnel source; audit panel old and new values. | Product Owner / Documentation |
 | 2026-11-24 | 3.1 | Logic review fixes, second pass: a use also returns on a provider-fault transfer; an admin revive returns the Application from Voided to Active; per-patient usage limit basis and check points; a fixed amount at or above the row price is not attached; fixed-amount conversion for a patient code; auto-applied eligibility named by Screen 2 fields; Hairline-Funded programs limited to Auto-applied or Code-only; notice to adopting providers when Value or Hairline Share % changes; provider and admin notices listed. | Product Owner / Documentation |
 | 2026-11-25 | 3.2 | Cross-FR alignment: the affiliate capture is stated as stored with the inquiry journey, read at acceptance and honoured only for an Active affiliate; code registration from FR-018 is rejected with a named reason for a duplicate code text or a non-affiliate program. | Product Owner / Documentation |
+| 2026-11-25 | 3.3 | Backlog points settled: three later events on the Application (revive, supersede, refund) are pointed to their rules and added to the graph flow; the promotion-entity graph statement for REQ-019-043 matches this PRD; the stale Reverse action wording of Screen 6 and the retired discount-code entity are removed from the graph; the measure bullets under General Module Rules cite the rules they measure. | Claude (AI Assistant) |
 
 ---
 

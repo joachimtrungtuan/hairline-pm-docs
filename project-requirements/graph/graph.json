@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T08:25:03Z",
+  "generated_at": "2026-11-25T08:26:35Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -8807,17 +8807,6 @@
       "version": 1,
       "attrs": {
         "description": "Global Default or Provider-Specific; one option must be selected."
-      }
-    },
-    {
-      "id": "ENT-discount-code",
-      "type": "Entity",
-      "owner_fr": "FR-019",
-      "title": "Discount code",
-      "status": "active",
-      "version": 2,
-      "attrs": {
-        "description": "Key Entity 4 as FR-017 reads it (prd.md lines 1814-1816). Created and approved in FR-019; FR-017 Screen 5 is read-only. One accepted subquote, and so one booking, has at most one promotion, frozen at acceptance."
       }
     },
     {
@@ -73326,9 +73315,9 @@
       "owner_fr": "FR-019",
       "title": "Admin may pause or revoke adoption on any program and record a refund; no actor may change the promotion on an accepted subquote",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
-        "statement": "All three program types share a single `PromotionProgram` entity (see Key Entities) and are managed through a unified screen system with type-aware filters, forms, and analytics. Admin retains override authority on every program (pause, revoke adoption) and may record a refund through FR-017 regardless of program type. No actor, including admin, may void, remove, or change the promotion on an accepted subquote (Alternative Flow B4).",
+        "statement": "All three program types share a single `PromotionProgram` entity (ENT-promotion-program) and are managed through a unified screen system with type-aware filters, forms, and analytics. Admin retains override authority on every program (pause, revoke adoption) and may record a refund through FR-017 regardless of program type. An admin can never force a provider to take part in a program; the overrides an admin has on a provider's adoption are Force-Revoke and Re-invite. No actor, including admin, may void, remove, or change the promotion on an accepted subquote (Alternative Flow B4).",
         "rationale": "Screen Specifications overview. PRD line 178."
       }
     },
@@ -102676,10 +102665,10 @@
       "owner_fr": "FR-019",
       "title": "Promotion Analytics and Applications (Admin)",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "platform": "admin",
-        "description": "Screen 6. Overview tab of KPI cards and Applications tab (redemption log) with Reverse and Refund on Completed rows. Drilling from a KPI card filters the Applications tab."
+        "description": "Screen 6. Overview tab of KPI cards and Applications tab (redemption log) with a Refund action on Completed rows. Drilling from a KPI card filters the Applications tab."
       }
     },
     {
@@ -108256,7 +108245,7 @@
       "owner_fr": null,
       "title": "Operations",
       "status": "active",
-      "version": 8,
+      "version": 9,
       "attrs": {
         "timeline": "platform-admin",
         "sequence": 2,
@@ -108413,7 +108402,7 @@
       "owner_fr": null,
       "title": "Payment",
       "status": "active",
-      "version": 22,
+      "version": 23,
       "attrs": {
         "timeline": "main",
         "sequence": 5,
@@ -108426,7 +108415,7 @@
       "owner_fr": null,
       "title": "In progress",
       "status": "active",
-      "version": 15,
+      "version": 16,
       "attrs": {
         "timeline": "main",
         "sequence": 6,
@@ -120907,7 +120896,7 @@
       "owner_fr": "FR-019",
       "title": "System creates one Application and reserves or consumes one use in the same atomic step as the acceptance",
       "status": "active",
-      "version": 3,
+      "version": 4,
       "attrs": {
         "prd_ref": "Alternative Flow A5"
       }
@@ -120962,7 +120951,7 @@
       "owner_fr": "FR-019",
       "title": "System consumes the reserved use at the first successful payment",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "General Module Rules, promotion usage lifecycle"
       }
@@ -120973,7 +120962,7 @@
       "owner_fr": "FR-019",
       "title": "System releases or voids the reserved use when the booking expires or is cancelled before the first payment",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "prd_ref": "General Module Rules, promotion usage lifecycle"
       }
@@ -121031,6 +121020,39 @@
       "version": 1,
       "attrs": {
         "prd_ref": "Screen 5 business rules"
+      }
+    },
+    {
+      "id": "STP-019-029",
+      "type": "Step",
+      "owner_fr": "FR-019",
+      "title": "Admin revives a Payment Window Expired booking; the system takes the use again if the limit has room and returns the Application from Voided to Active, otherwise the revive is rejected",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "General Module Rules, promotion usage lifecycle; Alternative Flow A5 later events"
+      }
+    },
+    {
+      "id": "STP-019-030",
+      "type": "Step",
+      "owner_fr": "FR-019",
+      "title": "System marks the original Application Superseded and returns its use when a provider-fault transfer replaces the booking",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "General Module Rules, post-acceptance freeze; Alternative Flow A5 later events"
+      }
+    },
+    {
+      "id": "STP-019-031",
+      "type": "Step",
+      "owner_fr": "FR-019",
+      "title": "Admin records a Refund on a Completed redemption; the row shows Refunded, FR-017 receives a reconciliation event and the use is not returned",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "Screen 6 Applications tab; Alternative Flow A5 later events"
       }
     },
     {
@@ -145210,134 +145232,6 @@
       "calculated_by": null
     },
     {
-      "id": "ENT-discount-code.affected_fees",
-      "entity_id": "ENT-discount-code",
-      "name": "affected_fees",
-      "data_type": "enum",
-      "required": true,
-      "calculated_by": null
-    },
-    {
-      "id": "ENT-discount-code.approval_required",
-      "entity_id": "ENT-discount-code",
-      "name": "approval_required",
-      "data_type": "bool",
-      "required": true,
-      "calculated_by": null
-    },
-    {
-      "id": "ENT-discount-code.approval_status",
-      "entity_id": "ENT-discount-code",
-      "name": "approval_status",
-      "data_type": "text",
-      "required": false,
-      "calculated_by": null
-    },
-    {
-      "id": "ENT-discount-code.currency",
-      "entity_id": "ENT-discount-code",
-      "name": "currency",
-      "data_type": "currency",
-      "required": false,
-      "calculated_by": null
-    },
-    {
-      "id": "ENT-discount-code.current_uses",
-      "entity_id": "ENT-discount-code",
-      "name": "current_uses",
-      "data_type": "int",
-      "required": true,
-      "calculated_by": null
-    },
-    {
-      "id": "ENT-discount-code.discount_code",
-      "entity_id": "ENT-discount-code",
-      "name": "discount_code",
-      "data_type": "text",
-      "required": true,
-      "calculated_by": null
-    },
-    {
-      "id": "ENT-discount-code.discount_code_id",
-      "entity_id": "ENT-discount-code",
-      "name": "discount_code_id",
-      "data_type": "id",
-      "required": true,
-      "calculated_by": null
-    },
-    {
-      "id": "ENT-discount-code.discount_name",
-      "entity_id": "ENT-discount-code",
-      "name": "discount_name",
-      "data_type": "text",
-      "required": true,
-      "calculated_by": null
-    },
-    {
-      "id": "ENT-discount-code.discount_type",
-      "entity_id": "ENT-discount-code",
-      "name": "discount_type",
-      "data_type": "enum",
-      "required": true,
-      "calculated_by": null
-    },
-    {
-      "id": "ENT-discount-code.discount_value",
-      "entity_id": "ENT-discount-code",
-      "name": "discount_value",
-      "data_type": "decimal",
-      "required": true,
-      "calculated_by": null
-    },
-    {
-      "id": "ENT-discount-code.discount_value_type",
-      "entity_id": "ENT-discount-code",
-      "name": "discount_value_type",
-      "data_type": "enum",
-      "required": true,
-      "calculated_by": null
-    },
-    {
-      "id": "ENT-discount-code.hairline_share_percent",
-      "entity_id": "ENT-discount-code",
-      "name": "hairline_share_percent",
-      "data_type": "decimal",
-      "required": false,
-      "calculated_by": null
-    },
-    {
-      "id": "ENT-discount-code.max_uses",
-      "entity_id": "ENT-discount-code",
-      "name": "max_uses",
-      "data_type": "int",
-      "required": false,
-      "calculated_by": null
-    },
-    {
-      "id": "ENT-discount-code.status",
-      "entity_id": "ENT-discount-code",
-      "name": "status",
-      "data_type": "enum",
-      "required": true,
-      "calculated_by": null
-    },
-    {
-      "id": "ENT-discount-code.valid_from",
-      "entity_id": "ENT-discount-code",
-      "name": "valid_from",
-      "data_type": "date",
-      "required": true,
-      "calculated_by": null
-    },
-    {
-      "id": "ENT-discount-code.valid_until",
-      "entity_id": "ENT-discount-code",
-      "name": "valid_until",
-      "data_type": "date",
-      "required": true,
-      "calculated_by": null
-    },
-    {
       "id": "ENT-discount-usage-summary.discount_code_id",
       "entity_id": "ENT-discount-usage-summary",
       "name": "discount_code_id",
@@ -164338,72 +164232,6 @@
       "sort_order": 1
     },
     {
-      "field_id": "ENT-discount-code.affected_fees",
-      "value": "hairline_only",
-      "label": "Hairline Only",
-      "sort_order": 0
-    },
-    {
-      "field_id": "ENT-discount-code.affected_fees",
-      "value": "both_fees",
-      "label": "Both Fees",
-      "sort_order": 1
-    },
-    {
-      "field_id": "ENT-discount-code.discount_type",
-      "value": "platform_wide",
-      "label": "Platform-Wide",
-      "sort_order": 0
-    },
-    {
-      "field_id": "ENT-discount-code.discount_type",
-      "value": "provider_specific",
-      "label": "Provider-Specific",
-      "sort_order": 1
-    },
-    {
-      "field_id": "ENT-discount-code.discount_type",
-      "value": "affiliate",
-      "label": "Affiliate",
-      "sort_order": 2
-    },
-    {
-      "field_id": "ENT-discount-code.discount_value_type",
-      "value": "percentage",
-      "label": "Percentage",
-      "sort_order": 0
-    },
-    {
-      "field_id": "ENT-discount-code.discount_value_type",
-      "value": "fixed_amount",
-      "label": "Fixed Amount",
-      "sort_order": 1
-    },
-    {
-      "field_id": "ENT-discount-code.status",
-      "value": "draft",
-      "label": "Draft",
-      "sort_order": 0
-    },
-    {
-      "field_id": "ENT-discount-code.status",
-      "value": "active",
-      "label": "Active",
-      "sort_order": 1
-    },
-    {
-      "field_id": "ENT-discount-code.status",
-      "value": "expired",
-      "label": "Expired",
-      "sort_order": 2
-    },
-    {
-      "field_id": "ENT-discount-code.status",
-      "value": "disabled",
-      "label": "Disabled",
-      "sort_order": 3
-    },
-    {
       "field_id": "ENT-export-report-config.date_range_type",
       "value": "custom",
       "label": "Custom",
@@ -174417,12 +174245,6 @@
       "from_id": "ENT-deposit-rate-config",
       "verb": "decided by",
       "to_id": "SRC-DOC-001-R07",
-      "attrs": {}
-    },
-    {
-      "from_id": "ENT-discount-code",
-      "verb": "decided by",
-      "to_id": "SRC-PRD-019",
       "attrs": {}
     },
     {
@@ -360977,12 +360799,6 @@
     {
       "from_id": "STG-admin-02-operations",
       "verb": "writes",
-      "to_id": "ENT-discount-code",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-admin-02-operations",
-      "verb": "writes",
       "to_id": "ENT-promotion-adoption",
       "attrs": {}
     },
@@ -363623,12 +363439,6 @@
     {
       "from_id": "STG-main-05-payment",
       "verb": "reads",
-      "to_id": "ENT-discount-code",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-05-payment",
-      "verb": "reads",
       "to_id": "ENT-discount-usage-summary",
       "attrs": {}
     },
@@ -364169,12 +363979,6 @@
     {
       "from_id": "STG-main-06-treatment",
       "verb": "reads",
-      "to_id": "ENT-discount-code",
-      "attrs": {}
-    },
-    {
-      "from_id": "STG-main-06-treatment",
-      "verb": "reads",
       "to_id": "ENT-installment-payment",
       "attrs": {}
     },
@@ -364212,6 +364016,12 @@
       "from_id": "STG-main-06-treatment",
       "verb": "reads",
       "to_id": "ENT-payout-dispute-resolution",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-main-06-treatment",
+      "verb": "reads",
+      "to_id": "ENT-promotion-application",
       "attrs": {}
     },
     {
@@ -408064,6 +407874,15 @@
       }
     },
     {
+      "from_id": "STP-019-017",
+      "verb": "next",
+      "to_id": "STP-019-030",
+      "attrs": {
+        "label": "provider-fault transfer replaces the booking",
+        "condition": "REQ-019-089"
+      }
+    },
+    {
       "from_id": "STP-019-018",
       "verb": "applies",
       "to_id": "REQ-019-013",
@@ -408181,6 +408000,24 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-019-022",
+      "verb": "next",
+      "to_id": "STP-019-030",
+      "attrs": {
+        "label": "provider-fault transfer replaces the booking",
+        "condition": "REQ-019-089"
+      }
+    },
+    {
+      "from_id": "STP-019-022",
+      "verb": "next",
+      "to_id": "STP-019-031",
+      "attrs": {
+        "label": "admin records a refund on the Completed redemption",
+        "condition": "REQ-019-071"
+      }
+    },
+    {
       "from_id": "STP-019-023",
       "verb": "applies",
       "to_id": "REQ-019-014",
@@ -408209,6 +408046,15 @@
       "verb": "done by",
       "to_id": "ACT-system",
       "attrs": {}
+    },
+    {
+      "from_id": "STP-019-023",
+      "verb": "next",
+      "to_id": "STP-019-029",
+      "attrs": {
+        "label": "admin revives a Payment Window Expired booking",
+        "condition": "REQ-019-014"
+      }
     },
     {
       "from_id": "STP-019-024",
@@ -408408,6 +408254,104 @@
       "from_id": "STP-019-028",
       "verb": "on",
       "to_id": "SCR-019-05",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-029",
+      "verb": "applies",
+      "to_id": "REQ-019-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-029",
+      "verb": "applies",
+      "to_id": "REQ-019-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-029",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-029",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-029",
+      "verb": "next",
+      "to_id": "STP-019-022",
+      "attrs": {
+        "label": "first payment succeeds on the revived booking"
+      }
+    },
+    {
+      "from_id": "STP-019-030",
+      "verb": "applies",
+      "to_id": "REQ-019-019",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-030",
+      "verb": "applies",
+      "to_id": "REQ-019-070",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-030",
+      "verb": "applies",
+      "to_id": "REQ-019-089",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-030",
+      "verb": "at",
+      "to_id": "STG-main-05-payment",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-030",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-031",
+      "verb": "applies",
+      "to_id": "REQ-019-014",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-031",
+      "verb": "applies",
+      "to_id": "REQ-019-071",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-031",
+      "verb": "applies",
+      "to_id": "REQ-019-083",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-031",
+      "verb": "at",
+      "to_id": "STG-admin-02-operations",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-031",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-019-031",
+      "verb": "on",
+      "to_id": "SCR-019-06",
       "attrs": {}
     },
     {
@@ -463430,6 +463374,32 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-082522-36779d4b",
+      "at": "2026-11-25T08:25:22.948678+00:00",
+      "changed_by": "controller",
+      "reason": "FR-019 backlog points settled from rules already written: revive, supersede and refund steps added to the promotion flow; REQ-019-043 matches the PRD wording (ENT-promotion-program); Screen 6 offers Refund only; ENT-discount-code (merged into the promotion program, FR-017 Entity 4) retired and its three stage links re-pointed.",
+      "source_id": "SRC-PRD-019",
+      "nodes_added": [
+        "STP-019-029",
+        "STP-019-030",
+        "STP-019-031"
+      ],
+      "nodes_updated": [
+        "ENT-discount-code",
+        "REQ-019-043",
+        "SCR-019-06",
+        "STG-admin-02-operations",
+        "STG-main-05-payment",
+        "STG-main-06-treatment",
+        "STP-019-017",
+        "STP-019-022",
+        "STP-019-023"
+      ],
+      "edges_added": 21,
+      "edges_removed": 3,
+      "rows": 42
+    },
     {
       "id": "cs-20261125-082347-7b5e83a1",
       "at": "2026-11-25T08:23:47.938192+00:00",

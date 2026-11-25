@@ -1,0 +1,35 @@
+# Backlog points settled for FR-019: later Application events added to the flow, stale statement and Screen 6 wording corrected, merged discount-code entity retired.
+reason: "FR-019 backlog points settled from rules already written: revive, supersede and refund steps added to the promotion flow; REQ-019-043 matches the PRD wording (ENT-promotion-program); Screen 6 offers Refund only; ENT-discount-code (merged into the promotion program, FR-017 Entity 4) retired and its three stage links re-pointed."
+by: controller
+source_id: SRC-PRD-019
+operations:
+  - {"op": "update_node", "id": "REQ-019-043", "attrs": {"statement": "All three program types share a single `PromotionProgram` entity (ENT-promotion-program) and are managed through a unified screen system with type-aware filters, forms, and analytics. Admin retains override authority on every program (pause, revoke adoption) and may record a refund through FR-017 regardless of program type. An admin can never force a provider to take part in a program; the overrides an admin has on a provider's adoption are Force-Revoke and Re-invite. No actor, including admin, may void, remove, or change the promotion on an accepted subquote (Alternative Flow B4)."}}
+  - {"op": "update_node", "id": "SCR-019-06", "attrs": {"description": "Screen 6. Overview tab of KPI cards and Applications tab (redemption log) with a Refund action on Completed rows. Drilling from a KPI card filters the Applications tab."}}
+  - {"op": "add_node", "id": "STP-019-029", "type": "Step", "owner_fr": "FR-019", "title": "Admin revives a Payment Window Expired booking; the system takes the use again if the limit has room and returns the Application from Voided to Active, otherwise the revive is rejected", "attrs": {"prd_ref": "General Module Rules, promotion usage lifecycle; Alternative Flow A5 later events"}}
+  - {"op": "add_node", "id": "STP-019-030", "type": "Step", "owner_fr": "FR-019", "title": "System marks the original Application Superseded and returns its use when a provider-fault transfer replaces the booking", "attrs": {"prd_ref": "General Module Rules, post-acceptance freeze; Alternative Flow A5 later events"}}
+  - {"op": "add_node", "id": "STP-019-031", "type": "Step", "owner_fr": "FR-019", "title": "Admin records a Refund on a Completed redemption; the row shows Refunded, FR-017 receives a reconciliation event and the use is not returned", "attrs": {"prd_ref": "Screen 6 Applications tab; Alternative Flow A5 later events"}}
+  - {"op": "add_edge", "from": "STP-019-029", "verb": "applies", "to": "REQ-019-014"}
+  - {"op": "add_edge", "from": "STP-019-029", "verb": "applies", "to": "REQ-019-015"}
+  - {"op": "add_edge", "from": "STP-019-029", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-019-029", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-019-029", "verb": "next", "to": "STP-019-022", "attrs": {"label": "first payment succeeds on the revived booking"}}
+  - {"op": "add_edge", "from": "STP-019-023", "verb": "next", "to": "STP-019-029", "attrs": {"label": "admin revives a Payment Window Expired booking", "condition": "REQ-019-014"}}
+  - {"op": "add_edge", "from": "STP-019-030", "verb": "applies", "to": "REQ-019-019"}
+  - {"op": "add_edge", "from": "STP-019-030", "verb": "applies", "to": "REQ-019-089"}
+  - {"op": "add_edge", "from": "STP-019-030", "verb": "applies", "to": "REQ-019-070"}
+  - {"op": "add_edge", "from": "STP-019-030", "verb": "at", "to": "STG-main-05-payment"}
+  - {"op": "add_edge", "from": "STP-019-030", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-019-017", "verb": "next", "to": "STP-019-030", "attrs": {"label": "provider-fault transfer replaces the booking", "condition": "REQ-019-089"}}
+  - {"op": "add_edge", "from": "STP-019-022", "verb": "next", "to": "STP-019-030", "attrs": {"label": "provider-fault transfer replaces the booking", "condition": "REQ-019-089"}}
+  - {"op": "add_edge", "from": "STP-019-031", "verb": "applies", "to": "REQ-019-071"}
+  - {"op": "add_edge", "from": "STP-019-031", "verb": "applies", "to": "REQ-019-083"}
+  - {"op": "add_edge", "from": "STP-019-031", "verb": "applies", "to": "REQ-019-014"}
+  - {"op": "add_edge", "from": "STP-019-031", "verb": "at", "to": "STG-admin-02-operations"}
+  - {"op": "add_edge", "from": "STP-019-031", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-019-031", "verb": "on", "to": "SCR-019-06"}
+  - {"op": "add_edge", "from": "STP-019-022", "verb": "next", "to": "STP-019-031", "attrs": {"label": "admin records a refund on the Completed redemption", "condition": "REQ-019-071"}}
+  - {"op": "remove_edge", "from": "STG-main-05-payment", "verb": "reads", "to": "ENT-discount-code"}
+  - {"op": "remove_edge", "from": "STG-main-06-treatment", "verb": "reads", "to": "ENT-discount-code"}
+  - {"op": "remove_edge", "from": "STG-admin-02-operations", "verb": "writes", "to": "ENT-discount-code"}
+  - {"op": "add_edge", "from": "STG-main-06-treatment", "verb": "reads", "to": "ENT-promotion-application"}
+  - {"op": "retire_node", "id": "ENT-discount-code"}
