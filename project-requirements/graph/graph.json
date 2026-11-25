@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T07:47:29Z",
+  "generated_at": "2026-11-25T07:49:12Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -18027,8 +18027,10 @@
       "owner_fr": "FR-001",
       "title": "Age",
       "status": "active",
-      "version": 1,
-      "attrs": {}
+      "version": 2,
+      "attrs": {
+        "description": "Patient age in years. Never entered: it is derived from the date of birth (FR-016 Screen 1, Age column)."
+      }
     },
     {
       "id": "ENT-patient.analytics_consent",
@@ -18177,9 +18179,9 @@
       "owner_fr": "FR-016",
       "title": "Flags and alerts",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "description": "Active warnings or concerns about the patient (payment issues, compliance concerns, support escalations)."
+        "description": "Active warnings or concerns about the patient (payment issues, compliance concerns, support escalations). Owned by FR-016 (REQ-016-092); FR-001 does not collect or store it."
       }
     },
     {
@@ -18340,8 +18342,10 @@
       "owner_fr": "FR-021",
       "title": "Preferred region/locale",
       "status": "active",
-      "version": 1,
-      "attrs": {}
+      "version": 2,
+      "attrs": {
+        "description": "Regional formatting context for dates, numbers and currency display. Owned by FR-021 (REQ-021-063); FR-001 does not collect or store it."
+      }
     },
     {
       "id": "ENT-patient.preferred_timezone",
@@ -33678,9 +33682,9 @@
       "owner_fr": "FR-001",
       "title": "Patient profile changed by admin",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "admin edit: patient is notified by email of every admin edit and can review the changes; the admin edit is final (prd.md Admin Editability Rules, Workflow 4 alternative D1)."
+        "description": "admin edit: patient is notified by email of every admin edit and the notice lists the changed fields; there is no review screen and the admin edit is final (REQ-001-034, REQ-001-035; prd.md Admin Editability Rules, Workflow 4 alternative D1)."
       }
     },
     {
@@ -42200,11 +42204,11 @@
       "id": "REQ-001-103",
       "type": "Rule",
       "owner_fr": "FR-001",
-      "title": "Help and Support routes to FR-033/FR-034",
+      "title": "Help and Support opens the patient Help & Support Hub (FR-035)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Help & Support routes to the Help Center & Support Access module (FR-033/FR-034)",
+        "statement": "Help & Support MUST open the patient Help & Support Hub (FR-035 Screen 1).",
         "rationale": "prd.md line 697. "
       }
     },
@@ -105706,9 +105710,9 @@
       "owner_fr": "FR-026",
       "title": "Re-verification threshold",
       "status": "active",
-      "version": 2,
+      "version": 3,
       "attrs": {
-        "description": "How long after a patient's last successful sign-in the patient must confirm identity again before a sensitive action (FR-001 Screens 16 and 18). Whole minutes from 1 to 60. Edited on FR-026 Screen 8.",
+        "description": "How long after a patient's last successful sign-in the patient must confirm identity again before a sensitive action (FR-001 Screens 14, 16 and 18). Whole minutes from 1 to 60. Edited on FR-026 Screen 8.",
         "default": "5",
         "unit": "minutes"
       }
@@ -462232,6 +462236,25 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-074752-47c4de9a",
+      "at": "2026-11-25T07:47:52.319873+00:00",
+      "changed_by": "controller",
+      "reason": "Filing fixes from the FR-001 backlog points: stale module names, empty field descriptions, a Setting that omits Screen 14, and an event description that contradicts REQ-001-035.",
+      "source_id": "SRC-PRD-001",
+      "nodes_added": [],
+      "nodes_updated": [
+        "ENT-patient.age",
+        "ENT-patient.flags_alerts",
+        "ENT-patient.preferred_region",
+        "EVT-patient-profile-changed-by-admin",
+        "REQ-001-103",
+        "SET-reverification-threshold"
+      ],
+      "edges_added": 0,
+      "edges_removed": 0,
+      "rows": 7
+    },
     {
       "id": "cs-20261125-074613-c1af89ba",
       "at": "2026-11-25T07:46:13.430441+00:00",

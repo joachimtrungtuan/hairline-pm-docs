@@ -1,0 +1,11 @@
+# Backlog points of FR-001 settled as filing matters: Help and Support target, field owner text, re-verification screens, admin edit notice wording.
+reason: "Filing fixes from the FR-001 backlog points: stale module names, empty field descriptions, a Setting that omits Screen 14, and an event description that contradicts REQ-001-035."
+by: controller
+source_id: SRC-PRD-001
+operations:
+  - {"op": "update_node", "id": "REQ-001-103", "title": "Help and Support opens the patient Help & Support Hub (FR-035)", "attrs": {"statement": "Help & Support MUST open the patient Help & Support Hub (FR-035 Screen 1)."}}
+  - {"op": "update_node", "id": "SET-reverification-threshold", "attrs": {"description": "How long after a patient's last successful sign-in the patient must confirm identity again before a sensitive action (FR-001 Screens 14, 16 and 18). Whole minutes from 1 to 60. Edited on FR-026 Screen 8."}}
+  - {"op": "update_node", "id": "ENT-patient.age", "attrs": {"description": "Patient age in years. Never entered: it is derived from the date of birth (FR-016 Screen 1, Age column)."}}
+  - {"op": "update_node", "id": "ENT-patient.preferred_region", "attrs": {"description": "Regional formatting context for dates, numbers and currency display. Owned by FR-021 (REQ-021-063); FR-001 does not collect or store it."}}
+  - {"op": "update_node", "id": "ENT-patient.flags_alerts", "attrs": {"description": "Active warnings or concerns about the patient (payment issues, compliance concerns, support escalations). Owned by FR-016 (REQ-016-092); FR-001 does not collect or store it."}}
+  - {"op": "update_node", "id": "EVT-patient-profile-changed-by-admin", "attrs": {"description": "admin edit: patient is notified by email of every admin edit and the notice lists the changed fields; there is no review screen and the admin edit is final (REQ-001-034, REQ-001-035; prd.md Admin Editability Rules, Workflow 4 alternative D1)."}}

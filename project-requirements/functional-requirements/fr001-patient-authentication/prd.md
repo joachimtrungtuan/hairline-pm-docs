@@ -547,7 +547,7 @@ flowchart TD
 | Field Name | Type | Required | Description | Validation Rules | Graph field |
 |---|---|---|---|---|---|
 | Screen Title | text | Yes | Prompt asking the patient which service to start with | Displayed at top | no graph field (static content) |
-| Service Options | select | Yes | The four Hairline services, one option each | Exactly one service is picked; the four services are defined in the platform requirements, not in this module (REQ-001-169) | no graph field (options defined outside this module) |
+| Service Options | select | Yes | The four Hairline services, one option each | Exactly one service is picked; the four services are the service options listed in FR-003 Screen 1 (Service Selection), not defined in this module (REQ-001-169) | no graph field (options defined outside this module) |
 | Continue Button | button | Yes | Primary CTA (green) | Disabled until a service is picked; lands the patient in the chosen service (REQ-001-169) | no graph field (control) |
 
 **Business Rules**:
@@ -744,13 +744,13 @@ flowchart TD
 | Terms & Conditions | link | Yes | Row with document icon + "Terms & Conditions" label + chevron | Navigates to Screen 15d | no graph field (control) |
 | Consent | link | Yes | Row with consent icon + "Consent" label + chevron | Opens the general Consent view owned by FR-027 (REQ-027-016, REQ-001-185) | no graph field (control) |
 | Language | link | Yes | Row with globe icon + "Language" label + chevron | Opens the app language choice owned by FR-021 (REQ-021-002, REQ-001-165, REQ-001-185) | no graph field (control) |
-| Help & Support | link | Yes | Row with help/question icon + "Help & Support" label + chevron | Navigates to Help & Support flow (FR-033/FR-034) (REQ-001-103) | no graph field (control) |
+| Help & Support | link | Yes | Row with help/question icon + "Help & Support" label + chevron | Opens the patient Help & Support Hub (FR-035 Screen 1) (REQ-001-103) | no graph field (control) |
 
 **Business Rules**:
 
 - Navigation sections are static items — always visible in the same order (REQ-001-152)
 - Tapping a navigation row opens the corresponding sub-screen and preserves back navigation to Screen 15 (REQ-001-160)
-- Help & Support routes to the Help Center & Support Access module (FR-033/FR-034) (REQ-001-103)
+- Help & Support MUST open the patient Help & Support Hub (FR-035 Screen 1) (REQ-001-103)
 - Settings items are patient-app only; no provider/admin controls appear here (REQ-001-102)
 - FR-001 owns this Settings Main screen and the Notification, Privacy and Terms sub-screens (Screens 15a to 15d); the Consent row opens the general Consent view (FR-027) and the Language row opens the language choice (FR-021) (REQ-001-185)
 
@@ -992,7 +992,7 @@ flowchart TD
 
 **Business Rules**:
 
-- Re-verification is required when last successful auth is older than the re-verification threshold, a platform setting managed in FR-026 (whole minutes from 1 to 60, default 5; the 5 minutes named on Screens 16 and 18 is that default) (REQ-001-142)
+- Re-verification is required when last successful auth is older than the re-verification threshold, a platform setting managed in FR-026 (whole minutes from 1 to 60, default 5; the 5 minutes named on Screens 14, 16 and 18 is that default) (REQ-001-142)
 - Selecting "Email OTP" sends a 6-digit code to the registered email with the email verification template; the code expires after a fixed 15 minutes (it does not follow the FR-026 OTP Expiry Time, as the email-change code does not); resend is rate-limited (REQ-001-098)
 - Verification failures, throttling, and any lockout behavior follow the configured authentication security policy (do not hardcode attempt counts in UI copy) (REQ-001-097)
 - A wrong email code counts toward the same limit as failed logins (FR-026 max login attempts, default 5); after the limit the code stops working and a new one must be requested, with the resend cooldown applying (REQ-001-180)
@@ -1144,6 +1144,7 @@ flowchart TD
 - **analyticsConsent**: yes/no consent for analytics, kept on the patient record; the compliance feature (FR-023) reads it
 - **emailDeliveryIssue**: flag on the patient account set when an email to the patient bounces; the notification feature (FR-030) sets it
 - **Not kept here**: flags and alerts (owned by FR-016) and preferred region (owned by FR-021); notification preference records are owned by FR-030
+- **Age**: never entered; it is derived from the date of birth (FR-016 Screen 1)
 - **Relationships**: Belongs to Patient; can be revoked independently
 - **OTPCode**: otpId, email, code (hashed), type (verification/reset), expiresAt, used, attempts, createdAt
 - **Relationships**: Linked to email address; one-time use
@@ -1299,6 +1300,7 @@ A patient successfully updates their profile information and manages account set
 | 2026-11-24 | 2.0 | Logic review pass 2: replace-on-register limited to a registration that never had a verified email; routing after a correct code by registration state (new rule REQ-001-189); Screen 14 code block with resend and cancel; email uniqueness also on email change and admin save; wrong password on a Locked account shows the normal message, failed-attempt count and lock start stored, IP block message; a fulfilled deletion ends sessions and frees the email; Delete Account path and re-authentication check at Screen 16; Terms version named at the tick; status-change wording corrected; Screen 19 shows email verification state; Screen 14 date of birth maximum age 100. | AI |
 | 2026-11-25 | 2.1 | Cross-FR alignment: FR-012 no longer called future; default locale shown when the device language is not offered; re-verification threshold range 1 to 60 minutes (default 5); email-change and re-verification codes use the email verification template with a fixed 15 minutes; one failed-attempt counter per account shared by sign-in and code entry with its reset rule; admin last-login time in the admin's browser timezone. | AI |
 | 2026-11-25 | 2.2 | Owner ruling 2026-11-25: a mandatory notice is guaranteed by email only; push follows the patient setting (REQ-001-105, settings note text). | AI |
+| 2026-11-25 | 2.3 | Backlog points settled: Help and Support names the FR-035 hub (REQ-001-103), the four services point to FR-003 Screen 1, the re-verification default is named on Screen 14 too, and age is stated as derived from the date of birth. | Claude (AI Assistant) |
 
 ## Appendix: Approvals
 
