@@ -363,6 +363,22 @@ This module directly impacts provider quote submission capabilities and ensures 
   5. Export to CSV: system exports the package list to a CSV file (REQ-024-077)
 - **Outcome**: Fast edits and bulk deactivation keep the same protections as the single-package paths
 
+**A12: Admin Discards a Treatment Draft**:
+
+- **Trigger**: The admin who created a treatment draft no longer wants it; the treatment has never been saved as Active or Inactive
+- **Steps**:
+  1. On the treatment catalog (Screen 1), the admin clicks "Discard Draft" on the Draft treatment (shown only on Draft treatments) (REQ-024-057)
+  2. System removes the draft and records the removal in the audit log (REQ-024-057; REQ-024-022)
+- **Outcome**: The treatment draft is gone; no version exists to keep
+
+**A13: Provider Discards a Package Draft**:
+
+- **Trigger**: The provider team that owns a package draft no longer wants it; the package has no version yet
+- **Steps**:
+  1. On the package catalog (Screen 4), the provider clicks "Discard Draft" on the Draft package (shown only on Draft packages) (REQ-024-057)
+  2. System removes the draft and records the removal in the audit log (REQ-024-057; REQ-024-022)
+- **Outcome**: The package draft is gone; no version exists to keep
+
 ---
 
 ## Screen Specifications
@@ -757,7 +773,7 @@ There are two distinct ways a package's content can change. They must never be c
 - See REQ-024-006.
 - There is no total limit on how many packages a provider can create; package creation is limited to 50 per hour per provider by default (admin setting); the counting rule and the message when the limit is reached are in Admin Editability Rules (REQ-024-078)
 - A version is created only by a successful Update of an Active or Inactive package, including an Update that sets the status Inactive (REQ-024-008)
-- Permission checks by staff role gate these actions: package create, edit, clone, deactivate, quick price edit, and treatment pricing configuration (REQ-024-082)
+- Provider staff permissions, checked by staff role (matrix owned by FR-009 and FR-031), gate these actions: package create, edit, clone, deactivate, quick price edit, and treatment pricing configuration (REQ-024-082)
 
 ### Localization Rules
 
@@ -981,6 +997,7 @@ Provider needs to temporarily stop offering a package (seasonal hotel unavailabi
 | 2026-11-24 | 2.0 | Logic review pass 1: closed gaps in treatment and package status rules (new-treatment notice on first Active, reactivation through Edit, Deactivate only on Active records, Draft only for a never-Active package, versions only on a successful Update, open-quote and open-booking warnings on every route); chosen status stored and restored on retried uploads; Screen 7 lists only Active and Inactive packages; packages not tied to a treatment; Number of Providers counts Offered configurations of Active providers; Not Offered effect on new quotes; creation-limit message and counting rule; permission-gated actions named; media-processing and image-optimisation paragraphs marked as implementation notes; FR-021 approach for library text and package free text; short flows added for Screens 6 to 8, Quick Copy Pricing, quick price edit, and bulk actions. | Product Owner / Documentation |
 | 2026-11-24 | 2.1 | Logic review pass 2: Draft for a treatment only while it has never been saved as Active or Inactive, and for a package only while it has no version; a draft is not counted toward the creation limit until first saved as Active or Inactive, needs a name, and can be discarded by its owner; open-warning, confirmation and notices apply on every route to Inactive for treatments; setting Inactive on the edit form is a versioned Update; quick price edit uses the package price rule and is hidden on drafts; failed uploads keep the previous media and status for any treatment, with one error text and a way out without the failed file; update notice only for Active treatments; back-to-Active notice only for a treatment that has been Active before; aftercare templates are Active or Inactive and earlier prescriptions keep their text; Export to CSV step added. | Product Owner / Documentation |
 | 2026-11-25 | 2.2 | Cross-FR alignment: the Screen 2 treatment form is the English authoring screen for the treatment library text (REQ-024-081, REQ-021-127). Admin treatment list keeps no status filter (REQ-024-054). | Product Owner / Documentation |
+| 2026-11-25 | 2.3 | Backlog points settled: Discard Draft now has workflow steps (A12 for a treatment draft, A13 for a package draft), and the provider permission bullet names its actor (provider staff). | Claude (AI Assistant) |
 
 ---
 

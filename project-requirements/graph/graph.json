@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T08:36:07Z",
+  "generated_at": "2026-11-25T08:38:15Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -37920,6 +37920,32 @@
         "kind": "alternative",
         "description": "A2: Admin Deactivates Treatment",
         "prd_ref": "A2"
+      }
+    },
+    {
+      "id": "FLW-024-discard-package-draft",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "A13: Provider Discards a Package Draft",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A13: Provider Discards a Package Draft",
+        "prd_ref": "A13"
+      }
+    },
+    {
+      "id": "FLW-024-discard-treatment-draft",
+      "type": "Flow",
+      "owner_fr": null,
+      "title": "A12: Admin Discards a Treatment Draft",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "kind": "alternative",
+        "description": "A12: Admin Discards a Treatment Draft",
+        "prd_ref": "A12"
       }
     },
     {
@@ -123672,6 +123698,50 @@
       }
     },
     {
+      "id": "STP-024-147",
+      "type": "Step",
+      "owner_fr": "FR-024",
+      "title": "Admin clicks Discard Draft on a Draft treatment in the catalog (shown only on Draft treatments)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A12 step 1"
+      }
+    },
+    {
+      "id": "STP-024-148",
+      "type": "Step",
+      "owner_fr": "FR-024",
+      "title": "System removes the treatment draft and records the removal in the audit log",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A12 step 2"
+      }
+    },
+    {
+      "id": "STP-024-149",
+      "type": "Step",
+      "owner_fr": "FR-024",
+      "title": "Provider clicks Discard Draft on a Draft package in the package catalog (shown only on Draft packages)",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A13 step 1"
+      }
+    },
+    {
+      "id": "STP-024-150",
+      "type": "Step",
+      "owner_fr": "FR-024",
+      "title": "System removes the package draft and records the removal in the audit log",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "prd_ref": "A13 step 2"
+      }
+    },
+    {
       "id": "STP-025-001",
       "type": "Step",
       "owner_fr": "FR-025",
@@ -178799,6 +178869,18 @@
       "from_id": "FLW-024-deactivate-treatment",
       "verb": "starts at",
       "to_id": "STP-024-031",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-024-discard-package-draft",
+      "verb": "starts at",
+      "to_id": "STP-024-149",
+      "attrs": {}
+    },
+    {
+      "from_id": "FLW-024-discard-treatment-draft",
+      "verb": "starts at",
+      "to_id": "STP-024-147",
       "attrs": {}
     },
     {
@@ -417467,6 +417549,126 @@
       "attrs": {}
     },
     {
+      "from_id": "STP-024-147",
+      "verb": "applies",
+      "to_id": "REQ-024-057",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-147",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-147",
+      "verb": "done by",
+      "to_id": "ACT-platform-admin",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-147",
+      "verb": "next",
+      "to_id": "STP-024-148",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-147",
+      "verb": "on",
+      "to_id": "SCR-024-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-148",
+      "verb": "applies",
+      "to_id": "REQ-024-022",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-148",
+      "verb": "applies",
+      "to_id": "REQ-024-057",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-148",
+      "verb": "at",
+      "to_id": "STG-admin-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-148",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-148",
+      "verb": "on",
+      "to_id": "SCR-024-01",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-149",
+      "verb": "applies",
+      "to_id": "REQ-024-057",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-149",
+      "verb": "at",
+      "to_id": "STG-provider-config-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-149",
+      "verb": "done by",
+      "to_id": "ACT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-149",
+      "verb": "next",
+      "to_id": "STP-024-150",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-149",
+      "verb": "on",
+      "to_id": "SCR-024-04",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-150",
+      "verb": "applies",
+      "to_id": "REQ-024-022",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-150",
+      "verb": "applies",
+      "to_id": "REQ-024-057",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-150",
+      "verb": "at",
+      "to_id": "STG-provider-config-01-configuration",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-150",
+      "verb": "done by",
+      "to_id": "ACT-system",
+      "attrs": {}
+    },
+    {
+      "from_id": "STP-024-150",
+      "verb": "on",
+      "to_id": "SCR-024-04",
+      "attrs": {}
+    },
+    {
       "from_id": "STP-025-001",
       "verb": "applies",
       "to_id": "REQ-025-054",
@@ -463302,6 +463504,25 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-083702-95a94ac9",
+      "at": "2026-11-25T08:37:02.631848+00:00",
+      "changed_by": "controller",
+      "reason": "Discard Draft is an action on Screens 1 and 4 and rule REQ-024-057 but had no workflow step; two small alternative flows added.",
+      "source_id": "SRC-PRD-024",
+      "nodes_added": [
+        "FLW-024-discard-package-draft",
+        "FLW-024-discard-treatment-draft",
+        "STP-024-147",
+        "STP-024-148",
+        "STP-024-149",
+        "STP-024-150"
+      ],
+      "nodes_updated": [],
+      "edges_added": 22,
+      "edges_removed": 0,
+      "rows": 54
+    },
     {
       "id": "cs-20261125-083131-5d8e2295",
       "at": "2026-11-25T08:31:31.096108+00:00",

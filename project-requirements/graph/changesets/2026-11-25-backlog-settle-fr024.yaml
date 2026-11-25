@@ -1,0 +1,33 @@
+# FR-024 backlog settle of 2026-11-25: Discard Draft gets workflow steps (A12 treatment draft, A13 package draft).
+reason: "Discard Draft is an action on Screens 1 and 4 and rule REQ-024-057 but had no workflow step; two small alternative flows added."
+by: controller
+source_id: SRC-PRD-024
+operations:
+  - {"op": "add_node", "id": "FLW-024-discard-treatment-draft", "type": "Flow", "title": "A12: Admin Discards a Treatment Draft", "attrs": {"kind": "alternative", "description": "A12: Admin Discards a Treatment Draft", "prd_ref": "A12"}}
+  - {"op": "add_node", "id": "FLW-024-discard-package-draft", "type": "Flow", "title": "A13: Provider Discards a Package Draft", "attrs": {"kind": "alternative", "description": "A13: Provider Discards a Package Draft", "prd_ref": "A13"}}
+  - {"op": "add_node", "id": "STP-024-147", "type": "Step", "owner_fr": "FR-024", "title": "Admin clicks Discard Draft on a Draft treatment in the catalog (shown only on Draft treatments)", "attrs": {"prd_ref": "A12 step 1"}}
+  - {"op": "add_node", "id": "STP-024-148", "type": "Step", "owner_fr": "FR-024", "title": "System removes the treatment draft and records the removal in the audit log", "attrs": {"prd_ref": "A12 step 2"}}
+  - {"op": "add_node", "id": "STP-024-149", "type": "Step", "owner_fr": "FR-024", "title": "Provider clicks Discard Draft on a Draft package in the package catalog (shown only on Draft packages)", "attrs": {"prd_ref": "A13 step 1"}}
+  - {"op": "add_node", "id": "STP-024-150", "type": "Step", "owner_fr": "FR-024", "title": "System removes the package draft and records the removal in the audit log", "attrs": {"prd_ref": "A13 step 2"}}
+  - {"op": "add_edge", "from": "FLW-024-discard-treatment-draft", "verb": "starts at", "to": "STP-024-147"}
+  - {"op": "add_edge", "from": "FLW-024-discard-package-draft", "verb": "starts at", "to": "STP-024-149"}
+  - {"op": "add_edge", "from": "STP-024-147", "verb": "next", "to": "STP-024-148"}
+  - {"op": "add_edge", "from": "STP-024-149", "verb": "next", "to": "STP-024-150"}
+  - {"op": "add_edge", "from": "STP-024-147", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-024-148", "verb": "at", "to": "STG-admin-01-configuration"}
+  - {"op": "add_edge", "from": "STP-024-149", "verb": "at", "to": "STG-provider-config-01-configuration"}
+  - {"op": "add_edge", "from": "STP-024-150", "verb": "at", "to": "STG-provider-config-01-configuration"}
+  - {"op": "add_edge", "from": "STP-024-147", "verb": "done by", "to": "ACT-platform-admin"}
+  - {"op": "add_edge", "from": "STP-024-148", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-024-149", "verb": "done by", "to": "ACT-provider"}
+  - {"op": "add_edge", "from": "STP-024-150", "verb": "done by", "to": "ACT-system"}
+  - {"op": "add_edge", "from": "STP-024-147", "verb": "on", "to": "SCR-024-01"}
+  - {"op": "add_edge", "from": "STP-024-148", "verb": "on", "to": "SCR-024-01"}
+  - {"op": "add_edge", "from": "STP-024-149", "verb": "on", "to": "SCR-024-04"}
+  - {"op": "add_edge", "from": "STP-024-150", "verb": "on", "to": "SCR-024-04"}
+  - {"op": "add_edge", "from": "STP-024-147", "verb": "applies", "to": "REQ-024-057"}
+  - {"op": "add_edge", "from": "STP-024-148", "verb": "applies", "to": "REQ-024-057"}
+  - {"op": "add_edge", "from": "STP-024-148", "verb": "applies", "to": "REQ-024-022"}
+  - {"op": "add_edge", "from": "STP-024-149", "verb": "applies", "to": "REQ-024-057"}
+  - {"op": "add_edge", "from": "STP-024-150", "verb": "applies", "to": "REQ-024-057"}
+  - {"op": "add_edge", "from": "STP-024-150", "verb": "applies", "to": "REQ-024-022"}
