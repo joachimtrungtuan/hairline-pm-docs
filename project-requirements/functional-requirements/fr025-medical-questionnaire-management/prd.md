@@ -647,6 +647,67 @@ flowchart TD
    - System must handle large numbers of questions efficiently
    - See system PRD, Platform-Wide Rules: Encryption in transit and at rest (REQ-SYS-004); GDPR and HIPAA-equivalent practices for personal and medical data (REQ-SYS-011).
 
+## User Scenarios & Testing
+
+Each scenario restates a flow in Business Workflows and its acceptance conditions; the rule ids named are the owners of the wording.
+
+1. **Publish a new version (Workflow 1; alternative flow A4)**
+   - **Given** a Draft set whose Active questions are complete, whose Context Type fits its current uses and whose category is Active, **When** the Admin clicks Publish and confirms the new version number and changes summary, **Then** the version is incremented, the set is Active, the previous Active version is archived, and the set is not yet designated for Inquiry (REQ-025-031, REQ-025-034, REQ-025-049).
+   - **Given** a set with incomplete questions, a Context Type that no longer fits a current use, or an inactive category, **When** the Admin clicks Publish, **Then** publish is blocked and the system lists what is wrong (REQ-025-024, REQ-025-013, REQ-025-033, REQ-025-025).
+   - **Given** the confirmation is shown, **When** the Admin cancels, **Then** the Admin returns to Set Details and nothing is published.
+
+2. **Edit a published set (Workflow 1, alternative flow A1; Workflow 2, alternative flow B1)**
+   - **Given** a set with an Active published version, **When** the Admin edits it, **Then** the set's single open Draft is opened (created if none exists) and the Active version keeps serving until the Draft is published (REQ-025-032).
+
+3. **Duplicate a set (Workflow 1, alternative flow A3)**
+   - **Given** an existing set, **When** the Admin duplicates it, **Then** an independent Draft copy named `<source name> (copy)` is created and the Admin makes the name unique before the first save (REQ-025-008).
+
+4. **Delete or archive a set (Workflow 1, other Admin actions)**
+   - **Given** a set that was never published and has no usages, **When** the Admin deletes it, **Then** it is removed (REQ-025-046).
+   - **Given** a set used by an aftercare milestone, **When** the Admin tries to delete or archive it, **Then** the action is blocked until those milestones are reassigned (REQ-025-045).
+
+5. **Severity flags and the alert tier (Workflow 2)**
+   - **Given** a set with Inquiry or Multi-Context Context Type, **When** a question has no Severity Flag at publish, **Then** publish is blocked (REQ-025-013).
+   - **Given** a submitted Inquiry questionnaire, **When** any Critical question is answered Yes, **Then** the tier is Red; otherwise Amber if any Standard question is answered Yes; otherwise Green (REQ-025-064).
+
+6. **Designate a set for Inquiry (Workflow 4, alternative flow A1)**
+   - **Given** a published Inquiry or Multi-Context set and another set already designated, **When** the Admin clicks Set as Active for Inquiry and confirms the replacement, **Then** the designation moves to the new set (audited) and every inquiry started afterwards uses it immediately, while a resumed draft keeps its version (REQ-025-050).
+   - **Given** the same confirmation, **When** the Admin cancels, **Then** nothing changes and the previous set stays designated.
+   - **Given** no set is designated, **When** the Admin designates a published set, **Then** the Inquiry flow is configured (REQ-025-050, REQ-025-051).
+   - **Given** the set changed after the screen loaded and is no longer published, **When** the Admin clicks Set as Active for Inquiry, **Then** the system blocks it with the published-only message (REQ-025-051).
+
+7. **Archive the designated set (Workflow 4, alternative flow A2)**
+   - **Given** a set designated for Inquiry and not used by any milestone, **When** the Admin archives it, **Then** the Inquiry flow is flagged unconfigured, the Admin is warned, and patient inquiry submissions are blocked until a new set is designated (REQ-025-048, REQ-025-052).
+
+8. **Patient reaches the questionnaire step (Workflow 3; alternative flow C1)**
+   - **Given** a designated Inquiry set and a new start, **When** the patient reaches the questionnaire step, **Then** the patient gets the current published version of that set; on a version mismatch the system pushes the current Active version (REQ-025-053, REQ-025-057).
+   - **Given** a resumed saved draft, **When** the patient continues, **Then** the draft keeps its questionnaire version and is not reloaded to a newer one (REQ-025-057).
+   - **Given** the patient submits, **When** the answers are processed, **Then** the version used is recorded on the inquiry, the FR-002 engine returns the tier, and the provider platform shows it (REQ-025-058, REQ-025-059, REQ-025-063, REQ-025-064).
+   - **Given** no Inquiry set is designated, **When** the patient reaches the step, new or resumed, **Then** submission is blocked, the draft is kept, and the patient sees the submission-unavailable message (REQ-025-052).
+
+9. **Assign a set to an aftercare milestone (Workflow 4, alternative flows A3, A4, A5)**
+   - **Given** an aftercare template in FR-011, **When** the Admin selects a set for a milestone, **Then** the list offers only published Aftercare and Multi-Context sets, and different milestones may use different sets (REQ-025-069, REQ-025-070).
+   - **Given** the set became Inquiry-only or a Draft after the list loaded, **When** the Admin saves the assignment, **Then** the system blocks it with the matching message (REQ-025-071, REQ-025-077).
+   - **Given** a milestone with an assigned set, **When** the Admin assigns a different set, **Then** future deliveries use the new set and earlier responses stay linked to the version they used (REQ-025-072).
+
+10. **Two admins edit the same set (Data Integrity Rules)**
+    - **Given** an Admin saves from a screen that is out of date, **When** the save is made, **Then** it is refused with a message to reload (REQ-025-073).
+
+## Functional Requirements Summary
+
+The rules are stated once in Business Workflows, Screen Specifications and Business Rules; this summary only groups them by id.
+
+- **Context types and set structure**: REQ-025-001 to REQ-025-009
+- **Question types, fields and limits**: REQ-025-010 to REQ-025-016, REQ-025-019 to REQ-025-022, REQ-025-024, REQ-025-044, REQ-025-078 to REQ-025-082, REQ-025-084
+- **Severity flags and provider alerts**: REQ-025-017, REQ-025-018, REQ-025-063 to REQ-025-068
+- **Categories**: REQ-025-025 to REQ-025-030
+- **Versions and set lifecycle**: REQ-025-031 to REQ-025-034, REQ-025-036 to REQ-025-039, REQ-025-045 to REQ-025-048
+- **Access and audit**: REQ-025-035, REQ-025-040 to REQ-025-043
+- **Inquiry designation and delivery**: REQ-025-049 to REQ-025-054, REQ-025-056 to REQ-025-059
+- **Aftercare assignment (FR-011)**: REQ-025-069 to REQ-025-072, REQ-025-077
+- **Preview**: REQ-025-074 to REQ-025-076
+- **Platform behaviour**: REQ-025-060 to REQ-025-062, REQ-025-073, REQ-025-083
+
 ## Dependencies
 
 - **FR-003**: Inquiry Submission & Distribution (consumes active Inquiry-context questionnaire set)
@@ -661,6 +722,7 @@ flowchart TD
 
 | Date | Version | Changes | Author |
 |------|---------|---------|--------|
+| 2026-11-25 | 2.8 | Backlog points settled: both open points closed against the live PRD and graph with no rule change; the standard sections User Scenarios & Testing and Functional Requirements Summary added from existing flows and rule ids. | Claude (AI Assistant) |
 | 2026-11-24 | 2.7 | Logic review pass 2: Draft and Archived sets can be opened and restored from the catalog; archiving discards the set's open Draft and a restored set returns as a new Draft without the designation; the publish confirmation, the question edit and the Set as Active for Inquiry actions are wired onto the workflow; publish blocks include the inactive category; an incomplete question can be saved and is caught at publish; a category is deleted only when no set at all is assigned (deactivate otherwise); audit entries of a deleted set stay in storage without a screen at launch; "immediately" applies to a new start, not to a resumed draft; Set as Active for Inquiry is hidden on the already designated set. | Product Team |
 | 2026-11-24 | 2.6 | Logic review pass 1: Alert Engine ownership moved to FR-002 (FR-025 owns the Severity Flag to tier mapping); Context Type, archive, delete, restore and open Draft rules made consistent; resume and version recording rules for the inquiry questionnaire; audit action types and session id extended; admin screens placed in the configuration stage with workflow lines for category, history, archive and delete; publish confirmation, copy naming and Alert Description clarified. | Product Team |
 | 2026-11-22 | 2.5 | Requirements graph programme baseline: PRD compressed to the checklist structure (each rule stated once, field rows tagged with graph field ids, dropped classes removed). No rule changes. Earlier history (v1.0 to v2.4) and the change request `change-request-2026-08-20-fr037-monitoring-advice-questionnaire.md` are in `archived/prd-baseline-2026-11-08/` and in git history. | Product Team |
