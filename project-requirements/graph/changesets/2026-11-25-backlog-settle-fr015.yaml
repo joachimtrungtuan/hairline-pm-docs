@@ -1,0 +1,16 @@
+# Backlog points settled for FR-015: featured cap at creation, and carrier for the Provider record copies and activation counters.
+reason: "Filing fixes from the 2026-11-25 backlog settlement: Rule 8 names the Screen 2 Step 5 toggle; new rule carries the Provider record attribute facts."
+by: controller
+source_id: SRC-PRD-015
+operations:
+  - {"op": "update_node", "id": "REQ-015-034", "attrs": {"statement": "At most 10 active providers may be featured. Admin can set or unset featured status from the Provider-list quick action or the Basic Information toggle, and can set it at creation with the Screen 2 Step 5 Featured Provider toggle; the limit applies to all three. A request to feature an eleventh provider must be rejected without changing data and must clearly tell the admin to unfeature another provider first, using the message: \"Maximum of 10 featured providers reached. Unfeature another provider first.\" Featuring or unfeaturing does not require an admin change reason (Tab 8 still logs it). This limit must be enforced server-side for every write path."}}
+  - {"op": "add_edge", "from": "REQ-015-034", "verb": "applies to", "to": "SCR-015-02"}
+  - {"op": "add_node", "id": "REQ-015-142", "type": "Rule", "owner_fr": "FR-015", "title": "Provider record keeps copies of clinic address, country and avatar and the activation email counters", "attrs": {"statement": "System MUST keep on the Provider record a copy of the clinic address (Clinic Address), the clinic country (Location - Country) and the clinic avatar (Profile Picture / Logo), so that other FRs read them together with the provider, and MUST keep each copy in step with the profile value whenever an admin (Screens 2 and 3) or the provider (FR-032) changes it. The Provider record also keeps the activation email send count and the time of the last activation email, which serve the REQ-015-016 resend limit.", "rationale": "Data Requirements. The graph descriptions of ENT-provider.address, ENT-provider.country and ENT-provider.avatar already call them copies of the profile values; REQ-015-007 requires profile data to stay in sync; REQ-015-016 is the resend limit."}}
+  - {"op": "add_edge", "from": "REQ-015-142", "verb": "decided by", "to": "SRC-PRD-015"}
+  - {"op": "add_edge", "from": "REQ-015-142", "verb": "applies at", "to": "STG-provider-03-active"}
+  - {"op": "add_edge", "from": "REQ-015-142", "verb": "applies to", "to": "ENT-provider"}
+  - {"op": "add_edge", "from": "REQ-015-142", "verb": "applies to", "to": "ENT-provider.address"}
+  - {"op": "add_edge", "from": "REQ-015-142", "verb": "applies to", "to": "ENT-provider.country"}
+  - {"op": "add_edge", "from": "REQ-015-142", "verb": "applies to", "to": "ENT-provider.avatar"}
+  - {"op": "add_edge", "from": "REQ-015-142", "verb": "applies to", "to": "ENT-provider.activation_email_sent_count"}
+  - {"op": "add_edge", "from": "REQ-015-142", "verb": "applies to", "to": "ENT-provider.last_activation_email_sent_at"}

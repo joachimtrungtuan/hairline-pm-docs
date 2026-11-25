@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T08:11:55Z",
+  "generated_at": "2026-11-25T08:16:19Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -63109,9 +63109,9 @@
       "owner_fr": "FR-015",
       "title": "At most 10 featured providers, enforced server-side",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "At most 10 active providers may be featured. Admin can set or unset featured status from the Provider-list quick action or the Basic Information toggle. A request to feature an eleventh provider must be rejected without changing data and must clearly tell the admin to unfeature another provider first, using the message: \"Maximum of 10 featured providers reached. Unfeature another provider first.\" Featuring or unfeaturing does not require an admin change reason (Tab 8 still logs it). This limit must be enforced server-side for every write path.",
+        "statement": "At most 10 active providers may be featured. Admin can set or unset featured status from the Provider-list quick action or the Basic Information toggle, and can set it at creation with the Screen 2 Step 5 Featured Provider toggle; the limit applies to all three. A request to feature an eleventh provider must be rejected without changing data and must clearly tell the admin to unfeature another provider first, using the message: \"Maximum of 10 featured providers reached. Unfeature another provider first.\" Featuring or unfeaturing does not require an admin change reason (Tab 8 still logs it). This limit must be enforced server-side for every write path.",
         "rationale": "General Module Rule 8; Alternative Flow A3 step 2 restates the Active and fewer-than-10 check."
       }
     },
@@ -64372,6 +64372,18 @@
       "attrs": {
         "statement": "System MUST keep an \"Email delivery issue\" flag on the Provider record, set by the FR-030 bounce handling (Workflow B1 step 7, REQ-030-156) exactly as for the patient account, and MUST show it read-only to admins on Screen 3 Tab 1 beside Email Address. No admin action on Screen 3 sets or clears it, and the provider does not see it.",
         "rationale": "Screen 3 Tab 1 row Email Delivery Issue; Data Requirements. FR-030 REQ-030-156 owns the setting of the flag for every account type; the patient equivalent is ENT-patient.email_delivery_issue."
+      }
+    },
+    {
+      "id": "REQ-015-142",
+      "type": "Rule",
+      "owner_fr": "FR-015",
+      "title": "Provider record keeps copies of clinic address, country and avatar and the activation email counters",
+      "status": "active",
+      "version": 1,
+      "attrs": {
+        "statement": "System MUST keep on the Provider record a copy of the clinic address (Clinic Address), the clinic country (Location - Country) and the clinic avatar (Profile Picture / Logo), so that other FRs read them together with the provider, and MUST keep each copy in step with the profile value whenever an admin (Screens 2 and 3) or the provider (FR-032) changes it. The Provider record also keeps the activation email send count and the time of the last activation email, which serve the REQ-015-016 resend limit.",
+        "rationale": "Data Requirements. The graph descriptions of ENT-provider.address, ENT-provider.country and ENT-provider.avatar already call them copies of the profile values; REQ-015-007 requires profile data to stay in sync; REQ-015-016 is the resend limit."
       }
     },
     {
@@ -182552,7 +182564,7 @@
       "verb": "active in",
       "to_id": "STG-provider-03-active",
       "attrs": {
-        "rules": 93
+        "rules": 94
       },
       "derived": true
     },
@@ -238017,6 +238029,12 @@
     {
       "from_id": "REQ-015-034",
       "verb": "applies to",
+      "to_id": "SCR-015-02",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-034",
+      "verb": "applies to",
       "to_id": "SCR-015-03",
       "attrs": {}
     },
@@ -241340,6 +241358,54 @@
     },
     {
       "from_id": "REQ-015-141",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-015",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-142",
+      "verb": "applies at",
+      "to_id": "STG-provider-03-active",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-142",
+      "verb": "applies to",
+      "to_id": "ENT-provider",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-142",
+      "verb": "applies to",
+      "to_id": "ENT-provider.activation_email_sent_count",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-142",
+      "verb": "applies to",
+      "to_id": "ENT-provider.address",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-142",
+      "verb": "applies to",
+      "to_id": "ENT-provider.avatar",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-142",
+      "verb": "applies to",
+      "to_id": "ENT-provider.country",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-142",
+      "verb": "applies to",
+      "to_id": "ENT-provider.last_activation_email_sent_at",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-015-142",
       "verb": "decided by",
       "to_id": "SRC-PRD-015",
       "attrs": {}
@@ -462684,6 +462750,22 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-081505-7324f0b6",
+      "at": "2026-11-25T08:15:05.560996+00:00",
+      "changed_by": "controller",
+      "reason": "Filing fixes from the 2026-11-25 backlog settlement: Rule 8 names the Screen 2 Step 5 toggle; new rule carries the Provider record attribute facts.",
+      "source_id": "SRC-PRD-015",
+      "nodes_added": [
+        "REQ-015-142"
+      ],
+      "nodes_updated": [
+        "REQ-015-034"
+      ],
+      "edges_added": 9,
+      "edges_removed": 0,
+      "rows": 16
+    },
     {
       "id": "cs-20261125-081041-8cd283f5",
       "at": "2026-11-25T08:10:41.550050+00:00",
