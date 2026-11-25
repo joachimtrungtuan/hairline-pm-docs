@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T09:19:36Z",
+  "generated_at": "2026-11-25T09:22:38Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -49343,7 +49343,7 @@
       "owner_fr": "FR-007",
       "title": "The booking stores the balance due date and the FR-029 values locked at confirmation",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
         "statement": "At booking confirmation (REQ-007-098) System MUST store on the booking the balance due date (the procedure date minus the FR-029 balance due days, kept as the Final Payment Due Date) and the FR-029 values that lock at confirmation: the refund ladder, the rescheduling fee, the late payment fee with its currency code, the late payment grace period, the unpaid balance cancellation point and the installment cutoff. A value that is Not set stays Not set, and a later FR-029 change MUST NOT move any of them (FR-029 REQ-029-101, REQ-029-146)."
       }
@@ -206339,6 +206339,12 @@
       "from_id": "REQ-007-103",
       "verb": "applies to",
       "to_id": "ENT-booking.final_payment_due_at",
+      "attrs": {}
+    },
+    {
+      "from_id": "REQ-007-103",
+      "verb": "decided by",
+      "to_id": "SRC-PRD-007",
       "attrs": {}
     },
     {
@@ -465906,6 +465912,20 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-092108-880a5f65",
+      "at": "2026-11-25T09:21:08.893074+00:00",
+      "changed_by": "controller",
+      "reason": "REQ-007-103 is stated in the FR-007 PRD; the rule needs its source link.",
+      "source_id": "SRC-PRD-007",
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-007-103"
+      ],
+      "edges_added": 1,
+      "edges_removed": 0,
+      "rows": 1
+    },
     {
       "id": "cs-20261125-091820-460fa3f5",
       "at": "2026-11-25T09:18:20.338485+00:00",

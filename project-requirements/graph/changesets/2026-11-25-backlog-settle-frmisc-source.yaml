@@ -1,0 +1,6 @@
+# Source link for the rule added by the cross-FR backlog settle change-set.
+reason: "REQ-007-103 is stated in the FR-007 PRD; the rule needs its source link."
+by: controller
+source_id: SRC-PRD-007
+operations:
+  - {"op": "add_edge", "from": "REQ-007-103", "verb": "decided by", "to": "SRC-PRD-007"}
