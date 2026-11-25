@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-11-25T08:07:19Z",
+  "generated_at": "2026-11-25T08:08:57Z",
   "schema_version": 11,
   "nodes": [
     {
@@ -55776,9 +55776,9 @@
       "owner_fr": "FR-011",
       "title": "Aftercare data retention follows the system retention rule",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Retention of aftercare data, scan media and communication logs follows the system PRD, Platform-Wide Rules: One 10-year retention period.",
+        "statement": "Retention of aftercare data, scan media and communication logs follows the system PRD, Platform-Wide Rules: One 10-year retention period, REQ-SYS-002.",
         "rationale": "Data and Privacy Rule 1."
       }
     },
@@ -56076,9 +56076,9 @@
       "owner_fr": "FR-011",
       "title": "Who is paid depends on who delivers; a provider who hands aftercare to the Hairline team gets a fixed handover fee",
       "status": "active",
-      "version": 6,
+      "version": 7,
       "attrs": {
-        "statement": "When the provider marks \"Assign to Hairline aftercare team\", the admin receives a notification for aftercare assignment, the Hairline aftercare team takes over patient monitoring, and, after the handover, the coordinator confirms the plan on Screen 14 and the system activates it. The provider is paid a fixed handover fee set by the admin (default 0, so nothing is paid until the admin sets an amount); in the treatment-linked flow there is no separate aftercare price, so Hairline pays the fee from its own revenue, and in the add-on and standalone flows Hairline keeps the rest of the price. When the Hairline team delivers by default in the add-on flow, or after an admin reassignment, Hairline keeps the full price with no commission line and no provider payment. When a provider delivers, the provider is paid the price less commission (REQ-011-040).",
+        "statement": "When the provider marks \"Assign to Hairline aftercare team\", the admin receives a notification for aftercare assignment, the Hairline aftercare team takes over patient monitoring, and, after the handover, the coordinator confirms the plan on Screen 14 and the system activates it. The provider is paid a fixed handover fee set by the admin (default 0, so nothing is paid until the admin sets an amount); in the treatment-linked flow there is no separate aftercare price, so Hairline pays the fee from its own revenue, and in the add-on and standalone flows Hairline keeps the rest of the price. The fee is a Handover Fee credit entry on the clinic's balance record owned by FR-017 (REQ-017-203). When the Hairline team delivers by default in the add-on flow, or after an admin reassignment, Hairline keeps the full price with no commission line and no provider payment. When a provider delivers, the provider is paid the price less commission (REQ-011-040).",
         "rationale": "Workflow 1 alternative A2."
       }
     },
@@ -56316,9 +56316,9 @@
       "owner_fr": "FR-011",
       "title": "Provider performance scores monthly (backlog)",
       "status": "active",
-      "version": 4,
+      "version": 5,
       "attrs": {
-        "statement": "Provider performance scores are calculated monthly, poor performance triggers a review process and provider suspension requires admin approval. Retention of performance data follows the system PRD, Platform-Wide Rules: One 10-year retention period.",
+        "statement": "Provider performance scores are calculated monthly, poor performance triggers a review process and provider suspension requires admin approval. Retention of performance data follows the system PRD, Platform-Wide Rules: One 10-year retention period, REQ-SYS-002.",
         "rationale": "Screen 17 business rules. The screen is Backlog (post-MVP analytics)."
       }
     },
@@ -56556,9 +56556,9 @@
       "owner_fr": "FR-011",
       "title": "Patient can cancel an aftercare subscription or a plan paid in full",
       "status": "active",
-      "version": 1,
+      "version": 2,
       "attrs": {
-        "statement": "The patient MUST be able to cancel from the plan payment screen (Screen 7). A monthly subscription runs to the end of the paid month, later months are not charged, the plan then becomes Cancelled, and nothing is refunded. A plan paid in full stops at the end of the current month and the unused full months are refunded pro rata (REQ-011-083). Commission and provider payout follow the refund in the same proportion.",
+        "statement": "The patient MUST be able to cancel from the plan payment screen (Screen 7). A monthly subscription runs to the end of the paid month, later months are not charged, the plan then becomes Cancelled, and nothing is refunded. A plan paid in full stops at the end of the current month and the unused full months are refunded pro rata (REQ-011-083). Commission and provider payout follow the refund in the same proportion. The commission reversal is FR-017 REQ-017-202.",
         "rationale": "Workflow 3 Alternative Flow C4; Payment Rule 4 (refund policy). Money movement is executed through FR-007 and FR-017."
       }
     },
@@ -108467,11 +108467,11 @@
       "owner_fr": null,
       "title": "Conversion",
       "status": "active",
-      "version": 7,
+      "version": 8,
       "attrs": {
         "timeline": "monitoring",
         "sequence": 3,
-        "description": "Patient moves from monitoring into a treatment inquiry."
+        "description": "Patient moves from monitoring into a treatment inquiry or into a standalone aftercare request."
       }
     },
     {
@@ -364698,6 +364698,12 @@
     {
       "from_id": "STG-monitoring-03-conversion",
       "verb": "joins",
+      "to_id": "STG-aftercare-01-recovery-plan",
+      "attrs": {}
+    },
+    {
+      "from_id": "STG-monitoring-03-conversion",
+      "verb": "joins",
       "to_id": "STG-main-01-inquiry",
       "attrs": {}
     },
@@ -462678,6 +462684,26 @@
     }
   ],
   "changes": [
+    {
+      "id": "cs-20261125-080742-e0fb89f9",
+      "at": "2026-11-25T08:07:42.269828+00:00",
+      "changed_by": "controller",
+      "reason": "Backlog points settled: cite REQ-SYS and REQ-017 rule ids in FR-011 rules; the FR-038 conversion stage also leads into the standalone aftercare stage (REQ-011-093).",
+      "source_id": "SRC-PRD-011",
+      "nodes_added": [],
+      "nodes_updated": [
+        "REQ-011-008",
+        "REQ-011-009",
+        "REQ-011-032",
+        "REQ-011-057",
+        "REQ-011-077",
+        "REQ-011-097",
+        "STG-monitoring-03-conversion"
+      ],
+      "edges_added": 1,
+      "edges_removed": 0,
+      "rows": 8
+    },
     {
       "id": "cs-20261125-080606-47e1d181",
       "at": "2026-11-25T08:06:06.059556+00:00",

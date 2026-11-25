@@ -725,7 +725,7 @@ Admin assignment is not a separate entry route. It is a step inside these routes
 
 **Notes**:
 
-- Integrate with Stripe payment gateway (per dependencies, line 1232-1236)
+- Integrate with Stripe payment gateway (see Integration and Security Rules: Payment Gateway - Stripe)
 - Order summary clearly shows all fees and charges with transparent breakdown
 - Payment method selection supports region-specific payment options
 - Secure payment form with SSL encryption and PCI compliance
@@ -1115,7 +1115,7 @@ Admin assignment is not a separate entry route. It is a step inside these routes
 - Admin has full access to all tabs and data (REQ-011-021)
 - All changes logged with admin identification (REQ-011-036)
 - Patient anonymization rules don't apply to admin (REQ-011-010)
-- All communications monitored and logged
+- All communications monitored and logged (REQ-011-030)
 - Admin can override any provider settings (REQ-011-067)
 - Manual activation needs a mandatory reason and creates an audit entry; it is the route for a plan whose setup stays unconfirmed after the escalation (REQ-011-019, REQ-011-090)
 - The admin decides each proposed extension or major change here; a change proposed by the coordinator is approved by a different admin (REQ-011-098)
@@ -1313,7 +1313,7 @@ Admin assignment is not a separate entry route. It is a step inside these routes
 - Performance scores calculated monthly (REQ-011-077)
 - Poor performance triggers review process (REQ-011-077)
 - Provider suspension requires admin approval (REQ-011-077)
-- Retention of performance data follows the system PRD, Platform-Wide Rules: One 10-year retention period (REQ-011-077)
+- Retention of performance data follows the system PRD, Platform-Wide Rules: One 10-year retention period, REQ-SYS-002 (REQ-011-077)
 - This screen is deferred to a later phase as it represents system-wide analytics beyond case operations covered by Screens 11–12.
 
 **Notes**:
@@ -1437,7 +1437,7 @@ Admin assignment is not a separate entry route. It is a step inside these routes
    - Patients can only access their own aftercare data (REQ-011-021)
    - Providers can only access assigned patients (REQ-011-021)
    - Admin has full access to all aftercare data (REQ-011-021)
-   - Hiding and unlocking patient identity around payment is one platform rule in the system PRD; it is not restated here
+   - Hiding and unlocking patient identity around payment is one platform rule in the system PRD (REQ-SYS-001); it is not restated here
 
 4. **Provider Status Cancellation Rules**
    - An effective provider suspension/deactivation does not cancel that provider's non-terminal standalone aftercare cases; it marks them for Screen 19 reassignment with cause `ProviderSuspended` or `ProviderDeactivated` and an independent `supportRequired` marker (Workflow 4 D4; FR-015 A5/Screen 4) (REQ-011-014)
@@ -1491,15 +1491,15 @@ Admin assignment is not a separate entry route. It is a step inside these routes
 ### Data and Privacy Rules
 
 1. **Data Retention**
-   - Retention of aftercare data, scan media and communication logs follows the system PRD, Platform-Wide Rules: One 10-year retention period (REQ-011-032)
+   - Retention of aftercare data, scan media and communication logs follows the system PRD, Platform-Wide Rules: One 10-year retention period, REQ-SYS-002 (REQ-011-032)
 
 2. **Data Access**
-   - Patient details are visible to the assigned provider from assignment in the standalone flow, and from payment in the post-treatment add-on flow where assignment follows payment; the admin always sees them (REQ-011-010; REQ-011-022 is retired in favour of the system PRD, Platform-Wide Rules: Patient identity hidden until booking confirmation)
+   - Patient details are visible to the assigned provider from assignment in the standalone flow, and from payment in the post-treatment add-on flow where assignment follows payment; the admin always sees them (REQ-011-010; REQ-011-022 is retired in favour of the system PRD, Platform-Wide Rules: Patient identity hidden until booking confirmation, REQ-SYS-001)
    - Provider access limited to assigned patients (REQ-011-021)
    - Admin access logged for audit trail (REQ-011-033)
 
 3. **Data Security**
-   - Encryption of aftercare data in transit and at rest follows the system PRD, Platform-Wide Rules: Encryption in transit and at rest
+   - Encryption of aftercare data in transit and at rest follows the system PRD, Platform-Wide Rules: Encryption in transit and at rest (REQ-SYS-004)
    - Scan media stored securely with access controls (REQ-011-012)
    - Access attempts logged and monitored (REQ-011-033)
 
@@ -1534,7 +1534,7 @@ Admin assignment is not a separate entry route. It is a step inside these routes
    - Payment disputes handled by admin team (REQ-011-038)
 
 2. **Provider Compensation**
-   - Who is paid depends on who delivers (REQ-011-057): the provider who delivers is paid the price less commission; when the Hairline team delivers by default (add-on flow) or after an admin reassignment, Hairline keeps the full price with no commission line and no provider payment; when the team takes over after a provider handover, the provider is paid the fixed handover fee set in the admin handover-fee setting (default 0); in the treatment-linked flow Hairline pays it from its own revenue because there is no separate aftercare price, and in the add-on and standalone flows Hairline keeps the rest
+   - Who is paid depends on who delivers (REQ-011-057): the provider who delivers is paid the price less commission; when the Hairline team delivers by default (add-on flow) or after an admin reassignment, Hairline keeps the full price with no commission line and no provider payment; when the team takes over after a provider handover, the provider is paid the fixed handover fee set in the admin handover-fee setting (default 0); in the treatment-linked flow Hairline pays it from its own revenue because there is no separate aftercare price, and in the add-on and standalone flows Hairline keeps the rest; the fee is a Handover Fee credit entry on the clinic's balance record owned by FR-017 (REQ-017-203)
    - Providers compensated for aftercare participation (REQ-011-039)
    - Compensation based on case complexity and duration (REQ-011-039)
    - Payment processed monthly (REQ-011-039)
@@ -1605,6 +1605,7 @@ Related FRs:
 - **FR-006**: Booking & Scheduling (owns the move to Aftercare and reads the plan completion event; see REQ-006-060)
 - **FR-038**: Monitor Your Transplant Progress (a monitoring case can be converted into a standalone request; see REQ-038-068)
 - **FR-007**: Payment Processing (cites REQ-007-088, the FR-007 Rule that processes the standalone aftercare payment)
+- **FR-017**: Admin Billing & Financial Management (cites REQ-017-203 for the handover fee entry and REQ-017-202 for the commission reversal on a subscription cancellation refund)
 - **FR-020**: Notifications & Alerts (cites the four aftercare events REQ-020-117, REQ-020-118, REQ-020-119, REQ-020-120, each reaching its FR-030 Rule: REQ-030-072, REQ-030-073, REQ-030-074, REQ-030-075)
 
 ---
@@ -1627,7 +1628,7 @@ Related FRs:
 - **REQ-011-094**: System MUST refuse a conversion once the monitoring case is completed, and after a failed or abandoned request MUST return the patient to FR-038 Screen 6 with the draft intact; when a converted request ends Rejected or Expired the notice MUST say the patient may start a new standalone request pre-filled from the same source data with a new idempotency key, and the monitoring case stays final
 - **REQ-011-095**: The scan task MUST use the FR-002 media-only call with at least one photo and the scan id as idempotency key; staged photos never attached to a scan are removed after 7 days
 - **REQ-011-096**: System MUST complete the plan at the end of the last milestone or the subscription term (whichever is later), stop its reminders including REQ-011-088, and emit a completion event that FR-006 reads; every other ending follows REQ-011-101
-- **REQ-011-097**: The patient MUST be able to cancel from the plan payment screen: a monthly subscription runs to the end of the paid month with no refund; a plan paid in full stops at the end of the current month with a pro-rata refund of the unused full months; commission and provider payout follow in proportion
+- **REQ-011-097**: The patient MUST be able to cancel from the plan payment screen: a monthly subscription runs to the end of the paid month with no refund; a plan paid in full stops at the end of the current month with a pro-rata refund of the unused full months; commission and provider payout follow in proportion, the commission reversal being FR-017 REQ-017-202
 - **REQ-011-098**: The provider (or the coordinator) MUST be able to propose an extension or major change with a reason; the admin approves or rejects it; the patient is notified and extra cost needs the patient's acceptance and payment; a rejection leaves the plan unchanged; when the coordinator proposes, the approving admin MUST be a different person
 - **REQ-011-099**: The plan MUST carry an urgent flag and its raised-at time; the assigned provider or coordinator clears it with a note; when the flag is not cleared within 2 hours (clearing it is the response) the case escalates to the admin; dashboards count flagged plans
 - **REQ-011-100**: The provider MAY pick an alternative template only among templates offering the pricing option the patient chose; when the final price differs the patient accepts the new price or cancels at no charge; in the already paid add-on flow an alternative is allowed only if its price for the chosen pricing option equals the price already paid (REQ-011-047)
@@ -1641,9 +1642,9 @@ Related FRs:
 
 ### Security & Privacy Requirements
 
-- **REQ-011-008**: Aftercare data encryption in transit and at rest MUST follow the system PRD, Platform-Wide Rules: Encryption in transit and at rest
-- **REQ-011-009**: *Retired.* Role-based (patient, provider, admin) and audited access is one platform rule in the system PRD, Platform-Wide Rules: Role-based, audited access
-- **REQ-011-010**: The assigned provider sees patient details from assignment in the standalone flow and from payment in the post-treatment add-on flow where assignment follows payment; the admin is exempt and always sees them. *(REQ-011-022, "identity hidden until payment", is retired in favour of the system PRD, Platform-Wide Rules: Patient identity hidden until booking confirmation.)*
+- **REQ-011-008**: Aftercare data encryption in transit and at rest MUST follow the system PRD, Platform-Wide Rules: Encryption in transit and at rest (REQ-SYS-004)
+- **REQ-011-009**: *Retired.* Role-based (patient, provider, admin) and audited access is one platform rule in the system PRD, Platform-Wide Rules: Role-based, audited access (REQ-SYS-009)
+- **REQ-011-010**: The assigned provider sees patient details from assignment in the standalone flow and from payment in the post-treatment add-on flow where assignment follows payment; the admin is exempt and always sees them. *(REQ-011-022, "identity hidden until payment", is retired in favour of the system PRD, Platform-Wide Rules: Patient identity hidden until booking confirmation, REQ-SYS-001.)*
 
 ### Integration Requirements
 
@@ -1716,6 +1717,7 @@ Acceptance Scenarios:
 | 2026-11-24 | 1.14 | Logic review pass 2: one closing rule for every ending of aftercare with an admin Cancel Aftercare control; time ends a milestone and a task not done becomes Missed; reminder and escalation clock for a paid add-on and an assigned standalone request in place of the add-on unassigned expiry; Pending activation plan status; Hairline-team actions on Screen 14 and a confirm-and-activate step after a handover; reassignment has no automatic refund and the handover fee in the treatment-linked flow is paid from Hairline revenue; add-on alternative template only at the price already paid; aftercare participation as a provider profile setting owned by FR-015; a new standalone request after a rejected or expired FR-038 conversion; discount codes removed from templates; Screen 15 availability marks. | Product Owner / Documentation |
 | 2026-11-25 | 1.15 | New rule REQ-011-102: Contact Support on the patient Aftercare Dashboard sends a text message to the aftercare team, recorded in the aftercare communication log, not in FR-012 messaging. Closes the gap between this FR (contact the aftercare team) and FR-012 (aftercare-team chat out of scope). | Claude (AI Assistant) |
 | 2026-11-25 | 1.16 | Owner ruling 2026-11-25: the Contact Support route of REQ-011-102 is confirmed, and new rule REQ-011-103 says how the aftercare team's reply reaches the patient: a Messages list on the Aftercare Dashboard plus the `aftercare.team_message` notification by push and email. | Claude (AI Assistant) |
+| 2026-11-25 | 1.17 | Backlog points settled: system PRD Platform-Wide Rules are cited by id (REQ-SYS-001, -002, -004, -009); the handover fee and the subscription refund cite FR-017 REQ-017-203 and REQ-017-202; the dangling line reference in the Screen 7 notes and the uncited communication-logging line are fixed. No requirement behaviour changed. | Claude (AI Assistant) |
 
 ## Appendix: Approvals
 
