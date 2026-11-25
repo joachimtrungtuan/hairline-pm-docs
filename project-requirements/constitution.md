@@ -1,15 +1,15 @@
 # Hairline Platform Constitution
 
-**Version**: 1.0.0
+**Version**: 1.1.0
 **Ratified**: 2025-10-23
-**Last amended**: 2025-10-23 (rule text unchanged since ratification)
-**Structure revised**: 2026-11-25 (restructure and merge of the executive summary; no rule wording changed)
+**Last amended**: 2026-11-25 (rules corrected to agree with the system PRD and the FR PRDs; see the change log)
+**Structure revised**: 2026-11-25 (restructure and merge of the executive summary)
 
-This is the single canonical constitution for the Hairline medical tourism platform (three tenants: Patient app, Provider web, Admin web). It states the principles, security and compliance rules, PRD standards and governance that every functional requirement, PRD, plan and code change is checked against. Part E (Constitution Authority) states what it supersedes and how a deviation is justified. The path `.specify/memory/constitution.md` is kept for Spec Kit and the project skills.
+This is the single canonical constitution for the Hairline medical tourism platform (four tenants: Patient app, Provider web, Admin web, Affiliate web portal). It states the principles, security and compliance rules, PRD standards and governance that every functional requirement, PRD, plan and code change is checked against. Part E (Constitution Authority) states what it supersedes and how a deviation is justified. The path `.specify/memory/constitution.md` is kept for Spec Kit and the project skills.
 
-Rule wording is the ratified wording. Rule ids (`C-I-1`, `C-SEC-3`, and so on) are labels added for citation; they carry no meaning beyond identifying a line. The original Roman numerals and section headings are kept, so a citation such as "Principle II" resolves to the heading "II. Medical Data Privacy & Security".
+Rule wording is the ratified wording except where the change log records a correction. Rule ids (`C-I-1`, `C-SEC-3`, and so on) are labels added for citation; they carry no meaning beyond identifying a line. The original Roman numerals and section headings are kept, so a citation such as "Principle II" resolves to the heading "II. Medical Data Privacy & Security".
 
-The system PRD (`system-prd.md`, section "Platform-Wide Rules") and this document both state some cross-cutting rules. Where their wording differs, no precedence has been ruled yet; the open differences are listed in `constitution-open-items.md` beside this file (a stateful list, not part of this authority path).
+The system PRD (`system-prd.md`, section "Platform-Wide Rules") and this document both state some cross-cutting rules. Where this document disagrees with the system PRD or the FR PRDs, it is corrected to match them (owner ruling 2026-11-25).
 
 ## How to use this document
 
@@ -17,7 +17,7 @@ The system PRD (`system-prd.md`, section "Platform-Wide Rules") and this documen
 |---|---|---|
 | Verify an FR against the constitution | Part A, then Part B | Cite rule ids. A NON-NEGOTIABLE principle (I, II, V) or the NON-NEGOTIABLE PRD Standards in Part C cannot be waived without the Part E complexity process. |
 | Review code or a plan | Part A, Part B, Part D (Development Standards) | Lines labelled `C-DEV` carry the code-review, commit, coverage and test-data rules. |
-| Write or review a PRD | Part C | Section structure of a compressed PRD is also governed by `graph/checklists/prd-structure.md`; see Part C. |
+| Write or review a PRD | Part C | Section structure of a compressed PRD follows `graph/checklists/prd-structure.md`; see Part C. |
 | Place a new document | Part C (Documentation Organization) | Layout trees are in Part D and are historical; `local-docs/INDEX.md` is the current wayfinder. |
 | Understand tenants, modules, platform stack | Part D, then Appendix | Product scope is owned by `system-prd.md`. The former technical spec is archived in `local-docs/archived/technical-docs/` and is history only. |
 | Amend the constitution or justify a deviation | Part E | |
@@ -28,19 +28,19 @@ Original section: Core Principles. Each rule line has an id of the form `C-<Roma
 
 ### I. Multi-Tenant Architecture (NON-NEGOTIABLE)
 
-C-I-0 The Hairline platform MUST be architected as three independent, loosely-coupled tenants that
+C-I-0 The Hairline platform MUST be architected as four independent, loosely-coupled tenants that
 communicate through well-defined APIs:
 
 1. **Patient Platform (Mobile App)**: Patient-facing iOS/Android application
 2. **Provider Platform (Web)**: Clinic/hospital management web application
 3. **Admin Platform (Web)**: Internal operations and oversight web application
+4. **Affiliate Platform (Web Portal)**: External-facing portal for influencers and marketing partners
 
-C-I-0a **Scoped external surfaces**: The Affiliate Portal (FR-018) is a limited external-facing
-surface operated **as part of the Admin Platform tenant**, not a fourth tenant. It shares the
-Admin tenant's API contracts and deployment boundary, exposes only affiliate-scoped
-self-service (performance, payouts, profile), and enforces its own authentication and
-authorization boundary *within* the Admin tenant. Any future external-partner surface MUST
-likewise be scoped under an existing tenant unless this constitution is amended to add a tenant.
+C-I-0a **Affiliate Platform**: The Affiliate Portal (FR-018) is the fourth application, matching the
+four applications of `system-prd.md` (section "System Architecture"). It exposes only
+affiliate-scoped self-service (performance, payouts, profile) and enforces its own authentication
+and authorization boundary like every other tenant (C-I-1). Affiliates are managed from the Admin
+Platform (A-07). Any further application MUST be added to this list by amending this constitution.
 
 **Rationale**: Each tenant serves distinct user groups with different security clearances,
 workflows, and data access requirements. Strict separation ensures data privacy, independent
@@ -63,16 +63,17 @@ with healthcare-grade security measures.
 **Rules**:
 
 - C-II-1 Patient personal identifiable information (PII) MUST be encrypted at rest and in transit
-- C-II-2 Provider platforms MUST NOT display patient full names or contact details until treatment
-  is confirmed and paid
+- C-II-2 Provider platforms MUST NOT display patient full names or contact details until booking
+  confirmation (the first successful payment); admins are exempt and see the full patient identity
 - C-II-3 All patient-provider communications MUST be logged and monitored for compliance
-- C-II-4 Medical records MUST be retained for minimum 7 years per healthcare regulations
+- C-II-4 Every record type, including medical records, MUST be retained for one period of 10 years;
+  no record type has a shorter period (`system-prd.md`, "One 10-year retention period")
 - C-II-5 Data deletion requests MUST result in archival, not permanent deletion
 - C-II-6 All data access MUST be auditable with tamper-proof audit trails
 - C-II-7 Role-Based Access Control (RBAC) MUST be enforced across all platforms
-- C-II-8 Multi-Factor Authentication (MFA) is a **planned mandatory control** for Admin and Provider
-  platforms and WILL be enforced platform-wide once the shared MFA stack (FR-026 / FR-031)
-  is delivered. Until then, Admin and Provider platforms MUST implement strong password
+- C-II-8 Multi-Factor Authentication (MFA) is a **future feature**: planned for Admin and Provider
+  platforms, not enforced at launch, and WILL be enforced platform-wide once the shared MFA stack
+  (FR-026 / FR-031) is delivered. Until then, Admin and Provider platforms MUST implement strong password
   policies, throttling, and re-authentication flows, and any FR that references MFA MUST
   clearly mark it as a future (non-MVP) requirement.
 - C-II-9 Payment card data MUST never be stored; use PCI-compliant payment processors (Stripe)
@@ -107,7 +108,7 @@ C-IV-0 User interfaces MUST prioritize intuitive workflows, accessibility, and m
 
 **Rules for Patient Mobile App**:
 
-- C-IV-1 MUST support iOS 14+ and Android 8.0+
+- C-IV-1 MUST support iOS 14+ and Android 10+
 - C-IV-2 MUST function offline for core features (view bookings, aftercare instructions)
 - C-IV-3 MUST support multiple languages (internationalization/i18n)
 - C-IV-4 Loading states MUST not exceed 3 seconds for 95th percentile
@@ -178,12 +179,16 @@ C-VI-0 All system state changes MUST be auditable and recoverable.
 - C-VI-9 Aftercare milestone templates MUST be versioned
 - C-VI-10 Price changes MUST preserve historical pricing for existing bookings
 
+**Deletion**:
+
+- C-VI-11 Every delete MUST be a soft delete (the record is archived); hard deletion is prohibited for
+  every record type (`system-prd.md`, "Soft deletes only")
+
 ### VII. Modularity & Independent Deployment
 
 C-VII-0 The system MUST be architected to allow independent module development and deployment.
 
-Editorial note: the module list below is the ratified original. The Appendix carries the later naming (head scan V1 photo set, V2 true 3D) and per-module priority from the old executive summary; where they differ, see `constitution-open-items.md`; no precedence has been ruled.
-
+Module names and scope notes follow the module lines of `system-prd.md`. Head scan media: V1 is a standardized photo set and V2 is true 3D (`system-prd.md`, FR-002 release scope note); wherever this document says "3D scan", read it as head scan media in that sense.
 
 **Module Breakdown**:
 
@@ -195,13 +200,13 @@ Editorial note: the module list below is the ratified original. The Appendix car
 - **P-04**: Travel & Logistics (flights, hotels, transport)
 - **P-05**: Aftercare & Progress Monitoring
 - **P-06**: Communication (chat with providers, aftercare team)
-- **P-07**: 3D Scan Capture & Viewing
+- **P-07**: 3D Scan Capture & Viewing *(head scan media: V1 photo set; V2 true 3D)*
 - **P-08**: Help Center & Support Access
 
 **Provider Platform Modules**:
 
 - **PR-01**: Auth & Team Management
-- **PR-02**: Inquiry & Quote Management
+- **PR-02**: Inquiry & Quote Management (includes appointment management, Part D Tenant 2 item 4)
 - **PR-03**: Treatment Execution & Documentation
 - **PR-04**: Aftercare Participation (optional)
 - **PR-05**: Financial Management & Reporting
@@ -223,11 +228,11 @@ Editorial note: the module list below is the ratified original. The Appendix car
 
 **Shared Services** (independently deployable):
 
-- **S-01**: 3D Scan Processing Service
+- **S-01**: 3D Scan Processing Service *(V1 photo set; V2 true 3D)*
 - **S-02**: Payment Processing Service (Stripe integration)
 - **S-03**: Notification Service (email, SMS, push notifications)
-- **S-04**: Travel API Gateway (flights, hotels)
-- **S-05**: Media Storage Service (images, 3D scans, documents)
+- **S-04**: Travel API Gateway (flights, hotels) *(MVP: travel record storage and itinerary coordination; Phase 2: flight and hotel API integrations)*
+- **S-05**: Media Storage Service (images, head scan photo sets (V1), 3D scans (V2), documents)
 - **S-06**: Audit Log Service (centralized, immutable audit trail)
 
 **Traceability**: Each Functional Requirement in `local-docs/project-requirements/system-prd.md` includes its corresponding module code(s) for full traceability.
@@ -246,7 +251,7 @@ C-VIII-0 The system MUST be designed to handle growth in users, providers, and d
 **Performance Targets**:
 
 - C-VIII-1 API response time: p95 < 500ms, p99 < 1000ms (excluding external API calls)
-- C-VIII-2 Patient mobile app: Core screens load in < 2 seconds on 4G connection
+- C-VIII-2 Patient mobile app: Core screens load in < 3 seconds on 4G connection (same threshold as C-IV-4 and `system-prd.md` NFR-001)
 - C-VIII-3 3D scan upload: Support files up to 50MB with progress indication
 - C-VIII-4 Database queries: No N+1 queries; use eager loading and indexing
 - C-VIII-5 Search operations: Patient/provider search results in < 300ms
@@ -326,17 +331,20 @@ Original section: Security & Compliance Requirements. Each rule line has an id o
 
 **Patient Privacy Rules**:
 
-- C-SEC-9 Providers MUST NOT see patient full names until booking is confirmed and paid
-- C-SEC-10 Providers MUST see patient anonymized IDs (e.g., "Mark P #A47B2") before payment
-- C-SEC-11 Patient contact details MUST be revealed only after payment confirmation
+- C-SEC-9 Providers MUST NOT see patient full names until booking confirmation (the first successful payment); admins are exempt
+- C-SEC-10 Providers MUST see only the anonymized patient ID, shown as "Mark P." followed by the ID,
+  until booking confirmation (the first successful payment); this does not apply to admins
+- C-SEC-11 Patient contact details (phone number and email address) MUST be revealed only at booking
+  confirmation (the first successful payment)
 - C-SEC-12 Patient medical history MUST be visible to providers only for active inquiries/bookings
 - C-SEC-13 Patient 3D scans MUST be watermarked with patient ID (prevent unauthorized distribution)
 
 **Data Retention & Deletion**:
 
-- C-SEC-14 Medical records MUST be retained for 7 years minimum (compliance requirement)
+- C-SEC-14 Medical records MUST be retained for 10 years, the same single period as every other record type (compliance requirement; see C-II-4)
 - C-SEC-15 Patient data deletion requests MUST result in anonymization + archival, not hard deletion
-- C-SEC-16 Archived data MUST be inaccessible via normal application interfaces
+- C-SEC-16 Archived data MUST NOT be reachable through normal application interfaces, and MUST remain
+  retrievable for compliance audits
 - C-SEC-17 Audit trails MUST be immutable and retained for 10 years
 
 ### Authentication & Authorization
@@ -346,9 +354,11 @@ Original section: Security & Compliance Requirements. Each rule line has an id o
 - C-SEC-18 Passwords MUST be hashed using bcrypt (minimum cost factor: 12)
 - C-SEC-19 Password minimum requirements: 12 characters, with at least 1 uppercase, 1 lowercase, 1 number, and 1 special character from !@#$%^&(),.?":{}|<> (not configurable in admin)
 - C-SEC-20 Password changes MUST NOT reuse any of the last 5 passwords (password history enforcement)
-- C-SEC-21 Account lockout after 5 failed login attempts (15-minute lockout)
+- C-SEC-21 Account lockout is an admin setting (maximum login attempts and lockout duration); the default
+  is 5 failed login attempts and a 15-minute lockout
 - C-SEC-22 Session timeout: 30 minutes of inactivity (admin/provider), 24 hours (patient mobile app)
-- C-SEC-23 Multi-Factor Authentication (MFA) MUST be enforced for:
+- C-SEC-23 Multi-Factor Authentication (MFA) is a future feature, planned and not enforced at launch;
+  the interim controls are in C-II-8. When delivered, it is planned for:
   - All Admin Platform users
   - Provider admin accounts
   - Optional for provider staff accounts
@@ -409,7 +419,7 @@ Original section: Security & Compliance Requirements. Each rule line has an id o
 
 Original sections: Governance, Documentation Organization and PRD Standards & Requirements. Ids are `C-DOC-<n>` for documentation placement and `C-PRD-<n>` for PRD standards.
 
-Section structure of a compressed PRD is also governed by `local-docs/project-requirements/graph/checklists/prd-structure.md` (v1.0), which post-dates this text. The "Mandatory PRD Structure" below is the ratified wording and is kept unchanged; points where it differs from that checklist are open items for the owner (see `constitution-open-items.md`). Until the owner rules, neither is silently preferred.
+The PRD structure below is the compressed structure of `local-docs/project-requirements/graph/checklists/prd-structure.md` (v1.0) and `local-docs/INDEX.md` section C.1 (owner ruling 2026-11-25). Sections dropped there are no longer required; the ids of dropped sections are retired in place and not reused.
 
 ### Documentation Organization
 
@@ -421,7 +431,7 @@ local-docs/project-requirements/
 
 ### PRD Standards & Requirements (NON-NEGOTIABLE)
 
-C-PRD-1 All Product Requirements Documents (PRDs) MUST follow the comprehensive structure and quality standards established by the verified FR-011 Aftercare & Recovery Management PRD (`functional-requirements/fr011-aftercare-recovery-management/prd.md`).
+C-PRD-1 All Product Requirements Documents (PRDs) MUST follow the compressed structure and quality standards below. New PRDs start from the canonical templates in `local-docs/project-requirements/templates/`.
 
 **Mandatory PRD Structure**:
 
@@ -450,7 +460,7 @@ C-PRD-1 All Product Requirements Documents (PRDs) MUST follow the comprehensive 
 
 5. C-PRD-6 **Screen Specifications** (REQUIRED):
    - **Purpose**: Clear screen objective
-   - **Data Fields**: Complete field list with types and descriptions
+   - **Data Fields**: Complete field list with types and descriptions; every field-table row carries its graph field id
    - **Business Rules**: Specific rules governing screen behavior
    - **Notes**: Implementation guidance and constraints
 
@@ -459,35 +469,31 @@ C-PRD-1 All Product Requirements Documents (PRDs) MUST follow the comprehensive 
    - Data and privacy rules
    - Admin editability rules (if applicable)
    - Payment and billing rules (if applicable)
+   - Each rule is stated once and cited elsewhere by its REQ id; rules rescued from dropped sections sit here in their original wording
 
-7. C-PRD-8 **Success Criteria** (REQUIRED):
-   - Patient experience metrics
-   - Provider efficiency metrics
-   - Admin management metrics
-   - System performance metrics
-   - Business impact metrics
+7. C-PRD-8 **RETIRED** (formerly Success Criteria). Success metrics are no longer a PRD section; they stay in the frozen baseline.
 
-8. C-PRD-9 **Dependencies** (REQUIRED):
-   - Internal dependencies (other FRs/modules)
-   - External dependencies (APIs, services)
-   - Data dependencies
+8. C-PRD-9 **Dependencies** (REQUIRED): one short list of related FR ids.
 
-9. C-PRD-10 **Assumptions** (REQUIRED):
-   - User behavior assumptions
-   - Technology assumptions
-   - Business process assumptions
+9. C-PRD-10 **RETIRED** (formerly Assumptions). Rules stated inside assumptions were moved to Business Rules; the section is no longer part of a PRD.
 
-10. C-PRD-11 **Implementation Notes** (REQUIRED):
-    - Technical considerations
-    - Integration points
-    - Scalability considerations
-    - Security considerations
+10. C-PRD-11 **RETIRED** (formerly Implementation Notes). Technical notes are no longer a PRD section; any business rule found there was moved to Business Rules.
+
+11. C-PRD-25 **User Scenarios & Testing** (REQUIRED): user stories, acceptance scenarios, and edge cases. Edge cases stay in the PRD because they are business rules.
+
+12. C-PRD-26 **Functional Requirements Summary** (REQUIRED)
+
+13. C-PRD-27 **Appendix: Change Log** (REQUIRED): restarted with one first entry pointing to the frozen baseline `archived/prd-baseline-2026-11-08/`; earlier history stays in that archive.
+
+14. C-PRD-28 **Appendix: Approvals** (REQUIRED): kept short.
+
+Key Entities is also no longer a PRD section: entities and fields live in the requirements graph. The pre-compression PRDs and all change-request files are kept in `archived/prd-baseline-2026-11-08/`.
 
 **Quality Standards**:
 
-- C-PRD-12 **Completeness**: All sections MUST be fully populated (no placeholders)
+- C-PRD-12 **Completeness**: Every section above MUST be fully populated (no placeholders)
 - C-PRD-13 **Consistency**: Terminology and concepts MUST align with system-prd.md
-- C-PRD-14 **Traceability**: Every requirement MUST reference source FR and module codes
+- C-PRD-14 **Traceability**: Every requirement MUST reference source FR and module codes; every field-table row also carries its graph field id (C-PRD-6)
 - C-PRD-15 **Verification**: PRD MUST be cross-checked against client transcriptions
 - C-PRD-16 **Status Management**: PRD status MUST progress from "Draft" → "Verified & Approved"
 - C-PRD-17 **Admin Editability**: MUST explicitly address admin override capabilities where applicable
@@ -502,7 +508,7 @@ C-PRD-1 All Product Requirements Documents (PRDs) MUST follow the comprehensive 
 4. C-PRD-23 **Stakeholder Approval**: PRD MUST be confirmed as OK by project stakeholders
 5. C-PRD-24 **Status Update**: PRD status MUST be updated to "✅ Verified & Approved" upon confirmation
 
-**Template Reference**: Use `functional-requirements/fr011-aftercare-recovery-management/prd.md` as the definitive template for all future module PRDs.
+**Template Reference**: The canonical templates are in `local-docs/project-requirements/templates/` (change control in the project instructions). `prd-template.md` there still carries the pre-compression section list; until it is updated, the section list in this Part and in `local-docs/INDEX.md` section C.1 governs, and a new PRD omits the retired sections.
 
 ### Documentation placement rules
 
@@ -532,16 +538,16 @@ Editorial note: `constitution-summary.md`, named in the first rule above, has be
 
 ## Part D. Reference and development standards
 
-Description of the three tenants, development standards and the original documentation layout. This part is reference: product scope is owned by `system-prd.md` (Functional Requirements and Platform-Wide Rules). The former technical spec and data schema named in this part are archived in `local-docs/archived/technical-docs/`. Lines in Development Standards that carry MUST wording or numeric thresholds are labelled `C-DEV-<n>` and are checked in code review.
+Description of the four tenants, development standards and the original documentation layout. This part is reference: product scope is owned by `system-prd.md` (Functional Requirements and Platform-Wide Rules). The former technical spec and data schema named in this part are archived in `local-docs/archived/technical-docs/`. Lines in Development Standards that carry MUST wording or numeric thresholds are labelled `C-DEV-<n>` and are checked in code review.
 
-The per-tenant module lists are kept in full because no single section of `system-prd.md` reproduces them: that document is organised by Functional Requirement, not by these per-tenant module lists with priority labels. Replacing them with pointers is an owner decision (see `constitution-open-items.md`).
+The per-tenant module lists are kept in full because no single section of `system-prd.md` reproduces them: that document is organised by Functional Requirement, not by these per-tenant module lists with priority labels. Replacing them with pointers is a possible later pass (see `constitution-open-items.md`, remaining points). Head scan media follows the scope note in Principle VII (V1 photo set; V2 true 3D).
 
 ### System Architecture & Tenants
 
 
 #### Tenant 1: Patient Platform (Mobile App)
 
-**Target Platform**: iOS 14+ (Swift/SwiftUI), Android 8.0+ (Kotlin/Jetpack Compose) OR
+**Target Platform**: iOS 14+ (Swift/SwiftUI), Android 10+ (Kotlin/Jetpack Compose) OR
 React Native/Flutter for cross-platform
 
 **Core Modules**:
@@ -554,7 +560,7 @@ React Native/Flutter for cross-platform
 2. **Quote Request & Management** (P1 - MVP Required)
    - Destination selection (country-based clinic search)
    - Treatment type selection (hair transplant, beard transplant)
-   - 3D head scan capture
+   - Head scan media capture (V1 photo set; V2 true 3D)
    - Medical questionnaire completion
    - Treatment date range selection
    - Quote submission to multiple providers
@@ -580,10 +586,10 @@ React Native/Flutter for cross-platform
    - Provider contact information
    - Check-in notifications
 
-6. **Aftercare & Monitoring** (P2 - Post-MVP)
+6. **Aftercare & Monitoring** (P1 - MVP Required)
    - Aftercare milestone tracking
    - Medication reminders
-   - Progress 3D scans (before/after comparison)
+   - Progress head scan media (before/after comparison)
    - Symptom logging (pain levels, sleep quality)
    - Chat with aftercare team
    - Video consultation scheduling
@@ -617,7 +623,7 @@ React Native/Flutter for cross-platform
 
 2. **Inquiry Management** (P1 - MVP Required)
    - View incoming quote requests
-   - Review patient 3D scans and medical history
+   - Review patient head scan media and medical history
    - View patient medical questionnaire (highlight risk factors)
    - Filter inquiries by date, treatment type, location
 
@@ -641,12 +647,12 @@ React Native/Flutter for cross-platform
 
 5. **Treatment Execution** (P1 - MVP Required)
    - Check-in patients on arrival
-   - 3D scan capture (pre-procedure, post-procedure)
+   - Head scan media capture (pre-procedure, post-procedure)
    - Procedure notes and documentation
    - Medication prescription
    - Aftercare plan assignment (from templates)
 
-6. **Aftercare Management** (P2 - Optional)
+6. **Aftercare Management** (P1 - MVP; provider participation is optional) *(PR-04)*
    - View assigned aftercare patients (if provider participates in aftercare)
    - Monitor patient progress (milestones, questionnaires, scans)
    - Schedule video consultations
@@ -692,7 +698,7 @@ React Native/Flutter for cross-platform
 
    - View all patients (with stage filters: inquiry, quoted, scheduled, in-progress, aftercare, complete)
    - Search patients by name, ID, email, location
-   - View patient details (full profile, medical history, 3D scans)
+   - View patient details (full profile, medical history, head scan media)
    - View patient quote history (all quotes received from providers)
    - View patient booking details
    - View patient payment history
@@ -711,14 +717,14 @@ React Native/Flutter for cross-platform
    - Provider reviews management (import external reviews, moderate user reviews)
    - Provider suspension/activation
 
-3. **Aftercare Management** (P2 - Post-MVP)
+3. **Aftercare Management** (P1 - MVP Required) *(A-03)*
    - View all aftercare patients
    - Assign aftercare clinicians
    - Monitor patient progress (milestones, compliance, red flags)
    - Chat with patients
    - Chat with assigned provider clinicians (for patients with provider aftercare)
    - Schedule video consultations
-   - Request additional 3D scans
+   - Request additional head scan media
    - Generate aftercare reports
    - Aftercare milestone template management
    - Aftercare questionnaire management
@@ -830,6 +836,20 @@ React Native/Flutter for cross-platform
     - Keyword flagging (detect attempts to transact outside platform)
     - Support ticket management (patient inquiries, issues)
     - Provider support ticketing
+
+#### Tenant 4: Affiliate Platform (Web Portal)
+
+**Target Platform**: Web portal for influencers and marketing partners. Affiliates are onboarded and
+managed from the Admin Platform (Tenant 3, item 7). Scope and screens are owned by FR-018 (P2 - Enhanced).
+
+**Core Modules**:
+
+1. **Affiliate Portal** (P2 - Enhanced) *(A-07)*
+   - Account activation by one-time link, then login with the affiliate's own authentication boundary
+   - Performance dashboard (referral count, revenue, commissions)
+   - Assigned promo codes, commission structure and payout schedule
+   - Payout history and profile
+   - Affiliate-scoped data access only
 
 
 ### Development Standards
@@ -1074,7 +1094,7 @@ The Constitution is a living document. The team is encouraged to propose improve
 
 ## Appendix: content carried from the old executive summary
 
-Carried from the former `constitution-summary.md` (version 1.0.0). This appendix is descriptive, not rule text. Module codes are owned by the module line of each Functional Requirement in `system-prd.md`; where this list and an FR differ, the difference is an open item (no precedence has been ruled).
+Carried from the former `constitution-summary.md` (version 1.0.0) and aligned with the system PRD on 2026-11-25. This appendix is descriptive, not rule text. Module codes are owned by the module line of each Functional Requirement in `system-prd.md`; where this list and an FR differ, the FR and the system PRD govern.
 
 ### Module Breakdown
 
@@ -1096,7 +1116,7 @@ Carried from the former `constitution-summary.md` (version 1.0.0). This appendix
 - **PR-01**: Auth & Team Management (P1)
 - **PR-02**: Inquiry & Quote Management (P1) - Includes Appointment Management & Pre-scheduling
 - **PR-03**: Treatment Execution & Documentation (P1)
-- **PR-04**: Aftercare Participation (P2 - optional)
+- **PR-04**: Aftercare Participation (P1 - provider participation optional)
 - **PR-05**: Financial Management & Reporting (P1)
 - **PR-06**: Profile & Settings Management (P1)
 - **PR-07**: Communication & Messaging (P2)
@@ -1116,7 +1136,7 @@ Carried from the former `constitution-summary.md` (version 1.0.0). This appendix
 
 #### Shared Services (independently deployable)
 
-- **S-01**: Head Scan Media Processing Service *(V1 photo set; V2 true 3D)* (P1)
+- **S-01**: 3D Scan Processing Service *(V1 photo set; V2 true 3D)* (P1)
 - **S-02**: Payment Processing Service (Stripe integration) (P1)
 - **S-03**: Notification Service (email, SMS, push notifications) (P1)
 - **S-04**: Travel API Gateway (MVP travel record storage + itinerary coordination; Phase 2 flight/hotel API integrations) (P2)
@@ -1125,18 +1145,17 @@ Carried from the former `constitution-summary.md` (version 1.0.0). This appendix
 
 ### Implementation Priority
 
-Carried as written in the old summary and not re-verified. It differs from the per-tenant priority labels in Part D on aftercare priority (see `constitution-open-items.md`); the priority of each FR is owned by the `Priority` line of its section in `system-prd.md`.
+Carried from the old summary and not re-verified, except that aftercare is placed in Phase 1 (owner ruling 2026-11-25). The priority of each FR is owned by the `Priority` line of its section in `system-prd.md`.
 
 #### Phase 1: MVP (P1 modules)
 
-- Patient: Auth, Quote Request, Booking/Payment (includes travel detail capture + itinerary coordination), Treatment Progress
-- Provider: Auth, Inquiry, Quote Submission, Appointments, Treatment Execution, Financial
-- Admin: Patient Management, Provider Management, Financial Management, Settings, Communication Monitoring
+- Patient: Auth, Quote Request, Booking/Payment (includes travel detail capture + itinerary coordination), Treatment Progress, Aftercare & Progress Monitoring
+- Provider: Auth, Inquiry, Quote Submission, Appointments, Treatment Execution, Financial, Aftercare Participation (optional for a clinic)
+- Admin: Patient Management, Provider Management, Financial Management, Settings, Communication Monitoring, Aftercare Team Management
 
 #### Phase 2: Enhanced Features (P2 modules)
 
 - Travel & Logistics (Phase 2: in-app flight/hotel booking via APIs; transport tracking)
-- Aftercare Management (all tenants)
 - Discounts & Promotions
 - Affiliate Program
 - Analytics & Reporting
@@ -1149,11 +1168,11 @@ Carried as written in the old summary and not re-verified. It differs from the p
 
 ### Statements found only in the old summary
 
-These statements are not in the ratified original text, so they are not rules in Part A. They are kept here, word for word, until the owner rules on them (see `constitution-open-items.md`). The system PRD, Platform-Wide Rules, section "Soft deletes only", already prohibits hard deletion.
+These statements are kept here, word for word, as history. They are not rules; the rules are in Parts A and B. The hard-deletion prohibition is now `C-VI-11`, archived-data retrieval for audits is stated in `C-SEC-16`, and the retention period is `C-II-4`; the "7-year minimum" below is superseded by the single 10-year period. The other summary-only statements (the NON-NEGOTIABLE heading on Principle VI, numeric targets such as coverage, compliance and sprint cadence, and the table count) are not carried as rules; the original text governs.
 
 - Principle VI was headed "Data Integrity & Audit Trail (NON-NEGOTIABLE)" in the summary; the original heading has no NON-NEGOTIABLE marker.
 - **HARD DELETES STRICTLY PROHIBITED**: System MUST NOT allow hard deletion of any medical, financial, or patient data
-- Soft-deletes ONLY for all critical entities (7-year minimum retention for healthcare/tax compliance)
+- Soft-deletes ONLY for all critical entities (7-year minimum retention for healthcare/tax compliance) *(superseded: 10 years, see `C-II-4`)*
 - Archived data MUST remain accessible for compliance audits
 
 ### Planned Functional Requirements
@@ -1165,6 +1184,18 @@ FR-035 (Patient Help Center and Support Submission) was listed here as planned. 
 - 1.0.0 (2025-10-23): initial ratification (ten principles; System Architecture & Tenants; Security & Compliance Requirements; Development Standards; Governance). The original file carried a Spec Kit sync report (templates plan, PRD and tasks reviewed as compatible); that comment is not kept.
 - 1.0.0 restructure (2026-11-25): original constitution and executive summary merged into this file in Parts A to E plus an Appendix. Rule wording unchanged; rule ids added; original headings kept. Replaced by pointers or dropped from the summary: overview, core-principles digest, security and development digests, governance digest, "Key Gaps Addressed", "Next Steps", "Success Metrics", the repeated PRD standards and layout trees, "Planned Functional Requirements" detail and the document-status footer.
 - File placement update (2026-11-25): C-DOC-2 and two pointer lines updated after `system-technical-spec.md` and `system-data-schema.md` were archived to `local-docs/archived/technical-docs/` and the `constitution-summary.md` stub was removed. No principle changed.
+- 1.1.0 (2026-11-25): rules corrected to agree with `system-prd.md` and the FR PRDs, on owner rulings of 2026-11-25. Corrected rules and reasons:
+  - `C-I-0`, `C-I-0a`, Tenant 4 in Part D: the Affiliate Portal is a fourth application (system PRD "System Architecture").
+  - Aftercare is P1 and part of the first release: Part D Tenant 1 item 6, Tenant 2 item 6 (`PR-04`, per the system PRD FR-011 module line), Tenant 3 item 3, Appendix module priorities and Implementation Priority (aftercare moved from Phase 2 to Phase 1).
+  - `C-II-8`, `C-SEC-23`: MFA is a future feature, not enforced at launch; the interim controls of `C-II-8` are kept.
+  - `C-SEC-21`: account lockout is an admin setting with default 5 attempts and 15 minutes.
+  - `C-VI-11` (new): every delete is a soft delete; hard deletion is prohibited (system PRD "Soft deletes only").
+  - `C-II-4`, `C-SEC-14`, Appendix "7-year" text: one 10-year retention period for every record type including medical records.
+  - `C-IV-1`, Part D Tenant 1 target platform: minimum Android version is Android 10+ (system PRD NFR-006).
+  - `C-VIII-2`: mobile load time under 3 seconds, aligned with `C-IV-4` and system PRD NFR-001.
+  - `C-II-2`, `C-SEC-9`, `C-SEC-10`, `C-SEC-11`: patient identity before booking confirmation (the first successful payment) uses the system PRD wording; admins exempt.
+  - `C-SEC-16`: states both halves (not reachable through normal application interfaces; retrievable for compliance audits).
+  - Principle VII and Part D tenant lists: module scope notes (head scan media V1 photo set, V2 true 3D; S-04, S-05, PR-02).
+  - Part C: PRD structure replaced by the compressed structure; `C-PRD-1`, `C-PRD-6`, `C-PRD-7`, `C-PRD-9`, `C-PRD-12`, `C-PRD-14` reworded; `C-PRD-8`, `C-PRD-10`, `C-PRD-11` retired in place; `C-PRD-25` to `C-PRD-28` added; the FR-011 template statement replaced by the canonical templates directory.
 
-
-**Version**: 1.0.0 | **Ratified**: 2025-10-23 | **Last Amended**: 2025-10-23
+**Version**: 1.1.0 | **Ratified**: 2025-10-23 | **Last Amended**: 2026-11-25
