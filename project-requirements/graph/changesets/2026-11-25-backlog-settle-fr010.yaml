@@ -1,0 +1,8 @@
+# FR-010 backlog settle of 2026-11-25: provider identity rule points to the system rule, retention title matches its 10-year statement, dangling EC-004 reference removed.
+reason: "Filing fixes from requirements already written: REQ-SYS-001 holds the identity unlock point (booking confirmation, first successful payment), REQ-SYS-002 holds the 10-year retention, and FR-006 owns the refund rules."
+by: controller
+source_id: SRC-PRD-010
+operations:
+  - {"op": "update_node", "id": "REQ-010-045", "title": "Provider sees the patient's identity under the system identity-hiding Rule", "attrs": {"statement": "What the provider sees of the patient's identity, and from which point, is held once in the system PRD identity-hiding rule (REQ-SYS-001); FR-010 adds nothing to it", "rationale": "REQ-SYS-001 carries the unlock point: booking confirmation (the first successful payment). This FR-010 rule is a pointer only."}}
+  - {"op": "update_node", "id": "REQ-010-046", "title": "Treatment documentation retention follows the system 10-year Rule", "attrs": {"rationale": "Pointer to REQ-SYS-002; the retention period is held once in the system PRD."}}
+  - {"op": "update_node", "id": "REQ-010-059", "attrs": {"statement": "If a case is flagged as No-Show, the booking stays Confirmed and any refund follows the FR-006 refund rules.", "rationale": "The refund rules are owned by FR-006; this rule only states that the No-Show label changes no status."}}
